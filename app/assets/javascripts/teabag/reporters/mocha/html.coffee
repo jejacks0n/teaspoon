@@ -1,0 +1,1 @@
+class Teabag.Reporters.HTML

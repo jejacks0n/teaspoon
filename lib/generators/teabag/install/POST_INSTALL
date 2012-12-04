@@ -1,0 +1,6 @@
++============================================================================+
+Congratulations! Teabag was successfully installed. Documentation and more can
+be found at: https://github.com/jejacks0n/teabag
+
+Configure Teabag by editing your config/initializers/teabag.rb file.
+

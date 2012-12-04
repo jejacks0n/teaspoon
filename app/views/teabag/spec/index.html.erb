@@ -1,0 +1,16 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>Teabag :: Jasmine Runner</title>
+    <%= stylesheet_link_tag *@suite.stylesheets %>
+    <%= javascript_include_tag *@suite.javascripts %>
+    <%= csrf_meta_tags %>
+  </head>
+  <body>
+    <div id="mocha"></div>
+
+    <script type="text/javascript">
+      Teabag.execute()
+    </script>
+  </body>
+</html>
