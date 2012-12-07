@@ -42,7 +42,7 @@ class Teabag::Formatter
     raise Teabag::Failure if fails > 0
   end
 
-  private
+  protected
 
   def pluralize(str, value)
     value == 1 ? "#{value} #{str}" : "#{value} #{str}s"

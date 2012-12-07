@@ -5,7 +5,7 @@ require "phantomjs-mac" # todo: the phantom stuff in here should get factored in
 
 class Teabag::Console
 
-  def initialize(suite_name)
+  def initialize(suite_name = :default)
     @suite_name = suite_name
   end
 

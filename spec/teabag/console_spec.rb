@@ -3,7 +3,6 @@ require "teabag/console"
 
 describe Teabag::Console do
 
-  subject { Teabag::Console.new(:default) }
   let(:server) { mock(start: nil, url: "http://url.com") }
 
   before do

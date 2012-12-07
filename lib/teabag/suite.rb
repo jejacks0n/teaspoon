@@ -8,7 +8,7 @@ class Teabag::Suite
   end
 
   def javascripts
-    [config.javascripts, config.helper, specs].flatten
+    [config.javascripts, helper, specs].flatten
   end
 
   def specs

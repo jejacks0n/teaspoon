@@ -46,10 +46,6 @@ class Runner
       console.log(msg)
 
 
-    onInitialized: ->
-      #console.log('onInitialized')
-
-
     onLoadFinished: (status) =>
       @fail("Failed to load: #{@url}") unless status == "success"
       @waitForResults()
