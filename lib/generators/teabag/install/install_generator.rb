@@ -8,6 +8,15 @@ module Teabag::Generators
       copy_file "templates/initializer.rb", "config/initializers/teabag.rb"
     end
 
+    def create_structure
+      empty_directory "spec/javascripts/support"
+      empty_directory "spec/javascripts/fixtures"
+    end
+
+    def copy_spec_helper
+      copy_file "templates/spec_helper.js", "spec/javascripts/spec_helper.js"
+    end
+
     def display_readme
       readme "POST_INSTALL" if behavior == :invoke
     end
