@@ -54,5 +54,5 @@ class Runner
       @fail("Failed to load: #{@url}") unless status == "success"
       @waitForResults()
 
-runner = new Runner()
-runner.run()
+
+new Runner().run()

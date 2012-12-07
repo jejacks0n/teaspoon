@@ -16,7 +16,7 @@ class Teabag::Server
     end
     wait_until_started
   rescue => e
-    raise "Cannot start server: #{ e.message }"
+    raise "Cannot start server: #{e.message}"
   end
 
   def wait_until_started
