@@ -22,6 +22,8 @@ module Teabag
       @@suites[name.to_s] = block
     end
 
+    self.suite(:default) {}
+
     class Suite
       attr_accessor :matcher, :helper, :stylesheets, :javascripts
 

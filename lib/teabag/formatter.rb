@@ -39,7 +39,7 @@ class Teabag::Formatter
     failures(results['failures']) if fails > 0
     log "Finished in #{results['elapsed']} seconds\n"
     log "#{pluralize("example", total)}, #{pluralize("failure", fails)}\n\n", fails > 0 ? RED : GREEN
-    raise Teabag::FailureException if fails > 0
+    raise Teabag::Failure if fails > 0
   end
 
   private

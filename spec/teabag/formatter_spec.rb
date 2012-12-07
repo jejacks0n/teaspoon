@@ -94,7 +94,7 @@ describe Teabag::Formatter do
         failures = {"spec" => "some spec", "description" => "some description"}
         expect {
           subject.results("elapsed" => 0.31337, "failures" => [failures], "total" => 666)
-        }.to raise_error(Teabag::FailureException)
+        }.to raise_error(Teabag::Failure)
         expect(@log).to eq("Teabag starting for: default...\n\n\n\nFailures:\n\n  1) some spec\n\e[31m    Failure/Error: some description\n\e[0m\nFinished in 0.31337 seconds\n\e[31m666 examples, 1 failure\n\n\e[0m")
       end
 

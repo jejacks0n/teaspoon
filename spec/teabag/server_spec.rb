@@ -87,9 +87,11 @@ describe Teabag::Server do
   describe "integration" do
 
     it "really starts a server" do
+      Teabag.configuration.suite(:foo) {}
       subject.start
-      response = Net::HTTP.get_response(URI.parse("#{subject.url}/teabag"))
+      response = Net::HTTP.get_response(URI.parse("#{subject.url}/teabag/foo"))
       expect(response.code).to eq("200")
+      Teabag.configuration.suites = {}
     end
 
   end

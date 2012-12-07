@@ -2,6 +2,10 @@ require "spec_helper"
 
 describe Teabag::Suite do
 
+  before do
+    Teabag.configuration.suite(:default) {}
+  end
+
   after do
     Teabag.configuration.suites = {}
   end

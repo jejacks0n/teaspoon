@@ -3,8 +3,8 @@ class Teabag::Suite
   attr_accessor :config
   delegate :stylesheets, :helper, to: :config
 
-  def initialize(name = nil)
-    @config = configuration_or_default(name || :default)
+  def initialize(name = :default)
+    @config = suite_configuration(name)
   end
 
   def javascripts
@@ -17,12 +17,13 @@ class Teabag::Suite
     end
   end
 
-  private
+  protected
 
-  def configuration_or_default(name)
-    suite = Teabag.configuration.suites[name.to_s]
-    proc = suite.present? ? suite : nil
-    Teabag::Configuration::Suite.new(&proc)
+  def suite_configuration(name)
+    name ||= :default
+    config = Teabag.configuration.suites[name.to_s]
+    raise Teabag::UnknownSuite unless config.present?
+    Teabag::Configuration::Suite.new(&config)
   end
 
   def asset_path_from_filename(filename)

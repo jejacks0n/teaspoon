@@ -1,4 +1,3 @@
-require "teabag/exceptions"
 require "teabag/server"
 require "teabag/formatter"
 require "phantomjs"
@@ -26,7 +25,7 @@ class Teabag::Console
       @formatter.process(line)
     end
     return 0
-  rescue Teabag::FailureException
+  rescue Teabag::Failure
     return 1
   end
 
