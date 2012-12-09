@@ -61,6 +61,12 @@ html[xmlns] .teabag-clearfix {
   overflow: hidden;
   background: #18c2e8;
 }
+#teabag-progress canvas {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  margin: -5px;
+}
 #teabag-progress em {
   display: block;
   width: 70px;
@@ -220,7 +226,7 @@ html[xmlns] .teabag-clearfix {
   border: 1px solid #bd190f;
   font-size: 12px;
   white-space: pre;
-  display: none;
+  /*display: none;*/
 }
 
 /* State Overrides

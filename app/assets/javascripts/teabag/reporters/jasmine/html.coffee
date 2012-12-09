@@ -19,10 +19,14 @@ class Teabag.Reporters.HTML extends Teabag.View
 
   build: ->
     @el = @findEl("report-all")
-    @failureEl = @findEl("report-failures")
     @setText("env-info", @envInfo())
     @findEl("toggles").onclick = @toggle
     @showConfig()
+    try
+      ratio = window.devicePixelRatio || 1
+      @ctx = @findEl("progress-canvas").getContext("2d")
+      @ctx.scale(ratio, ratio)
+    catch e # intentionally do nothing
 
 
   toggle: (e) =>
@@ -76,13 +80,22 @@ class Teabag.Reporters.HTML extends Teabag.View
     else
       @setText("stats-failures", @total.failures += 1)
       @reportView?.updateState("failed")
-      new FailureView(spec, @total.failures).appendTo(@failureEl)
+      new FailureView(spec, @total.failures).appendTo(@findEl("report-failures"))
       @setStatus("failed")
 
 
   updatePercent: ->
     percent = if @total.exist then Math.ceil((@total.run * 100) / @total.exist) else 0
     @setHtml("progress-percent", "#{percent}%")
+    return unless @ctx
+    size = 80
+    half = size / 2
+    @ctx.strokeStyle = "#fff"
+    @ctx.lineWidth = 1.5
+    @ctx.clearRect(0, 0, size, size)
+    @ctx.beginPath()
+    @ctx.arc(half, half, half - 1, 0, Math.PI * 2 * (percent / 100), false)
+    @ctx.stroke()
 
 
   setStatus: (status) ->
