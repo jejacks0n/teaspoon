@@ -1,12 +1,9 @@
-/*
- *= require mocha
- */
 body {
   margin: 0;
   padding: 60px 50px;
   background-color: #f4f3ee;
   border-top: 3px solid #18c2e8;
-  font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 15px/1.5em "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #000;
 }
 .teabag-clearfix:after {
@@ -23,6 +20,12 @@ html[xmlns] .teabag-clearfix {
 * html .teabag-clearfix {
   height: 1%;
 }
+hr {
+  border: 0;
+  background: #cfc8c4;
+  height: 1px;
+  margin: 20px 0;
+}
 
 /* Title / Env info
  *---------------------------------------------------------------------------*/
@@ -36,7 +39,6 @@ html[xmlns] .teabag-clearfix {
   font-weight: 100;
   font-size: 42px;
   line-height: 44px;
-  color: #482b25;
 }
 #teabag-title ul {
   margin: 0;
@@ -118,6 +120,9 @@ html[xmlns] .teabag-clearfix {
 
 /* Controls / Settings Toggles
  *---------------------------------------------------------------------------*/
+#teabag-controls {
+  height: 15px;
+}
 #teabag-controls button {
   margin: 0;
   padding: 3px 8px;
@@ -146,6 +151,18 @@ html[xmlns] .teabag-clearfix {
 }
 #teabag-controls button:hover {
   background-color: #E6E6E6;
+}
+#teabag-controls #teabag-filtered {
+  display: none;
+  margin-right: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 200;
+  color: #7b4f49;
+}
+#teabag-controls #teabag-filtered.teabag-filtered {
+  display: block;
 }
 #teabag-controls #teabag-toggles {
   float: right;
@@ -184,7 +201,14 @@ html[xmlns] .teabag-clearfix {
   font-size: 15px;
   font-weight: 200;
 }
-
+#teabag-report div {
+  overflow: auto;
+  padding: 5px;
+  margin-bottom: 20px;
+  border: 1px dotted #d07f6b;
+  font-size: 12px;
+  white-space: pre;
+}
 #teabag-report ol {
   margin: 0 0 20px;
   padding: 0;
@@ -194,14 +218,31 @@ html[xmlns] .teabag-clearfix {
   margin: 0;
   padding: 0 0 0 20px;
 }
+#teabag-report span {
+  display: inline-block;
+  float: right;
+  background: #5a423c;
+  color: #f4f3ee;
+  margin: 2px 5px 1px;
+  border-radius: 3px;
+  font-size: 11px;
+  line-height: normal;
+  padding: 3px;
+}
+#teabag-report .slow span {
+  background: #ff3f3c;
+}
+
 
 #teabag-report #teabag-report-all {
   margin: 0;
   padding: 0;
   list-style: none;
 }
+#teabag-report #teabag-report-all ol {
+  list-style: none;
+}
 #teabag-report #teabag-report-all li {
-  display: none;
   font-size: 15px;
   font-weight: 200;
 }
@@ -209,24 +250,17 @@ html[xmlns] .teabag-clearfix {
   background: rgba(255, 2, 0, 0.1);
   display: block;
 }
-#teabag-report #teabag-report-all.show-full li {
-  display: block;
+#teabag-report #teabag-report-all div {
+  background: rgba(255, 255, 255, 0.7);
+  height: 100px;
 }
 
 #teabag-report #teabag-report-failures {
-  margin-left: 30px;
+  margin-left: 20px;
 }
 #teabag-report #teabag-report-failures h1 a {
+  font-size: 18px;
   color: #cb190f;
-}
-#teabag-report #teabag-report-failures li div {
-  height: 100px;
-  overflow: auto;
-  margin-bottom: 20px;
-  border: 1px solid #bd190f;
-  font-size: 12px;
-  white-space: pre;
-  /*display: none;*/
 }
 
 /* State Overrides

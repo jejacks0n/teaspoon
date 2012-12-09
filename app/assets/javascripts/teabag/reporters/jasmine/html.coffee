@@ -2,46 +2,30 @@
 
 class Teabag.Reporters.HTML extends Teabag.View
 
-  constructor: ->
+  constructor: (@filter) ->
     @start = Date.now()
-    @config = {"use-catch": true, "build-full-report": false, "show-full-report": true}
+    @config = {"use-catch": true, "build-full-report": false}
     @total = {exist: 0, run: 0, passes: 0, failures: 0, skipped: 0}
     @views = {specs: {}, suites: {}}
     @elements = {}
-    @setup()
+    @readConfig()
     super
-
-
-  setup: ->
-    @config = JSON.parse(config) if config = @cookie("teabag")
-    jasmine.CATCH_EXCEPTIONS = @config["use-catch"]
 
 
   build: ->
     @el = @findEl("report-all")
     @setText("env-info", @envInfo())
-    @findEl("toggles").onclick = @toggle
-    @showConfig()
+    @findEl("toggles").onclick = @toggleConfig
+    if @filter
+      @setClass("filtered", "teabag-filtered")
+      @setHtml("filtered", "Filtering: #{@filter}", true)
+    @showConfiguration()
+
     try
       ratio = window.devicePixelRatio || 1
       @ctx = @findEl("progress-canvas").getContext("2d")
       @ctx.scale(ratio, ratio)
     catch e # intentionally do nothing
-
-
-  toggle: (e) =>
-    button = e.target
-    return unless button.tagName.toLowerCase() == "button"
-    name = button.getAttribute("id").replace(/^teabag-/, "")
-    @config[name] = !@config[name]
-    @cookie("teabag", JSON.stringify(@config))
-    window.location.href = window.location.href if name == "use-catch" || name == "build-full-report"
-    @showConfig()
-
-
-  showConfig: ->
-    @setClass("report-all", if @config["show-full-report"] then "show-full" else "")
-    @setClass(key, if value then "active" else "") for key, value of @config
 
 
   reportRunnerStarting: (runner) ->
@@ -52,6 +36,7 @@ class Teabag.Reporters.HTML extends Teabag.View
   reportSpecStarting: (spec) ->
     # we have to pass ourself into the subviews because of the way Jasmine is setup
     # (a reportSuiteStaring would be nice)
+    @specStart = Date.now()
     @reportView = new SpecView(spec, @) if @config["build-full-report"]
 
 
@@ -75,13 +60,14 @@ class Teabag.Reporters.HTML extends Teabag.View
       @setText("stats-skipped", @total.skipped += 1)
       return
 
+    @time = (Date.now() - @specStart)
     if results.passed()
       @setText("stats-passes", @total.passes += 1)
-      @reportView?.updateState("passed")
+      @reportView?.updateState("passed", @time)
     else
       @setText("stats-failures", @total.failures += 1)
-      @reportView?.updateState("failed")
-      new FailureView(spec, @total.failures).appendTo(@findEl("report-failures"))
+      @reportView?.updateState("failed", @time)
+      new FailureView(spec).appendTo(@findEl("report-failures")) unless @config["build-full-report"]
       @setStatus("failed")
 
 
@@ -101,6 +87,29 @@ class Teabag.Reporters.HTML extends Teabag.View
 
   setStatus: (status) ->
     document.body.className = "teabag-#{status}"
+
+
+  readConfig: ->
+    #    @cookie("teabag", JSON.stringify(@config))
+    @config = JSON.parse(config) if config = @cookie("teabag")
+    jasmine.CATCH_EXCEPTIONS = @config["use-catch"]
+
+
+  toggleConfig: (e) =>
+    button = e.target
+    return unless button.tagName.toLowerCase() == "button"
+    name = button.getAttribute("id").replace(/^teabag-/, "")
+    @config[name] = !@config[name]
+    @cookie("teabag", JSON.stringify(@config))
+    if name == "use-catch" || name == "build-full-report"
+      window.location.href = window.location.href
+      return
+    @readConfig()
+    @showConfiguration()
+
+
+  showConfiguration: ->
+    @setClass(key, if value then "active" else "") for key, value of @config
 
 
   envInfo: ->
@@ -123,15 +132,14 @@ class Teabag.Reporters.HTML extends Teabag.View
 
 class FailureView extends Teabag.View
 
-  constructor: (@spec, @number) ->
+  constructor: (@spec) ->
     super
 
 
   build: ->
     super("spec")
-    results = @spec.results()
-    html = """<h1><a href="?grep=#{encodeURIComponent(@spec.getFullName())}">#{@spec.getFullName()}</a></h1>"""
-    for error in results.getItems()
+    html = """<h1 class="teabag-clearfix"><a href="?grep=#{encodeURIComponent(@spec.getFullName())}">#{@spec.getFullName()}</a></h1>"""
+    for error in @spec.results().getItems()
       html += """<div>#{error.trace.stack || error.message || "Stack trace unavailable"}</div>"""
     @el.innerHTML = html
 
@@ -156,11 +164,22 @@ class SpecView extends Teabag.View
     @views.suites[@spec.suite.id] ||= new SuiteView(@spec.suite, @reporter)
 
 
-  updateState: (state) ->
-    return if @state == "failed"
-    @el.className = "#{@el.className.replace(/\s?state-\w+/, "")} state-#{state}"
+  buildReport: ->
+    div = @createEl("div")
+    html = ""
+    for error in @spec.results().getItems()
+      html += """#{error.trace.stack || error.message || "Stack trace unavailable"}"""
+    div.innerHTML = html
+    @append(div)
+
+
+  updateState: (state, time) ->
+    classes = ["state-#{state}"]
+    classes.push("slow") if time > Teabag.slow
+    @el.innerHTML += "<span>#{time}ms</span>"
+    @el.className = classes.join(" ")
+    @buildReport() unless @spec.results().passed()
     @parentView.updateState?(state)
-    @state = state
 
 
 

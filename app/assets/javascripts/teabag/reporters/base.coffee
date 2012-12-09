@@ -32,9 +32,9 @@ class Teabag.View
     el.innerText = value
 
 
-  setHtml: (id, value) ->
+  setHtml: (id, value, add = false) ->
     el = @findEl(id)
-    el.innerHTML = value
+    if add then el.innerHTML += value else el.innerHTML = value
 
 
   setClass: (id, value) ->
