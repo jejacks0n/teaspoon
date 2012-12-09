@@ -25,7 +25,7 @@ class Teabag.Reporters.Console
 
   trackFailure: (spec) ->
     for item in spec.results().getItems()
-      fails.push(spec: spec.getFullName(), description: item.toString(), trace: item.trace.stack || item.trace.toString())
+      fails.push(spec: spec.getFullName(), description: item.toString(), link: "?grep=#{encodeURIComponent(spec.getFullName())}", trace: item.trace.stack || item.trace.toString())
 
 
   log: (object = {}) ->

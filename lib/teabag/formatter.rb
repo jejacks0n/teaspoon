@@ -8,7 +8,7 @@ class Teabag::Formatter
   CYAN = 36
 
   def initialize(suite_name = "default")
-    log "Teabag starting for: #{suite_name}...\n\n"
+    log "Teabag starting for: #{suite_name}...\n"
   end
 
   def process(line)
@@ -38,15 +38,12 @@ class Teabag::Formatter
     log "\n\n"
     failures(results['failures']) if fails > 0
     log "Finished in #{results['elapsed']} seconds\n"
-    log "#{pluralize("example", total)}, #{pluralize("failure", fails)}\n\n", fails > 0 ? RED : GREEN
+    log "#{pluralize("example", total)}, #{pluralize("failure", fails)}\n", fails > 0 ? RED : GREEN
+    focus_links(results['failures']) if fails > 0
     raise Teabag::Failure if fails > 0
   end
 
   protected
-
-  def pluralize(str, value)
-    value == 1 ? "#{value} #{str}" : "#{value} #{str}s"
-  end
 
   def failures(failures)
     log "Failures:\n"
@@ -56,6 +53,14 @@ class Teabag::Formatter
       #log "    # #{failure['trace']}\n", CYAN
     end
     log "\n"
+  end
+
+  def focus_links(failures)
+    log "\nFailed examples:\n"
+    failures.each do |failure|
+      log "\n#{Teabag.configuration.mount_at}#{failure['link']}", RED
+    end
+    log "\n\n"
   end
 
   def output_from(line)
@@ -69,6 +74,10 @@ class Teabag::Formatter
     return true
   rescue JSON::ParserError => e
     false
+  end
+
+  def pluralize(str, value)
+    value == 1 ? "#{value} #{str}" : "#{value} #{str}s"
   end
 
   def filename(file)

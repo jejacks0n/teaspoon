@@ -28,7 +28,7 @@ class Teabag.Reporters.Console
 
 
   trackFailure: (spec) ->
-    fails.push(spec: spec.fullTitle(), description: spec.err.message, trace: spec.err.stack || spec.err.toString())
+    fails.push(spec: spec.fullTitle(), description: spec.err.message, link: "?grep=#{encodeURIComponent(spec.getFullName())}", trace: spec.err.stack || spec.err.toString())
 
 
   log: (obj = {}) ->
