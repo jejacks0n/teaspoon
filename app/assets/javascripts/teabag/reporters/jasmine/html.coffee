@@ -1,6 +1,4 @@
-#= require ../base
-
-class Teabag.Reporters.HTML extends Teabag.View
+class Teabag.Reporters.HTML extends Teabag.HtmlReporterBase
 
   constructor: (@filter) ->
     @start = Date.now()

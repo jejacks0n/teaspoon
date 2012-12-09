@@ -1,15 +1,19 @@
 #= require mocha-1.7.3
 #= require_self
+#= require ./reporters/base
 #= require_tree ./reporters/mocha
 
 class @Teabag
   @defer: false
   @finished: false
+  @slow: 75
+  @fixturePath = null
+  @Reporters = {}
   executed = false
 
   env = mocha.setup("bdd")
 
-  @execute: (@fixturePath = null) ->
+  @execute: () ->
     if @defer && !executed
       @defer = false
       return
@@ -25,6 +29,3 @@ class @Teabag
     else
       reporter = "html" # Teabag.Reporters.HTML
     env.setup(reporter: reporter)
-
-
-Teabag.Reporters = {}

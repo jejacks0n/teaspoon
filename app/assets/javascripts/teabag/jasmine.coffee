@@ -1,16 +1,19 @@
 #= require jasmine-1.3.0
 #= require_self
+#= require ./reporters/base
 #= require_tree ./reporters/jasmine
 
 class @Teabag
   @defer: false
   @finished: false
   @slow: 75
+  @fixturePath = null
+  @Reporters = {}
   executed = false
 
   env = jasmine.getEnv()
 
-  @execute: (@fixturePath = null) ->
+  @execute: () ->
     if @defer && !executed
       @defer = false
       return
@@ -38,11 +41,8 @@ class @Teabag
     env.addReporter(reporter)
 
     # add fixture support
-    return unless jasmine.getFixtures
+    return unless jasmine.getFixtures && Teabag.fixturePath
     jasmine.getFixtures().containerId = "teabag-fixtures"
-    jasmine.getFixtures().fixturesPath = @fixturePath
-    jasmine.getStyleFixtures().fixturesPath = @fixturePath
-    jasmine.getJSONFixtures().fixturesPath = @fixturePath
-
-
-Teabag.Reporters = {}
+    jasmine.getFixtures().fixturesPath = Teabag.fixturePath
+    jasmine.getStyleFixtures().fixturesPath = Teabag.fixturePath
+    jasmine.getJSONFixtures().fixturesPath = Teabag.fixturePath

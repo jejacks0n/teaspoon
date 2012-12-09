@@ -1,1 +1,1 @@
-class Teabag.Reporters.HTML
+class Teabag.Reporters.HTML extends Teabag.View

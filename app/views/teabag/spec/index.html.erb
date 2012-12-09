@@ -47,10 +47,11 @@
       <ol id="teabag-report-all"></ol>
     </div>
 
-    <!--<div id="mocha"></div>-->
+    <div id="mocha"></div>
 
     <script type="text/javascript">
-      Teabag.execute('<%= Teabag.configuration.mount_at %>/fixtures')
+      Teabag.fixturePath = '<%= Teabag.configuration.mount_at %>/fixtures';
+      Teabag.execute()
     </script>
   </body>
 </html>
