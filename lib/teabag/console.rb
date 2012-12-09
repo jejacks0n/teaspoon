@@ -7,7 +7,7 @@ class Teabag::Console
 
   def initialize(suite_name = nil)
     if suite_name
-      @suites = [:default]
+      @suites = [suite_name]
     else
       @suites = Teabag.configuration.suites.keys
     end
