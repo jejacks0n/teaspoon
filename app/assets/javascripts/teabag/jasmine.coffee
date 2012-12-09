@@ -25,7 +25,7 @@ class @Teabag
     if navigator.userAgent.match(/PhantomJS/)
       reporter = new Teabag.Reporters.Console()
     else
-      reporter = new Teabag.HtmlReporter()
+      reporter = new Teabag.Reporters.HTML()
     env.addReporter(reporter)
 
     # add the spec filter
@@ -33,8 +33,8 @@ class @Teabag
     for param in window.location.search.substring(1).split("&")
       [name, value] = param.split("=")
       params[decodeURIComponent(name)] = decodeURIComponent(value)
-    if params["spec"] then env.specFilter = (spec) ->
-      return spec.getFullName().indexOf(params["spec"]) == 0
+    if params["grep"] then env.specFilter = (spec) ->
+      return spec.getFullName().indexOf(params["grep"]) == 0
 
     # add fixture support
     return unless jasmine.getFixtures
