@@ -9,15 +9,6 @@ describe Teabag::Formatter do
     STDOUT.stub(:print) { |s| @log << s }
   end
 
-  describe "#initialize" do
-
-    it "logs" do
-      Teabag::Formatter.any_instance.should_receive(:log).with("Teabag starting for: foo...\n")
-      Teabag::Formatter.new("foo")
-    end
-
-  end
-
   describe "#process" do
 
     it "just outputs logs that it doesn't understand" do
@@ -72,7 +63,7 @@ describe Teabag::Formatter do
     it "logs the error" do
       trace = {"file" => "http://127.0.0.1:31337/assets/path/file.js?foo=true&body=1", "line" => 42, "function" => "notAnAnonFunc"}
       subject.error("msg" => "_message_", "trace" => [trace])
-      expect(@log).to eq("Teabag starting for: default...\n\e[31m_message_\n\e[0m\e[36m  # path/file.js?foo=true:42 -- notAnAnonFunc\n\e[0m\n")
+      expect(@log).to eq("\e[31m_message_\n\e[0m\e[36m  # path/file.js?foo=true:42 -- notAnAnonFunc\n\e[0m\n")
     end
 
   end
@@ -83,7 +74,7 @@ describe Teabag::Formatter do
 
       it "logs the details" do
         subject.results("elapsed" => 0.31337, "failures" => [], "total" => 666)
-        expect(@log).to eq("Teabag starting for: default...\n\n\nFinished in 0.31337 seconds\n\e[32m666 examples, 0 failures\n\e[0m")
+        expect(@log).to eq("\n\nFinished in 0.31337 seconds\n\e[32m666 examples, 0 failures\n\e[0m")
       end
 
     end
@@ -95,7 +86,7 @@ describe Teabag::Formatter do
         expect {
           subject.results("elapsed" => 0.31337, "failures" => [failures], "total" => 666)
         }.to raise_error(Teabag::Failure)
-        expect(@log).to eq("Teabag starting for: default...\n\n\nFailures:\n\n  1) some spec\n\e[31m    Failure/Error: some description\n\e[0m\nFinished in 0.31337 seconds\n\e[31m666 examples, 1 failure\n\e[0m\nFailed examples:\n\e[31m\n/teabag?grep=some%20spec\e[0m\n\n")
+        expect(@log).to eq("\n\nFailures:\n\n  1) some spec\n\e[31m    Failure/Error: some description\n\e[0m\nFinished in 0.31337 seconds\n\e[31m666 examples, 1 failure\n\e[0m\nFailed examples:\n\e[31m\n/teabag?grep=some%20spec\e[0m\n\n")
       end
 
     end
@@ -103,10 +94,6 @@ describe Teabag::Formatter do
   end
 
   describe "#log" do
-
-    before do
-      STDOUT.should_receive(:print).with("Teabag starting for: default...\n")
-    end
 
     it "calls STDOUT.write" do
       STDOUT.should_receive(:print).with("foo")

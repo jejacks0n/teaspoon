@@ -5,13 +5,20 @@ require "phantomjs-mac" # todo: the phantom stuff in here should get factored in
 
 class Teabag::Console
 
-  def initialize(suite_name = :default)
-    @suite_name = suite_name
+  def initialize(suite_name = nil)
+    if suite_name
+      @suites = [:default]
+    else
+      @suites = Teabag.configuration.suites.keys
+    end
   end
 
   def execute
     start_server
-    run_specs
+    @suites.each do |suite|
+      @suite_name = suite
+      run_specs
+    end
   end
 
   def start_server
@@ -20,7 +27,8 @@ class Teabag::Console
   end
 
   def run_specs
-    @formatter = Teabag::Formatter.new(@suite_name)
+    STDOUT.print "Teabag starting for: #{@suite_name}...\n"
+    @formatter = Teabag::Formatter.new
     IO.popen("#{Phantomjs.executable_path} #{script} #{url}").each_line do |line|
       @formatter.process(line)
     end

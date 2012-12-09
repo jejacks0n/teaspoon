@@ -7,10 +7,6 @@ class Teabag::Formatter
   YELLOW = 33
   CYAN = 36
 
-  def initialize(suite_name = "default")
-    log "Teabag starting for: #{suite_name}...\n"
-  end
-
   def process(line)
     return if output_from(line)
     log line

@@ -7,13 +7,14 @@ describe Teabag::Console do
 
   before do
     subject.instance_variable_set(:@server, server)
+    subject.instance_variable_set(:@suites, [:default, :foo])
   end
 
   describe "#execute" do
 
     it "starts the server and calls run" do
       subject.should_receive(:start_server)
-      subject.should_receive(:run_specs)
+      subject.should_receive(:run_specs).twice
       subject.execute
     end
 
@@ -34,6 +35,7 @@ describe Teabag::Console do
     before do
       @io = mock(each_line: nil)
       IO.stub(:popen).and_return(@io)
+      STDOUT.stub(:print)
     end
 
     it "instantiates the formatter" do
@@ -42,8 +44,7 @@ describe Teabag::Console do
     end
 
     it "uses popen and logs the results of each line using the formatter" do
-      STDOUT.stub(:write)
-      arg = %{#{Phantomjs.executable_path} #{Teabag::Engine.root.join("lib/teabag/phantomjs/runner.coffee")} http://url.com/teabag/default}
+      arg = %{#{Phantomjs.executable_path} #{Teabag::Engine.root.join("lib/teabag/phantomjs/runner.coffee")} http://url.com/teabag/}
 
       Teabag::Formatter.any_instance.should_receive(:process).with("_line_")
       @io.should_receive(:each_line) { |&b| @block = b }
