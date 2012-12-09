@@ -46,7 +46,7 @@ class Teabag.Reporters.HTML extends Teabag.View
 
   reportRunnerStarting: (runner) ->
     @total.exist = runner.specs().length
-    @setText("stats-duration", "...")
+    @setText("stats-duration", "...") if @total.exist
 
 
   reportSpecStarting: (spec) ->
@@ -62,6 +62,7 @@ class Teabag.Reporters.HTML extends Teabag.View
 
 
   reportRunnerResults: ->
+    return unless @total.run
     @setText("stats-duration", "#{((Date.now() - @start) / 1000).toFixed(3)}s")
     @setStatus("passed") unless @total.failures
     @updatePercent()
