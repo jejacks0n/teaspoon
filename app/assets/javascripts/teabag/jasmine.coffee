@@ -38,6 +38,7 @@ class @Teabag
 
     # add fixture support
     return unless jasmine.getFixtures
+    jasmine.getFixtures().containerId = "teabag-fixtures"
     jasmine.getFixtures().fixturesPath = @fixturePath
     jasmine.getStyleFixtures().fixturesPath = @fixturePath
     jasmine.getJSONFixtures().fixturesPath = @fixturePath

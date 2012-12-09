@@ -47,36 +47,8 @@
 
     <div id="mocha"></div>
 
-<!--<ul>-->
-<!--<li class="test pass slow"><h2>actially tests<span class="duration">1ms</span>-->
-<!--<a href="?grep=Teabag%20running%20Mocha%20running%20tests%20actially%20tests" class="replay">‣</a></h2>-->
-<!--<pre style="display: none;"><code><span class="keyword">return</span> expect(passing).to.equal(true);</code></pre>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</li>-->
-<!--<li class="suite"><h1><a href="?grep=Teabag%20running%20Mocha%20failing%20tests">failing tests</a></h1>-->
-<!--<ul>-->
-<!--<li class="test pass fast"><h2>can fail<span class="duration">0ms</span>-->
-<!--<a href="?grep=Teabag%20running%20Mocha%20failing%20tests%20can%20fail" class="replay">‣</a></h2>-->
-<!--<pre style="display: none;"><code><span class="keyword">return</span>-->
-<!--expect(failing).to.equal(false);</code></pre>-->
-<!--</li>-->
-<!--</ul>-->
-<!--</li>-->
-<!--<li class="suite"><h1><a href="?grep=Teabag%20running%20Mocha%20nesting">nesting</a></h1>-->
-<!--<ul>-->
-<!--<li class="suite">-->
-<!--<h1><a href="?grep=Teabag%20running%20Mocha%20nesting%20multiple%20levels">multiple levels</a></h1>-->
-<!--<ul>-->
-<!--<li class="test pass fast"><h2>displays<span class="duration">1ms</span>-->
-<!--<a href="?grep=Teabag%20running%20Mocha%20nesting%20multiple%20levels%20displays" class="replay">‣</a>-->
-<!--</h2>-->
-<!--<pre style="display: none;"><code><span class="keyword">return</span>-->
-<!--expect(passing).to.equal(true);</code></pre>-->
-<!--</li>-->
-
     <script type="text/javascript">
-      Teabag.execute()
+      Teabag.execute('<%= Teabag.configuration.mount_at %>/fixtures')
     </script>
   </body>
 </html>

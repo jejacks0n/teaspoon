@@ -1,13 +1,16 @@
+#= require jquery
+#= require jasmine-jquery
+
 describe "Teabag running Jasmine", ->
 
   it "is awesome", -> expect(passing).toEqual(true)
   it "is something", -> expect(passing).toEqual(true)
 
-
   describe "running tests", ->
 
     it "actually tests", ->
-      expect(passing).toEqual(true)
+      loadFixtures('fixture.html')
+      expect($('#fixture_view')).toExist()
 
     it "has more than one test", ->
       waits(1000)
