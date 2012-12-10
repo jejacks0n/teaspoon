@@ -26,11 +26,12 @@ task :default => [:spec, :teabag]
 
 # Teabag
 # -----------------------------------------------------------------------------
-load File.expand_path("../lib/tasks/teabag.rake", __FILE__)
+desc "Run the javascript specs"
+task :teabag => "app:teabag"
 
 namespace :teabag do
   desc "Builds Teabag into the distribution ready bundle"
-  task :build => ['build:javascripts']
+  task :build => "build:javascripts"
 
   namespace :build do
 
@@ -38,9 +39,9 @@ namespace :teabag do
     task :javascripts => :environment do
       env = Rails.application.assets
 
-      ['teabag/jasmine.js', 'teabag/mocha.js'].each do |path|
+      %w(teabag/jasmine.js teabag/mocha.js).each do |path|
         asset = env.find_asset(path)
-        asset.write_to(Teabag::Engine.root.join("app/assets/javascripts/#{path.gsub(/\//, '-')}"))
+        asset.write_to(Teabag::Engine.root.join("app/assets/javascripts/#{path.gsub(/\//, "-")}"))
       end
     end
   end
