@@ -1,8 +1,8 @@
 class Teabag.Reporters.HTML extends Teabag.Reporters.HTML
 
-#  readConfig: ->
-#    super
-#    jasmine.CATCH_EXCEPTIONS = @config["use-catch"]
+  readConfig: ->
+    super
+    jasmine.CATCH_EXCEPTIONS = @config["use-catch"]
 
 
   envInfo: ->
