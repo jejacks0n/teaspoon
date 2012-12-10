@@ -14,19 +14,19 @@ Teabag.setup do |config|
   # default: nil, which forces defaulting to Rails.root
   config.root = nil
 
-  # Fixtures
-  # Fixtures are different than the specs, in that Rails is rendering them directly through a controller. This means you
-  # can use haml, erb builder, rabl, etc. to render content in those views.
-  #
-  # default: "spec/javascripts/fixtures"
-  config.fixture_path = "spec/javascripts/fixtures"
-
   # Asset paths
-  # These paths are appended to the rails assets paths (relative to config.root), and by default is an array that we can
-  # replace or add to.
+  # These paths are appended to the rails assets paths (relative to config.root), and by default is an array that you
+  # can replace or add to.
   #
   # default: ["spec/javascripts", "spec/javascripts/stylesheets"]
   config.asset_paths << "app/assets/some_other_path"
+
+  # Fixtures
+  # Fixtures are different than the specs, in that Rails is rendering them directly through a controller. This means you
+  # can use haml, erb builder, rabl, etc. to render content in the views available in this path.
+  #
+  # default: "spec/javascripts/fixtures"
+  config.fixture_path = "spec/javascripts/fixtures"
 
   # Server timeout
   # Timeout for starting the server in seconds. If your server is slow to start you may have to bump the timeout, or you
@@ -60,8 +60,8 @@ Teabag.setup do |config|
     # is loaded before your specs are loaded -- so could potentially also include all of your specs (if you wanted to
     # set the matcher to nil).
     #
-    # default: "spec_helper.js"
-    suite.helper = "spec_helper.js"
+    # default: "spec_helper"
+    suite.helper = "spec_helper"
 
     # Javascripts
     # These are the core teabag javascripts. Spec files should not go here -- but if you want to add additional support
