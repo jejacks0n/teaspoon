@@ -7,17 +7,23 @@ class Teabag.Reporters.Console extends Teabag.Reporters.Console
     runner.on("end", @reportRunnerResults)
 
 
-  reportSpecResults: (spec, err) =>
+  reportSpecResults: (@spec, err) =>
     if err
-      spec.err = err
+      @spec.err = err
       return
     super
 
 
-  resultForSpec: (spec) ->
-    skipped: spec.state == "skipped"
-    passed: spec.state == "passed"
+  resultForSpec: ->
+    pending: @spec.pending
+    skipped: @spec.state == "skipped"
+    passed: @spec.state == "passed"
+    description: @spec.title
 
 
-  trackFailure: (spec) ->
-    @fails.push(spec: spec.fullTitle(), description: spec.err.message, link: @paramsFor(spec.fullTitle()), trace: spec.err.stack || spec.err.toString())
+  errors: ->
+    [@spec.err]
+
+
+  fullName: ->
+    @spec.fullTitle()

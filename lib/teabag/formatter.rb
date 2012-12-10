@@ -37,8 +37,8 @@ class Teabag::Formatter
     pending = results["pending"].length
 
     log "\n\n"
-    failures(results["failures"]) if fails > 0
     pending(results["pending"]) if pending > 0
+    failures(results["failures"]) if fails > 0
     status(results, fails, pending)
     failed_examples(results["failures"]) if fails > 0
     raise Teabag::Failure if fails > 0
@@ -57,14 +57,14 @@ class Teabag::Formatter
     log "Failures:\n"
     failures.each_with_index do |failure, index|
       log "\n  #{index + 1}) #{failure["spec"]}\n"
-      log "    Failure/Error: #{failure["description"]}\n", RED
+      log "     Failure/Error: #{failure["description"]}\n", RED
       #log "    # #{failure['trace']}\n", CYAN
     end
     log "\n"
   end
 
   def pending(pending)
-    log "Pending:\n"
+    log "Pending:"
     pending.each do |pending|
       log "\n  #{pending["spec"]}\n", YELLOW
       log "    # Not yet implemented\n", CYAN

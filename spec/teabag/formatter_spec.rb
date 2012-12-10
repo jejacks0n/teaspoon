@@ -86,7 +86,7 @@ describe Teabag::Formatter do
         expect {
           subject.results("elapsed" => 0.31337, "failures" => [failures], "pending" => [], "total" => 666)
         }.to raise_error(Teabag::Failure)
-        expect(@log).to eq("\n\nFailures:\n\n  1) some spec\n\e[31m    Failure/Error: some description\n\e[0m\nFinished in 0.31337 seconds\n\e[31m666 examples, 1 failure\n\e[0m\nFailed examples:\n\e[31m\n/teabag/default?grep=some%20spec\e[0m\n\n")
+        expect(@log).to eq("\n\nFailures:\n\n  1) some spec\n\e[31m     Failure/Error: some description\n\e[0m\nFinished in 0.31337 seconds\n\e[31m666 examples, 1 failure\n\e[0m\nFailed examples:\n\e[31m\n/teabag/default?grep=some%20spec\e[0m\n\n")
       end
 
     end
@@ -96,7 +96,7 @@ describe Teabag::Formatter do
       it "logs the details" do
         pending = {"spec" => "some spec"}
         subject.results("elapsed" => 0.31337, "failures" => [], "pending" => [pending], "total" => 666)
-        expect(@log).to eq("\n\nPending:\n\e[33m\n  some spec\n\e[0m\e[36m    # Not yet implemented\n\e[0m\nFinished in 0.31337 seconds\n\e[33m666 examples, 0 failures, 1 pending\n\e[0m")
+        expect(@log).to eq("\n\nPending:\e[33m\n  some spec\n\e[0m\e[36m    # Not yet implemented\n\e[0m\nFinished in 0.31337 seconds\n\e[33m666 examples, 0 failures, 1 pending\n\e[0m")
       end
 
     end
