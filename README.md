@@ -39,7 +39,7 @@ rabl, etc. for your fixtures.
 
 If you want a more visual experience you can browse to the specs in the browser, or use the rake task to run them on the
 command line.  By default Teabag uses PhantomJS to run your specs headless via the console.  This turned out really
-well, so I encourage checking Teabag out just for that.
+well, so we encourage checking Teabag out just for that.
 
 ### Browser
 
@@ -115,8 +115,8 @@ describe "My great feature", ->
 ### Pending Specs
 
 We've normalized defining a spec as pending between the two libraries as a service to you. Since Jasmine lacks the
-concept entirely we've added it in, and since Mocha has several ways to accomplish it so we thought it would be worth
-going over what we consider the standard between the two to be.
+concept entirely we've added it in, and since Mocha has several ways to accomplish it we thought it would be worth
+mentioning what we consider the standard between the two to be.
 
 To mark a spec as pending you can simply not provide a function as a second argument, or you can use `xit` and
 `xdescribe`.  Mocha provides some additional things like `it.skip`, but to keep it consistent we've normalized on what
@@ -252,8 +252,8 @@ want to lower this if you know it shouldn't take long to start.
 ## Jasmine
 
 Jasmine is a pretty big aspect of the default setup. We've been using Jasmine for a long time, and have been pretty
-happy with it.  It lacks a few things that I think are important in a test framework, but we've done a little bit of
-work to make that nicer.  Like pending spec support for example.
+happy with it.  It lacks a few important things that could be in a test framework, so we've done a little bit of work to
+make that nicer.  Like adding pending spec support.
 
 
 ## Mocha
