@@ -70,9 +70,12 @@ class Teabag.Reporters.HTML extends Teabag.View
       @setClass("progress", "")
       return
     try
-      ratio = window.devicePixelRatio || 1
-      @ctx = @findEl("progress-canvas").getContext("2d")
-      @ctx.scale(ratio, ratio)
+      canvas = @findEl("progress-canvas")
+      canvas.width = 80
+      canvas.height = 80
+      canvas.style.width = 80
+      canvas.style.height = 80
+      @ctx = canvas.getContext("2d")
     catch e # intentionally do nothing
 
 

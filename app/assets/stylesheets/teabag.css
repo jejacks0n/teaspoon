@@ -72,8 +72,6 @@ hr {
 }
 #teabag-progress.circular canvas {
   position: absolute;
-  width: 80px;
-  height: 80px;
   margin: -5px;
 }
 #teabag-progress.circular em {
