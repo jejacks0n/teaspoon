@@ -140,6 +140,36 @@ If you're using one library and you want to take advantage of the things that th
 free to do so, and this is provided as a suggestion more than anything. Both the reporters understand the standard above
 and have specs for them.
 
+### Fixtures
+
+Teabag fixtures are using jasmine-jquery for now, but we'll be providing a more complete solution for loading fixtures
+shortly.  For now though, you can either use jasmine-jquery, or load your fixtures manually into the "#teabag-fixtures"
+element.
+
+The fixture path is configurable, and the views in there will be rendered by a controller.  Which allows you to use
+things like rabl if you're building JSON, or haml etc.
+
+To load fixtures in your specs just use the `loadFixtures` method.
+
+```coffeescript
+it "loads fixtures", ->
+  loadFixtures("fixture.html")
+  expect($("#fixture_view")).toExist()
+```
+
+### Deferring Execution
+
+Teabag has the concept of deferring execution in the cases when you're using AMD or other asynchronous methods. This is
+expecially useful if you're using [CommonJS](http://www.commonjs.org/), or [RequireJS](http://requirejs.org/), etc.
+
+You can tell Teabag to defer and then you can execute the runner later -- after loading files asychronously for
+instance.
+
+```coffeescript
+Teabag.defer = true
+setTimeout(Teabag.execute, 1000) # defers execution for 1 second
+```
+
 
 ## Suites
 
