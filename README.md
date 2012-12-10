@@ -2,7 +2,7 @@ Teabag
 ======
 
 Teabag is a Javascript test runner built on top of Rails. It can run headless using PhantomJS or in the browser within
-your Rails application. It's intention is to be the simpliest, but most complete Javascript testing solution for Rails
+your Rails application. It's intention is to be the simplest, but most complete Javascript testing solution for Rails
 and the asset pipeline. It ships with the ability to use Jasmine or Mocha and has custom reporters for both libraries.
 
 We've only just released Teabag, but we expect to be working on it for a while longer to get a glossy shine to
@@ -144,7 +144,7 @@ Teabag comes with the concept of top level suites (suites to keep it simple). Th
 another, and can have entirely different configurations.
 
 When Teabag is run via the rake task, it will stop at any point that a suite fails, which allows you to create a
-heirarchy of suites -- crafting tiers of pass expectation.
+hierarchy of suites -- crafting tiers of pass expectation.
 
 You can define suites in the configuration. For brevity `config` is the argument passed to the `Teabag.setup` block.
 
@@ -173,19 +173,20 @@ outlined below.
 ### Suite Configuration Directives
 
 - `matcher` -
-   A file matcher for your specs.
+   A file matcher for your specs.<br/>
    default: `"{app/assets,lib/assets/,spec/javascripts}/**/*_spec.{js,js.coffee,coffee}"`
 
 - `helper` -
-   Spec helper file (you can require other support libraries from this.)
+   Spec helper file (you can require other support libraries from this.)<br/>
    default: "spec_helper"
 
 - `javascripts` -
-   Primary Javascripts. Use `["teabag-jasmine"]` or `["teabag-mocha"]` -- for coffeescript files use `["teabag/jasmine"]` or `["teabag/mocha"]`.
+   Primary Javascript files. Use "teabag-jasmine" or "teabag-mocha".  For coffeescript you can use "teabag/jasmine" /
+   "teabag/mocha".<br/>
    default: `["teabag-jasmine"]`
 
 - `stylesheets` -
-   The stylesheets to load in this suite.
+   The stylesheets to load in this suite.<br/>
    default: `["teabag"]`
 
 **Note:** It's strongly encouraged to only include the base files in the `javascripts` directive. You can require
@@ -203,27 +204,27 @@ wrapped around Teabag.setup.
 
 - `mount_at` -
   This determines where the Teabag spec path will be mounted. Changing this to `"/jasmine"` would allow you to browse to
-  `http://localhost:3000/jasmine` to run your specs.
+  `http://localhost:3000/jasmine` to run your specs.<br/>
   default: `"/teabag"`
 
 - `root` -
   The root path defaults to Rails.root if left nil, but if you're testing an engine using a dummy application it's
-  useful to be able to set this to your engines root.. E.g. `Teabag::Engine.root`
+  useful to be able to set this to your engines root.. E.g. `Teabag::Engine.root`<br/>
   default: `nil`
 
 - `asset_paths` -
   These paths are appended to the rails assets paths (relative to config.root), and by default is an array that you can
-  replace or add to.
+  replace or add to.<br/>
   default `["spec/javascripts", "spec/javascripts/stylesheets"]`
 
 - `fixture_path` -
   Fixtures are different than the specs, in that Rails is rendering them directly through a controller. This means you
-  can use haml, erb builder, rabl, etc. to render content in the views available in this path.
+  can use haml, erb builder, rabl, etc. to render content in the views available in this path.<br/>
   default: `"spec/javascripts/fixtures"`
 
 - `server_timeout`
   Timeout for starting the server in seconds. If your server is slow to start you may have to bump the timeout, or you
-  may want to lower this if you know it shouldn't take long to start.
+  may want to lower this if you know it shouldn't take long to start.<br/>
   default: `20`
 
 
@@ -256,9 +257,9 @@ end
 Because we know that testing usually requires more than just the test framework we've included some of the great
 libraries that we use on a consistent basis.
 
-- [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit based on [should.js](https://github.com/visionmedia/should.js/).
-- [jasmine-jquery.js](https://github.com/velesin/jasmine-jquery) Great support for jQuery matchers and fixture support.
-- [Sinon.JS](https://github.com/cjohansen/Sinon.JS) Great for stubbing Ajax.
+- [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit (Mocha).
+- [jasmine-jquery.js](https://github.com/velesin/jasmine-jquery) Great jQuery matchers and fixture support (Jasmine).
+- [Sinon.JS](https://github.com/cjohansen/Sinon.JS) Great for stubbing Ajax (Mocha/Jasmine).
 
 
 ## CI Support
