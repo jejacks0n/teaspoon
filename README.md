@@ -59,15 +59,14 @@ http://localhost:3000/teabag/my_fantasic_suite
 rake teabag
 ```
 
-You can also specify the suite to limit the specs to if you've defined them in the configuration (more on this below) by
-providing it.
+You can also specify the suite with the rake task by using:
 
 ```
 rake teabag suite=my_fantasic_suite
 ```
 
-When you encounter a failure a url will be generated for you so you can easily pop open a browser and load a focus run
-for the specific failures.
+When a failure is encounter a url will be generated for you so you can pop open a browser and load a focus run for the
+specific failures.
 
 **Note:** We like to include our javascript specs into the default rake task, and here's an example of using it between
 rspec and cucumber.
@@ -115,9 +114,9 @@ describe "My great feature", ->
 
 ### Pending Specs
 
-We've normalized pending specs between the two libraries as a service to you. Since Jasmine lacks the concept entirely
-we've added it in, and Mocha has several ways to accomplish it so we thought it's worth noting what we consider the
-standard to be.
+We've normalized defining a spec as pending between the two libraries as a service to you. Since Jasmine lacks the
+concept entirely we've added it in, and since Mocha has several ways to accomplish it so we thought it would be worth
+going over what we consider the standard between the two to be.
 
 To mark a spec as pending you can simply not provide a function as a second argument, or you can use `xit` and
 `xdescribe`.  Mocha provides some additional things like `it.skip`, but to keep it consistent we've normalized on what
@@ -137,11 +136,15 @@ describe "My great feature", ->
       expect(true).to.be(false)
 ```
 
+If you're using one library and you want to take advantage of the things that that library provides you're completely
+free to do so, and this is provided as a suggestion more than anything. Both the reporters understand the standard above
+and have specs for them.
+
 
 ## Suites
 
-Teabag comes with the concept of top level suites (suites to keep it simple). These suites are run in isolation from one
-another, and can have entirely different configurations.
+Teabag comes with the concept of top level suites. These suites are run in isolation from one another, and can have
+entirely different configurations.
 
 When Teabag is run via the rake task, it will stop at any point that a suite fails, which allows you to create a
 hierarchy of suites -- crafting tiers of pass expectation.
@@ -172,21 +175,21 @@ outlined below.
 
 ### Suite Configuration Directives
 
-- `matcher` -
-   A file matcher for your specs.<br/>
+- **`matcher`**<br/>
+   A file matcher for your specs.<br/><br/>
    default: `"{app/assets,lib/assets/,spec/javascripts}/**/*_spec.{js,js.coffee,coffee}"`
 
-- `helper` -
-   Spec helper file (you can require other support libraries from this.)<br/>
+- **`helper`**<br/>
+   Spec helper file (you can require other support libraries from this.)<br/><br/>
    default: "spec_helper"
 
-- `javascripts` -
+- **`javascripts`**<br/>
    Primary Javascript files. Use "teabag-jasmine" or "teabag-mocha".  For coffeescript you can use "teabag/jasmine" /
-   "teabag/mocha".<br/>
+   "teabag/mocha".<br/><br/>
    default: `["teabag-jasmine"]`
 
-- `stylesheets` -
-   The stylesheets to load in this suite.<br/>
+- **`stylesheets`**<br/>
+   The stylesheets to load in this suite.<br/><br/>
    default: `["teabag"]`
 
 **Note:** It's strongly encouraged to only include the base files in the `javascripts` directive. You can require
@@ -196,35 +199,35 @@ server.
 
 ## Configuration
 
-The best way to read about the configuration options is to generate the initializer, but we've included some brief info
-here because we're nice guys.
+The best way to read about the configuration options is to generate the initializer, but we've included some info here
+because we're nice guys.
 
-**Note:** Teabag.setup may not be available in all environments, so keep that in mind. The generator provides a check
+**Note:** `Teabag.setup` may not be available in all environments, so keep that in mind. The generator provides a check
 wrapped around Teabag.setup.
 
-- `mount_at` -
+- **`mount_at`**<br/>
   This determines where the Teabag spec path will be mounted. Changing this to `"/jasmine"` would allow you to browse to
-  `http://localhost:3000/jasmine` to run your specs.<br/>
+  `http://localhost:3000/jasmine` to run your specs.<br/><br/>
   default: `"/teabag"`
 
-- `root` -
+- **`root`**<br/>
   The root path defaults to Rails.root if left nil, but if you're testing an engine using a dummy application it's
-  useful to be able to set this to your engines root.. E.g. `Teabag::Engine.root`<br/>
+  useful to be able to set this to your engines root.. E.g. `Teabag::Engine.root`<br/><br/>
   default: `nil`
 
-- `asset_paths` -
+- **`asset_paths`**<br/>
   These paths are appended to the rails assets paths (relative to config.root), and by default is an array that you can
-  replace or add to.<br/>
+  replace or add to.<br/><br/>
   default `["spec/javascripts", "spec/javascripts/stylesheets"]`
 
-- `fixture_path` -
+- **`fixture_path`**<br/>
   Fixtures are different than the specs, in that Rails is rendering them directly through a controller. This means you
-  can use haml, erb builder, rabl, etc. to render content in the views available in this path.<br/>
+  can use haml, erb builder, rabl, etc. to render content in the views available in this path.<br/><br/>
   default: `"spec/javascripts/fixtures"`
 
-- `server_timeout`
+- **`server_timeout`**<br/>
   Timeout for starting the server in seconds. If your server is slow to start you may have to bump the timeout, or you
-  may want to lower this if you know it shouldn't take long to start.<br/>
+  may want to lower this if you know it shouldn't take long to start.<br/><br/>
   default: `20`
 
 
@@ -252,6 +255,11 @@ end
 ```
 
 
+## CI Support
+
+More on this shortly....
+
+
 ## Support Libraries
 
 Because we know that testing usually requires more than just the test framework we've included some of the great
@@ -260,11 +268,6 @@ libraries that we use on a consistent basis.
 - [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit (Mocha).
 - [jasmine-jquery.js](https://github.com/velesin/jasmine-jquery) Great jQuery matchers and fixture support (Jasmine).
 - [Sinon.JS](https://github.com/cjohansen/Sinon.JS) Great for stubbing Ajax (Mocha/Jasmine).
-
-
-## CI Support
-
-More on this shortly....
 
 
 ## License
