@@ -15,10 +15,13 @@ class Teabag::Console
 
   def execute
     start_server
+    failure = false
     @suites.each do |suite|
       @suite_name = suite
-      run_specs
+      result = run_specs
+      failure = result unless failure
     end
+    failure
   end
 
   def start_server
@@ -32,9 +35,9 @@ class Teabag::Console
     IO.popen("#{Phantomjs.executable_path} #{script} #{url}").each_line do |line|
       @formatter.process(line)
     end
-    return 0
+    false
   rescue Teabag::Failure
-    return 1
+    true
   end
 
   protected
