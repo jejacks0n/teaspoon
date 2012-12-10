@@ -1,6 +1,7 @@
 describe "Teabag running Mocha", ->
 
-  it "is awesome", -> expect(passing).to.equal(true)
+  it "is awesome", ->
+    expect(passing).to.equal(true)
 
   describe "running tests", ->
 
@@ -20,6 +21,18 @@ describe "Teabag running Mocha", ->
     it "can fail", ->
       expect(failing).to.equal(false)
 
+  describe "pending tests", ->
+
+    it "allows them"
+
+    xit "doesn't run", ->
+      alert('no no no')
+      expect(false).to.equal(true)
+
+    it.skip "doesn't run", ->
+      alert('no no no')
+      expect(false).to.equal(true)
+
   describe "nesting", ->
 
     describe "multiple levels", ->
@@ -27,4 +40,5 @@ describe "Teabag running Mocha", ->
       it "displays correctly", ->
         expect(passing).to.equal(true)
 
-  it "is something cool", -> expect(passing).to.equal(true)
+  it "is something cool", ->
+    expect(passing).to.equal(true)

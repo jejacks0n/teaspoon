@@ -2,7 +2,7 @@ Teabag.setup do |config|
 
   config.root = Teabag::Engine.root
 
-  config.suite do |suite|
+  config.suite :jasmine do |suite|
     suite.matcher = "spec/javascripts/**/*_jspec.{js,js.coffee,coffee}"
   end
 

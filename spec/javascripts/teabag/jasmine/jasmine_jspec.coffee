@@ -2,7 +2,8 @@
 #= require jasmine-jquery
 describe "Teabag running Jasmine", ->
 
-  it "is awesome", -> expect(passing).toEqual(true)
+  it "is awesome", ->
+    expect(passing).toEqual(true)
 
   describe "running tests", ->
 
@@ -19,6 +20,14 @@ describe "Teabag running Jasmine", ->
     it "can fail", ->
       expect(failing).toEqual(false)
 
+  describe "pending tests", ->
+
+    it "allows them"
+
+    xit "doesn't display or run", ->
+      alert('no no no')
+      expect(false).to.equal(true)
+
   describe "nesting", ->
 
     describe "multiple levels", ->
@@ -26,4 +35,5 @@ describe "Teabag running Jasmine", ->
       it "displays correctly", ->
         expect(passing).toEqual(true)
 
-  it "is something cool", -> expect(passing).toEqual(true)
+  it "is something cool", ->
+    expect(passing).toEqual(true)
