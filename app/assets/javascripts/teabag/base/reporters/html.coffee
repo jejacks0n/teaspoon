@@ -185,8 +185,7 @@ class Teabag.Reporters.HTML extends Teabag.View
     else
       date = new Date()
       date.setDate(date.getDate() + 365)
-      document.cookie = "#{name}=#{escape(JSON.stringify(value))} expires=#{date.toUTCString()};"
-
+      document.cookie = "#{name}=#{escape(JSON.stringify(value))}; path=/; expires=#{date.toUTCString()};"
 
 
 class Teabag.Reporters.HTML.FailureView extends Teabag.View
