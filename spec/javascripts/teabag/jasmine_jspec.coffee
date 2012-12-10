@@ -7,8 +7,8 @@ describe "Teabag running Jasmine", ->
   describe "running tests", ->
 
     it "actually tests", ->
-      loadFixtures('fixture.html')
-      expect($('#fixture_view')).toExist()
+      loadFixtures("fixture.html")
+      expect($("#fixture_view")).toExist()
 
     it "can handle more than one test", ->
       waits(1000)

@@ -6,8 +6,8 @@ describe "Teabag running Mocha", ->
 
     it "actually tests", ->
       # todo: provide similar fixture support for mocha
-      #loadFixtures('fixture.html')
-      #expect($('#fixture_view')).toExist()
+      #loadFixtures("fixture.html")
+      #expect($("#fixture_view")).toExist()
 
     it "can handle more than one test", (done) ->
       test = ->
