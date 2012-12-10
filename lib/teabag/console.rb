@@ -15,13 +15,12 @@ class Teabag::Console
 
   def execute
     start_server
-    failure = false
     @suites.each do |suite|
-      @suite_name = suite
-      result = run_specs
-      failure = result unless failure
+      run_specs(suite)
     end
-    failure
+    false
+  rescue Teabag::Failure
+    true
   end
 
   def start_server
@@ -29,15 +28,12 @@ class Teabag::Console
     @server.start
   end
 
-  def run_specs
-    STDOUT.print "Teabag starting for: #{@suite_name}...\n"
-    @formatter = Teabag::Formatter.new(@suite_name)
-    IO.popen("#{Phantomjs.executable_path} #{script} #{url}").each_line do |line|
+  def run_specs(suite)
+    STDOUT.print "Teabag starting for: #{suite}...\n"
+    @formatter = Teabag::Formatter.new(suite)
+    IO.popen("#{Phantomjs.executable_path} #{script} #{url(suite)}").each_line do |line|
       @formatter.process(line)
     end
-    false
-  rescue Teabag::Failure
-    true
   end
 
   protected
@@ -46,7 +42,7 @@ class Teabag::Console
     File.expand_path("../phantomjs/runner.coffee", __FILE__)
   end
 
-  def url
-    ["#{@server.url}#{Teabag.configuration.mount_at}", @suite_name].join("/")
+  def url(suite)
+    ["#{@server.url}#{Teabag.configuration.mount_at}", suite].join("/")
   end
 end

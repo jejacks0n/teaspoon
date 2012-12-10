@@ -40,17 +40,17 @@ describe Teabag::Console do
 
     it "instantiates the formatter" do
       Teabag::Formatter.should_receive(:new)
-      subject.run_specs
+      subject.run_specs(:default)
     end
 
     it "uses popen and logs the results of each line using the formatter" do
-      arg = %{#{Phantomjs.executable_path} #{Teabag::Engine.root.join("lib/teabag/phantomjs/runner.coffee")} http://url.com/teabag/}
+      arg = %{#{Phantomjs.executable_path} #{Teabag::Engine.root.join("lib/teabag/phantomjs/runner.coffee")} http://url.com/teabag/default}
 
       Teabag::Formatter.any_instance.should_receive(:process).with("_line_")
       @io.should_receive(:each_line) { |&b| @block = b }
       IO.should_receive(:popen).with(arg).and_return(@io)
 
-      subject.run_specs
+      subject.run_specs(:default)
       @block.call("_line_")
     end
 
