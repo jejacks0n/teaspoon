@@ -41,7 +41,7 @@ describe Teabag::Suite do
   describe "#javascripts" do
 
     it "returns an array of javascripts" do
-      expect(subject.javascripts).to include("teabag/jasmine")
+      expect(subject.javascripts).to include("teabag-jasmine")
     end
 
   end

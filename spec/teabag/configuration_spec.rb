@@ -55,7 +55,7 @@ describe Teabag::Configuration::Suite do
     subject = Teabag::Configuration::Suite.new
     expect(subject.matcher).to eq("{app/assets,lib/assets/,spec/javascripts}/**/*_spec.{js,js.coffee,coffee}")
     expect(subject.helper).to eq("spec_helper.js")
-    expect(subject.javascripts).to eq(["teabag/jasmine"])
+    expect(subject.javascripts).to eq(["teabag-jasmine"])
     expect(subject.stylesheets).to eq(["teabag"])
   end
 

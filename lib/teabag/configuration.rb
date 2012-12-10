@@ -30,7 +30,8 @@ module Teabag
       def initialize
         @matcher     = "{app/assets,lib/assets/,spec/javascripts}/**/*_spec.{js,js.coffee,coffee}"
         @helper      = "spec_helper.js"
-        @javascripts = ["teabag/jasmine"] # or ["teabag/mocha"]
+        # ["teabag-jasmine"] or ["teabag-mocha"] -- for coffeescript files ["teabag/jasmine"] or ["teabag/mocha"]
+        @javascripts = ["teabag-jasmine"]
         @stylesheets = ["teabag"]
 
         yield self if block_given?
