@@ -213,30 +213,40 @@ because we're nice guys.
 **Note:** `Teabag.setup` may not be available in all environments, so keep that in mind. The generator provides a check
 wrapped around Teabag.setup.
 
-- **`mount_at`**<br/>
-  This determines where the Teabag spec path will be mounted. Changing this to `"/jasmine"` would allow you to browse to
-  `http://localhost:3000/jasmine` to run your specs.<br/><br/>
-  default: `"/teabag"`
+#### `mount_at`
 
-- **`root`**<br/>
-  The root path defaults to Rails.root if left nil, but if you're testing an engine using a dummy application it's
-  useful to be able to set this to your engines root.. E.g. `Teabag::Engine.root`<br/><br/>
-  default: `nil`
+This determines where the Teabag spec path will be mounted. Changing this to `"/jasmine"` would allow you to browse to
+`http://localhost:3000/jasmine` to run your specs.
 
-- **`asset_paths`**<br/>
-  These paths are appended to the rails assets paths (relative to config.root), and by default is an array that you can
-  replace or add to.<br/><br/>
-  default `["spec/javascripts", "spec/javascripts/stylesheets"]`
+**default:** `"/teabag"`
 
-- **`fixture_path`**<br/>
-  Fixtures are different than the specs, in that Rails is rendering them directly through a controller. This means you
-  can use haml, erb builder, rabl, etc. to render content in the views available in this path.<br/><br/>
-  default: `"spec/javascripts/fixtures"`
+#### `root`
 
-- **`server_timeout`**<br/>
-  Timeout for starting the server in seconds. If your server is slow to start you may have to bump the timeout, or you
-  may want to lower this if you know it shouldn't take long to start.<br/><br/>
-  default: `20`
+The root path defaults to Rails.root if left nil, but if you're testing an engine using a dummy application it's useful
+to be able to set this to your engines root.. E.g. `Teabag::Engine.root`
+
+**default:** `nil`
+
+#### `asset_paths`
+
+These paths are appended to the rails assets paths (relative to config.root), and by default is an array that you can
+replace or add to.
+
+**default:** `["spec/javascripts", "spec/javascripts/stylesheets"]`
+
+#### `fixture_path`
+
+Fixtures are different than the specs, in that Rails is rendering them directly through a controller. This means you can
+use haml, erb builder, rabl, etc. to render content in the views available in this path.
+
+**default:** `"spec/javascripts/fixtures"`
+
+#### `server_timeout`
+
+Timeout for starting the server in seconds. If your server is slow to start you may have to bump the timeout, or you may
+want to lower this if you know it shouldn't take long to start.
+
+**default:** `20`
 
 
 ## Jasmine
