@@ -20,7 +20,7 @@ class Teabag.Reporters.Console
 
 
   reportRunnerResults: =>
-    @log(type: "results", total: @total, failures: @fails, elapsed: ((Date.now() - @start) / 1000).toFixed(5))
+    @log(type: "results", total: @total, failures: @fails, pending: [], elapsed: ((Date.now() - @start) / 1000).toFixed(5))
     Teabag.finished = true
 
 

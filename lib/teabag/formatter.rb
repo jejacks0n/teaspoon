@@ -33,17 +33,25 @@ class Teabag::Formatter
   end
 
   def results(results)
-    total = results["total"]
     fails = results["failures"].length
+    pending = results["pending"].length
+
     log "\n\n"
     failures(results["failures"]) if fails > 0
-    log "Finished in #{results["elapsed"]} seconds\n"
-    log "#{pluralize("example", total)}, #{pluralize("failure", fails)}\n", fails > 0 ? RED : GREEN
-    focus_links(results["failures"]) if fails > 0
+    pending(results["pending"]) if pending > 0
+    status(results, fails, pending)
+    failed_examples(results["failures"]) if fails > 0
     raise Teabag::Failure if fails > 0
   end
 
   protected
+
+  def status(results, fails, pending)
+    log "Finished in #{results["elapsed"]} seconds\n"
+    stats = "#{pluralize("example", results["total"])}, #{pluralize("failure", fails)}"
+    stats << ", #{pending} pending" if pending > 0
+    log "#{stats}\n", fails > 0 ? RED : pending > 0 ? YELLOW : GREEN
+  end
 
   def failures(failures)
     log "Failures:\n"
@@ -55,7 +63,16 @@ class Teabag::Formatter
     log "\n"
   end
 
-  def focus_links(failures)
+  def pending(pending)
+    log "Pending:\n"
+    pending.each do |pending|
+      log "\n  #{pending["spec"]}\n", YELLOW
+      log "    # Not yet implemented\n", CYAN
+    end
+    log "\n"
+  end
+
+  def failed_examples(failures)
     log "\nFailed examples:\n"
     failures.each do |failure|
       log "\n#{Teabag.configuration.mount_at}/#{@suite_name}#{failure["link"]}", RED
