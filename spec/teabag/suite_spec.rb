@@ -13,13 +13,13 @@ describe Teabag::Suite do
   describe ".new" do
 
     it "uses default suite configuration" do
-      expect(subject.config.helper).to eq("spec_helper.js")
+      expect(subject.config.helper).to eq("spec_helper")
     end
 
     it "accepts a suite configuration name" do
-      Teabag.configuration.suite(:test) { |s| s.helper = "helper_file.js" }
+      Teabag.configuration.suite(:test) { |s| s.helper = "helper_file" }
       subject = Teabag::Suite.new(:test)
-      expect(subject.config.helper).to eq("helper_file.js")
+      expect(subject.config.helper).to eq("helper_file")
     end
 
   end

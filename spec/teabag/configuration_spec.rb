@@ -54,14 +54,14 @@ describe Teabag::Configuration::Suite do
   it "has the default configuration" do
     subject = Teabag::Configuration::Suite.new
     expect(subject.matcher).to eq("{app/assets,lib/assets/,spec/javascripts}/**/*_spec.{js,js.coffee,coffee}")
-    expect(subject.helper).to eq("spec_helper.js")
+    expect(subject.helper).to eq("spec_helper")
     expect(subject.javascripts).to eq(["teabag-jasmine"])
     expect(subject.stylesheets).to eq(["teabag"])
   end
 
   it "accepts a block that can override defaults" do
-    subject = Teabag::Configuration::Suite.new { |s| s.helper = "helper_file.js" }
-    expect(subject.helper).to eq("helper_file.js")
+    subject = Teabag::Configuration::Suite.new { |s| s.helper = "helper_file" }
+    expect(subject.helper).to eq("helper_file")
   end
 
 end
