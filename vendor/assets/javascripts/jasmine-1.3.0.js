@@ -867,6 +867,8 @@ jasmine.Env.prototype.it = function(description, func) {
 
   if (func) {
     spec.runs(func);
+  } else {
+    spec.pending = true
   }
 
   return spec;

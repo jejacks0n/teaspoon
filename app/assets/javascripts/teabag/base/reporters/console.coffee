@@ -8,10 +8,10 @@ class Teabag.Reporters.Console
 
   reportSpecResults: (spec) ->
     result = @resultForSpec(spec)
-    if result.passed
-      status = "pass"
-    else if result.skipped
+    if spec.pending
       status = "skipped"
+    else if result.passed
+      status = "pass"
     else
       @trackFailure(spec)
       status = "fail"

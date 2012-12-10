@@ -18,7 +18,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.HTML
 
 
   resultForSpec: (spec) ->
-    skipped: spec.state == "pending"
+    skipped: spec.pending
     passed: spec.state == "passed"
 
 

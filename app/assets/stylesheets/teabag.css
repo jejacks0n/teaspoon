@@ -252,6 +252,9 @@ hr {
   font-size: 15px;
   font-weight: 200;
 }
+#teabag-report #teabag-report-all li.state-pending {
+  background: rgba(255, 210, 0, 0.49);
+}
 #teabag-report #teabag-report-all li.state-failed {
   background: rgba(255, 2, 0, 0.1);
   display: block;

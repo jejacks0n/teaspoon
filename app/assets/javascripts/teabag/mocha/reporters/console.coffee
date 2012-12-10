@@ -8,16 +8,15 @@ class Teabag.Reporters.Console extends Teabag.Reporters.Console
 
 
   reportSpecResults: (spec, err) =>
-    switch spec.state
-      when "passed" then status = "pass"
-      when "pending" then status = "skipped"
-      else
-        return unless err
-        spec.err = err
-        @trackFailure(spec)
-        status = "fail"
-    @total += 1
-    @log(type: "spec", status: status, description: spec.title)
+    if err
+      spec.err = err
+      return
+    super
+
+
+  resultForSpec: (spec) ->
+    skipped: spec.state == "skipped"
+    passed: spec.state == "passed"
 
 
   trackFailure: (spec) ->
