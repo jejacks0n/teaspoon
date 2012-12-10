@@ -252,6 +252,7 @@ hr {
 #teabag-report #teabag-report-all div {
   background: rgba(255, 255, 255, 0.7);
   height: 100px;
+  margin-bottom: 0;
 }
 
 #teabag-report #teabag-report-failures {
@@ -260,6 +261,9 @@ hr {
 #teabag-report #teabag-report-failures h1 a {
   font-size: 18px;
   color: #cb190f;
+}
+#teabag-report #teabag-report-failures div {
+  background: rgba(255, 255, 255, 0.6);
 }
 
 /* State Overrides

@@ -26,3 +26,5 @@ describe "Teabag running Mocha", ->
 
       it "displays correctly", ->
         expect(passing).to.equal(true)
+
+  it "is something cool", -> expect(passing).to.equal(true)

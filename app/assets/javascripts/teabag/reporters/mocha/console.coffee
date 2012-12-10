@@ -1,4 +1,4 @@
-class Teabag.Reporters.Console extends Teabag.ConsoleReporterBase
+class Teabag.Reporters.Console extends Teabag.Reporters.Console
 
   constructor: (runner) ->
     super
@@ -17,13 +17,8 @@ class Teabag.Reporters.Console extends Teabag.ConsoleReporterBase
         @trackFailure(spec)
         status = "fail"
     @total += 1
-    @log(type: "spec", status: status, description: spec.title, suite: spec.parent.fullTitle())
-
-
-  reportRunnerResults: =>
-    @log(type: "results", total: @total, failures: @fails, elapsed: ((Date.now() - @start) / 1000).toFixed(5))
-    Teabag.finished = true
+    @log(type: "spec", status: status, description: spec.title)
 
 
   trackFailure: (spec) ->
-    @fails.push(spec: spec.fullTitle(), description: spec.err.message, link: "?grep=#{encodeURIComponent(spec.getFullName())}", trace: spec.err.stack || spec.err.toString())
+    @fails.push(spec: spec.fullTitle(), description: spec.err.message, link: @paramsFor(spec.fullTitle()), trace: spec.err.stack || spec.err.toString())

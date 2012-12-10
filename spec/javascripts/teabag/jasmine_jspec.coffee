@@ -25,3 +25,5 @@ describe "Teabag running Jasmine", ->
 
       it "displays correctly", ->
         expect(passing).toEqual(true)
+
+  it "is something cool", -> expect(passing).toEqual(true)

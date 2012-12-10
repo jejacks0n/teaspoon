@@ -33,11 +33,12 @@ class @Teabag
     if params["grep"]
       env.specFilter = (spec) -> return spec.getFullName().indexOf(params["grep"]) == 0
 
-    # add the reporter
+    # add the reporter and set the filter
     if navigator.userAgent.match(/PhantomJS/)
       reporter = new Teabag.Reporters.Console()
     else
-      reporter = new Teabag.Reporters.HTML(params["grep"])
+      reporter = new Teabag.Reporters.HTML()
+    reporter.setFilter(params["grep"])
     env.addReporter(reporter)
 
     # add fixture support
