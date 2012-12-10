@@ -175,22 +175,30 @@ outlined below.
 
 ### Suite Configuration Directives
 
-- **`matcher`**<br/>
-   A file matcher for your specs.<br/><br/>
-   default: `"{app/assets,lib/assets/,spec/javascripts}/**/*_spec.{js,js.coffee,coffee}"`
+#### `matcher`
 
-- **`helper`**<br/>
-   Spec helper file (you can require other support libraries from this.)<br/><br/>
-   default: "spec_helper"
+A file matcher for your specs.
 
-- **`javascripts`**<br/>
-   Primary Javascript files. Use "teabag-jasmine" or "teabag-mocha".  For coffeescript you can use "teabag/jasmine" /
-   "teabag/mocha".<br/><br/>
-   default: `["teabag-jasmine"]`
+**default:** `"{app/assets,lib/assets/,spec/javascripts}/**/*_spec.{js,js.coffee,coffee}"`
 
-- **`stylesheets`**<br/>
-   The stylesheets to load in this suite.<br/><br/>
-   default: `["teabag"]`
+#### `helper`
+
+Spec helper file (you can require other support libraries from this.)
+
+**default:** `"spec_helper"`
+
+#### `javascripts`
+
+Primary Javascript files. Use "teabag-jasmine" or "teabag-mocha".  For coffeescript you can use "teabag/jasmine" /
+"teabag/mocha".
+
+**default:** `["teabag-jasmine"]`
+
+#### `stylesheets`
+
+The stylesheets to load in this suite.
+
+**default:** `["teabag"]`
 
 **Note:** It's strongly encouraged to only include the base files in the `javascripts` directive. You can require
 whatever libraries you need in your spec helper, which makes it easier to maintain because you won't have to restart the
