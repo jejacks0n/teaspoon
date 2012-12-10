@@ -95,8 +95,7 @@ class Teabag.Reporters.HTML extends Teabag.View
   updateStatus: (spec) ->
     result = @resultForSpec(spec)
 
-    return if spec.pending
-    if result.skipped
+    if result.skipped || spec.pending
       @updateStat("skipped", @total.skipped += 1)
       return
 
@@ -231,7 +230,7 @@ class Teabag.Reporters.HTML.SpecView extends Teabag.View
 
   build: ->
     classes = ["spec"]
-    classes.push("state-pending") if @pending()
+    classes.push("state-pending") if @spec.pending
     super(classes.join(" "))
     @el.innerHTML = """<a href="#{@link()}">#{@description()}</a>"""
     @parentView = @buildParent()
@@ -263,10 +262,6 @@ class Teabag.Reporters.HTML.SpecView extends Teabag.View
     @el.className = classes.join(" ")
     @buildErrors() unless @passed()
     @parentView.updateState?(state)
-
-
-  pending: ->
-    @spec.pending
 
 
   parent: ->
