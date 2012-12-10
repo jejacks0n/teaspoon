@@ -7,13 +7,17 @@ class Teabag::Formatter
   YELLOW = 33
   CYAN = 36
 
+  def initialize(suite_name = :default)
+    @suite_name = suite_name
+  end
+
   def process(line)
     return if output_from(line)
     log line
   end
 
   def spec(spec)
-    case spec['status']
+    case spec["status"]
       when "pass" then log ".", GREEN
       when "skipped" then log "*", YELLOW
       else log "F", RED
@@ -21,21 +25,21 @@ class Teabag::Formatter
   end
 
   def error(error)
-    log "#{error['msg']}\n", RED
-    for trace in error['trace'] || []
-      log "  # #{filename(trace['file'])}:#{trace['line']}#{trace['function'].present? ? " -- #{trace['function']}" : ""}\n", CYAN
+    log "#{error["msg"]}\n", RED
+    for trace in error["trace"] || []
+      log "  # #{filename(trace["file"])}:#{trace["line"]}#{trace["function"].present? ? " -- #{trace["function"]}" : ""}\n", CYAN
     end
     log "\n"
   end
 
   def results(results)
-    total = results['total']
-    fails = results['failures'].length
+    total = results["total"]
+    fails = results["failures"].length
     log "\n\n"
-    failures(results['failures']) if fails > 0
-    log "Finished in #{results['elapsed']} seconds\n"
+    failures(results["failures"]) if fails > 0
+    log "Finished in #{results["elapsed"]} seconds\n"
     log "#{pluralize("example", total)}, #{pluralize("failure", fails)}\n", fails > 0 ? RED : GREEN
-    focus_links(results['failures']) if fails > 0
+    focus_links(results["failures"]) if fails > 0
     raise Teabag::Failure if fails > 0
   end
 
@@ -44,8 +48,8 @@ class Teabag::Formatter
   def failures(failures)
     log "Failures:\n"
     failures.each_with_index do |failure, index|
-      log "\n  #{index + 1}) #{failure['spec']}\n"
-      log "    Failure/Error: #{failure['description']}\n", RED
+      log "\n  #{index + 1}) #{failure["spec"]}\n"
+      log "    Failure/Error: #{failure["description"]}\n", RED
       #log "    # #{failure['trace']}\n", CYAN
     end
     log "\n"
@@ -54,15 +58,15 @@ class Teabag::Formatter
   def focus_links(failures)
     log "\nFailed examples:\n"
     failures.each do |failure|
-      log "\n#{Teabag.configuration.mount_at}#{failure['link']}", RED
+      log "\n#{Teabag.configuration.mount_at}/#{@suite_name}#{failure["link"]}", RED
     end
     log "\n\n"
   end
 
   def output_from(line)
     json = JSON.parse(line)
-    return false unless json['_teabag'] && json['type']
-    case json['type']
+    return false unless json["_teabag"] && json["type"]
+    case json["type"]
       when "spec" then spec(json)
       when "error" then error(json)
       when "results" then results(json)

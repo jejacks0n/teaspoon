@@ -28,7 +28,7 @@ class Teabag::Console
 
   def run_specs
     STDOUT.print "Teabag starting for: #{@suite_name}...\n"
-    @formatter = Teabag::Formatter.new
+    @formatter = Teabag::Formatter.new(@suite_name)
     IO.popen("#{Phantomjs.executable_path} #{script} #{url}").each_line do |line|
       @formatter.process(line)
     end
