@@ -38,8 +38,7 @@ Javascript. This simplifies the fixtures as well and lets you do some pretty awe
 rabl, etc. for your fixtures.
 
 If you want a more visual experience you can browse to the specs in the browser, or use the rake task to run them on the
-command line.  By default Teabag uses PhantomJS to run your specs headless via the console.  This turned out really
-well, so we encourage checking Teabag out just for that.
+command line.  Teabag uses PhantomJS to run your specs headless via the console.
 
 ### Browser
 
