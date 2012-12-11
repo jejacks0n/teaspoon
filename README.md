@@ -203,6 +203,23 @@ end
 It's worth noting that suites don't inherit from the default suite values, but instead always fall back to the defaults
 outlined below.
 
+### Manifest Style
+
+Teabag likes to look for files for you, but you can disable this feature and maintain a manifest yourself.  Since each
+suite can utilize a different spec helper, you can use these to create your own manifest of specs using the `= require`
+directive.
+
+First disable Teabag from locating spec files for you in a given suite, then specify a helper to load, and then require
+whatever files you want in that file.
+
+```ruby
+config.suite do |suite|
+  suite.matcher = nil
+  suite.helper = "my_spec_manifest"
+end
+
+```
+
 ### Suite Configuration Directives
 
 #### `matcher`
