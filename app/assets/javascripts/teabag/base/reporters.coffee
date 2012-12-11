@@ -46,6 +46,7 @@ class Teabag.Reporters.NormalizedSuite
     @parent = @getParent()
     @viewId = @suite.viewId
 
+
   getParent: ->
     if @suite.parent
       if @suite.parent.root then null else @suite.parent
