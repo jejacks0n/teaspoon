@@ -3,6 +3,7 @@ describe "Teabag running Mocha", ->
   it "is awesome", ->
     expect(passing).to.equal(true)
 
+
   describe "running tests", ->
 
     it "actually tests", ->
@@ -16,22 +17,21 @@ describe "Teabag running Mocha", ->
         done()
       setTimeout(test, 1000)
 
+
   describe "failing tests", ->
 
     it "can fail", ->
       expect(failing).to.equal(false)
 
-  describe "pending tests", ->
 
-    it "allows them"
+  describe "pending", ->
 
-    xit "doesn't run", ->
+    it "is allowed"
+
+    xit "doesn't get executed", ->
       alert('no no no')
       expect(false).to.equal(true)
 
-    it.skip "doesn't run", ->
-      alert('no no no')
-      expect(false).to.equal(true)
 
   describe "nesting", ->
 
@@ -39,6 +39,7 @@ describe "Teabag running Mocha", ->
 
       it "displays correctly", ->
         expect(passing).to.equal(true)
+
 
   it "is something cool", ->
     expect(passing).to.equal(true)

@@ -1,27 +1,22 @@
-#= require_self
-#= require_tree ./reporters
-
-class @Teabag
-  @defer: false
-  @finished: false
-  @slow: 75
-  @fixturePath = null
-  @Reporters = {}
-
-  @execute: ->
-    if @defer
-      @defer = false
-      return
-    new Teabag.Runner()
-
-
 class Teabag.Runner
 
+  @run: false
+
   constructor: ->
-    return if @run
-    @run = true
+    return if @constructor.run
+    @constructor.run = true
     @fixturePath = Teabag.fixturePath
+    @params = @getParams()
     @setup()
 
 
+  getParams: ->
+    params = {}
+    for param in window.location.search.substring(1).split("&")
+      [name, value] = param.split("=")
+      params[decodeURIComponent(name)] = decodeURIComponent(value)
+    params
+
+
   setup: ->
+    # left for subclasses to implement

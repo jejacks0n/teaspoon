@@ -5,6 +5,7 @@ describe "Teabag running Jasmine", ->
   it "is awesome", ->
     expect(passing).toEqual(true)
 
+
   describe "running tests", ->
 
     it "actually tests", ->
@@ -15,18 +16,21 @@ describe "Teabag running Jasmine", ->
       waits(1000)
       runs -> expect(passing).toEqual(true)
 
+
   describe "failing tests", ->
 
     it "can fail", ->
       expect(failing).toEqual(false)
 
-  describe "pending tests", ->
 
-    it "allows them"
+  describe "pending", ->
 
-    xit "doesn't display or run", ->
+    it "is allowed"
+
+    xit "doesn't display or get executed (different than mocha)", ->
       alert('no no no')
       expect(false).to.equal(true)
+
 
   describe "nesting", ->
 
@@ -34,6 +38,7 @@ describe "Teabag running Jasmine", ->
 
       it "displays correctly", ->
         expect(passing).toEqual(true)
+
 
   it "is something cool", ->
     expect(passing).toEqual(true)

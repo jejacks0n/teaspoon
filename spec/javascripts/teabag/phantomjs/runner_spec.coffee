@@ -1,0 +1,154 @@
+#= require_self
+#= require phantomjs/runner
+
+# stub out phantomjs
+window.phantom = {exit: ->}
+window.require = (file) ->
+  switch file
+    when "system" then {args: ["runner.coffee", "http://host:port/path"]}
+    when "webpage" then create: -> {
+      open: -> {}
+      evaluate: -> {}
+    }
+
+describe "PhantomJS Runner", ->
+
+  beforeEach ->
+    @logSpy = spyOn(window.console, 'log')
+    @runner = new Runner()
+
+  describe "constructor", ->
+
+    it "sets the url from system.args", ->
+      expect(@runner.url).toBe("http://host:port/path")
+
+
+  describe "#run", ->
+
+    beforeEach ->
+      @initSpy = spyOn(@runner, "initPage")
+      @loadSpy = spyOn(@runner, "loadPage")
+
+    it "calls initPage", ->
+      @runner.run()
+      expect(@initSpy).toHaveBeenCalled()
+
+    it "calls loadPage", ->
+      @runner.run()
+      expect(@loadSpy).toHaveBeenCalled()
+
+
+  describe "#initPage", ->
+
+    it "creates a webpage and assigns it to @page", ->
+      @runner.initPage()
+      expect(typeof(@runner.page["open"])).toBe("function")
+
+
+  describe "#loadPage", ->
+
+    beforeEach ->
+      @runner.initPage()
+
+    it "opens the url in the page", ->
+      spy = spyOn(@runner.page, "open")
+      @runner.loadPage()
+      expect(spy).toHaveBeenCalledWith(@runner.url)
+
+    it "attaches all the methods to page", ->
+      spyOn(@runner, "pageCallbacks").andCallFake -> {callback1: "method1", callback2: "method2"}
+      @runner.loadPage()
+      expect(@runner.page.callback1).toBe("method1")
+      expect(@runner.page.callback2).toBe("method2")
+
+
+  describe "#waitForResults", ->
+
+    beforeEach ->
+      @timeoutSpy = spyOn(window, "setTimeout")
+      @runner.initPage()
+
+    it "evaluates in the context of the page", ->
+      spy = spyOn(@runner.page, "evaluate").andReturn(false)
+      @runner.waitForResults()
+      expect(spy).toHaveBeenCalled()
+
+    it "sets a timeout of 100ms if not finished", ->
+      spyOn(@runner.page, "evaluate").andReturn(false)
+      @runner.waitForResults()
+      expect(@timeoutSpy).toHaveBeenCalled()
+
+    it "calls finish if Teabag says that it's finished", ->
+      spyOn(@runner.page, "evaluate").andCallFake (f) -> f()
+      spy = spyOn(@runner, "finish")
+      window.Teabag.finished = true
+      @runner.waitForResults()
+      expect(spy).toHaveBeenCalled()
+
+
+  describe "#fail", ->
+
+    it "logs the error message", ->
+      @runner.fail("_message_")
+      expect(@logSpy).toHaveBeenCalledWith("_message_")
+
+    it "exits with the error code", ->
+      spy = spyOn(phantom, "exit")
+      @runner.fail("_message_", 2)
+      expect(spy).toHaveBeenCalledWith(2)
+
+
+  describe "#finish", ->
+
+    it "logs an empty string (to fix line feeds in the console)", ->
+      @runner.finish()
+      expect(@logSpy).toHaveBeenCalledWith(" ")
+
+    it "calls exit with a success code", ->
+      spy = spyOn(phantom, "exit")
+      @runner.finish()
+      expect(spy).toHaveBeenCalledWith(0)
+
+
+  describe "#pageCallbacks", ->
+
+    it "returns an object with the expected methods", ->
+      object = @runner.pageCallbacks()
+      expect(Object.keys(object)).toEqual(['onError', 'onConsoleMessage', 'onLoadFinished'])
+
+
+  describe "page callback methods", ->
+
+    beforeEach ->
+      @callbacks = @runner.pageCallbacks()
+
+    describe "onError", ->
+
+      it "logs the json of a message and trace", ->
+        @callbacks.onError('_message_', ['trace1', 'trace2'])
+        expect(@logSpy).toHaveBeenCalledWith('{"_teabag":true,"type":"error","msg":"_message_","trace":["trace1","trace2"]}')
+
+
+    describe "onConsoleMessage", ->
+
+      it "logs the message", ->
+        @callbacks.onConsoleMessage('_message_')
+        expect(@logSpy).toHaveBeenCalledWith('_message_')
+
+
+    describe "onLoadFinish", ->
+
+      beforeEach ->
+        @waitSpy = spyOn(@runner, 'waitForResults')
+
+      it "fails if the status was not success", ->
+        spy = spyOn(@runner, 'fail')
+        @callbacks.onLoadFinished('failure')
+        expect(spy).toHaveBeenCalledWith("Failed to load: #{@runner.url}")
+        expect(@waitSpy).wasNotCalled()
+
+
+      it "calls waitForResults", ->
+        @callbacks.onLoadFinished('success')
+        expect(@waitSpy).toHaveBeenCalled()
+

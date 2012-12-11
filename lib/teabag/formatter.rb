@@ -18,8 +18,8 @@ class Teabag::Formatter
 
   def spec(spec)
     case spec["status"]
-      when "pass" then log ".", GREEN
-      when "skipped" then log "*", YELLOW
+      when "passed" then log ".", GREEN
+      when "pending" then log "*", YELLOW
       else log "F", RED
     end
   end
@@ -57,7 +57,7 @@ class Teabag::Formatter
     log "Failures:\n"
     failures.each_with_index do |failure, index|
       log "\n  #{index + 1}) #{failure["spec"]}\n"
-      log "     Failure/Error: #{failure["description"]}\n", RED
+      log "     Failure/Error: #{failure["message"]}\n", RED
       #log "    # #{failure['trace']}\n", CYAN
     end
     log "\n"

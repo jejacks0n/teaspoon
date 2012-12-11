@@ -246,6 +246,9 @@ hr {
 #teabag-report #teabag-report-all ol {
   list-style: none;
 }
+#teabag-report #teabag-report-all > li {
+  margin-bottom: 20px;
+}
 #teabag-report #teabag-report-all li {
   font-size: 15px;
   font-weight: 200;

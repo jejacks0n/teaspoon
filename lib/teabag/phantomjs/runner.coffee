@@ -1,11 +1,10 @@
 system  = require "system"
 webpage = require "webpage"
 
-class Runner
+class @Runner
 
   constructor: ->
     @url = system.args[1]
-    @startTime = Date.now()
 
 
   run: ->
@@ -47,7 +46,9 @@ class Runner
 
 
     onLoadFinished: (status) =>
-      @fail("Failed to load: #{@url}") unless status == "success"
+      unless status == "success"
+        @fail("Failed to load: #{@url}")
+        return
       @waitForResults()
 
 

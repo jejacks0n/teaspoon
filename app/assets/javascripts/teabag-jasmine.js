@@ -2628,20 +2628,165 @@ jasmine.version_= {
 
   })();
 
+}).call(this);
+(function() {
+
   Teabag.Runner = (function() {
 
+    Runner.run = false;
+
     function Runner() {
-      if (this.run) {
+      if (this.constructor.run) {
         return;
       }
-      this.run = true;
+      this.constructor.run = true;
       this.fixturePath = Teabag.fixturePath;
+      this.params = this.getParams();
       this.setup();
     }
+
+    Runner.prototype.getParams = function() {
+      var name, param, params, value, _i, _len, _ref, _ref1;
+      params = {};
+      _ref = window.location.search.substring(1).split("&");
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        param = _ref[_i];
+        _ref1 = param.split("="), name = _ref1[0], value = _ref1[1];
+        params[decodeURIComponent(name)] = decodeURIComponent(value);
+      }
+      return params;
+    };
 
     Runner.prototype.setup = function() {};
 
     return Runner;
+
+  })();
+
+}).call(this);
+(function() {
+
+  Teabag.Reporters.NormalizedSpec = (function() {
+
+    function NormalizedSpec(spec) {
+      var _base;
+      this.spec = spec;
+      this.fullDescription = (typeof (_base = this.spec).getFullName === "function" ? _base.getFullName() : void 0) || this.spec.fullTitle();
+      this.description || (this.description = this.spec.description || this.spec.title);
+      this.link = "?grep=" + (encodeURIComponent(this.fullDescription));
+    }
+
+    NormalizedSpec.prototype.errors = function() {
+      var item, _i, _len, _ref, _results;
+      if (this.spec.err) {
+        return [this.spec.err];
+      }
+      if (!this.spec.results) {
+        return [];
+      }
+      _ref = this.spec.results().getItems();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        if (item.passed()) {
+          continue;
+        }
+        _results.push({
+          message: item.message,
+          stack: item.trace.stack
+        });
+      }
+      return _results;
+    };
+
+    NormalizedSpec.prototype.result = function() {
+      var results, skipped, status;
+      status = "failed";
+      if (this.spec.results) {
+        results = this.spec.results();
+        if (results.passed()) {
+          status = "passed";
+        }
+        skipped = results.skipped;
+      } else {
+        if (this.spec.state === "passed") {
+          status = "passed";
+        }
+        skipped = this.spec.state === "skipped";
+      }
+      if (this.spec.pending) {
+        status = "pending";
+      }
+      return {
+        status: status,
+        skipped: skipped
+      };
+    };
+
+    return NormalizedSpec;
+
+  })();
+
+  Teabag.Reporters.BaseView = (function() {
+
+    function BaseView() {
+      this.build();
+    }
+
+    BaseView.prototype.build = function(className) {
+      return this.el = this.createEl("li", className);
+    };
+
+    BaseView.prototype.appendTo = function(el) {
+      return el.appendChild(this.el);
+    };
+
+    BaseView.prototype.append = function(el) {
+      return this.el.appendChild(el);
+    };
+
+    BaseView.prototype.createEl = function(type, className) {
+      var el;
+      if (className == null) {
+        className = "";
+      }
+      el = document.createElement(type);
+      el.className = className;
+      return el;
+    };
+
+    BaseView.prototype.findEl = function(id) {
+      var _base;
+      this.elements || (this.elements = []);
+      return (_base = this.elements)[id] || (_base[id] = document.getElementById("teabag-" + id));
+    };
+
+    BaseView.prototype.setText = function(id, value) {
+      var el;
+      el = this.findEl(id);
+      return el.innerText = value;
+    };
+
+    BaseView.prototype.setHtml = function(id, value, add) {
+      var el;
+      if (add == null) {
+        add = false;
+      }
+      el = this.findEl(id);
+      if (add) {
+        return el.innerHTML += value;
+      } else {
+        return el.innerHTML = value;
+      }
+    };
+
+    BaseView.prototype.setClass = function(id, value) {
+      var el;
+      el = this.findEl(id);
+      return el.className = value;
+    };
+
+    return BaseView;
 
   })();
 
@@ -2653,30 +2798,29 @@ jasmine.version_= {
 
     function Console() {
       this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.fails = [];
+      this.failures = [];
       this.pending = [];
       this.total = 0;
       this.start = Date.now();
     }
 
     Console.prototype.reportSpecResults = function(spec) {
-      var result, status;
-      this.spec = spec;
-      result = this.resultForSpec();
-      if (result.pending) {
-        this.trackPending();
-        status = "skipped";
-      } else if (result.passed) {
-        status = "pass";
-      } else {
-        this.trackFailure();
-        status = "fail";
+      var result;
+      this.spec = new Teabag.Reporters.NormalizedSpec(spec);
+      result = this.spec.result();
+      switch (result.status) {
+        case "pending":
+          this.trackPending();
+          break;
+        case "failed":
+          this.trackFailure();
       }
       this.total += 1;
       return this.log({
         type: "spec",
-        status: status,
-        description: result.description
+        spec: this.spec.description,
+        status: result.status,
+        skipped: result.skipped
       });
     };
 
@@ -2684,66 +2828,34 @@ jasmine.version_= {
       this.log({
         type: "results",
         total: this.total,
-        failures: this.fails,
+        failures: this.failures,
         pending: this.pending,
         elapsed: ((Date.now() - this.start) / 1000).toFixed(5)
       });
       return Teabag.finished = true;
     };
 
-    Console.prototype.resultForSpec = function() {
-      var results;
-      results = this.spec.results();
-      return {
-        pending: this.spec.pending,
-        skipped: results.skipped,
-        passed: results.passed(),
-        description: this.spec.description
-      };
+    Console.prototype.trackPending = function() {
+      return this.pending.push({
+        spec: this.spec.fullDescription
+      });
     };
 
     Console.prototype.trackFailure = function() {
       var error, _i, _len, _ref, _results;
-      _ref = this.errors();
+      _ref = this.spec.errors();
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         error = _ref[_i];
-        _results.push(this.fails.push({
-          spec: this.fullName(),
-          description: error.message,
-          link: this.link(),
+        _results.push(this.failures.push({
+          spec: this.spec.fullDescription,
+          link: this.spec.link,
+          message: error.message,
           trace: error.stack || error.message || "Stack Trace Unavailable"
         }));
       }
       return _results;
     };
-
-    Console.prototype.errors = function() {
-      var item, _i, _len, _ref, _results;
-      _ref = this.spec.results().getItems();
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        item = _ref[_i];
-        _results.push(item.trace);
-      }
-      return _results;
-    };
-
-    Console.prototype.trackPending = function() {
-      return this.pending.push({
-        spec: this.fullName()
-      });
-    };
-
-    Console.prototype.fullName = function() {
-      return this.spec.getFullName();
-    };
-
-    Console.prototype.link = function() {
-      return "?grep=" + (encodeURIComponent(this.fullName()));
-    };
-
-    Console.prototype.setFilter = function() {};
 
     Console.prototype.log = function(obj) {
       if (obj == null) {
@@ -2762,69 +2874,6 @@ jasmine.version_= {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Teabag.View = (function() {
-
-    function View() {
-      this.build();
-    }
-
-    View.prototype.build = function(className) {
-      return this.el = this.createEl("li", className);
-    };
-
-    View.prototype.appendTo = function(el) {
-      return el.appendChild(this.el);
-    };
-
-    View.prototype.append = function(el) {
-      return this.el.appendChild(el);
-    };
-
-    View.prototype.createEl = function(type, className) {
-      var el;
-      if (className == null) {
-        className = "";
-      }
-      el = document.createElement(type);
-      el.className = className;
-      return el;
-    };
-
-    View.prototype.findEl = function(id) {
-      var _base;
-      this.elements || (this.elements = []);
-      return (_base = this.elements)[id] || (_base[id] = document.getElementById("teabag-" + id));
-    };
-
-    View.prototype.setText = function(id, value) {
-      var el;
-      el = this.findEl(id);
-      return el.innerText = value;
-    };
-
-    View.prototype.setHtml = function(id, value, add) {
-      var el;
-      if (add == null) {
-        add = false;
-      }
-      el = this.findEl(id);
-      if (add) {
-        return el.innerHTML += value;
-      } else {
-        return el.innerHTML = value;
-      }
-    };
-
-    View.prototype.setClass = function(id, value) {
-      var el;
-      el = this.findEl(id);
-      return el.className = value;
-    };
-
-    return View;
-
-  })();
 
   Teabag.Reporters.HTML = (function(_super) {
 
@@ -2866,16 +2915,19 @@ jasmine.version_= {
     };
 
     HTML.prototype.buildProgress = function() {
-      var ratio;
+      var canvas;
       if (!this.config["display-progress"]) {
         this.setHtml("progress", "<div></div>");
         this.setClass("progress", "");
         return;
       }
       try {
-        ratio = window.devicePixelRatio || 1;
-        this.ctx = this.findEl("progress-canvas").getContext("2d");
-        return this.ctx.scale(ratio, ratio);
+        canvas = this.findEl("progress-canvas");
+        canvas.width = 80;
+        canvas.height = 80;
+        canvas.style.width = 80;
+        canvas.style.height = 80;
+        return this.ctx = canvas.getContext("2d");
       } catch (e) {
 
       }
@@ -3042,7 +3094,7 @@ jasmine.version_= {
 
     return HTML;
 
-  })(Teabag.View);
+  })(Teabag.Reporters.BaseView);
 
   Teabag.Reporters.HTML.FailureView = (function(_super) {
 
@@ -3082,14 +3134,20 @@ jasmine.version_= {
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
-        _results.push(item.trace);
+        if (item.passed()) {
+          continue;
+        }
+        _results.push({
+          message: item.message,
+          stack: item.trace.stack
+        });
       }
       return _results;
     };
 
     return FailureView;
 
-  })(Teabag.View);
+  })(Teabag.Reporters.BaseView);
 
   Teabag.Reporters.HTML.SpecView = (function(_super) {
     var viewId;
@@ -3186,14 +3244,20 @@ jasmine.version_= {
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
-        _results.push(item.trace);
+        if (item.passed()) {
+          continue;
+        }
+        _results.push({
+          message: item.message,
+          stack: item.trace.stack
+        });
       }
       return _results;
     };
 
     return SpecView;
 
-  })(Teabag.View);
+  })(Teabag.Reporters.BaseView);
 
   Teabag.Reporters.HTML.SuiteView = (function(_super) {
     var viewId;
@@ -3270,7 +3334,7 @@ jasmine.version_= {
 
     return SuiteView;
 
-  })(Teabag.View);
+  })(Teabag.Reporters.BaseView);
 
 }).call(this);
 (function() {
@@ -3319,18 +3383,11 @@ jasmine.version_= {
     }
 
     Runner.prototype.setup = function() {
-      var name, param, params, reporter, value, _i, _len, _ref, _ref1;
+      var grep, reporter;
       env.updateInterval = 1000;
-      params = {};
-      _ref = window.location.search.substring(1).split("&");
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        param = _ref[_i];
-        _ref1 = param.split("="), name = _ref1[0], value = _ref1[1];
-        params[decodeURIComponent(name)] = decodeURIComponent(value);
-      }
-      if (params["grep"]) {
+      if (grep = this.params["grep"]) {
         env.specFilter = function(spec) {
-          return spec.getFullName().indexOf(params["grep"]) === 0;
+          return spec.getFullName().indexOf(grep) === 0;
         };
       }
       if (navigator.userAgent.match(/PhantomJS/)) {
@@ -3338,8 +3395,14 @@ jasmine.version_= {
       } else {
         reporter = new Teabag.Reporters.HTML();
       }
-      reporter.setFilter(params["grep"]);
+      if (typeof reporter.setFilter === "function") {
+        reporter.setFilter(this.params["grep"]);
+      }
       env.addReporter(reporter);
+      return this.addFixtureSupport();
+    };
+
+    Runner.prototype.addFixtureSupport = function() {
       if (!(jasmine.getFixtures && this.fixturePath)) {
         return;
       }
@@ -3352,10 +3415,5 @@ jasmine.version_= {
     return Runner;
 
   })(Teabag.Runner);
-
-}).call(this);
-(function() {
-
-
 
 }).call(this);

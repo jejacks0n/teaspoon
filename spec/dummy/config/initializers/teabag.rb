@@ -1,6 +1,7 @@
 Teabag.setup do |config|
 
   config.root = Teabag::Engine.root
+  config.asset_paths << Teabag::Engine.root.join('lib/teabag')
 
   config.suite do |suite|
     suite.javascripts = ["teabag/jasmine"]

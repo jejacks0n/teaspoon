@@ -1,49 +1,4 @@
-class Teabag.View
-
-  constructor: ->
-    @build()
-
-
-  build: (className) ->
-    @el = @createEl("li", className)
-
-
-  appendTo: (el) ->
-    el.appendChild(@el)
-
-
-  append: (el) ->
-    @el.appendChild(el)
-
-
-  createEl: (type, className = "") ->
-    el = document.createElement(type)
-    el.className = className
-    el
-
-
-  findEl: (id) ->
-    @elements ||= []
-    @elements[id] ||= document.getElementById("teabag-#{id}")
-
-
-  setText: (id, value) ->
-    el = @findEl(id)
-    el.innerText = value
-
-
-  setHtml: (id, value, add = false) ->
-    el = @findEl(id)
-    if add then el.innerHTML += value else el.innerHTML = value
-
-
-  setClass: (id, value) ->
-    el = @findEl(id)
-    el.className = value
-
-
-
-class Teabag.Reporters.HTML extends Teabag.View
+class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
   constructor: ->
     @start = Date.now()
@@ -191,7 +146,7 @@ class Teabag.Reporters.HTML extends Teabag.View
       document.cookie = "#{name}=#{escape(JSON.stringify(value))}; path=/; expires=#{date.toUTCString()};"
 
 
-class Teabag.Reporters.HTML.FailureView extends Teabag.View
+class Teabag.Reporters.HTML.FailureView extends Teabag.Reporters.BaseView
 
   constructor: (@spec) ->
     super
@@ -215,11 +170,12 @@ class Teabag.Reporters.HTML.FailureView extends Teabag.View
 
   errors: ->
     for item in @spec.results().getItems()
-      item.trace
+      continue if item.passed()
+      {message: item.message, stack: item.trace.stack}
 
 
 
-class Teabag.Reporters.HTML.SpecView extends Teabag.View
+class Teabag.Reporters.HTML.SpecView extends Teabag.Reporters.BaseView
 
   viewId = 0
 
@@ -289,11 +245,12 @@ class Teabag.Reporters.HTML.SpecView extends Teabag.View
 
   errors: ->
     for item in @spec.results().getItems()
-      item.trace
+      continue if item.passed()
+      {message: item.message, stack: item.trace.stack}
 
 
 
-class Teabag.Reporters.HTML.SuiteView extends Teabag.View
+class Teabag.Reporters.HTML.SuiteView extends Teabag.Reporters.BaseView
 
   viewId = 0
 

@@ -30,7 +30,8 @@ describe Teabag::Configuration do
 
   it "has the default configuration" do
     expect(subject.mount_at).to eq("/teabag")
-    expect(subject.asset_paths).to eq(["spec/javascripts", "spec/javascripts/stylesheets"])
+    expect(subject.asset_paths).to include("spec/javascripts")
+    expect(subject.asset_paths).to include("spec/javascripts/stylesheets")
     expect(subject.fixture_path).to eq("spec/javascripts/fixtures")
     expect(subject.server_timeout).to eq(20)
     expect(subject.suites).to eq({})

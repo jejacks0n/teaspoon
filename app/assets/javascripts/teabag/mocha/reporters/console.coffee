@@ -12,18 +12,3 @@ class Teabag.Reporters.Console extends Teabag.Reporters.Console
       @spec.err = err
       return
     super
-
-
-  resultForSpec: ->
-    pending: @spec.pending
-    skipped: @spec.state == "skipped"
-    passed: @spec.state == "passed"
-    description: @spec.title
-
-
-  errors: ->
-    [@spec.err]
-
-
-  fullName: ->
-    @spec.fullTitle()

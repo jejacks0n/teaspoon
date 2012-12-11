@@ -43,12 +43,12 @@ describe Teabag::Formatter do
 
     it "logs a green . on pass" do
       subject.should_receive(:log).with(".", 32)
-      subject.spec("status" => "pass")
+      subject.spec("status" => "passed")
     end
 
-    it "logs a yellow * on skipped" do
+    it "logs a yellow * on pending" do
       subject.should_receive(:log).with("*", 33)
-      subject.spec("status" => "skipped")
+      subject.spec("status" => "pending")
     end
 
     it "logs a red F on anything else" do
