@@ -40,6 +40,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
 
   reportSpecStarting: (spec) ->
+    spec = new Teabag.Reporters.NormalizedSpec(spec)
     @reportView = new Teabag.Reporters.HTML.SpecView(spec, @) if @config["build-full-report"]
     @specStart = Date.now()
 
@@ -51,14 +52,16 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
 
   updateStatus: (spec) ->
-    result = @resultForSpec(spec)
+    spec = new Teabag.Reporters.NormalizedSpec(spec)
+    result = spec.result()
 
-    if result.skipped || spec.pending
+    if result.skipped || result.status == "pending"
       @updateStat("skipped", @total.skipped += 1)
       return
 
     elapsed = Date.now() - @specStart
-    if result.passed
+
+    if result.status == "passed"
       @updateStat("passes", @total.passes += 1)
       @reportView?.updateState("passed", elapsed)
     else
@@ -66,12 +69,6 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
       @reportView?.updateState("failed", elapsed)
       new Teabag.Reporters.HTML.FailureView(spec).appendTo(@findEl("report-failures")) unless @config["build-full-report"]
       @setStatus("failed")
-
-
-  resultForSpec: (spec) ->
-    result = spec.results()
-    skipped: result.skipped
-    passed: result.passed()
 
 
   reportRunnerResults: =>
@@ -146,6 +143,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
       document.cookie = "#{name}=#{escape(JSON.stringify(value))}; path=/; expires=#{date.toUTCString()};"
 
 
+
 class Teabag.Reporters.HTML.FailureView extends Teabag.Reporters.BaseView
 
   constructor: (@spec) ->
@@ -154,24 +152,10 @@ class Teabag.Reporters.HTML.FailureView extends Teabag.Reporters.BaseView
 
   build: ->
     super("spec")
-    html = """<h1 class="teabag-clearfix"><a href="?grep=#{encodeURIComponent(@fullName())}">#{@fullName()}</a></h1>"""
-    @el.innerHTML = html + @buildErrors()
-
-
-  buildErrors: ->
-    html = ""
-    for error in @errors()
+    html = """<h1 class="teabag-clearfix"><a href="#{@spec.link}">#{@spec.fullDescription}</a></h1>"""
+    for error in @spec.errors()
       html += """<div>#{error.stack || error.message || "Stack trace unavailable"}</div>"""
-
-
-  fullName: ->
-    @spec.getFullName()
-
-
-  errors: ->
-    for item in @spec.results().getItems()
-      continue if item.passed()
-      {message: item.message, stack: item.trace.stack}
+    @el.innerHTML = html
 
 
 
@@ -181,8 +165,7 @@ class Teabag.Reporters.HTML.SpecView extends Teabag.Reporters.BaseView
 
   constructor: (@spec, @reporter) ->
     @views = @reporter.views
-    viewId += 1
-    @spec.viewId = viewId
+    @spec.viewId = viewId += 1
     @views.specs[@spec.viewId] = @
     super
 
@@ -191,13 +174,13 @@ class Teabag.Reporters.HTML.SpecView extends Teabag.Reporters.BaseView
     classes = ["spec"]
     classes.push("state-pending") if @spec.pending
     super(classes.join(" "))
-    @el.innerHTML = """<a href="#{@link()}">#{@description()}</a>"""
+    @el.innerHTML = """<a href="#{@spec.link}">#{@spec.description}</a>"""
     @parentView = @buildParent()
     @parentView.append(@el)
 
 
   buildParent: ->
-    parent = @parent()
+    parent = @spec.parent
     if parent.viewId
       @views.suites[parent.viewId]
     else
@@ -208,45 +191,20 @@ class Teabag.Reporters.HTML.SpecView extends Teabag.Reporters.BaseView
   buildErrors: ->
     div = @createEl("div")
     html = ""
-    for error in @errors()
+    for error in @spec.errors()
       html += """#{error.stack || error.message || "Stack trace unavailable"}"""
     div.innerHTML = html
     @append(div)
 
 
   updateState: (state, elapsed) ->
+    result = @spec.result()
     classes = ["state-#{state}"]
     classes.push("slow") if elapsed > Teabag.slow
     @el.innerHTML += "<span>#{elapsed}ms</span>" unless state == "failed"
     @el.className = classes.join(" ")
-    @buildErrors() unless @passed()
+    @buildErrors() unless result.status == "passed"
     @parentView.updateState?(state)
-
-
-  parent: ->
-    @spec.suite
-
-
-  link: ->
-    "?grep=#{encodeURIComponent(@fullName())}"
-
-
-  description: ->
-    @spec.description
-
-
-  fullName: ->
-    @spec.getFullName()
-
-
-  passed: ->
-    @spec.results().passed()
-
-
-  errors: ->
-    for item in @spec.results().getItems()
-      continue if item.passed()
-      {message: item.message, stack: item.trace.stack}
 
 
 
@@ -256,21 +214,21 @@ class Teabag.Reporters.HTML.SuiteView extends Teabag.Reporters.BaseView
 
   constructor: (@suite, @reporter) ->
     @views = @reporter.views
-    viewId += 1
-    @suite.viewId = viewId
+    @suite.viewId = viewId += 1
     @views.suites[@suite.viewId] = @
+    @suite = new Teabag.Reporters.NormalizedSuite(suite)
     super
 
 
   build: ->
     super("suite")
-    @el.innerHTML = """<h1><a href="#{@link()}">#{@description()}</a></h1>"""
+    @el.innerHTML = """<h1><a href="#{@suite.link}">#{@suite.description}</a></h1>"""
     @parentView = @buildParent()
     @parentView.append(@el)
 
 
   buildParent: ->
-    parent = @parent()
+    parent = @suite.parent
     return @reporter unless parent
     if parent.viewId
       @views.suites[parent.viewId]
@@ -289,19 +247,3 @@ class Teabag.Reporters.HTML.SuiteView extends Teabag.Reporters.BaseView
     @el.className = "#{@el.className.replace(/\s?state-\w+/, "")} state-#{state}"
     @parentView.updateState?(state)
     @state = state
-
-
-  parent: ->
-    @suite.parentSuite
-
-
-  link: ->
-    "?grep=#{encodeURIComponent(@fullName())}"
-
-
-  description: ->
-    @suite.description
-
-
-  fullName: ->
-    @suite.getFullName()

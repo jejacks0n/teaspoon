@@ -7,6 +7,9 @@ class Teabag.Reporters.NormalizedSpec
     @fullDescription = @spec.getFullName?() || @spec.fullTitle()
     @description ||= @spec.description || @spec.title
     @link = "?grep=#{encodeURIComponent(@fullDescription)}"
+    @parent = @spec.suite || @spec.parent
+    @viewId = @spec.viewId
+    @pending = @spec.pending
 
 
   errors: ->
@@ -31,6 +34,24 @@ class Teabag.Reporters.NormalizedSpec
       status: status
       skipped: skipped
     }
+
+
+
+class Teabag.Reporters.NormalizedSuite
+
+  constructor: (@suite) ->
+    @fullDescription = @suite.getFullName?() || @suite.fullTitle()
+    @description = @suite.description || @suite.title
+    @link = "?grep=#{encodeURIComponent(@fullDescription)}"
+    @parent = @getParent()
+    @viewId = @suite.viewId
+
+  getParent: ->
+    if @suite.parent
+      if @suite.parent.root then null else @suite.parent
+    else
+      @suite.parentSuite
+
 
 
 class Teabag.Reporters.BaseView
