@@ -13,7 +13,7 @@ class Teabag::Formatter
 
   def process(line)
     return if output_from(line)
-    log line
+    log line unless Teabag.configuration.suppress_log
   end
 
   def spec(spec)
@@ -33,15 +33,19 @@ class Teabag::Formatter
   end
 
   def results(results)
-    fails = results["failures"].length
+    @failures = results["failures"].length
     pending = results["pending"].length
 
     log "\n\n"
-    pending(results["pending"]) if pending > 0
-    failures(results["failures"]) if fails > 0
-    status(results, fails, pending)
-    failed_examples(results["failures"]) if fails > 0
-    raise Teabag::Failure if fails > 0
+    pending_log(results["pending"]) if pending > 0
+    failure_log(results["failures"]) if failures > 0
+    status(results, failures, pending)
+    failed_examples(results["failures"]) if failures > 0
+    raise Teabag::Failure if failures > 0 && Teabag.configuration.fail_fast
+  end
+
+  def failures
+    @failures || 0
   end
 
   protected
@@ -53,7 +57,7 @@ class Teabag::Formatter
     log "#{stats}\n", fails > 0 ? RED : pending > 0 ? YELLOW : GREEN
   end
 
-  def failures(failures)
+  def failure_log(failures)
     log "Failures:\n"
     failures.each_with_index do |failure, index|
       log "\n  #{index + 1}) #{failure["spec"]}\n"
@@ -63,7 +67,7 @@ class Teabag::Formatter
     log "\n"
   end
 
-  def pending(pending)
+  def pending_log(pending)
     log "Pending:"
     pending.each do |pending|
       log "\n  #{pending["spec"]}\n", YELLOW

@@ -18,6 +18,11 @@ describe Teabag do
 
   describe ".override_from_env" do
 
+    after do
+      Teabag.configuration.suppress_log = false
+      Teabag.configuration.fail_fast = true
+    end
+
     it "allows overriding of fail_fast and suppress_log from the env" do
       Teabag.setup { |c| config = c }
       ENV["suppress_log"] = "true"
