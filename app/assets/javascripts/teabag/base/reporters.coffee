@@ -27,7 +27,7 @@ class Teabag.Reporters.NormalizedSpec
       status = "passed" if results.passed()
       skipped = results.skipped
     else
-      status = "passed" if @spec.state == "passed"
+      status = "passed" if @spec.state == "passed" || @spec.state == "skipped"
       skipped = @spec.state == "skipped"
     status = "pending" if @spec.pending
     status: status
