@@ -292,3 +292,11 @@ body.teabag-passed #teabag-progress {
   background: #51e431;
 }
 
+/* Fixtures
+ *---------------------------------------------------------------------------*/
+#teabag-fixtures {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10000px;
+}
