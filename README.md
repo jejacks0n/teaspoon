@@ -13,6 +13,7 @@ Ok, another test runner, right? Really? Yeah, that's a tough one, but we're pret
 you'll find at the moment. And if not, you can swing by our offices in Denver and we'll hang out with you and share a
 beer if you're so inclined.
 
+Check out the [screenshots](https://github.com/modeset/teabag/tree/master/screenshots).
 
 ## Installation
 
@@ -79,12 +80,6 @@ in the browser (since that's likely running in development).
 ```ruby
 task :default => [:spec, :teabag, :cucumber]
 ```
-
-
-## Screenshots
-
-![HTML Reporter](https://raw.github.com/modeset/teabag/master/screenshots/html-reporter.png "HTML Reporter")
-![Console Reporter](https://raw.github.com/modeset/teabag/master/screenshots/console-reporter.png "Console Reporter")
 
 
 ## Writing Specs
