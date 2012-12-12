@@ -12,10 +12,25 @@ describe Teabag::Console do
 
   describe "#execute" do
 
+    before do
+      STDOUT.stub(:print)
+    end
+
+    it "starts the server and calls run" do
+      STDOUT.should_receive(:print).with("Starting server...\n")
+      subject.should_receive(:start_server)
+      STDOUT.should_receive(:print).with("Teabag running default suite at http://url.com/teabag/default...\n")
+      STDOUT.should_receive(:print).with("Teabag running foo suite at http://url.com/teabag/foo...\n")
+      subject.should_receive(:run_specs).twice.and_return(2)
+      result = subject.execute
+      expect(result).to be(true)
+    end
+
     it "starts the server and calls run" do
       subject.should_receive(:start_server)
-      subject.should_receive(:run_specs).twice
-      subject.execute
+      subject.should_receive(:run_specs).twice.and_return(0)
+      result = subject.execute
+      expect(result).to be(false)
     end
 
   end
@@ -33,23 +48,20 @@ describe Teabag::Console do
   describe "#run_specs" do
 
     before do
-      @io = mock(each_line: nil)
-      IO.stub(:popen).and_return(@io)
-      STDOUT.stub(:print)
+      Phantomjs.stub(:run)
     end
 
     it "instantiates the formatter" do
-      Teabag::Formatter.should_receive(:new)
+      formatter = mock(failures: nil)
+      Teabag::Formatter.should_receive(:new).and_return(formatter)
       subject.run_specs(:default)
     end
 
-    it "uses popen and logs the results of each line using the formatter" do
-      arg = %{#{Phantomjs.executable_path} #{Teabag::Engine.root.join("lib/teabag/phantomjs/runner.coffee")} http://url.com/teabag/default}
-
+    it "phantomjs.run and logs the results of each line using the formatter" do
+      args = [Teabag::Engine.root.join("lib/teabag/phantomjs/runner.coffee").to_s, 'http://url.com/teabag/default']
       Teabag::Formatter.any_instance.should_receive(:process).with("_line_")
-      @io.should_receive(:each_line) { |&b| @block = b }
-      IO.should_receive(:popen).with(arg).and_return(@io)
-
+      @block = nil
+      Phantomjs.should_receive(:run).with(*args) { |&b| @block = b }
       subject.run_specs(:default)
       @block.call("_line_")
     end

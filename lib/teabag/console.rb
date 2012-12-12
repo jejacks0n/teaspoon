@@ -1,7 +1,6 @@
 require "teabag/server"
 require "teabag/formatter"
 require "phantomjs"
-require "phantomjs-mac" # todo: the phantom stuff in here should get factored into the phantomjs.rb gem
 
 class Teabag::Console
 
@@ -14,11 +13,14 @@ class Teabag::Console
   end
 
   def execute
+    STDOUT.print "Starting server...\n"
     start_server
+    failures = 0
     @suites.each do |suite|
-      run_specs(suite)
+      STDOUT.print "Teabag running #{suite} suite at #{url(suite)}...\n"
+      failures += run_specs(suite)
     end
-    false
+    failures > 0
   rescue Teabag::Failure
     true
   end
@@ -29,11 +31,11 @@ class Teabag::Console
   end
 
   def run_specs(suite)
-    STDOUT.print "Teabag starting for: #{suite}...\n"
-    @formatter = Teabag::Formatter.new(suite)
-    IO.popen("#{Phantomjs.executable_path} #{script} #{url(suite)}").each_line do |line|
-      @formatter.process(line)
+    formatter = Teabag::Formatter.new(suite)
+    Phantomjs.run(script, url(suite)) do |line|
+      formatter.process(line)
     end
+    formatter.failures
   end
 
   protected
