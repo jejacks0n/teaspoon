@@ -16,6 +16,21 @@ describe Teabag do
 
   end
 
+  describe ".override_from_env" do
+
+    it "allows overriding of fail_fast and suppress_log from the env" do
+      Teabag.setup { |c| config = c }
+      ENV["suppress_log"] = "true"
+      ENV["fail_fast"] = "false"
+      Teabag.send(:override_from_env)
+      expect(Teabag.configuration.suppress_log).to eq(true)
+      expect(Teabag.configuration.fail_fast).to eq(false)
+      ENV["suppress_log"] = nil
+      ENV["fail_fast"] = nil
+    end
+
+  end
+
 end
 
 
@@ -34,6 +49,8 @@ describe Teabag::Configuration do
     expect(subject.asset_paths).to include("spec/javascripts/stylesheets")
     expect(subject.fixture_path).to eq("spec/javascripts/fixtures")
     expect(subject.server_timeout).to eq(20)
+    expect(subject.fail_fast).to eq(true)
+    expect(subject.suppress_log).to eq(false)
     expect(subject.suites).to eq({})
   end
 
