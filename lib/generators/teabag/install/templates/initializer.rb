@@ -29,11 +29,29 @@ Teabag.setup do |config|
   config.fixture_path = "spec/javascripts/fixtures"
 
   # Server timeout
-  # Timeout for starting the server in seconds. If your server is slow to start you may have to bump the timeout, or you
-  # may want to lower this if you know it shouldn't take long to start.
+  # Timeout for starting the server in seconds when running from the console. If your server is slow to start you may
+  # have to bump the timeout, or you may want to lower this if you know it shouldn't take long to start.
   #
   # default: 20
   config.server_timeout = 20
+
+  # Failing Fast
+  # When you run several suites it can be useful to make Teabag fail directly after the suite with failing examples is
+  # finished (not continuing on to the next suite), but in environments like CI this isn't as desirable. You can also
+  # configure this using the fail_fast environment variable.
+  #
+  # default: true
+  # Note: override this directive by running `rake teabag fail_fast=false`
+  config.fail_fast = true
+
+  # Suppressing Logs
+  # When you run Teabag from the console, it will pipe all console.log/debug/etc. calls to the console. This is useful
+  # to catch places where you've forgotten to remove console.log calls, but in verbose applications that use logging
+  # heavily this may not be desirable.
+  #
+  # default: false
+  # Note: override this directive by running `rake teabag suppress_log=true`
+  config.suppress_log = false
 
   # Suites
   # You can modify the default suite configuration or create new suites here. Suites can be entirely isolated from one
@@ -48,17 +66,17 @@ Teabag.setup do |config|
     # File Matcher
     # You can specify a file matcher for your specs, and the matching files will be automatically loaded when the suite
     # is run. It's important that these files are serve-able from sprockets (aka the asset pipeline), otherwise it will
-    # reference the full path of the file, which probably work out that well. Can be set to nil if you want to load all
-    # your spec files from within the spec helper file (below).
+    # reference the full path of the file, which probably work out that well.
     #
-    # default: "{app/assets,spec/javascripts}/**/*_spec.{js,js.coffee,coffee}"
-    suite.matcher = "{app/assets,spec/javascripts}/**/*_spec.{js,js.coffee,coffee}"
+    # default: "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
+    # Note: set to nil if you want to load your spec files using a manifest from within the spec helper file.
+    suite.matcher = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
 
     # Spec Helper
     # Each suite can load a different spec helper, which can in turn require additional files. Since this file is served
     # via the asset pipeline, you can use the require directive and include whatever else seems useful to you. This file
-    # is loaded before your specs are loaded -- so could potentially also include all of your specs (if you wanted to
-    # set the matcher to nil).
+    # is loaded before your specs are loaded -- so could potentially also include all of your specs (if you set the
+    # matcher to nil).
     #
     # default: "spec_helper"
     suite.helper = "spec_helper"
