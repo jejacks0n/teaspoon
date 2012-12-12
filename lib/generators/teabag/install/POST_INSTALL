@@ -2,5 +2,5 @@
 Congratulations! Teabag was successfully installed. Documentation and more can
 be found at: https://github.com/modeset/teabag
 
-Configure Teabag by editing your config/initializers/teabag.rb file.
+Configure Teabag by editing config/initializers/teabag.rb
 
