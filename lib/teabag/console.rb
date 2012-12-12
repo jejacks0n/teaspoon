@@ -5,6 +5,9 @@ require "phantomjs"
 class Teabag::Console
 
   def initialize(suite_name = nil)
+    # force asset debugging to false, which gives us much nicer errors
+    Rails.application.config.assets.debug = false
+
     if suite_name
       @suites = [suite_name]
     else
