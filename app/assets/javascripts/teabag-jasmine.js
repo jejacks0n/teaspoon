@@ -2712,7 +2712,7 @@ jasmine.version_= {
         }
         skipped = results.skipped;
       } else {
-        if (this.spec.state === "passed") {
+        if (this.spec.state === "passed" || this.spec.state === "skipped") {
           status = "passed";
         }
         skipped = this.spec.state === "skipped";
