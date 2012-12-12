@@ -12,7 +12,7 @@ class Teabag.Runner
 
   getParams: ->
     params = {}
-    for param in window.location.search.substring(1).split("&")
+    for param in Teabag.location.search.substring(1).split("&")
       [name, value] = param.split("=")
       params[decodeURIComponent(name)] = decodeURIComponent(value)
     params

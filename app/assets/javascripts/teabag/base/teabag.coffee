@@ -8,6 +8,8 @@ class @Teabag
   @fixturePath : null
   @finished    : false
   @Reporters   : {}
+  @Date        : Date
+  @location    : window.location
 
   @execute: ->
     if @defer

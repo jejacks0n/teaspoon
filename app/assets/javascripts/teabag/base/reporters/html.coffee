@@ -1,7 +1,7 @@
 class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
   constructor: ->
-    @start = Date.now()
+    @start = new Teabag.Date().getTime()
     @config = {"use-catch": true, "build-full-report": false, "display-progress": true}
     @total = {exist: 0, run: 0, passes: 0, failures: 0, skipped: 0}
     @views = {specs: {}, suites: {}}
@@ -42,7 +42,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
   reportSpecStarting: (spec) ->
     spec = new Teabag.Reporters.NormalizedSpec(spec)
     @reportView = new Teabag.Reporters.HTML.SpecView(spec, @) if @config["build-full-report"]
-    @specStart = Date.now()
+    @specStart = new Teabag.Date().getTime()
 
 
   reportSpecResults: (spec) ->
@@ -59,7 +59,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
       @updateStat("skipped", @total.skipped += 1)
       return
 
-    elapsed = Date.now() - @specStart
+    elapsed = new Teabag.Date().getTime() - @specStart
 
     if result.status == "passed"
       @updateStat("passes", @total.passes += 1)
@@ -73,7 +73,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
   reportRunnerResults: =>
     return unless @total.run
-    @setText("stats-duration", "#{((Date.now() - @start) / 1000).toFixed(3)}s")
+    @setText("stats-duration", "#{((new Teabag.Date().getTime() - @start) / 1000).toFixed(3)}s")
     @setStatus("passed") unless @total.failures
     @setText("stats-passes", @total.passes)
     @setText("stats-failures", @total.failures)
@@ -138,7 +138,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
       match = document.cookie.match(new RegExp("(?:^|;)\\s?#{name}=(.*?)(?:;|$)", "i"))
       match && JSON.parse(unescape(match[1]).split(" ")[0])
     else
-      date = new Date()
+      date = new Teabag.Date()
       date.setDate(date.getDate() + 365)
       document.cookie = "#{name}=#{escape(JSON.stringify(value))}; path=/; expires=#{date.toUTCString()};"
 

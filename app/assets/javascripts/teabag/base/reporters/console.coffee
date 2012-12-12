@@ -4,7 +4,7 @@ class Teabag.Reporters.Console
     @failures = []
     @pending = []
     @total = 0
-    @start = Date.now()
+    @start = new Teabag.Date().getTime()
 
 
   reportSpecResults: (spec) ->
@@ -18,7 +18,7 @@ class Teabag.Reporters.Console
 
 
   reportRunnerResults: =>
-    @log(type: "results", total: @total, failures: @failures, pending: @pending, elapsed: ((Date.now() - @start) / 1000).toFixed(5))
+    @log(type: "results", total: @total, failures: @failures, pending: @pending, elapsed: ((new Teabag.Date().getTime() - @start) / 1000).toFixed(5))
     Teabag.finished = true
 
 

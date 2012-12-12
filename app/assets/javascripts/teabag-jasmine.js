@@ -2616,6 +2616,8 @@ jasmine.version_= {
 
     Teabag.Reporters = {};
 
+    Teabag.Date = Date;
+
     Teabag.execute = function() {
       if (this.defer) {
         this.defer = false;
@@ -2832,7 +2834,7 @@ jasmine.version_= {
       this.failures = [];
       this.pending = [];
       this.total = 0;
-      this.start = Date.now();
+      this.start = new Teabag.Date().getTime();
     }
 
     Console.prototype.reportSpecResults = function(spec) {
@@ -2861,7 +2863,7 @@ jasmine.version_= {
         total: this.total,
         failures: this.failures,
         pending: this.pending,
-        elapsed: ((Date.now() - this.start) / 1000).toFixed(5)
+        elapsed: ((new Teabag.Date().getTime() - this.start) / 1000).toFixed(5)
       });
       return Teabag.finished = true;
     };
@@ -2914,7 +2916,7 @@ jasmine.version_= {
       this.toggleConfig = __bind(this.toggleConfig, this);
 
       this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.start = Date.now();
+      this.start = new Teabag.Date().getTime();
       this.config = {
         "use-catch": true,
         "build-full-report": false,
@@ -2976,7 +2978,7 @@ jasmine.version_= {
       if (this.config["build-full-report"]) {
         this.reportView = new Teabag.Reporters.HTML.SpecView(spec, this);
       }
-      return this.specStart = Date.now();
+      return this.specStart = new Teabag.Date().getTime();
     };
 
     HTML.prototype.reportSpecResults = function(spec) {
@@ -2993,7 +2995,7 @@ jasmine.version_= {
         this.updateStat("skipped", this.total.skipped += 1);
         return;
       }
-      elapsed = Date.now() - this.specStart;
+      elapsed = new Teabag.Date().getTime() - this.specStart;
       if (result.status === "passed") {
         this.updateStat("passes", this.total.passes += 1);
         return (_ref = this.reportView) != null ? _ref.updateState("passed", elapsed) : void 0;
@@ -3013,7 +3015,7 @@ jasmine.version_= {
       if (!this.total.run) {
         return;
       }
-      this.setText("stats-duration", "" + (((Date.now() - this.start) / 1000).toFixed(3)) + "s");
+      this.setText("stats-duration", "" + (((new Teabag.Date().getTime() - this.start) / 1000).toFixed(3)) + "s");
       if (!this.total.failures) {
         this.setStatus("passed");
       }
@@ -3110,7 +3112,7 @@ jasmine.version_= {
         match = document.cookie.match(new RegExp("(?:^|;)\\s?" + name + "=(.*?)(?:;|$)", "i"));
         return match && JSON.parse(unescape(match[1]).split(" ")[0]);
       } else {
-        date = new Date();
+        date = new Teabag.Date();
         date.setDate(date.getDate() + 365);
         return document.cookie = "" + name + "=" + (escape(JSON.stringify(value))) + "; path=/; expires=" + (date.toUTCString()) + ";";
       }
