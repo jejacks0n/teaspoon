@@ -64,10 +64,15 @@ You can also specify the suite with the rake task by using:
 rake teabag suite=my_fantasic_suite
 ```
 
-When a failure is encounter a url will be generated for you so you can pop open a browser and load a focus run for the
-specific failures.
+When a failure is encountered, a url will be generated for you so you can pop open a browser and load a focus run for
+the specific failures. The fail_fast configuration lets you override this -- for CI for instance (more on setting these
+via env in the configuration section).
 
-**Note:** We like to include our javascript specs into the default rake task, and here's an example of using it between
+**Note:** By default the rake task runs within the development environment, but you can specify the environment using
+`RAILS_ENV=test rake teabag` if you need it to run in different environments. This is an asset compilation optimization,
+and to keep consistent with what you might see in the browser.
+
+**Note:** We like to include our javascript specs into the default rake task, so here's an example of using it between
 rspec and cucumber.
 
 ```ruby
@@ -77,8 +82,8 @@ task :default => [:spec, :teabag, :cucumber]
 
 ## Writing Specs
 
-Depending on what framework you use, this can be slightly different. This expects a certain level of understanding of
-the test framework that you're using, and there's some great resources for reading more about them elsewhere --
+Depending on what framework you use this can be slightly different. There's an expectation of a certain level of
+understanding of the test framework that you're using, so here's a few resources for reading more about
 [Jasmine](http://pivotal.github.com/jasmine/) and [Mocha](http://visionmedia.github.com/mocha/).
 
 Since we have the asset pipeline at our fingertips we're free to use the `= require` directive throughout our specs and
@@ -151,9 +156,13 @@ things like rabl if you're building JSON, or haml etc.
 To load fixtures in your specs just use the `loadFixtures` method.
 
 ```coffeescript
-it "loads fixtures", ->
-  loadFixtures("fixture.html")
-  expect($("#fixture_view")).toExist()
+#= require jquery
+#= require jasmine-jquery
+describe "fixtures", ->
+
+  it "loads fixtures", ->
+    loadFixtures("fixture.html")
+    expect($("#fixture_view")).toExist()
 ```
 
 ### Deferring Execution
@@ -294,6 +303,25 @@ want to lower this if you know it shouldn't take long to start.
 
 **default:** `20`
 
+#### `fail_fast`
+When you run several suites it can be useful to make Teabag fail directly after the suite with failing examples is
+finished (not continuing on to the next suite), but in environments like CI this isn't as desirable. You can also
+configure this using the fail_fast environment variable.
+
+**Note:** override this directive by running `rake teabag fail_fast=false`
+
+**default:** `true`
+
+#### `suppress_log`
+
+When you run Teabag from the console, it will pipe all console.log/debug/etc. calls to the console. This is useful to
+catch places where you've forgotten to remove console.log calls, but in verbose applications that use logging heavily
+this may not be desirable.
+
+**Note:** override this directive by running `rake teabag suppress_log=true`
+
+**default:** `false`
+
 
 ## Jasmine
 
@@ -320,6 +348,9 @@ end
 
 
 ## CI Support
+
+There's a few things that we're doing to make Teabag nicer on CI.  The first is to create a timeout scenario where it
+will timeout if specs stop executing, and the second is to provide a reporter that is friendly for jUnit style XML.
 
 More on this shortly....
 
