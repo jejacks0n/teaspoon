@@ -58,7 +58,7 @@ describe Teabag::Console do
     end
 
     it "phantomjs.run and logs the results of each line using the formatter" do
-      args = [Teabag::Engine.root.join("lib/teabag/phantomjs/runner.coffee").to_s, 'http://url.com/teabag/default']
+      args = [Teabag::Engine.root.join("lib/teabag/phantomjs/runner.coffee").to_s, "http://url.com/teabag/default"]
       Teabag::Formatter.any_instance.should_receive(:process).with("_line_")
       @block = nil
       Phantomjs.should_receive(:run).with(*args) { |&b| @block = b }

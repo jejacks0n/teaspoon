@@ -36,8 +36,8 @@ describe Teabag::Formatter do
     end
 
     it "handles bad json" do
-      subject.should_receive(:log).with('{bad: true}')
-      subject.process('{bad: true}')
+      subject.should_receive(:log).with("{bad: true}")
+      subject.process("{bad: true}")
     end
 
     it "handles json when it's not intended for it" do

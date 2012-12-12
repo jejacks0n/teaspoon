@@ -5005,11 +5005,11 @@
 
     Teabag.defer = false;
 
-    Teabag.finished = false;
-
     Teabag.slow = 75;
 
     Teabag.fixturePath = null;
+
+    Teabag.finished = false;
 
     Teabag.Reporters = {};
 
@@ -5071,6 +5071,9 @@
       this.fullDescription = (typeof (_base = this.spec).getFullName === "function" ? _base.getFullName() : void 0) || this.spec.fullTitle();
       this.description || (this.description = this.spec.description || this.spec.title);
       this.link = "?grep=" + (encodeURIComponent(this.fullDescription));
+      this.parent = this.spec.suite || this.spec.parent;
+      this.viewId = this.spec.viewId;
+      this.pending = this.spec.pending;
     }
 
     NormalizedSpec.prototype.errors = function() {
@@ -5121,6 +5124,34 @@
     };
 
     return NormalizedSpec;
+
+  })();
+
+  Teabag.Reporters.NormalizedSuite = (function() {
+
+    function NormalizedSuite(suite) {
+      var _base;
+      this.suite = suite;
+      this.fullDescription = (typeof (_base = this.suite).getFullName === "function" ? _base.getFullName() : void 0) || this.suite.fullTitle();
+      this.description = this.suite.description || this.suite.title;
+      this.link = "?grep=" + (encodeURIComponent(this.fullDescription));
+      this.parent = this.getParent();
+      this.viewId = this.suite.viewId;
+    }
+
+    NormalizedSuite.prototype.getParent = function() {
+      if (this.suite.parent) {
+        if (this.suite.parent.root) {
+          return null;
+        } else {
+          return this.suite.parent;
+        }
+      } else {
+        return this.suite.parentSuite;
+      }
+    };
+
+    return NormalizedSuite;
 
   })();
 
@@ -5338,6 +5369,7 @@
     };
 
     HTML.prototype.reportSpecStarting = function(spec) {
+      spec = new Teabag.Reporters.NormalizedSpec(spec);
       if (this.config["build-full-report"]) {
         this.reportView = new Teabag.Reporters.HTML.SpecView(spec, this);
       }
@@ -5352,13 +5384,14 @@
 
     HTML.prototype.updateStatus = function(spec) {
       var elapsed, result, _ref, _ref1;
-      result = this.resultForSpec(spec);
-      if (result.skipped || spec.pending) {
+      spec = new Teabag.Reporters.NormalizedSpec(spec);
+      result = spec.result();
+      if (result.skipped || result.status === "pending") {
         this.updateStat("skipped", this.total.skipped += 1);
         return;
       }
       elapsed = Date.now() - this.specStart;
-      if (result.passed) {
+      if (result.status === "passed") {
         this.updateStat("passes", this.total.passes += 1);
         return (_ref = this.reportView) != null ? _ref.updateState("passed", elapsed) : void 0;
       } else {
@@ -5371,15 +5404,6 @@
         }
         return this.setStatus("failed");
       }
-    };
-
-    HTML.prototype.resultForSpec = function(spec) {
-      var result;
-      result = spec.results();
-      return {
-        skipped: result.skipped,
-        passed: result.passed()
-      };
     };
 
     HTML.prototype.reportRunnerResults = function() {
@@ -5503,43 +5527,15 @@
     }
 
     FailureView.prototype.build = function() {
-      var html;
+      var error, html, _i, _len, _ref;
       FailureView.__super__.build.call(this, "spec");
-      html = "<h1 class=\"teabag-clearfix\"><a href=\"?grep=" + (encodeURIComponent(this.fullName())) + "\">" + (this.fullName()) + "</a></h1>";
-      return this.el.innerHTML = html + this.buildErrors();
-    };
-
-    FailureView.prototype.buildErrors = function() {
-      var error, html, _i, _len, _ref, _results;
-      html = "";
-      _ref = this.errors();
-      _results = [];
+      html = "<h1 class=\"teabag-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
+      _ref = this.spec.errors();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         error = _ref[_i];
-        _results.push(html += "<div>" + (error.stack || error.message || "Stack trace unavailable") + "</div>");
+        html += "<div>" + (error.stack || error.message || "Stack trace unavailable") + "</div>";
       }
-      return _results;
-    };
-
-    FailureView.prototype.fullName = function() {
-      return this.spec.getFullName();
-    };
-
-    FailureView.prototype.errors = function() {
-      var item, _i, _len, _ref, _results;
-      _ref = this.spec.results().getItems();
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        item = _ref[_i];
-        if (item.passed()) {
-          continue;
-        }
-        _results.push({
-          message: item.message,
-          stack: item.trace.stack
-        });
-      }
-      return _results;
+      return this.el.innerHTML = html;
     };
 
     return FailureView;
@@ -5557,8 +5553,7 @@
       this.spec = spec;
       this.reporter = reporter;
       this.views = this.reporter.views;
-      viewId += 1;
-      this.spec.viewId = viewId;
+      this.spec.viewId = viewId += 1;
       this.views.specs[this.spec.viewId] = this;
       SpecView.__super__.constructor.apply(this, arguments);
     }
@@ -5570,14 +5565,14 @@
         classes.push("state-pending");
       }
       SpecView.__super__.build.call(this, classes.join(" "));
-      this.el.innerHTML = "<a href=\"" + (this.link()) + "\">" + (this.description()) + "</a>";
+      this.el.innerHTML = "<a href=\"" + this.spec.link + "\">" + this.spec.description + "</a>";
       this.parentView = this.buildParent();
       return this.parentView.append(this.el);
     };
 
     SpecView.prototype.buildParent = function() {
       var parent, view;
-      parent = this.parent();
+      parent = this.spec.parent;
       if (parent.viewId) {
         return this.views.suites[parent.viewId];
       } else {
@@ -5590,7 +5585,7 @@
       var div, error, html, _i, _len, _ref;
       div = this.createEl("div");
       html = "";
-      _ref = this.errors();
+      _ref = this.spec.errors();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         error = _ref[_i];
         html += "" + (error.stack || error.message || "Stack trace unavailable");
@@ -5600,7 +5595,8 @@
     };
 
     SpecView.prototype.updateState = function(state, elapsed) {
-      var classes, _base;
+      var classes, result, _base;
+      result = this.spec.result();
       classes = ["state-" + state];
       if (elapsed > Teabag.slow) {
         classes.push("slow");
@@ -5609,47 +5605,10 @@
         this.el.innerHTML += "<span>" + elapsed + "ms</span>";
       }
       this.el.className = classes.join(" ");
-      if (!this.passed()) {
+      if (result.status !== "passed") {
         this.buildErrors();
       }
       return typeof (_base = this.parentView).updateState === "function" ? _base.updateState(state) : void 0;
-    };
-
-    SpecView.prototype.parent = function() {
-      return this.spec.suite;
-    };
-
-    SpecView.prototype.link = function() {
-      return "?grep=" + (encodeURIComponent(this.fullName()));
-    };
-
-    SpecView.prototype.description = function() {
-      return this.spec.description;
-    };
-
-    SpecView.prototype.fullName = function() {
-      return this.spec.getFullName();
-    };
-
-    SpecView.prototype.passed = function() {
-      return this.spec.results().passed();
-    };
-
-    SpecView.prototype.errors = function() {
-      var item, _i, _len, _ref, _results;
-      _ref = this.spec.results().getItems();
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        item = _ref[_i];
-        if (item.passed()) {
-          continue;
-        }
-        _results.push({
-          message: item.message,
-          stack: item.trace.stack
-        });
-      }
-      return _results;
     };
 
     return SpecView;
@@ -5667,22 +5626,22 @@
       this.suite = suite;
       this.reporter = reporter;
       this.views = this.reporter.views;
-      viewId += 1;
-      this.suite.viewId = viewId;
+      this.suite.viewId = viewId += 1;
       this.views.suites[this.suite.viewId] = this;
+      this.suite = new Teabag.Reporters.NormalizedSuite(suite);
       SuiteView.__super__.constructor.apply(this, arguments);
     }
 
     SuiteView.prototype.build = function() {
       SuiteView.__super__.build.call(this, "suite");
-      this.el.innerHTML = "<h1><a href=\"" + (this.link()) + "\">" + (this.description()) + "</a></h1>";
+      this.el.innerHTML = "<h1><a href=\"" + this.suite.link + "\">" + this.suite.description + "</a></h1>";
       this.parentView = this.buildParent();
       return this.parentView.append(this.el);
     };
 
     SuiteView.prototype.buildParent = function() {
       var parent, view;
-      parent = this.parent();
+      parent = this.suite.parent;
       if (!parent) {
         return this.reporter;
       }
@@ -5711,22 +5670,6 @@
         _base.updateState(state);
       }
       return this.state = state;
-    };
-
-    SuiteView.prototype.parent = function() {
-      return this.suite.parentSuite;
-    };
-
-    SuiteView.prototype.link = function() {
-      return "?grep=" + (encodeURIComponent(this.fullName()));
-    };
-
-    SuiteView.prototype.description = function() {
-      return this.suite.description;
-    };
-
-    SuiteView.prototype.fullName = function() {
-      return this.suite.getFullName();
     };
 
     return SuiteView;
@@ -5793,13 +5736,6 @@
       return HTML.__super__.reportSpecResults.apply(this, arguments);
     };
 
-    HTML.prototype.resultForSpec = function(spec) {
-      return {
-        skipped: spec.pending,
-        passed: spec.state === "passed"
-      };
-    };
-
     HTML.prototype.envInfo = function() {
       return "mocha 1.7.3";
     };
@@ -5807,26 +5743,6 @@
     return HTML;
 
   })(Teabag.Reporters.HTML);
-
-  Teabag.Reporters.HTML.FailureView = (function(_super) {
-
-    __extends(FailureView, _super);
-
-    function FailureView() {
-      return FailureView.__super__.constructor.apply(this, arguments);
-    }
-
-    FailureView.prototype.fullName = function() {
-      return this.spec.fullTitle();
-    };
-
-    FailureView.prototype.errors = function() {
-      return [this.spec.err];
-    };
-
-    return FailureView;
-
-  })(Teabag.Reporters.HTML.FailureView);
 
   Teabag.Reporters.HTML.SpecView = (function(_super) {
 
@@ -5836,61 +5752,13 @@
       return SpecView.__super__.constructor.apply(this, arguments);
     }
 
-    SpecView.prototype.fullName = function() {
-      return this.spec.fullTitle();
-    };
-
-    SpecView.prototype.description = function() {
-      return this.spec.title;
-    };
-
-    SpecView.prototype.updateState = function(state, elapsed) {
-      return SpecView.__super__.updateState.call(this, state, this.spec.duration);
-    };
-
-    SpecView.prototype.parent = function() {
-      return this.spec.parent;
-    };
-
-    SpecView.prototype.passed = function() {
-      return this.spec.state === "passed";
-    };
-
-    SpecView.prototype.errors = function() {
-      return [this.spec.err];
+    SpecView.prototype.updateState = function(state) {
+      return SpecView.__super__.updateState.call(this, state, this.spec.spec.duration);
     };
 
     return SpecView;
 
   })(Teabag.Reporters.HTML.SpecView);
-
-  Teabag.Reporters.HTML.SuiteView = (function(_super) {
-
-    __extends(SuiteView, _super);
-
-    function SuiteView() {
-      return SuiteView.__super__.constructor.apply(this, arguments);
-    }
-
-    SuiteView.prototype.parent = function() {
-      if (!this.suite.parent.root) {
-        return this.suite.parent;
-      } else {
-        return null;
-      }
-    };
-
-    SuiteView.prototype.description = function() {
-      return this.suite.title;
-    };
-
-    SuiteView.prototype.fullName = function() {
-      return this.suite.fullTitle();
-    };
-
-    return SuiteView;
-
-  })(Teabag.Reporters.HTML.SuiteView);
 
 }).call(this);
 (function() {

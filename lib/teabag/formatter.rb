@@ -62,7 +62,6 @@ class Teabag::Formatter
     failures.each_with_index do |failure, index|
       log "\n  #{index + 1}) #{failure["spec"]}\n"
       log "     Failure/Error: #{failure["message"]}\n", RED
-      #log "    # #{failure['trace']}\n", CYAN
     end
     log "\n"
   end

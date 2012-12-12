@@ -3,11 +3,11 @@
 #= require teabag/base/reporters
 
 class @Teabag
-  @defer: false
-  @finished: false
-  @slow: 75
-  @fixturePath = null
-  @Reporters = {}
+  @defer       : false
+  @slow        : 75
+  @fixturePath : null
+  @finished    : false
+  @Reporters   : {}
 
   @execute: ->
     if @defer

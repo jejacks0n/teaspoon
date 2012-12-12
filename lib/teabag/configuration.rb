@@ -57,7 +57,7 @@ module Teabag
   def self.override_from_env
     ["fail_fast", "suppress_log"].each do |directive|
       next unless ENV[directive].present?
-      @@configuration.send("#{directive}=", ENV[directive] == 'true')
+      @@configuration.send("#{directive}=", ENV[directive] == "true")
     end
   end
 

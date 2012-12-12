@@ -23,5 +23,5 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.HTML
 
 class Teabag.Reporters.HTML.SpecView extends Teabag.Reporters.HTML.SpecView
 
-  updateState: (state, elapsed) ->
+  updateState: (state) ->
     super(state, @spec.spec.duration)

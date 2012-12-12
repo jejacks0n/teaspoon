@@ -4,13 +4,7 @@ describe "Teabag", ->
 
     it "has the expected API", ->
       expect(Object.keys(Teabag)).toEqual([
-        "defer",
-        "finished",
-        "slow",
-        "fixturePath",
-        "Reporters",
-        "execute",
-        "Runner"
+        "defer", "slow", "fixturePath", "finished", "Reporters", "execute", "Runner"
       ])
 
   describe "@execute", ->
