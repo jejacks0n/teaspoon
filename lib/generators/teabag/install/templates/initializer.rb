@@ -1,7 +1,7 @@
 Teabag.setup do |config|
 
   # Mounting / Route
-  # This determines where the teabag spec path will be mounted. Changing this to /jasmine would allow you to browse to
+  # This determines where the Teabag spec path will be mounted. Changing this to /jasmine would allow you to browse to
   # http://localhost:3000/jasmine to run your jasmine specs.
   #
   # default: "/teabag"
@@ -82,7 +82,7 @@ Teabag.setup do |config|
     suite.helper = "spec_helper"
 
     # Javascripts
-    # These are the core teabag javascripts. Spec files should not go here -- but if you want to add additional support
+    # These are the core Teabag javascripts. Spec files should not go here -- but if you want to add additional support
     # for jasmine matchers, switch to mocha, include expectation libraries etc., this is the right place to do it.
     #
     # To use mocha, you should switch this to:
@@ -95,7 +95,7 @@ Teabag.setup do |config|
     suite.javascripts = ["teabag-jasmine"]
 
     # Stylesheets
-    # If you want to change how teabag looks, or include your own stylesheets you can do that here. The default is the
+    # If you want to change how Teabag looks, or include your own stylesheets you can do that here. The default is the
     # stylesheet for the HTML reporter.
     #
     # default: ["teabag"]

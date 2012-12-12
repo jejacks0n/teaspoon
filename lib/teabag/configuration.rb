@@ -33,7 +33,7 @@ module Teabag
       attr_accessor :matcher, :helper, :stylesheets, :javascripts
 
       def initialize
-        @matcher     = "{app/assets,lib/assets/,spec/javascripts}/**/*_spec.{js,js.coffee,coffee}"
+        @matcher     = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
         @helper      = "spec_helper"
         # ["teabag-jasmine"] or ["teabag-mocha"] -- for coffeescript files ["teabag/jasmine"] or ["teabag/mocha"]
         @javascripts = ["teabag-jasmine"]
