@@ -26,6 +26,8 @@ class Teabag::Console
     failures > 0
   rescue Teabag::Failure
     true
+  rescue Teabag::RunnerException
+    true
   end
 
   def start_server

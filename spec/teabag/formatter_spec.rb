@@ -29,10 +29,12 @@ describe Teabag::Formatter do
       subject.should_receive(:spec)
       subject.should_receive(:error)
       subject.should_receive(:results)
+      subject.should_receive(:exception)
       subject.should_not_receive(:log)
       subject.process('{"_teabag": true, "type": "spec"}')
       subject.process('{"_teabag": true, "type": "error"}')
       subject.process('{"_teabag": true, "type": "results"}')
+      subject.process('{"_teabag": true, "type": "exception"}')
     end
 
     it "handles bad json" do
@@ -123,6 +125,14 @@ describe Teabag::Formatter do
         expect(@log).to eq("\n\nPending:\e[33m\n  some spec\n\e[0m\e[36m    # Not yet implemented\n\e[0m\nFinished in 0.31337 seconds\n\e[33m666 examples, 0 failures, 1 pending\n\e[0m")
       end
 
+    end
+
+  end
+
+  describe "#exception" do
+
+    it "raises" do
+      expect { subject.exception }.to raise_error(Teabag::RunnerException)
     end
 
   end

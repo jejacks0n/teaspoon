@@ -48,6 +48,10 @@ class Teabag::Formatter
     @failures || 0
   end
 
+  def exception(exception = {})
+    raise Teabag::RunnerException
+  end
+
   protected
 
   def status(results, fails, pending)
@@ -90,6 +94,7 @@ class Teabag::Formatter
       when "spec" then spec(json)
       when "error" then error(json)
       when "results" then results(json)
+      when "exception" then exception(json)
     end
     return true
   rescue JSON::ParserError => e
