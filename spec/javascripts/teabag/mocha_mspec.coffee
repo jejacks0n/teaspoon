@@ -1,3 +1,4 @@
+console.log('testing console output')
 describe "Teabag running Mocha", ->
 
   it "is awesome", ->

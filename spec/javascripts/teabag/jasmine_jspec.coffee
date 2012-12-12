@@ -1,5 +1,6 @@
 #= require jquery
 #= require jasmine-jquery
+console.log('testing console output')
 describe "Teabag running Jasmine", ->
 
   it "is awesome", ->
