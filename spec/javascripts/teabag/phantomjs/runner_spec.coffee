@@ -5,7 +5,7 @@
 window.phantom = {exit: ->}
 window.require = (file) ->
   switch file
-    when "system" then {args: ["runner.coffee", "http://host:port/path"]}
+    when "system" then {args: ["runner.coffee", "http://host:port/path", "200"]}
     when "webpage" then create: -> {
       open: -> {}
       evaluate: -> {}
@@ -21,6 +21,9 @@ describe "PhantomJS Runner", ->
 
     it "sets the url from system.args", ->
       expect(@runner.url).toBe("http://host:port/path")
+
+    it "sets the timeout from system.args", ->
+      expect(@runner.timeout).toBe(200 * 1000)
 
 
   describe "#run", ->
@@ -90,7 +93,8 @@ describe "PhantomJS Runner", ->
 
     it "logs the error message", ->
       @runner.fail("_message_")
-      expect(@logSpy).toHaveBeenCalledWith("_message_")
+      expect(@logSpy).toHaveBeenCalledWith("Error: _message_")
+      expect(@logSpy).toHaveBeenCalledWith('{"_teabag":true,"type":"exception"}')
 
     it "exits with the error code", ->
       spy = spyOn(phantom, "exit")
@@ -139,12 +143,15 @@ describe "PhantomJS Runner", ->
     describe "onLoadFinish", ->
 
       beforeEach ->
+        @runner.initPage()
         @waitSpy = spyOn(@runner, 'waitForResults')
 
       it "fails if the status was not success", ->
         spy = spyOn(@runner, 'fail')
+        evalSpy = spyOn(@runner.page, "evaluate").andReturn(true)
         @callbacks.onLoadFinished('failure')
         expect(spy).toHaveBeenCalledWith("Failed to load: #{@runner.url}")
+        expect(evalSpy).toHaveBeenCalled()
         expect(@waitSpy).wasNotCalled()
 
 

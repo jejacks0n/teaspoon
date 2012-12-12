@@ -5,6 +5,7 @@ class @Runner
 
   constructor: ->
     @url = system.args[1]
+    @timeout = parseInt(system.args[2] || 180) * 1000
 
 
   run: ->
@@ -22,12 +23,14 @@ class @Runner
 
 
   waitForResults: =>
+    @fail("Timed out") if (Date.now() - @start) >= @timeout
     finished = @page.evaluate(-> window.Teabag && window.Teabag.finished)
-    if finished then @finish() else setTimeout(@waitForResults, 100)
+    if finished then @finish() else setTimeout(@waitForResults, 200)
 
 
   fail: (msg = null, errno = 1) ->
-    console.log(msg) if msg
+    console.log("Error: #{msg}") if msg
+    console.log(JSON.stringify(_teabag: true, type: "exception"))
     phantom.exit(errno)
 
 
@@ -46,9 +49,12 @@ class @Runner
 
 
     onLoadFinished: (status) =>
-      unless status == "success"
+      @start = Date.now()
+      defined = @page.evaluate(-> window.Teabag)
+      unless status == "success" && defined
         @fail("Failed to load: #{@url}")
         return
+
       @waitForResults()
 
 
