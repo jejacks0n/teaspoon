@@ -40,7 +40,7 @@ class Teabag::Console
     Phantomjs.run(script, url(suite)) do |line|
       runner.process(line)
     end
-    runner.failures
+    runner.failure_count
   end
 
   protected

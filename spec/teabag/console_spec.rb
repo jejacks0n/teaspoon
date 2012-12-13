@@ -52,7 +52,7 @@ describe Teabag::Console do
     end
 
     it "instantiates the formatter" do
-      formatter = mock(failures: nil)
+      formatter = mock(failure_count: nil)
       Teabag::Runner.should_receive(:new).and_return(formatter)
       subject.run_specs(:default)
     end
