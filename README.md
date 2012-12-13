@@ -16,7 +16,7 @@ We've just released Teabag, and we expect to be working on it for a while longer
 1. [Installation](#installation)
 2. [Quickstart](#quickstart)
 3. [Usage](#usage)
-4. [Writing Specs](#writing_specs)
+4. [Writing Specs](#writing-specs)
 5. [Suites](#suites)
 6. [Configuration](#configuration)
 7. [Jasmine](#jasmine)
