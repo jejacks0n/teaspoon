@@ -64,7 +64,7 @@ module Teabag
       def failed_examples(failures)
         log "\nFailed examples:\n"
         failures.each do |failure|
-          log "\n#{Teabag.configuration.mount_at}/#{@suite_name}#{failure["link"]}", RED
+          log "\n#{Teabag.configuration.mount_at}/default#{failure["link"]}", RED
         end
         log "\n\n"
       end
