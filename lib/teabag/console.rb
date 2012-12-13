@@ -1,5 +1,5 @@
 require "teabag/server"
-require "teabag/formatter"
+require "teabag/runner"
 require "phantomjs"
 
 class Teabag::Console
@@ -36,11 +36,11 @@ class Teabag::Console
   end
 
   def run_specs(suite)
-    formatter = Teabag::Formatter.new(suite)
+    runner = Teabag::Runner.new(suite)
     Phantomjs.run(script, url(suite)) do |line|
-      formatter.process(line)
+      runner.process(line)
     end
-    formatter.failures
+    runner.failures
   end
 
   protected

@@ -1,8 +1,8 @@
 require "spec_helper"
-require "teabag/formatter"
+require "teabag/runner"
 require "teabag/exceptions"
 
-describe Teabag::Formatter do
+describe Teabag::Runner do
 
   before do
     @log = ""

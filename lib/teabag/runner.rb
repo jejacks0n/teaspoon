@@ -1,6 +1,6 @@
 require "json"
 
-class Teabag::Formatter
+class Teabag::Runner
 
   RED = 31
   GREEN = 32
