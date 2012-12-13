@@ -7,7 +7,7 @@ module Teabag
       YELLOW = 33
       CYAN = 36
 
-      def spec(spec)
+      def spec(suite_name, spec)
         case spec["status"]
           when "passed" then log ".", GREEN
           when "pending" then log "*", YELLOW
@@ -15,7 +15,7 @@ module Teabag
         end
       end
 
-      def error(error)
+      def error(suite_name, error)
         log "#{error["msg"]}\n", RED
         for trace in error["trace"] || []
           log "  # #{filename(trace["file"])}:#{trace["line"]}#{trace["function"].present? ? " -- #{trace["function"]}" : ""}\n", CYAN
@@ -23,7 +23,7 @@ module Teabag
         log "\n"
       end
 
-      def results(results)
+      def results(suite_name, results)
         @failures = results["failures"].length
         pending = results["pending"].length
 
@@ -31,11 +31,11 @@ module Teabag
         pending_log(results["pending"]) if pending > 0
         failure_log(results["failures"]) if failures > 0
         status(results, failures, pending)
-        failed_examples(results["failures"]) if failures > 0
+        failed_examples(suite_name, results["failures"]) if failures > 0
         raise Teabag::Failure if failures > 0 && Teabag.configuration.fail_fast
       end
 
-      def exception(exception = {})
+      def exception(suite_name, exception = {})
         raise Teabag::RunnerException
       end
 
@@ -61,10 +61,10 @@ module Teabag
         file.gsub(%r(^http://127.0.0.1:\d+/assets/), "").gsub(/[\?|&]?body=1/, "")
       end
 
-      def failed_examples(failures)
+      def failed_examples(suite_name, failures)
         log "\nFailed examples:\n"
         failures.each do |failure|
-          log "\n#{Teabag.configuration.mount_at}/default#{failure["link"]}", RED
+          log "\n#{Teabag.configuration.mount_at}/#{suite_name}#{failure["link"]}", RED
         end
         log "\n\n"
       end

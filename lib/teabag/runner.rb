@@ -36,7 +36,7 @@ class Teabag::Runner
 
   def notify_formatters(event, data)
     @formatters.each do |formatter|
-      formatter.send(event, data) if formatter.respond_to?(event)
+      formatter.send(event, @suite_name, data) if formatter.respond_to?(event)
     end
   end
 
