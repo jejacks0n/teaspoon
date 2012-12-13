@@ -179,9 +179,11 @@ describe "Teabag.Reporters.BaseView", ->
     @base = new Teabag.Reporters.BaseView()
 
   describe "constructor", ->
-    spy = spyOn(Teabag.Reporters.BaseView.prototype, "build")
-    new Teabag.Reporters.BaseView()
-    expect(spy).toHaveBeenCalled()
+
+    it "calls build", ->
+      spy = spyOn(Teabag.Reporters.BaseView.prototype, "build")
+      new Teabag.Reporters.BaseView()
+      expect(spy).toHaveBeenCalled()
 
 
   describe "#build", ->
