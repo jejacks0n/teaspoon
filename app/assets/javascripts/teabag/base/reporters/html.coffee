@@ -21,17 +21,13 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
   buildProgress: ->
     if !@config["display-progress"]
-      @setHtml("progress", "<div></div>")
-      @setClass("progress", "")
-      return
-    try
-      canvas = @findEl("progress-canvas")
-      canvas.width = 80
-      canvas.height = 80
-      canvas.style.width = 80
-      canvas.style.height = 80
-      @ctx = canvas.getContext("2d")
-    catch e # intentionally do nothing
+      @progress = new Teabag.Reporters.HTML.NoProgressView()
+    else
+      if Teabag.Reporters.HTML.RadialProgressView.supported
+        @progress = new Teabag.Reporters.HTML.RadialProgressView()
+      else
+        @progress = new Teabag.Reporters.HTML.SimpleProgressView()
+    @progress.appendTo(@findEl("progress"))
 
 
   reportRunnerStarting: (runner) ->
@@ -47,8 +43,27 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
   reportSpecResults: (spec) ->
     @total.run += 1
-    @updatePercent()
+    @updateProgress()
     @updateStatus(spec)
+
+
+  reportRunnerResults: =>
+    return unless @total.run
+    @setText("stats-duration", "#{((new Teabag.Date().getTime() - @start) / 1000).toFixed(3)}s")
+    @setStatus("passed") unless @total.failures
+    @setText("stats-passes", @total.passes)
+    @setText("stats-failures", @total.failures)
+    @setText("stats-skipped", @total.skipped)
+    if @total.run < @total.exist
+      @total.skipped = @total.exist - @total.run
+      @total.run = @total.exist
+    @setText("stats-skipped", @total.skipped)
+    @updateProgress()
+
+
+  updateStat: (name, value, force = false) ->
+    return unless @config["display-progress"]
+    @setText("stats-#{name}", value)
 
 
   updateStatus: (spec) ->
@@ -71,42 +86,12 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
       @setStatus("failed")
 
 
-  reportRunnerResults: =>
-    return unless @total.run
-    @setText("stats-duration", "#{((new Teabag.Date().getTime() - @start) / 1000).toFixed(3)}s")
-    @setStatus("passed") unless @total.failures
-    @setText("stats-passes", @total.passes)
-    @setText("stats-failures", @total.failures)
-    @setText("stats-skipped", @total.skipped)
-    if @total.run < @total.exist
-      @total.skipped = @total.exist - @total.run
-      @total.run = @total.exist
-    @setText("stats-skipped", @total.skipped)
-    @updatePercent()
+  updateProgress: ->
+    @progress.update(@total.exist, @total.run)
 
 
   showConfiguration: ->
     @setClass(key, if value then "active" else "") for key, value of @config
-
-
-  updateStat: (name, value, force = false) ->
-    return unless @config["display-progress"]
-    @setText("stats-#{name}", value)
-
-
-  updatePercent: ->
-    return unless @config["display-progress"]
-    percent = if @total.exist then Math.ceil((@total.run * 100) / @total.exist) else 0
-    @setHtml("progress-percent", "#{percent}%")
-    return unless @ctx
-    size = 80
-    half = size / 2
-    @ctx.strokeStyle = "#fff"
-    @ctx.lineWidth = 1.5
-    @ctx.clearRect(0, 0, size, size)
-    @ctx.beginPath()
-    @ctx.arc(half, half, half - 1, 0, Math.PI * 2 * (percent / 100), false)
-    @ctx.stroke()
 
 
   setStatus: (status) ->
@@ -144,6 +129,68 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
 
 
+class Teabag.Reporters.HTML.NoProgressView extends Teabag.Reporters.BaseView
+
+  build: ->
+    @el = @createEl("div", "teabag-indicator modeset-logo")
+
+
+  update: ->
+    # do nothing
+
+
+
+class Teabag.Reporters.HTML.SimpleProgressView extends Teabag.Reporters.HTML.NoProgressView
+
+  build: ->
+    @el = @createEl("div", "simple-progress")
+    @el.innerHTML = """
+      <em id="teabag-progress-percent">0%</em>
+      <span id="teabag-progress-span" class="teabag-indicator"></span>
+    """
+
+
+  update: (total, run) ->
+    percent = if total then Math.ceil((run * 100) / total) else 0
+    @setHtml("progress-percent", "#{percent}%")
+
+
+
+class Teabag.Reporters.HTML.RadialProgressView extends Teabag.Reporters.HTML.NoProgressView
+
+  @supported: !!document.createElement("canvas").getContext
+
+  build: ->
+    @el = @createEl("div", "teabag-indicator radial-progress")
+    @el.innerHTML = """
+      <canvas id="teabag-progress-canvas"></canvas>
+      <em id="teabag-progress-percent">0%</em>
+    """
+
+  appendTo: ->
+    super
+    @size = 80
+    try
+      canvas = @findEl("progress-canvas")
+      canvas.width = canvas.height = canvas.style.width = canvas.style.height = @size
+      @ctx = canvas.getContext("2d")
+      @ctx.strokeStyle = "#fff"
+      @ctx.lineWidth = 1.5
+    catch e # intentionally do nothing
+
+
+  update: (total, run) ->
+    percent = if total then Math.ceil((run * 100) / total) else 0
+    @setHtml("progress-percent", "#{percent}%")
+    return unless @ctx
+    half = @size / 2
+    @ctx.clearRect(0, 0, @size, @size)
+    @ctx.beginPath()
+    @ctx.arc(half, half, half - 1, 0, Math.PI * 2 * (percent / 100), false)
+    @ctx.stroke()
+
+
+
 class Teabag.Reporters.HTML.FailureView extends Teabag.Reporters.BaseView
 
   constructor: (@spec) ->
@@ -154,7 +201,7 @@ class Teabag.Reporters.HTML.FailureView extends Teabag.Reporters.BaseView
     super("spec")
     html = """<h1 class="teabag-clearfix"><a href="#{@spec.link}">#{@spec.fullDescription}</a></h1>"""
     for error in @spec.errors()
-      html += """<div>#{error.stack || error.message || "Stack trace unavailable"}</div>"""
+      html += """<div>#{@htmlSafe(error.stack || error.message || "Stack trace unavailable")}</div>"""
     @el.innerHTML = html
 
 
@@ -192,7 +239,7 @@ class Teabag.Reporters.HTML.SpecView extends Teabag.Reporters.BaseView
     div = @createEl("div")
     html = ""
     for error in @spec.errors()
-      html += """#{error.stack || error.message || "Stack trace unavailable"}"""
+      html += """#{@htmlSafe(error.stack || error.message || "Stack trace unavailable")}"""
     div.innerHTML = html
     @append(div)
 
