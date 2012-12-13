@@ -49,12 +49,9 @@ describe "Jasmine Teabag.Runner", ->
   describe "#addFixtureSupport", ->
 
     beforeEach ->
-      jasmine.getFixtures ||= ->
-      jasmine.getStyleFixtures ||= ->
-      jasmine.getJSONFixtures ||= ->
-      @fixtureObj = {}
-      @styleFixtureObj = {}
-      @jsonFixtureSpyObj = {}
+      @fixtureObj = {cleanUp: ->}
+      @styleFixtureObj = {cleanUp: ->}
+      @jsonFixtureSpyObj = {cleanUp: ->}
       @fixtureSpy = spyOn(jasmine, "getFixtures").andReturn(@fixtureObj)
       @styleFixtureSpy = spyOn(jasmine, "getStyleFixtures").andReturn(@styleFixtureObj)
       @jsonFixtureSpy = spyOn(jasmine, "getJSONFixtures").andReturn(@jsonFixtureSpyObj)

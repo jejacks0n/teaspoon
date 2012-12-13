@@ -1,6 +1,5 @@
-#= require jquery
-#= require jasmine-jquery
-console.log('testing console output')
+console.log("testing console output")
+
 describe "Teabag running Jasmine", ->
 
   it "is awesome", ->
@@ -29,7 +28,7 @@ describe "Teabag running Jasmine", ->
     it "is allowed"
 
     xit "doesn't display or get executed (different than mocha)", ->
-      alert('no no no')
+      alert("no no no")
       expect(false).to.equal(true)
 
 

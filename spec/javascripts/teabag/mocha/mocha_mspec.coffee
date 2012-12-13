@@ -1,4 +1,5 @@
-console.log('testing console output')
+console.log("testing console output")
+
 describe "Teabag running Mocha", ->
 
   it "is awesome", ->
@@ -30,7 +31,7 @@ describe "Teabag running Mocha", ->
     it "is allowed"
 
     xit "doesn't get executed", ->
-      alert('no no no')
+      alert("no no no")
       expect(false).to.equal(true)
 
 

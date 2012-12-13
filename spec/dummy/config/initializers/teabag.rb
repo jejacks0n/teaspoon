@@ -10,11 +10,13 @@ Teabag.setup do |config|
   config.suite :jasmine do |suite|
     suite.matcher = "spec/javascripts/**/*_jspec.{js,js.coffee,coffee}"
     suite.javascripts = ["teabag/jasmine"]
+    suite.helper = "jasmine_helper"
   end
 
   config.suite :mocha do |suite|
     suite.matcher = "spec/javascripts/**/*_mspec.{js,js.coffee,coffee}"
     suite.javascripts = ["teabag/mocha", "expect"]
+    suite.helper = "mocha_helper"
   end
 
 end if defined?(Teabag) && Teabag.respond_to?(:setup) # let Teabag be undefined outside of development/test/asset groups
