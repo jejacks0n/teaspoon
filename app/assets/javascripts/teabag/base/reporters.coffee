@@ -96,3 +96,8 @@ class Teabag.Reporters.BaseView
     el = @findEl(id)
     el.className = value
 
+
+  htmlSafe: (str) ->
+    el = document.createElement("div")
+    el.appendChild(document.createTextNode(str))
+    el.innerHTML
