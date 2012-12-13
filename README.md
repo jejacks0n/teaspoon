@@ -11,6 +11,16 @@ Check out the [screenshots](https://github.com/modeset/teabag/tree/master/screen
 
 We've just released Teabag, and we expect to be working on it for a while longer to get a glossy shine to everything, so check it out, write a few specs, and let us know what you think. Feedback and ideas would be awesome.
 
+## Table of Contents
+
+1. [Installation](#installation)
+2. [Quickstart](#quickstart)
+3. [Usage](#usage)
+4. [Writing Specs](#writing_specs)
+5. [Suites](#suites)
+6. [Configuration](#configuration)
+7. [Jasmine](#jasmine)
+8. [Mocha](#mocha)
 
 ## Installation
 
@@ -28,6 +38,43 @@ Run the install generator to get the initializer and a basic spec helper.
 rails generate teabag:install
 ```
 
+## Quickstart
+
+1. Create A new rails app
+2. Install teabag and bootstrap with the generator (as described above)
+3. Write your first spec (explained in a sec)
+4. Run the test suite
+5. red. green. refactor.
+
+### Writing your first spec
+
+After you run the generator it will bootstrap you with a `spec/javascripts` directory. Teabag will automatically pick up any specs written in that folder that match the default [configuration](#suite-configuration-directives) directive. Here we are going to write the spec in coffeescript using jasmine.
+
+```
+mkdir -p spec/javascripts/models
+```
+
+open a file `spec/javascripts/models/calculator_spec.coffee` in your favorite editor.
+
+```coffeescript
+#= require models/calculator
+describe 'calculator', ->
+  it 'should add two digits', ->
+    calculator = new Calculator()
+    expect( calculator.add(2,2) ).toBe(4)
+```
+
+Save and close that file and run `rake teabag` from within the rails directory. You should see an error that the Calculator class doesn't exist. Great. It doesn't, so we'll make it by opening a file at `app/assets/javascripts/models/calculator.coffee` and adding the following code.
+
+```coffeescript
+class window.Calculator
+  add: (a,b)->
+    a + b
+```
+
+Run `rake teabag` again and you should have your first passing spec.
+
+Start up your rails server and visit `localhost:3000/jasmine` to run the specs in the browser.
 
 ## Usage
 
