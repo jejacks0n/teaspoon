@@ -20,7 +20,7 @@ module Teabag
     @@suites         = {}
 
     def self.root=(path)
-      @@root = Pathname.new(path.to_s)
+      @@root = Pathname.new(path.to_s) if path.present?
     end
 
     def self.suite(name = :default, &block)
