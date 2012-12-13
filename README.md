@@ -32,11 +32,9 @@ rails generate teabag:install
 
 ## Usage
 
-Teabag uses the Rails asset pipeline to serve files which means you're free to use things like CoffeeScript. This
-simplifies the fixtures as well and lets you do some pretty awesome things like use builder, hamlc, rabl, etc.
+Teabag uses the Rails asset pipeline to serve files which means you're free to use things like CoffeeScript. This simplifies the fixtures as well and lets you do some pretty awesome things like use builder, hamlc, rabl, etc.
 
-If you want a more visual experience you can browse to the specs in the browser, or you can use the rake task to run them headless on the
-command line with PhantomJS. Works great with CI, too!
+If you want a more visual experience you can browse to the specs in the browser, or you can use the rake task to run them headless on the command line with PhantomJS. Works great with CI, too!
 
 ### Browser
 
@@ -95,8 +93,7 @@ describe("My great feature", function() {
 });
 ```
 
-Here's the same test written in CoffeeScript using Mocha + [expect.js](https://github.com/LearnBoost/expect.js) (Teabag
-ships with expect.js and other support libraries like [jasmine-jquery](https://github.com/velesin/jasmine-jquery).):
+Here's the same test written in CoffeeScript using Mocha + [expect.js](https://github.com/LearnBoost/expect.js) (Teabag ships with expect.js and other support libraries like [jasmine-jquery](https://github.com/velesin/jasmine-jquery).):
 
 ```coffeescript
 #= require jquery
@@ -109,13 +106,9 @@ describe "My great feature", ->
 
 ### Pending Specs
 
-We've normalized declaring that a spec is pending between the two libraries. Since Jasmine lacks the concept entirely
-we've added it in, and since Mocha has several ways to accomplish it we thought it would be worth mentioning what we
-consider the standard between the two to be.
+We've normalized declaring that a spec is pending between the two libraries. Since Jasmine lacks the concept entirely we've added it in, and since Mocha has several ways to accomplish it we thought it would be worth mentioning what we consider the standard between the two to be.
 
-To mark a spec as pending you can either not provide a function as the second argument to `it`, or you can use `xit` and
-`xdescribe`.  Mocha provides some additional ways to accomplish this, but to keep it consistent we've normalized on what
-they both support easily.
+To mark a spec as pending you can either not provide a function as the second argument to `it`, or you can use `xit` and `xdescribe`.  Mocha provides some additional ways to accomplish this, but to keep it consistent we've normalized on what they both support easily.
 
 ```coffeescript
 describe "My great feature", ->
@@ -131,9 +124,7 @@ describe "My great feature", ->
       expect(true).to.be(false)
 ```
 
-If you're using one library and you want to take advantage of the things that that library provides you're completely
-free to do so, and this is provided as a suggestion more than anything. Both the reporters understand the standard above
-and have specs for them.
+If you're using one library and you want to take advantage of the things that that library provides you're completely free to do so, and this is provided as a suggestion more than anything. Both the reporters understand the standard above and have specs for them.
 
 ### Fixtures
 
