@@ -5015,6 +5015,8 @@
 
     Teabag.Date = Date;
 
+    Teabag.location = window.location;
+
     Teabag.execute = function() {
       if (this.defer) {
         this.defer = false;
@@ -5047,7 +5049,7 @@
     Runner.prototype.getParams = function() {
       var name, param, params, value, _i, _len, _ref, _ref1;
       params = {};
-      _ref = window.location.search.substring(1).split("&");
+      _ref = Teabag.location.search.substring(1).split("&");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         param = _ref[_i];
         _ref1 = param.split("="), name = _ref1[0], value = _ref1[1];
@@ -5216,6 +5218,13 @@
       return el.className = value;
     };
 
+    BaseView.prototype.htmlSafe = function(str) {
+      var el;
+      el = document.createElement("div");
+      el.appendChild(document.createTextNode(str));
+      return el.innerHTML;
+    };
+
     return BaseView;
 
   })();
@@ -5345,22 +5354,16 @@
     };
 
     HTML.prototype.buildProgress = function() {
-      var canvas;
       if (!this.config["display-progress"]) {
-        this.setHtml("progress", "<div></div>");
-        this.setClass("progress", "");
-        return;
+        this.progress = new Teabag.Reporters.HTML.NoProgressView();
+      } else {
+        if (Teabag.Reporters.HTML.RadialProgressView.supported) {
+          this.progress = new Teabag.Reporters.HTML.RadialProgressView();
+        } else {
+          this.progress = new Teabag.Reporters.HTML.SimpleProgressView();
+        }
       }
-      try {
-        canvas = this.findEl("progress-canvas");
-        canvas.width = 80;
-        canvas.height = 80;
-        canvas.style.width = 80;
-        canvas.style.height = 80;
-        return this.ctx = canvas.getContext("2d");
-      } catch (e) {
-
-      }
+      return this.progress.appendTo(this.findEl("progress"));
     };
 
     HTML.prototype.reportRunnerStarting = function(runner) {
@@ -5380,8 +5383,37 @@
 
     HTML.prototype.reportSpecResults = function(spec) {
       this.total.run += 1;
-      this.updatePercent();
+      this.updateProgress();
       return this.updateStatus(spec);
+    };
+
+    HTML.prototype.reportRunnerResults = function() {
+      if (!this.total.run) {
+        return;
+      }
+      this.setText("stats-duration", "" + (((new Teabag.Date().getTime() - this.start) / 1000).toFixed(3)) + "s");
+      if (!this.total.failures) {
+        this.setStatus("passed");
+      }
+      this.setText("stats-passes", this.total.passes);
+      this.setText("stats-failures", this.total.failures);
+      this.setText("stats-skipped", this.total.skipped);
+      if (this.total.run < this.total.exist) {
+        this.total.skipped = this.total.exist - this.total.run;
+        this.total.run = this.total.exist;
+      }
+      this.setText("stats-skipped", this.total.skipped);
+      return this.updateProgress();
+    };
+
+    HTML.prototype.updateStat = function(name, value, force) {
+      if (force == null) {
+        force = false;
+      }
+      if (!this.config["display-progress"]) {
+        return;
+      }
+      return this.setText("stats-" + name, value);
     };
 
     HTML.prototype.updateStatus = function(spec) {
@@ -5408,23 +5440,8 @@
       }
     };
 
-    HTML.prototype.reportRunnerResults = function() {
-      if (!this.total.run) {
-        return;
-      }
-      this.setText("stats-duration", "" + (((new Teabag.Date().getTime() - this.start) / 1000).toFixed(3)) + "s");
-      if (!this.total.failures) {
-        this.setStatus("passed");
-      }
-      this.setText("stats-passes", this.total.passes);
-      this.setText("stats-failures", this.total.failures);
-      this.setText("stats-skipped", this.total.skipped);
-      if (this.total.run < this.total.exist) {
-        this.total.skipped = this.total.exist - this.total.run;
-        this.total.run = this.total.exist;
-      }
-      this.setText("stats-skipped", this.total.skipped);
-      return this.updatePercent();
+    HTML.prototype.updateProgress = function() {
+      return this.progress.update(this.total.exist, this.total.run);
     };
 
     HTML.prototype.showConfiguration = function() {
@@ -5436,36 +5453,6 @@
         _results.push(this.setClass(key, value ? "active" : ""));
       }
       return _results;
-    };
-
-    HTML.prototype.updateStat = function(name, value, force) {
-      if (force == null) {
-        force = false;
-      }
-      if (!this.config["display-progress"]) {
-        return;
-      }
-      return this.setText("stats-" + name, value);
-    };
-
-    HTML.prototype.updatePercent = function() {
-      var half, percent, size;
-      if (!this.config["display-progress"]) {
-        return;
-      }
-      percent = this.total.exist ? Math.ceil((this.total.run * 100) / this.total.exist) : 0;
-      this.setHtml("progress-percent", "" + percent + "%");
-      if (!this.ctx) {
-        return;
-      }
-      size = 80;
-      half = size / 2;
-      this.ctx.strokeStyle = "#fff";
-      this.ctx.lineWidth = 1.5;
-      this.ctx.clearRect(0, 0, size, size);
-      this.ctx.beginPath();
-      this.ctx.arc(half, half, half - 1, 0, Math.PI * 2 * (percent / 100), false);
-      return this.ctx.stroke();
     };
 
     HTML.prototype.setStatus = function(status) {
@@ -5519,6 +5506,95 @@
 
   })(Teabag.Reporters.BaseView);
 
+  Teabag.Reporters.HTML.NoProgressView = (function(_super) {
+
+    __extends(NoProgressView, _super);
+
+    function NoProgressView() {
+      return NoProgressView.__super__.constructor.apply(this, arguments);
+    }
+
+    NoProgressView.prototype.build = function() {
+      return this.el = this.createEl("div", "teabag-indicator modeset-logo");
+    };
+
+    NoProgressView.prototype.update = function() {};
+
+    return NoProgressView;
+
+  })(Teabag.Reporters.BaseView);
+
+  Teabag.Reporters.HTML.SimpleProgressView = (function(_super) {
+
+    __extends(SimpleProgressView, _super);
+
+    function SimpleProgressView() {
+      return SimpleProgressView.__super__.constructor.apply(this, arguments);
+    }
+
+    SimpleProgressView.prototype.build = function() {
+      this.el = this.createEl("div", "simple-progress");
+      return this.el.innerHTML = "<em id=\"teabag-progress-percent\">0%</em>\n<span id=\"teabag-progress-span\" class=\"teabag-indicator\"></span>";
+    };
+
+    SimpleProgressView.prototype.update = function(total, run) {
+      var percent;
+      percent = total ? Math.ceil((run * 100) / total) : 0;
+      return this.setHtml("progress-percent", "" + percent + "%");
+    };
+
+    return SimpleProgressView;
+
+  })(Teabag.Reporters.HTML.NoProgressView);
+
+  Teabag.Reporters.HTML.RadialProgressView = (function(_super) {
+
+    __extends(RadialProgressView, _super);
+
+    function RadialProgressView() {
+      return RadialProgressView.__super__.constructor.apply(this, arguments);
+    }
+
+    RadialProgressView.supported = !!document.createElement("canvas").getContext;
+
+    RadialProgressView.prototype.build = function() {
+      this.el = this.createEl("div", "teabag-indicator radial-progress");
+      return this.el.innerHTML = "<canvas id=\"teabag-progress-canvas\"></canvas>\n<em id=\"teabag-progress-percent\">0%</em>";
+    };
+
+    RadialProgressView.prototype.appendTo = function() {
+      var canvas;
+      RadialProgressView.__super__.appendTo.apply(this, arguments);
+      this.size = 80;
+      try {
+        canvas = this.findEl("progress-canvas");
+        canvas.width = canvas.height = canvas.style.width = canvas.style.height = this.size;
+        this.ctx = canvas.getContext("2d");
+        this.ctx.strokeStyle = "#fff";
+        return this.ctx.lineWidth = 1.5;
+      } catch (e) {
+
+      }
+    };
+
+    RadialProgressView.prototype.update = function(total, run) {
+      var half, percent;
+      percent = total ? Math.ceil((run * 100) / total) : 0;
+      this.setHtml("progress-percent", "" + percent + "%");
+      if (!this.ctx) {
+        return;
+      }
+      half = this.size / 2;
+      this.ctx.clearRect(0, 0, this.size, this.size);
+      this.ctx.beginPath();
+      this.ctx.arc(half, half, half - 1, 0, Math.PI * 2 * (percent / 100), false);
+      return this.ctx.stroke();
+    };
+
+    return RadialProgressView;
+
+  })(Teabag.Reporters.HTML.NoProgressView);
+
   Teabag.Reporters.HTML.FailureView = (function(_super) {
 
     __extends(FailureView, _super);
@@ -5535,7 +5611,7 @@
       _ref = this.spec.errors();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         error = _ref[_i];
-        html += "<div>" + (error.stack || error.message || "Stack trace unavailable") + "</div>";
+        html += "<div>" + (this.htmlSafe(error.stack || error.message || "Stack trace unavailable")) + "</div>";
       }
       return this.el.innerHTML = html;
     };
@@ -5590,7 +5666,7 @@
       _ref = this.spec.errors();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         error = _ref[_i];
-        html += "" + (error.stack || error.message || "Stack trace unavailable");
+        html += "" + (this.htmlSafe(error.stack || error.message || "Stack trace unavailable"));
       }
       div.innerHTML = html;
       return this.append(div);
