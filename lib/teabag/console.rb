@@ -19,12 +19,11 @@ module Teabag
     def execute
       STDOUT.print "Starting server...\n"
       start_server
-      failures = 0
       @suites.each do |suite|
         STDOUT.print "Teabag running #{suite} suite at #{url(suite)}...\n"
-        failures += run_specs(suite)
+        run_specs(suite)
       end
-      failures > 0
+      false
     rescue Teabag::Failure
       true
     rescue Teabag::RunnerException
@@ -41,7 +40,6 @@ module Teabag
       Phantomjs.run(script, url(suite)) do |line|
         runner.process(line)
       end
-      runner.failure_count
     end
 
     protected

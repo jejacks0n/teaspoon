@@ -23,7 +23,7 @@ describe Teabag::Console do
       STDOUT.should_receive(:print).with("Teabag running foo suite at http://url.com/teabag/foo...\n")
       subject.should_receive(:run_specs).twice.and_return(2)
       result = subject.execute
-      expect(result).to be(true)
+      expect(result).to be(false)
     end
 
     it "starts the server and calls run" do
