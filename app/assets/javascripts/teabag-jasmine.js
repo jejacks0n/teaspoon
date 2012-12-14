@@ -2949,11 +2949,19 @@ jasmine.version_= {
     }
 
     HTML.prototype.build = function() {
+      this.buildLayout();
       this.el = this.findEl("report-all");
       this.setText("env-info", this.envInfo());
       this.findEl("toggles").onclick = this.toggleConfig;
       this.showConfiguration();
       return this.buildProgress();
+    };
+
+    HTML.prototype.buildLayout = function() {
+      var el;
+      el = this.createEl("div");
+      document.body.appendChild(el);
+      return el.innerHTML = "<div class=\"teabag-clearfix\">\n  <div id=\"teabag-title\">\n    <h1>Teabag</h1>\n    <ul>\n      <li>version: <b><%= Teabag::VERSION %></b></li>\n      <li id=\"teabag-env-info\"></li>\n    </ul>\n  </div>\n  <div id=\"teabag-progress\"></div>\n  <ul id=\"teabag-stats\">\n    <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n    <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n    <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n    <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n  </ul>\n</div>\n\n<div id=\"teabag-controls\" class=\"teabag-clearfix\">\n  <div id=\"teabag-toggles\">\n    <button id=\"teabag-use-catch\">Use Try/Catch</button>\n    <button id=\"teabag-build-full-report\">Build Full Report</button>\n    <button id=\"teabag-display-progress\">Display Progress</button>\n  </div>\n  <div id=\"teabag-filtered\">\n    <button onclick=\"window.location.href = window.location.pathname\">Run All Specs</button>\n  </div>\n</div>\n\n<hr/>\n\n<div id=\"teabag-report\">\n  <ol id=\"teabag-report-failures\"></ol>\n  <ol id=\"teabag-report-all\"></ol>\n</div>";
     };
 
     HTML.prototype.buildProgress = function() {
