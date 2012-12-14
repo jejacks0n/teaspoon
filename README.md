@@ -53,7 +53,7 @@ The install generator it will bootstrap you with a `spec/javascripts` directory.
 Here we're going to write the spec in CoffeeScript using Jasmine.
 
 ```
-mkdir -p spec/javascripts/models
+mkdir -p spec/javascripts
 ```
 
 Open a file `spec/javascripts/calculator_spec.coffee` in your favorite editor.
