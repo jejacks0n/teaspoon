@@ -8,7 +8,7 @@ class Teabag::Runner
 
   def initialize(suite_name = :default)
     @suite_name = suite_name
-    @formatters = [ Teabag.configuration.default_formatter.new ]
+    @formatters = Teabag.configuration.formatters.split(',').map {|f| resolve_formatter(f).new }
     @failure_count = 0
   end
 
@@ -18,6 +18,10 @@ class Teabag::Runner
   end
 
   private
+
+  def resolve_formatter(formatter)
+    Teabag::Formatters.const_get("#{formatter.to_s.capitalize}Formatter")
+  end
 
   def output_from(line)
     json = JSON.parse(line)

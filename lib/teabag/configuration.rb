@@ -6,13 +6,13 @@ module Teabag
 
     include Singleton
 
-    cattr_accessor :root, :mount_at, :asset_paths, :fixture_path, :default_formatter, :server_timeout, :fail_fast, :suppress_log, :suites
+    cattr_accessor :root, :mount_at, :asset_paths, :fixture_path, :formatters, :server_timeout, :fail_fast, :suppress_log, :suites
 
     @@mount_at          = "/teabag"
     @@root              = nil # will default to Rails.root if left unset
     @@asset_paths       = ["spec/javascripts", "spec/javascripts/stylesheets"]
     @@fixture_path      = "spec/javascripts/fixtures"
-    @@default_formatter = Teabag::Formatters::ProgressFormatter
+    @@formatters        = 'progress'
 
 
     # console runner specific
@@ -58,7 +58,7 @@ module Teabag
   private
 
   def self.override_from_env
-    ["fail_fast", "suppress_log"].each do |directive|
+    %w(fail_fast suppress_log formatters).each do |directive|
       next unless ENV[directive].present?
       @@configuration.send("#{directive}=", ENV[directive] == "true")
     end

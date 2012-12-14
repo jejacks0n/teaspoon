@@ -53,7 +53,7 @@ describe Teabag::Configuration do
     expect(subject.asset_paths).to include("spec/javascripts")
     expect(subject.asset_paths).to include("spec/javascripts/stylesheets")
     expect(subject.fixture_path).to eq("spec/javascripts/fixtures")
-    expect(subject.default_formatter).to eq(Teabag::Formatters::ProgressFormatter)
+    expect(subject.formatters).to eq('progress')
     expect(subject.server_timeout).to eq(20)
     expect(subject.fail_fast).to eq(true)
     expect(subject.suppress_log).to eq(false)
