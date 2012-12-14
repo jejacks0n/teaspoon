@@ -8,6 +8,7 @@ class Teabag.Reporters.NormalizedSpec
     @description ||= @spec.description || @spec.title
     @link = "?grep=#{encodeURIComponent(@fullDescription)}"
     @parent = @spec.suite || @spec.parent
+    @suiteName = @parent.getFullName?() || @parent.fullTitle()
     @viewId = @spec.viewId
     @pending = @spec.pending
 

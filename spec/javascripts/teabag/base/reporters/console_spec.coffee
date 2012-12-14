@@ -5,8 +5,9 @@ describe "Teabag.Reporters.Console", ->
     spyOn(Date, "now").andReturn(666)
 
     @spec =
-      fullDescription: "_spec_description_"
-      description: "_spec_name_"
+      fullDescription:  "_spec_description_"
+      description:      "_spec_name_"
+      suiteName:        "_suite_name_"
       link: "?grep=_spec_description_"
       result: -> {status: "passed", skipped: false}
       errors: -> [{message: "_message_", trace: {stack: "_stack_"}}]
@@ -19,8 +20,8 @@ describe "Teabag.Reporters.Console", ->
   describe "constructor", ->
 
     it "tracks failures, pending, total, and start time", ->
-      expect(@reporter.failures).toEqual([])
-      expect(@reporter.pending).toEqual([])
+      expect(@reporter.failures).toEqual(0)
+      expect(@reporter.pending).toEqual(0)
       expect(@reporter.total).toEqual(0)
       expect(@reporter.start).toBeDefined()
 
@@ -38,7 +39,13 @@ describe "Teabag.Reporters.Console", ->
     it "logs the information", ->
       spy = spyOn(@reporter, "log")
       @reporter.reportSpecResults()
-      expect(spy).toHaveBeenCalledWith(type: "spec", spec: "_spec_name_", status: "passed", skipped: false)
+      expect(spy).toHaveBeenCalledWith
+        type:             "spec"
+        spec:             "_spec_name_"
+        suite:            "_suite_name_"
+        status:           "passed"
+        skipped:          false
+        full_description: "_spec_description_"
 
     describe "pending tests", ->
 
@@ -50,11 +57,6 @@ describe "Teabag.Reporters.Console", ->
         @reporter.reportSpecResults()
         expect(@trackSpy).toHaveBeenCalled()
 
-      it "logs the status as 'pending'", ->
-        spy = spyOn(@reporter, "log")
-        @reporter.reportSpecResults()
-        expect(spy).toHaveBeenCalledWith(type: "spec", spec: "_spec_name_", status: "pending", skipped: false)
-
     describe "failing tests", ->
 
       beforeEach ->
@@ -64,11 +66,6 @@ describe "Teabag.Reporters.Console", ->
       it "tracks the failure", ->
         @reporter.reportSpecResults()
         expect(@trackSpy).toHaveBeenCalled()
-
-      it "logs the status as 'failed'", ->
-        spy = spyOn(@reporter, "log")
-        @reporter.reportSpecResults()
-        expect(spy).toHaveBeenCalledWith(type: "spec", spec: "_spec_name_", status: "failed", skipped: false)
 
 
   describe "#reportRunnerResults", ->
@@ -87,21 +84,48 @@ describe "Teabag.Reporters.Console", ->
 
 
   describe "#trackPending", ->
-
-    it "adds the spec to the pending array", ->
+    beforeEach ->
       @reporter.spec = @spec
+      @spec.result = -> {status: "pending", skipped: false}
+
+    it "increments the pending count", ->
       @reporter.trackPending()
-      expect(@reporter.pending.length).toEqual(1)
-      expect(@reporter.pending[0]).toEqual(spec: "_spec_description_")
+      expect(@reporter.pending).toEqual(1)
+
+    it "logs the status as 'pending'", ->
+      spy = spyOn(@reporter, "log")
+      @reporter.trackPending()
+      expect(spy).toHaveBeenCalledWith
+        type:             "spec"
+        suite:            "_suite_name_"
+        spec:             "_spec_name_"
+        status:           "pending"
+        skipped:          false
+        full_description: "_spec_description_"
 
 
   describe "#trackFailure", ->
-
-    it "adds the information to the failure array", ->
+    beforeEach ->
       @reporter.spec = @spec
+      @spec.result = -> {status: "failed", skipped: false}
+
+    it "increments the failure count", ->
       @reporter.trackFailure()
-      expect(@reporter.failures.length).toEqual(1)
-      expect(@reporter.failures[0]).toEqual(spec: "_spec_description_", link: "?grep=_spec_description_", message: "_message_", trace: "_message_")
+      expect(@reporter.failures).toEqual(1)
+
+    it "logs the status as 'failed'", ->
+      spy = spyOn(@reporter, "log")
+      @reporter.trackFailure()
+      expect(spy).toHaveBeenCalledWith
+        type:             "spec"
+        suite:            "_suite_name_"
+        spec:             "_spec_name_"
+        status:           "failed"
+        skipped:          false
+        link:             "?grep=_spec_description_"
+        message:          "_message_"
+        trace:            "_message_"
+        full_description: "_spec_description_"
 
 
   describe "#log", ->
