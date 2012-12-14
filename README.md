@@ -68,7 +68,7 @@ describe 'Calculator', ->
     expect( calc.add(2,2) ).toBe(4)
 ```
 
-Save and close that file and run `rake teabag` from within the rails directory. You should see an error that the `calculator` file can't be found. Great. It doesn't, so we'll make it by opening a file at `app/assets/javascripts/calculator.coffee` and adding the following code.
+Save and close that file and run `rake teabag` from within the rails directory. You should see an error that the `calculator` file can't be found. Great. It doesn't exist yet, so we'll make it by opening a file at `app/assets/javascripts/calculator.coffee` and adding the following code.
 
 ```coffeescript
 class @Calculator
