@@ -380,6 +380,8 @@ So, there's lots of directions we can take the Teabag project, but we'll give it
 
 - Improve the user interface in the HTML reporter by adding a select for switching suites.
 
+- Ensure that the HTML reporter is working in IE6+ (give it a shot and let us know -- tested in IE9+).
+
 
 ## License
 
