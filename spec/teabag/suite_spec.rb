@@ -33,7 +33,7 @@ describe Teabag::Suite do
 
     it "converts file names that are in registered asset paths into usable asset urls" do
       Teabag.configuration.suite { |s| s.matcher = Teabag::Engine.root.join("spec/javascripts/support/*.*") }
-      expect(subject.specs).to eq(["support/support.js.coffee"])
+      expect(subject.specs).to eq(["support/support.js"])
     end
 
   end

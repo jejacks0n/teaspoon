@@ -30,6 +30,6 @@ class Teabag::Suite
     Rails.application.config.assets.paths.each do |path|
       filename.gsub!(%r(^#{path}[\/|\\]), "")
     end
-    filename
+    filename.gsub(/(\.js\.coffee|\.coffee)$/, '.js')
   end
 end

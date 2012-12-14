@@ -48,34 +48,40 @@ rails generate teabag:install
 
 ### Writing your first spec
 
-The install generator it will bootstrap you with a `spec/javascripts` directory. Teabag will automatically pick up any specs written in that folder that are named `[classname]_spec.js` (or .js.coffee/.coffee). Here we're going to write the spec in CoffeeScript using Jasmine.
+The install generator it will bootstrap you with a `spec/javascripts` directory. Teabag will automatically pick up any specs written in that folder that are named `[classname]_spec.js` (or .js.coffee/.coffee).
+
+Here we're going to write the spec in CoffeeScript using Jasmine.
 
 ```
 mkdir -p spec/javascripts/models
 ```
 
-open a file `spec/javascripts/models/calculator_spec.coffee` in your favorite editor.
+Open a file `spec/javascripts/calculator_spec.coffee` in your favorite editor.
 
 ```coffeescript
-#= require models/calculator
+#= require calculator
 
-describe 'calculator', ->
+describe 'Calculator', ->
 
   it 'should add two digits', ->
-    calculator = new Calculator()
-    expect( calculator.add(2,2) ).toBe(4)
+    calc = new Calculator()
+    expect( calc.add(2,2) ).toBe(4)
 ```
 
-Save and close that file and run `rake teabag` from within the rails directory. You should see an error that the Calculator class doesn't exist. Great. It doesn't, so we'll make it by opening a file at `app/assets/javascripts/models/calculator.coffee` and adding the following code.
+Save and close that file and run `rake teabag` from within the rails directory. You should see an error that the `calculator` file can't be found. Great. It doesn't, so we'll make it by opening a file at `app/assets/javascripts/calculator.coffee` and adding the following code.
 
 ```coffeescript
 class @Calculator
+```
 
+Run `rake teabag` again and you should have your first failing spec.  Now we just need to finish it up and make the test pass by adding the `add` method to Calculator.
+
+```coffeescript
   add: (a, b) ->
     a + b
 ```
 
-Run `rake teabag` again and you should have your first passing spec.
+Run `rake teabag` again and you should have your first passing spec!
 
 Start up your rails server and visit [localhost:3000/teabag](http://localhost:3000/teabag) to run the specs in the browser.
 
