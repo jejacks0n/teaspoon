@@ -3,8 +3,8 @@ describe "Teabag.Reporters.NormalizedSpec", ->
   beforeEach ->
     @jasmineSuite = {}
     @jasmineSpecResultsItems = [
-      {message: "_jasmine_message1_", trace: {stack: "_jasmine_stack_trace1_"}, passed: -> false},
-      {message: "_jasmine_message2_", trace: {stack: "_jasmine_stack_trace2_"}, passed: -> false},
+      {message: "_jasmine_message1_", trace: {stack: "_jasmine_stack_trace1_"}, passed: -> false}
+      {message: "_jasmine_message2_", trace: {stack: "_jasmine_stack_trace2_"}, passed: -> false}
     ]
     @jasmineSpecResults =
       skipped: false

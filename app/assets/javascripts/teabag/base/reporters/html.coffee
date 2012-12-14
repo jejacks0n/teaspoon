@@ -11,7 +11,6 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     @config = {"use-catch": true, "build-full-report": false, "display-progress": true}
     @total = {exist: 0, run: 0, passes: 0, failures: 0, skipped: 0}
     @views = {specs: {}, suites: {}}
-    @elements = {}
     @filter = false
     @readConfig()
     super
@@ -92,11 +91,10 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
   reportRunnerResults: =>
     return unless @total.run
-    @setText("stats-duration", "#{((new Teabag.Date().getTime() - @start) / 1000).toFixed(3)}s")
+    @setText("stats-duration", @elapsedTime())
     @setStatus("passed") unless @total.failures
     @setText("stats-passes", @total.passes)
     @setText("stats-failures", @total.failures)
-    @setText("stats-skipped", @total.skipped)
     if @total.run < @total.exist
       @total.skipped = @total.exist - @total.run
       @total.run = @total.exist
@@ -104,7 +102,11 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     @updateProgress()
 
 
-  updateStat: (name, value, force = false) ->
+  elapsedTime: ->
+    "#{((new Teabag.Date().getTime() - @start) / 1000).toFixed(3)}s"
+
+
+  updateStat: (name, value) ->
     return unless @config["display-progress"]
     @setText("stats-#{name}", value)
 
@@ -157,6 +159,10 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     name = button.getAttribute("id").replace(/^teabag-/, "")
     @config[name] = !@config[name]
     @cookie("teabag", @config)
+    @refresh()
+
+
+  refresh: ->
     window.location.href = window.location.href
 
 

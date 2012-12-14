@@ -56,6 +56,7 @@ class Teabag.Reporters.NormalizedSuite
 class Teabag.Reporters.BaseView
 
   constructor: ->
+    @elements = {}
     @build()
 
 
@@ -78,7 +79,7 @@ class Teabag.Reporters.BaseView
 
 
   findEl: (id) ->
-    @elements ||= []
+    @elements ||= {}
     @elements[id] ||= document.getElementById("teabag-#{id}")
 
 
