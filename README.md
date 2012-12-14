@@ -50,9 +50,9 @@ rails generate teabag:install
 
 ### Writing your first spec
 
-The install generator it will bootstrap you with a `spec/javascripts` directory. Teabag will automatically pick up any specs written in that folder that are named `[classname]_spec.js` (or .js.coffee/.coffee).
+The install generator will bootstrap you with a `spec/javascripts` directory. Teabag will automatically pick up any specs written in that folder that are named `[classname]_spec.js` (or .js.coffee/.coffee).
 
-Here we're going to write the spec in CoffeeScript using Jasmine.
+Here we're going to write the spec in CoffeeScript using [Jasmine](#jasmine), the default option, though Teabag also supports [Mocha](#mocha).
 
 Open a file `spec/javascripts/calculator_spec.coffee` in your favorite editor.
 
@@ -66,13 +66,31 @@ describe 'Calculator', ->
     expect( calc.add(2,2) ).toBe(4)
 ```
 
+*Note that we added the Sprokets directive to the top of the file to require the `calculator` source file, even before we have written it. We're cheating a little here so by acknowledging our folly, hopefully [Uncle Bob Martin](http://www.butunclebob.com/CleanCoder.UncleBob) won't be sending us a cease and desist order.*
+
 Save the file and run `rake teabag` from within the rails directory. You should see an error that the `calculator` file can't be found. Great. It doesn't exist yet, so we'll make it by opening a file at `app/assets/javascripts/calculator.coffee` and adding the following code.
 
 ```coffeescript
 class @Calculator
 ```
 
-Run `rake teabag` again and you should have your first failing spec.  Now we just need to finish it up and make the test pass by adding the `add` method to Calculator.
+Run `rake teabag` again, and now you should have your first legitimate failing spec (an implementation failure rather than a system one).  
+
+```
+Failures:
+
+  1) calculator should add two numbers.
+       Failure/Error: TypeError: 'undefined' is not a function
+
+       Finished in 0.01600 seconds
+       1 example, 1 failure
+
+       Failed examples:
+
+       /teabag/default?grep=calculator%20should%20add%20two%20numbers.
+```
+
+The Calculator Function Object is defined but it does not have an add method (undefined is not a function). Now we just need to finish it up and make the test pass by adding the `add` method to Calculator.
 
 ```coffeescript
   add: (a, b) ->
