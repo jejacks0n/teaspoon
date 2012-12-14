@@ -1,4 +1,5 @@
 require "json"
+require "teabag/result"
 
 class Teabag::Runner
 
@@ -21,23 +22,23 @@ class Teabag::Runner
   def output_from(line)
     json = JSON.parse(line)
     return false unless json["_teabag"] && json["type"]
-    notify_formatters json["type"], json
-    @failure_count += 1 if is_failure?(json)
+    result = Teabag::Result.build_from_json(@suite_name, json)
+    notify_formatters result
+    @failure_count += 1 if result.failing?
     return true
   rescue JSON::ParserError
     false
   end
 
-  private
-
-  def is_failure?(spec)
-    (spec['status'] != 'passed' && spec['status'] != 'pending') || spec['type'] == 'exception' || spec['type'] == 'error'
+  def notify_formatters(result)
+    @formatters.each do |formatter|
+      event = result.type
+      formatter.send(event, result) if formatter.respond_to?(event)
+    end
   end
 
-  def notify_formatters(event, data)
-    @formatters.each do |formatter|
-      formatter.send(event, @suite_name, data) if formatter.respond_to?(event)
-    end
+  def log(msg)
+    STDOUT.print msg
   end
 
 end

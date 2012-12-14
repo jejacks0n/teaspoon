@@ -1,21 +1,27 @@
+require 'teabag/formatters/base_formatter'
+
 module Teabag
   module Formatters
-    class ProgressFormatter
+    class ProgressFormatter < BaseFormatter
 
       RED = 31
       GREEN = 32
       YELLOW = 33
       CYAN = 36
 
-      def spec(suite_name, spec)
-        case spec["status"]
-          when "passed" then log ".", GREEN
-          when "pending" then log "*", YELLOW
-          else log "F", RED
+      def spec(result)
+        super
+        if result.passing?
+          log ".", GREEN
+        elsif result.pending?
+          log "*", YELLOW
+        else
+          log "F", RED
         end
       end
 
-      def error(suite_name, error)
+      # Errors are reported from the onError handler in Phantom, so they're not linked to a result
+      def error(error)
         log "#{error["msg"]}\n", RED
         for trace in error["trace"] || []
           log "  # #{filename(trace["file"])}:#{trace["line"]}#{trace["function"].present? ? " -- #{trace["function"]}" : ""}\n", CYAN
@@ -23,25 +29,18 @@ module Teabag
         log "\n"
       end
 
-      def results(suite_name, results)
-        @failures = results["failures"].length
-        pending = results["pending"].length
+      def results(results)
+        failure_count = results["failures"]
+        pending_count = results["pending"]
 
         log "\n\n"
-        pending_log(results["pending"]) if pending > 0
-        failure_log(results["failures"]) if failures > 0
-        status(results, failures, pending)
-        failed_examples(suite_name, results["failures"]) if failures > 0
-        raise Teabag::Failure if failures > 0 && Teabag.configuration.fail_fast
+        pending_log if pending_count > 0
+        failure_log if failure_count > 0
+        status(results, failure_count, pending_count)
+        failed_examples if failure_count > 0
+        raise Teabag::Failure if failure_count > 0 && Teabag.configuration.fail_fast
       end
 
-      def exception(suite_name, exception = {})
-        raise Teabag::RunnerException
-      end
-
-      def failures
-        @failures || 0
-      end
 
       private
 
@@ -61,15 +60,7 @@ module Teabag
         file.gsub(%r(^http://127.0.0.1:\d+/assets/), "").gsub(/[\?|&]?body=1/, "")
       end
 
-      def failed_examples(suite_name, failures)
-        log "\nFailed examples:\n"
-        failures.each do |failure|
-          log "\n#{Teabag.configuration.mount_at}/#{suite_name}#{failure["link"]}", RED
-        end
-        log "\n\n"
-      end
-
-      def failure_log(failures)
+      def failure_log
         log "Failures:\n"
         failures.each_with_index do |failure, index|
           log "\n  #{index + 1}) #{failure["spec"]}\n"
@@ -78,10 +69,18 @@ module Teabag
         log "\n"
       end
 
-      def pending_log(pending)
+      def failed_examples
+        log "\nFailed examples:\n"
+        failures.each do |failure|
+          log "\n#{Teabag.configuration.mount_at}/#{failure.teabag_suite}#{failure.link}", RED
+        end
+        log "\n\n"
+      end
+
+      def pending_log
         log "Pending:"
-        pending.each do |spec|
-          log "\n  #{spec["spec"]}\n", YELLOW
+        pendings.each do |result|
+          log "\n  #{result.spec}\n", YELLOW
           log "    # Not yet implemented\n", CYAN
         end
         log "\n"
