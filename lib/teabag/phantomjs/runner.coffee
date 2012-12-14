@@ -5,7 +5,7 @@ class @Runner
 
   constructor: ->
     @url = system.args[1]
-    @timeout = parseInt(system.args[2] || 180) * 1000
+    @timeout = parseInt(system.args[2] || 180) * 1000 # todo: add configuration -- default timeout is 3 minutes
 
 
   run: ->

@@ -63,7 +63,7 @@ describe "Teabag.Reporters.NormalizedSpec", ->
       it "returns the expected object", ->
         spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
         expect(spec.errors()).toEqual([{message: "_jasmine_message1_", stack: "_jasmine_stack_trace1_"}, {message: "_jasmine_message2_", stack: "_jasmine_stack_trace2_"}])
-        spyOn(@jasmineSpecResultsItems[0], 'passed').andReturn(true)
+        spyOn(@jasmineSpecResultsItems[0], "passed").andReturn(true)
         spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
         expect(spec.errors()).toEqual([{message: "_jasmine_message2_", stack: "_jasmine_stack_trace2_"}])
 
@@ -101,7 +101,7 @@ describe "Teabag.Reporters.NormalizedSpec", ->
       describe "failing", ->
 
         it "returns the expected object", ->
-          spyOn(@jasmineSpecResults, 'passed').andReturn(false)
+          spyOn(@jasmineSpecResults, "passed").andReturn(false)
           spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
           expect(spec.result()).toEqual({status: "failed", skipped: false})
 

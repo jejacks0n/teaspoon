@@ -58,7 +58,7 @@ describe "Jasmine Teabag.Runner", ->
 
     it "adds fixture support", ->
       expect(jasmine.getFixtures).toBeDefined()
-      @runner.fixturePath = '/path/to/fixtures'
+      @runner.fixturePath = "/path/to/fixtures"
       @runner.addFixtureSupport()
       expect(@fixtureObj.containerId).toBe("teabag-fixtures")
       expect(@fixtureObj.fixturesPath).toBe("/path/to/fixtures")

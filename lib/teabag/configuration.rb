@@ -12,15 +12,14 @@ module Teabag
     @@root              = nil # will default to Rails.root if left unset
     @@asset_paths       = ["spec/javascripts", "spec/javascripts/stylesheets"]
     @@fixture_path      = "spec/javascripts/fixtures"
-    @@formatters        = 'progress'
-
+    @@suites            = {}
 
     # console runner specific
-    @@server_timeout = 20
-    @@fail_fast      = true
-    @@suppress_log   = false
-
-    @@suites         = {}
+    @@formatters        = 'progress'
+    @@default_formatter = Teabag::Formatters::ProgressFormatter
+    @@server_timeout    = 20
+    @@fail_fast         = true
+    @@suppress_log      = false
 
     def self.root=(path)
       @@root = Pathname.new(path.to_s) if path.present?
@@ -38,7 +37,6 @@ module Teabag
       def initialize
         @matcher     = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
         @helper      = "spec_helper"
-        # ["teabag-jasmine"] or ["teabag-mocha"] -- for coffeescript files ["teabag/jasmine"] or ["teabag/mocha"]
         @javascripts = ["teabag-jasmine"]
         @stylesheets = ["teabag"]
 

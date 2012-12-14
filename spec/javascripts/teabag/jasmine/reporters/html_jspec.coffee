@@ -1,7 +1,7 @@
 describe "Jasmine Teabag.Reporters.HTML", ->
 
   beforeEach ->
-    spyOn(Teabag.Reporters.HTML.prototype, 'build')
+    spyOn(Teabag.Reporters.HTML.prototype, "build")
     @reporter = new Teabag.Reporters.HTML()
 
   describe "#readConfig", ->

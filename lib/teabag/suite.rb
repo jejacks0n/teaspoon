@@ -32,6 +32,6 @@ class Teabag::Suite
       filename = filename.gsub(%r(^#{path}[\/|\\]), "")
     end
     raise Teabag::AssetNotServable, "#{filename} is not within an asset path" if filename == original
-    filename.gsub(/(\.js\.coffee|\.coffee)$/, '.js')
+    filename.gsub(/(\.js\.coffee|\.coffee)$/, ".js")
   end
 end

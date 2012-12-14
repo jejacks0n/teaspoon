@@ -14,7 +14,7 @@ window.require = (file) ->
 describe "PhantomJS Runner", ->
 
   beforeEach ->
-    @logSpy = spyOn(window.console, 'log')
+    @logSpy = spyOn(window.console, "log")
     @runner = new Runner()
 
   describe "constructor", ->
@@ -118,7 +118,7 @@ describe "PhantomJS Runner", ->
 
     it "returns an object with the expected methods", ->
       object = @runner.pageCallbacks()
-      expect(Object.keys(object)).toEqual(['onError', 'onConsoleMessage', 'onLoadFinished'])
+      expect(Object.keys(object)).toEqual(["onError", "onConsoleMessage", "onLoadFinished"])
 
 
   describe "page callback methods", ->
@@ -129,33 +129,33 @@ describe "PhantomJS Runner", ->
     describe "onError", ->
 
       it "logs the json of a message and trace", ->
-        @callbacks.onError('_message_', ['trace1', 'trace2'])
+        @callbacks.onError("_message_", ["trace1", "trace2"])
         expect(@logSpy).toHaveBeenCalledWith('{"_teabag":true,"type":"error","msg":"_message_","trace":["trace1","trace2"]}')
 
 
     describe "onConsoleMessage", ->
 
       it "logs the message", ->
-        @callbacks.onConsoleMessage('_message_')
-        expect(@logSpy).toHaveBeenCalledWith('_message_')
+        @callbacks.onConsoleMessage("_message_")
+        expect(@logSpy).toHaveBeenCalledWith("_message_")
 
 
     describe "onLoadFinish", ->
 
       beforeEach ->
         @runner.initPage()
-        @waitSpy = spyOn(@runner, 'waitForResults')
+        @waitSpy = spyOn(@runner, "waitForResults")
 
       it "fails if the status was not success", ->
-        spy = spyOn(@runner, 'fail')
+        spy = spyOn(@runner, "fail")
         evalSpy = spyOn(@runner.page, "evaluate").andReturn(true)
-        @callbacks.onLoadFinished('failure')
+        @callbacks.onLoadFinished("failure")
         expect(spy).toHaveBeenCalledWith("Failed to load: #{@runner.url}")
         expect(evalSpy).toHaveBeenCalled()
         expect(@waitSpy).wasNotCalled()
 
 
       it "calls waitForResults", ->
-        @callbacks.onLoadFinished('success')
+        @callbacks.onLoadFinished("success")
         expect(@waitSpy).toHaveBeenCalled()
 
