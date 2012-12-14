@@ -1,16 +1,19 @@
 require "singleton"
+require "teabag/formatters/progress_formatter"
 
 module Teabag
   class Configuration
 
     include Singleton
 
-    cattr_accessor :root, :mount_at, :asset_paths, :fixture_path, :server_timeout, :fail_fast, :suppress_log, :suites
+    cattr_accessor :root, :mount_at, :asset_paths, :fixture_path, :default_formatter, :server_timeout, :fail_fast, :suppress_log, :suites
 
-    @@mount_at       = "/teabag"
-    @@root           = nil # will default to Rails.root if left unset
-    @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets"]
-    @@fixture_path   = "spec/javascripts/fixtures"
+    @@mount_at          = "/teabag"
+    @@root              = nil # will default to Rails.root if left unset
+    @@asset_paths       = ["spec/javascripts", "spec/javascripts/stylesheets"]
+    @@fixture_path      = "spec/javascripts/fixtures"
+    @@default_formatter = Teabag::Formatters::ProgressFormatter
+
 
     # console runner specific
     @@server_timeout = 20

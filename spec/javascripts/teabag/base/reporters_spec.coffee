@@ -1,7 +1,8 @@
 describe "Teabag.Reporters.NormalizedSpec", ->
 
   beforeEach ->
-    @jasmineSuite = {}
+    @jasmineSuite =
+      getFullName: -> "_full jasmine name_"
     @jasmineSpecResultsItems = [
       {message: "_jasmine_message1_", trace: {stack: "_jasmine_stack_trace1_"}, passed: -> false}
       {message: "_jasmine_message2_", trace: {stack: "_jasmine_stack_trace2_"}, passed: -> false}
@@ -17,7 +18,8 @@ describe "Teabag.Reporters.NormalizedSpec", ->
       suite: @jasmineSuite
       getFullName: -> "_full jasmine description_"
       results: => @jasmineSpecResults
-    @mochaSuite = {}
+    @mochaSuite =
+      fullTitle: -> "_full mocha name_"
     @mochaSpec =
       title: "_mocha_description_"
       parent: @mochaSuite
@@ -37,6 +39,7 @@ describe "Teabag.Reporters.NormalizedSpec", ->
         expect(spec.description).toEqual("_jasmine_description_")
         expect(spec.link).toEqual("?grep=_full%20jasmine%20description_")
         expect(spec.parent).toBe(@jasmineSuite)
+        expect(spec.suiteName).toBe("_full jasmine name_")
         expect(spec.viewId).toBe(42)
         expect(spec.pending).toBe(false)
 
@@ -48,6 +51,7 @@ describe "Teabag.Reporters.NormalizedSpec", ->
         expect(spec.description).toEqual("_mocha_description_")
         expect(spec.link).toEqual("?grep=_full%20mocha%20description_")
         expect(spec.parent).toBe(@mochaSuite)
+        expect(spec.suiteName).toBe("_full mocha name_")
         expect(spec.viewId).toBe(420)
         expect(spec.pending).toBe(false)
 
