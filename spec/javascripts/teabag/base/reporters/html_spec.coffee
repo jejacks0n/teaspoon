@@ -4,7 +4,7 @@ describe "Teabag.Reporters.HTML", ->
     @buildSpy = spyOn(Teabag.Reporters.HTML.prototype, "build")
     @readConfigSpy = spyOn(Teabag.Reporters.HTML.prototype, "readConfig")
     @reporter = new Teabag.Reporters.HTML()
-    @jasmineSuite = {}
+    @jasmineSuite = {getFullName: -> "_full jasmine suite description_"}
     @jasmineSpecResultsItems = [
       {message: "_jasmine_message1_", trace: {stack: "_jasmine_stack_trace1_"}, passed: -> false}
       {message: "_jasmine_message2_", trace: {stack: "_jasmine_stack_trace2_"}, passed: -> false}
