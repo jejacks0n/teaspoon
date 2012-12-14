@@ -88,7 +88,6 @@ module Teabag
         stats << ", #{pendings.size} pending" if pendings.size > 0
         log "#{stats}\n", failures.size > 0 ? RED : pendings.size > 0 ? YELLOW : GREEN
       end
-
     end
   end
 end

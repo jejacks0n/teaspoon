@@ -22,5 +22,4 @@ class Teabag::SpecController < ActionController::Base
     err  = "#{exception.class.name}: #{exception.message}"
     render text: "<script>throw Error(#{err.inspect})</script>"
   end
-
 end

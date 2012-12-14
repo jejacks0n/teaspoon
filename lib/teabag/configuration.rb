@@ -15,7 +15,7 @@ module Teabag
     @@suites            = {}
 
     # console runner specific
-    @@formatters        = 'progress'
+    @@formatters        = "progress"
     @@default_formatter = Teabag::Formatters::ProgressFormatter
     @@server_timeout    = 20
     @@fail_fast         = true
@@ -65,5 +65,4 @@ module Teabag
       @@configuration.send("#{directive.downcase}=", ENV[directive])
     end
   end
-
 end

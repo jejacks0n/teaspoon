@@ -5,7 +5,7 @@ module Teabag
       attr_accessor :total, :passes, :pendings, :failures, :errors
 
       def initialize
-        @total = 0
+        @total    = 0
         @passes   = []
         @pendings = []
         @failures = []
@@ -27,7 +27,6 @@ module Teabag
       def exception(exception = {})
         raise Teabag::RunnerException
       end
-
     end
   end
 end
