@@ -12,7 +12,7 @@ describe "Mocha Teabag.Reporters.Console", ->
       assert.calledWith(@onSpy, "end", @reporter.reportRunnerResults)
 
 
-  describe "reportSpecResults", ->
+  describe "#reportSpecResults", ->
 
     it "sets the error if one is passed in", ->
       spec = {}
