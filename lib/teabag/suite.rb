@@ -26,10 +26,12 @@ class Teabag::Suite
     Teabag::Configuration::Suite.new(&config)
   end
 
-  def asset_path_from_filename(filename)
+  def asset_path_from_filename(original)
+    filename = original
     Rails.application.config.assets.paths.each do |path|
-      filename.gsub!(%r(^#{path}[\/|\\]), "")
+      filename = filename.gsub(%r(^#{path}[\/|\\]), "")
     end
+    raise Teabag::AssetNotServable, "#{filename} is not within an asset path" if filename == original
     filename.gsub(/(\.js\.coffee|\.coffee)$/, '.js')
   end
 end

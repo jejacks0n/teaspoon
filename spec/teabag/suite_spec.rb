@@ -26,14 +26,14 @@ describe Teabag::Suite do
 
   describe "#specs" do
 
-    it "returns an array of spec files based on the matcher" do
-      Teabag.configuration.suite { |s| s.matcher = __FILE__ }
-      expect(subject.specs).to eq([__FILE__])
-    end
-
     it "converts file names that are in registered asset paths into usable asset urls" do
       Teabag.configuration.suite { |s| s.matcher = Teabag::Engine.root.join("spec/javascripts/support/*.*") }
       expect(subject.specs).to eq(["support/support.js"])
+    end
+
+    it "raises an AssetNotServable exception if the file can't be served by sprockets" do
+      Teabag.configuration.suite { |s| s.matcher = __FILE__ }
+      expect { subject.specs }.to raise_error(Teabag::AssetNotServable, "#{__FILE__} is not within an asset path")
     end
 
   end
