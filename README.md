@@ -9,7 +9,7 @@ It's intention is to be the simplest, but most complete Javascript testing solut
 
 Check out the [screenshots](https://github.com/modeset/teabag/tree/master/screenshots).
 
-We've just released Teabag, and we expect to be working on it for a while to get a glossy shine to everything, so check it out, write a few specs, and let us know what you think. Feedback and ideas would be awesome.
+We've just released Teabag, and we expect to be working on it for a while to get a glossy shine to everything, so check it out, write a few specs, and let us know what you think. Feedback and ideas are always welcome.
 
 ## Table of Contents
 
@@ -19,8 +19,10 @@ We've just released Teabag, and we expect to be working on it for a while to get
 4. [Writing Specs](#writing-specs)
 5. [Suites](#suites)
 6. [Configuration](#configuration)
-7. [Jasmine](#jasmine)
-8. [Mocha](#mocha)
+7. [Test Frameworks](#test-frameworks)
+8. [Support Libraries](#support-libraries)
+9. [CI Support](#ci-support)
+10. [Roadmap](#roadmap)
 
 ## Installation
 
@@ -52,10 +54,6 @@ The install generator it will bootstrap you with a `spec/javascripts` directory.
 
 Here we're going to write the spec in CoffeeScript using Jasmine.
 
-```
-mkdir -p spec/javascripts
-```
-
 Open a file `spec/javascripts/calculator_spec.coffee` in your favorite editor.
 
 ```coffeescript
@@ -68,7 +66,7 @@ describe 'Calculator', ->
     expect( calc.add(2,2) ).toBe(4)
 ```
 
-Save and close that file and run `rake teabag` from within the rails directory. You should see an error that the `calculator` file can't be found. Great. It doesn't exist yet, so we'll make it by opening a file at `app/assets/javascripts/calculator.coffee` and adding the following code.
+Save the file and run `rake teabag` from within the rails directory. You should see an error that the `calculator` file can't be found. Great. It doesn't exist yet, so we'll make it by opening a file at `app/assets/javascripts/calculator.coffee` and adding the following code.
 
 ```coffeescript
 class @Calculator
@@ -118,7 +116,7 @@ rake teabag suite=my_fantastic_suite
 
 When a failure is encountered, a URL will be generated so you can pop open a browser and load a focused run to examine that specific failure.
 
-Additional arguments to the rake command are `fails_fast=[true/false]` and `suppress_logs=[false/true]`. You can read more about these options / configuration directives below.
+You can override a few configurations by using environment variables. `FAILS_FALSE=[true/false]` and `SUPPRESS_LOGS=[false/true]`. You can read more about these configuration directives below.
 
 **Note:** By default the rake task runs within the development environment, but you can specify the environment using`RAILS_ENV=test rake teabag`. This is an asset compilation optimization, and to keep consistent with what you might see in the browser (since that's likely running in development).
 
@@ -149,7 +147,7 @@ describe("My great feature", function() {
 });
 ```
 
-Here's the same test written in CoffeeScript using Mocha + [expect.js](https://github.com/LearnBoost/expect.js) (Teabag ships with expect.js and other support libraries like [jasmine-jquery](https://github.com/velesin/jasmine-jquery).):
+Here's that same test written in CoffeeScript using Mocha + [expect.js](https://github.com/LearnBoost/expect.js) (Teabag ships with expect.js and other support libraries like [jasmine-jquery](https://github.com/velesin/jasmine-jquery).):
 
 ```coffeescript
 #= require jquery
@@ -157,14 +155,14 @@ describe "My great feature", ->
 
   it "will change the world", ->
     expect(true).to.be(true)
-    expect(true).to.not.be(undefined)
+    expect(jQuery).to.not.be(undefined)
 ```
 
 ### Pending Specs
 
 We've normalized declaring that a spec is pending between the two libraries. Since Jasmine lacks the concept we've added it in, and since Mocha has several ways to accomplish it we thought it would be worth mentioning what we consider the standard between the two to be.
 
-To mark a spec as pending you can either not provide a function as the second argument to `it`, or you can use `xit` and `xdescribe`.  Mocha provides some additional ways to accomplish this, but to keep it consistent we've normalized on what they both support easily.
+To mark a spec as pending you can either not provide a function as the second argument to `it`, or you can use `xit` and `xdescribe`.  Mocha provides some additional ways to accomplish this, but to keep it consistent we've normalized on what they both support.
 
 ```coffeescript
 describe "My great feature", ->
@@ -180,11 +178,11 @@ describe "My great feature", ->
       expect(true).to.be(false)
 ```
 
-If you're using one library and you want to take advantage of the things that that library provides you're completely free to do so, and this is provided as a suggestion more than anything. The Teabag reporters understand the techniques above and have specs for them.
+If you're using one library and you want to take advantage of the things that that library provides you're completely free to do so, and this is provided as a suggestion. The Teabag reporters understand the techniques above and have specs for them.
 
 ### Fixtures
 
-Teabag fixtures are using jasmine-jquery for now, but we'll be providing a more complete solution for loading fixtures at some point in the future.
+Teabag fixtures are using jasmine-jquery for now.
 
 If jasmine-jquery isn't your thing, you can also load your fixtures manually into the "#teabag-fixtures" element.
 
@@ -216,13 +214,13 @@ setTimeout(Teabag.execute, 1000) # defers execution for 1 second
 
 ## Suites
 
-Teabag uses the concept of suites to group your tests at a high level. These suites are run in isolation from one another, and can have entirely different configurations.
+Teabag uses the concept of suites to group your tests at a high level. These suites are run in isolation from one another, and can have different configurations.
 
 When Teabag is run via the rake task, it will stop at any point that a suite fails, which allows you to create a hierarchy of suites -- crafting tiers of pass expectation.  The fail_fast configuration lets you override this behavior -- useful for CI (more on setting these via env in the configuration section).
 
 You can define suites in the configuration, and for brevity `config` is the argument passed to the `Teabag.setup` block.
 
-When creating a suite definition you simply pass it a name, and a configuration block. The following example defines a suite named "my_suite". You can focus to just this suite by browsing to `teabag/my_suite` or running the rake task with `suite=my_suite`.
+When creating a suite definition you simply pass it a name and a block. The following example defines a suite named "my_suite". You can focus to just this suite by browsing to `/teabag/my_suite` or running the rake task with `suite=my_suite`.
 
 ```ruby
 config.suite :my_suite do |suite|
@@ -258,7 +256,7 @@ end
 
 #### `matcher`
 
-You can specify a file matcher for your specs, and the matching files will be automatically loaded when the suite is run. It's important that these files are serve-able from sprockets (aka the asset pipeline), otherwise you'll receive a warning about it.
+You can specify a file matcher for your specs, and the matching files will be automatically loaded when the suite is run. It's important that these files are serve-able from sprockets (aka the asset pipeline), and you'll receive an exception if they aren't.
 
 **default:** `"{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"`
 
@@ -266,7 +264,7 @@ You can specify a file matcher for your specs, and the matching files will be au
 
 #### `helper`
 
-Each suite can load a different spec helper, which can in turn require additional files since this file is also served via the asset pipeline. This file is loaded before your specs are loaded -- so could potentially include all of your specs (if you set the matcher to nil).
+Each suite can load a different spec helper, which can in turn require additional files since this file is also served via the asset pipeline. This file is loaded before your specs are loaded -- so you can potentially include all of your spec files and use this as a manifest (if you set the matcher to nil).
 
 **default:** `"spec_helper"`
 
@@ -280,7 +278,7 @@ To use the coffeescript source files: `"teabag/jasmine"` or `"teabag/mocha"`
 
 **default:** `["teabag-jasmine"]`
 
-**Note:** It's strongly encouraged to only include the base files in the `javascripts` directive. You can require any other libraries you need in your spec helper, which makes it easier to maintain because you don't have to restart the server.
+**Note:** It's strongly encouraged to only include the base files in the `javascripts` directive. You can require any other libraries you need in your spec helper. This makes it easier to maintain because you don't have to restart the server.
 
 #### `stylesheets`
 
@@ -297,7 +295,7 @@ The best way to read about the configuration options is to generate the initiali
 
 #### `mount_at`
 
-This determines where the Teabag spec path will be mounted. Changing this to `"/jasmine"` would allow you to browse to `http://localhost:3000/jasmine` to run your specs.
+This determines where the Teabag spec path will be mounted. Changing this to "/jasmine" would allow you to browse to `http://localhost:3000/jasmine` to run your specs.
 
 **default:** `"/teabag"`
 
@@ -341,18 +339,13 @@ When you run Teabag from the console, it will pipe all console.log/debug/etc. ca
 **default:** `false`
 
 
-## Jasmine
+## Test Frameworks
 
-Jasmine is a pretty big aspect of the default setup. We've been using Jasmine for a long time, and have been pretty happy with it.  It lacks a few important things that could be in a test framework, so we've done a little bit of work to make that nicer.  Like adding pending spec support.
+[Jasmine](http://pivotal.github.com/jasmine/) is a pretty big aspect of the default setup. We've been using Jasmine for a long time, and have been pretty happy with it.  It lacks a few important things that could be in a test framework, so we've done a little bit of work to make that nicer.  Like adding pending spec support.
 
+[Mocha](http://visionmedia.github.com/mocha/) came up while we were working on Teabag -- we read up about it and thought it was a pretty awesome library with some really great approaches to some of the things that some of us browser types should consider more often, so we included it and added support for it. We encourage you to give it a try.
 
-## Mocha
-
-Mocha came up while we were working on Teabag -- we read up about it and thought it was a pretty awesome library with some really great approaches to some of the things that some of us browser types should consider more often, so we included it and added support for it. We encourage you to give it a try.
-
-Read [more about Mocha](http://visionmedia.github.com/mocha/).
-
-To use Mocha just change your suite to include the `teabag-mocha` javascript.
+By default Jasmine will be loaded, and to use Mocha just change your suite to include the Mocha javascript.
 
 ```ruby
 config.suite do |suite|
@@ -361,14 +354,23 @@ end
 ```
 
 
+## Support Libraries
+
+Because we know that testing usually requires more than just the test framework we've included some of the great libraries that we use on a regular basis.
+
+- [jasmine-jquery.js](https://github.com/velesin/jasmine-jquery) jQuery matchers and fixture support (Jasmine).
+- [Sinon.JS](https://github.com/cjohansen/Sinon.JS) Great for stubbing / spying, and mocking Ajax (Mocha/Jasmine).
+- [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit (Mocha).
+
+
 ## CI Support
 
-There's a few things that we're doing to make Teabag nicer on CI. We'll be integrating a jUnit style XML reporter.
+There's a few things that we're doing to make Teabag nicer on CI. We're in the process of integrating a jUnit style XML reporter.
 
 More on this shortly....
 
 
-## Road Map
+## Roadmap
 
 So, there's lots of directions we can take the Teabag project, but we'll give it some time to see what people are looking for.  Here's a short list of things that will probably happen.
 
@@ -376,16 +378,7 @@ So, there's lots of directions we can take the Teabag project, but we'll give it
 
 - Add support for running Teabag using selenium.
 
-- Improve the user interface in the html reporter by adding a select for switching suites.
-
-
-## Support Libraries
-
-Because we know that testing usually requires more than just the test framework we've included some of the great libraries that we use on a consistent basis.
-
-- [jasmine-jquery.js](https://github.com/velesin/jasmine-jquery) Great jQuery matchers and fixture support (Jasmine).
-- [Sinon.JS](https://github.com/cjohansen/Sinon.JS) Great for stubbing Ajax (Mocha/Jasmine).
-- [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit (Mocha).
+- Improve the user interface in the HTML reporter by adding a select for switching suites.
 
 
 ## License
