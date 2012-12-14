@@ -326,9 +326,9 @@ Timeout for starting the server in seconds. If your server is slow to start you 
 **default:** `20`
 
 #### `fail_fast`
-When you're running several suites it can be useful to make Teabag fail directly after any suite fails (not continuing on to the next suite), but in environments like CI this isn't as desirable. You can also configure this using the fail_fast environment variable.
+When you're running several suites it can be useful to make Teabag fail directly after any suite fails (not continuing on to the next suite), but in environments like CI this isn't as desirable. You can also configure this using the FAIL_FAST environment variable.
 
-**Note:** override this directive by running `rake teabag fail_fast=false`
+**Note:** override this directive by running `rake teabag FAIL_FAST=false`
 
 **default:** `true`
 
@@ -336,7 +336,7 @@ When you're running several suites it can be useful to make Teabag fail directly
 
 When you run Teabag from the console, it will pipe all console.log/debug/etc. calls to the console. This is useful to catch places where you've forgotten to remove console.log calls, but in verbose applications that use logging heavily this may not be desirable.
 
-**Note:** override this directive by running `rake teabag suppress_log=true`
+**Note:** override this directive by running `rake teabag SUPPRESS_LOG=true`
 
 **default:** `false`
 

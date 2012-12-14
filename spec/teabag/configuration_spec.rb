@@ -21,17 +21,21 @@ describe Teabag do
     after do
       Teabag.configuration.suppress_log = false
       Teabag.configuration.fail_fast = true
+      Teabag.configuration.formatters = 'progress'
     end
 
     it "allows overriding of fail_fast and suppress_log from the env" do
       Teabag.setup { |c| config = c }
-      ENV["suppress_log"] = "true"
-      ENV["fail_fast"] = "false"
+      ENV["SUPPRESS_LOG"] = "true"
+      ENV["FAIL_FAST"] = "false"
+      ENV["FORMATTERS"] = "something"
       Teabag.send(:override_from_env)
       expect(Teabag.configuration.suppress_log).to eq(true)
       expect(Teabag.configuration.fail_fast).to eq(false)
-      ENV["suppress_log"] = nil
-      ENV["fail_fast"] = nil
+      expect(Teabag.configuration.formatters).to eq('something')
+      ENV["SUPPRESS_LOG"] = nil
+      ENV["FAIL_FAST"] = nil
+      ENV["FORMATTERS"] = nil
     end
 
   end

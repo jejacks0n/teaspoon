@@ -58,9 +58,13 @@ module Teabag
   private
 
   def self.override_from_env
-    %w(fail_fast suppress_log formatters).each do |directive|
+    %w(FAIL_FAST SUPPRESS_LOG).each do |directive|
       next unless ENV[directive].present?
-      @@configuration.send("#{directive}=", ENV[directive] == "true")
+      @@configuration.send("#{directive.downcase}=", ENV[directive] == "true")
+    end
+    %w(FORMATTERS).each do |directive|
+      next unless ENV[directive].present?
+      @@configuration.send("#{directive.downcase}=", ENV[directive])
     end
   end
 
