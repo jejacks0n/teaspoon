@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source :rubygems
 
 gemspec
 
@@ -9,3 +9,7 @@ gem "sass-rails"
 gem "jquery-rails"
 gem "haml-rails"
 gem "haml_coffee_assets"
+
+if RUBY_PLATFORM =~ /linux/
+  gem 'phantomjs-linux'
+end
