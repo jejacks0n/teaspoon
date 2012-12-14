@@ -368,6 +368,15 @@ There's a few things that we're doing to make Teabag nicer on CI. We'll be integ
 More on this shortly....
 
 
+## Road Map
+
+So, there's lots of directions we can take the Teabag project, but we'll give it some time to see what people are looking for.  Here's a short list of things that will probably happen.
+
+- A proper Command Line Interface which will allow running as `teabag spec/javascripts/calculator_spec.coffee`, and with proper arguments that will let you override configuration. This will make things like running more focused failures nicer.
+
+- Add support for running your specs with selenium.
+
+
 ## Support Libraries
 
 Because we know that testing usually requires more than just the test framework we've included some of the great libraries that we use on a consistent basis.
