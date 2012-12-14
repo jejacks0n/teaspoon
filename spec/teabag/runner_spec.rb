@@ -65,7 +65,8 @@ describe Teabag::Runner do
       subject.process('{"_teabag": true, "type": "spec", "status": "pending"}')
       subject.process('{"_teabag": true, "type": "error"}')
       subject.process('{"_teabag": true, "type": "exception"}')
-      subject.failure_count.should == 3
+      subject.process('{"_teabag": true, "type": "results"}')
+      subject.failure_count.should == 1
     end
 
   end

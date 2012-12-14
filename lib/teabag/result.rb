@@ -32,7 +32,7 @@ module Teabag
     end
 
     def failing?
-      (status != "passed" && status != "pending") || type == "exception" || type == "error"
+      (status != "passed" && status != "pending") && type == "spec"
     end
 
     def passing?
