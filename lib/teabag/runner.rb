@@ -5,9 +5,9 @@ class Teabag::Runner
   attr_accessor :formatters
   attr_reader   :failure_count
 
-  def initialize(suite_name = :default, default_formatter = Teabag::Formatters::ProgressFormatter.new)
+  def initialize(suite_name = :default)
     @suite_name = suite_name
-    @formatters = [ default_formatter ]
+    @formatters = [ Teabag.configuration.default_formatter.new ]
     @failure_count = 0
   end
 
