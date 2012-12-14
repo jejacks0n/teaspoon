@@ -130,7 +130,7 @@ describe "PhantomJS Runner", ->
 
       it "logs the json of a message and trace", ->
         @callbacks.onError("_message_", ["trace1", "trace2"])
-        expect(@logSpy).toHaveBeenCalledWith('{"_teabag":true,"type":"error","msg":"_message_","trace":["trace1","trace2"]}')
+        expect(@logSpy).toHaveBeenCalledWith('{"_teabag":true,"type":"error","message":"_message_","trace":["trace1","trace2"]}')
 
 
     describe "onConsoleMessage", ->
