@@ -1,3 +1,9 @@
+#= require_self
+#= require teabag/base/reporters/html/progress_view
+#= require teabag/base/reporters/html/spec_view
+#= require teabag/base/reporters/html/failure_view
+#= require teabag/base/reporters/html/suite_view
+
 class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
   constructor: ->
@@ -63,13 +69,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
 
   buildProgress: ->
-    if !@config["display-progress"]
-      @progress = new Teabag.Reporters.HTML.NoProgressView()
-    else
-      if Teabag.Reporters.HTML.RadialProgressView.supported
-        @progress = new Teabag.Reporters.HTML.RadialProgressView()
-      else
-        @progress = new Teabag.Reporters.HTML.SimpleProgressView()
+    @progress = Teabag.Reporters.HTML.ProgressView.create(@config["display-progress"])
     @progress.appendTo(@findEl("progress"))
 
 
@@ -169,171 +169,3 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
       date = new Teabag.Date()
       date.setDate(date.getDate() + 365)
       document.cookie = "#{name}=#{escape(JSON.stringify(value))}; path=/; expires=#{date.toUTCString()};"
-
-
-
-class Teabag.Reporters.HTML.NoProgressView extends Teabag.Reporters.BaseView
-
-  build: ->
-    @el = @createEl("div", "teabag-indicator modeset-logo")
-
-
-  update: ->
-    # do nothing
-
-
-
-class Teabag.Reporters.HTML.SimpleProgressView extends Teabag.Reporters.HTML.NoProgressView
-
-  build: ->
-    @el = @createEl("div", "simple-progress")
-    @el.innerHTML = """
-      <em id="teabag-progress-percent">0%</em>
-      <span id="teabag-progress-span" class="teabag-indicator"></span>
-    """
-
-
-  update: (total, run) ->
-    percent = if total then Math.ceil((run * 100) / total) else 0
-    @setHtml("progress-percent", "#{percent}%")
-
-
-
-class Teabag.Reporters.HTML.RadialProgressView extends Teabag.Reporters.HTML.NoProgressView
-
-  @supported: !!document.createElement("canvas").getContext
-
-  build: ->
-    @el = @createEl("div", "teabag-indicator radial-progress")
-    @el.innerHTML = """
-      <canvas id="teabag-progress-canvas"></canvas>
-      <em id="teabag-progress-percent">0%</em>
-    """
-
-  appendTo: ->
-    super
-    @size = 80
-    try
-      canvas = @findEl("progress-canvas")
-      canvas.width = canvas.height = canvas.style.width = canvas.style.height = @size
-      @ctx = canvas.getContext("2d")
-      @ctx.strokeStyle = "#fff"
-      @ctx.lineWidth = 1.5
-    catch e # intentionally do nothing
-
-
-  update: (total, run) ->
-    percent = if total then Math.ceil((run * 100) / total) else 0
-    @setHtml("progress-percent", "#{percent}%")
-    return unless @ctx
-    half = @size / 2
-    @ctx.clearRect(0, 0, @size, @size)
-    @ctx.beginPath()
-    @ctx.arc(half, half, half - 1, 0, Math.PI * 2 * (percent / 100), false)
-    @ctx.stroke()
-
-
-
-class Teabag.Reporters.HTML.FailureView extends Teabag.Reporters.BaseView
-
-  constructor: (@spec) ->
-    super
-
-
-  build: ->
-    super("spec")
-    html = """<h1 class="teabag-clearfix"><a href="#{@spec.link}">#{@spec.fullDescription}</a></h1>"""
-    for error in @spec.errors()
-      html += """<div>#{@htmlSafe(error.stack || error.message || "Stack trace unavailable")}</div>"""
-    @el.innerHTML = html
-
-
-
-class Teabag.Reporters.HTML.SpecView extends Teabag.Reporters.BaseView
-
-  viewId = 0
-
-  constructor: (@spec, @reporter) ->
-    @views = @reporter.views
-    @spec.viewId = viewId += 1
-    @views.specs[@spec.viewId] = @
-    super
-
-
-  build: ->
-    classes = ["spec"]
-    classes.push("state-pending") if @spec.pending
-    super(classes.join(" "))
-    @el.innerHTML = """<a href="#{@spec.link}">#{@spec.description}</a>"""
-    @parentView = @buildParent()
-    @parentView.append(@el)
-
-
-  buildParent: ->
-    parent = @spec.parent
-    if parent.viewId
-      @views.suites[parent.viewId]
-    else
-      view = new Teabag.Reporters.HTML.SuiteView(parent, @reporter)
-      @views.suites[view.suite.viewId] = view
-
-
-  buildErrors: ->
-    div = @createEl("div")
-    html = ""
-    for error in @spec.errors()
-      html += """#{@htmlSafe(error.stack || error.message || "Stack trace unavailable")}"""
-    div.innerHTML = html
-    @append(div)
-
-
-  updateState: (state, elapsed) ->
-    result = @spec.result()
-    classes = ["state-#{state}"]
-    classes.push("slow") if elapsed > Teabag.slow
-    @el.innerHTML += "<span>#{elapsed}ms</span>" unless state == "failed"
-    @el.className = classes.join(" ")
-    @buildErrors() unless result.status == "passed"
-    @parentView.updateState?(state)
-
-
-
-class Teabag.Reporters.HTML.SuiteView extends Teabag.Reporters.BaseView
-
-  viewId = 0
-
-  constructor: (@suite, @reporter) ->
-    @views = @reporter.views
-    @suite.viewId = viewId += 1
-    @views.suites[@suite.viewId] = @
-    @suite = new Teabag.Reporters.NormalizedSuite(suite)
-    super
-
-
-  build: ->
-    super("suite")
-    @el.innerHTML = """<h1><a href="#{@suite.link}">#{@suite.description}</a></h1>"""
-    @parentView = @buildParent()
-    @parentView.append(@el)
-
-
-  buildParent: ->
-    parent = @suite.parent
-    return @reporter unless parent
-    if parent.viewId
-      @views.suites[parent.viewId]
-    else
-      view = new Teabag.Reporters.HTML.SuiteView(parent, @reporter)
-      @views.suites[view.suite.viewId] = view
-
-
-  append: (el) ->
-    super(@ol = @createEl("ol")) unless @ol
-    @ol.appendChild(el)
-
-
-  updateState: (state) ->
-    return if @state == "failed"
-    @el.className = "#{@el.className.replace(/\s?state-\w+/, "")} state-#{state}"
-    @parentView.updateState?(state)
-    @state = state
