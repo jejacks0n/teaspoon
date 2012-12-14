@@ -48,7 +48,7 @@ rails generate teabag:install
 
 ### Writing your first spec
 
-The install generator it will bootstrap you with a `spec/javascripts` directory. Teabag will automatically pick up any specs written in that folder that are named `[classname]_spec.js` (or .js.coffee/.coffee`). Here we're going to write the spec in CoffeeScript using Jasmine.
+The install generator it will bootstrap you with a `spec/javascripts` directory. Teabag will automatically pick up any specs written in that folder that are named `[classname]_spec.js` (or .js.coffee/.coffee). Here we're going to write the spec in CoffeeScript using Jasmine.
 
 ```
 mkdir -p spec/javascripts/models
