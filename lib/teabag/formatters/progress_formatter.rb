@@ -30,17 +30,13 @@ module Teabag
       end
 
       def results(results)
-        failure_count = results["failures"]
-        pending_count = results["pending"]
-
         log "\n\n"
-        pending_log if pending_count > 0
-        failure_log if failure_count > 0
-        status(results, failure_count, pending_count)
-        failed_examples if failure_count > 0
-        raise Teabag::Failure if failure_count > 0 && Teabag.configuration.fail_fast
+        pending_log if pendings.size > 0
+        failure_log if failures.size > 0
+        status(results)
+        failed_examples if failures.size > 0
+        raise Teabag::Failure if failures.size > 0 && Teabag.configuration.fail_fast
       end
-
 
       private
 
@@ -86,11 +82,11 @@ module Teabag
         log "\n"
       end
 
-      def status(results, fails, pending)
+      def status(results)
         log "Finished in #{results["elapsed"]} seconds\n"
-        stats = "#{pluralize("example", results["total"])}, #{pluralize("failure", fails)}"
-        stats << ", #{pending} pending" if pending > 0
-        log "#{stats}\n", fails > 0 ? RED : pending > 0 ? YELLOW : GREEN
+        stats = "#{pluralize("example", total)}, #{pluralize("failure", failures.size)}"
+        stats << ", #{pendings.size} pending" if pendings.size > 0
+        log "#{stats}\n", failures.size > 0 ? RED : pendings.size > 0 ? YELLOW : GREEN
       end
 
     end

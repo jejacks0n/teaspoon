@@ -20,9 +20,6 @@ describe "Teabag.Reporters.Console", ->
   describe "constructor", ->
 
     it "tracks failures, pending, total, and start time", ->
-      expect(@reporter.failures).toEqual(0)
-      expect(@reporter.pending).toEqual(0)
-      expect(@reporter.total).toEqual(0)
       expect(@reporter.start).toBeDefined()
 
 
@@ -31,10 +28,6 @@ describe "Teabag.Reporters.Console", ->
     it "normalizes the spec", ->
       @reporter.reportSpecResults()
       expect(@normalizeSpy).toHaveBeenCalled()
-
-    it "adds to the total", ->
-      @reporter.reportSpecResults()
-      expect(@reporter.total).toEqual(1)
 
     it "logs the information", ->
       spy = spyOn(@reporter, "log")
@@ -75,10 +68,8 @@ describe "Teabag.Reporters.Console", ->
       @reporter.reportRunnerResults()
       Teabag.finished = false # race condition? - this may catch and think the results are done
       args = spy.mostRecentCall.args[0]
-      expect(args['type']).toEqual("results")
-      expect(args['total']).toEqual(0)
-      expect(args['failures']).toEqual(@reporter.failures)
-      expect(args['pending']).toEqual(@reporter.pending)
+      expect(args["type"]).toEqual("results")
+      expect(args["elapsed"]).toBeDefined()
 
     it "tells Teabag that we're finished", ->
       @reporter.reportRunnerResults()
@@ -90,10 +81,6 @@ describe "Teabag.Reporters.Console", ->
     beforeEach ->
       @reporter.spec = @spec
       @spec.result = -> {status: "pending", skipped: false}
-
-    it "increments the pending count", ->
-      @reporter.trackPending()
-      expect(@reporter.pending).toEqual(1)
 
     it "logs the status as 'pending'", ->
       spy = spyOn(@reporter, "log")
@@ -111,10 +98,6 @@ describe "Teabag.Reporters.Console", ->
     beforeEach ->
       @reporter.spec = @spec
       @spec.result = -> {status: "failed", skipped: false}
-
-    it "increments the failure count", ->
-      @reporter.trackFailure()
-      expect(@reporter.failures).toEqual(1)
 
     it "logs the status as 'failed'", ->
       spy = spyOn(@reporter, "log")

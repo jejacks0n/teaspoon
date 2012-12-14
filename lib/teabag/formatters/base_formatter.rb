@@ -2,9 +2,10 @@ module Teabag
   module Formatters
     class BaseFormatter
 
-      attr_accessor :passes, :pendings, :failures, :errors
+      attr_accessor :total, :passes, :pendings, :failures, :errors
 
       def initialize
+        @total = 0
         @passes   = []
         @pendings = []
         @failures = []
@@ -12,6 +13,7 @@ module Teabag
       end
 
       def spec(result)
+        @total += 1
         if result.passing?
           @passes << result
         elsif result.pending?
