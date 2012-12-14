@@ -7,9 +7,14 @@ Ok, another test runner, right? Really? Yeah, that's a tough one, but we're pret
 
 The intention is to be the simplest but most complete Javascript testing solution for Rails, taking full advantage of the asset pipeline. It ships with support for both Jasmine and Mocha, and has custom reporters for both libraries.
 
-Check out the [screenshots](https://github.com/modeset/teabag/tree/master/screenshots).
-
 We've just released Teabag, and we expect to be working on it for a while to get a glossy shine to everything, so check it out and let us know what you think. Feedback, ideas and pull requests would be awesome.
+
+## Screenshots
+### Running in the console
+![Console Reporter](https://raw.github.com/modeset/teabag/master/screenshots/console-reporter.png)
+### Running in the browser
+![Browser Reporter](https://raw.github.com/modeset/teabag/master/screenshots/html-reporter.png)
+
 
 ## Table of Contents
 
