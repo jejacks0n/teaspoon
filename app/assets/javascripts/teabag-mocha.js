@@ -5070,12 +5070,13 @@
   Teabag.Reporters.NormalizedSpec = (function() {
 
     function NormalizedSpec(spec) {
-      var _base;
+      var _base, _base1;
       this.spec = spec;
       this.fullDescription = (typeof (_base = this.spec).getFullName === "function" ? _base.getFullName() : void 0) || this.spec.fullTitle();
       this.description || (this.description = this.spec.description || this.spec.title);
       this.link = "?grep=" + (encodeURIComponent(this.fullDescription));
       this.parent = this.spec.suite || this.spec.parent;
+      this.suiteName = (typeof (_base1 = this.parent).getFullName === "function" ? _base1.getFullName() : void 0) || this.parent.fullTitle();
       this.viewId = this.spec.viewId;
       this.pending = this.spec.pending;
     }
@@ -5162,6 +5163,7 @@
   Teabag.Reporters.BaseView = (function() {
 
     function BaseView() {
+      this.elements = {};
       this.build();
     }
 
@@ -5189,7 +5191,7 @@
 
     BaseView.prototype.findEl = function(id) {
       var _base;
-      this.elements || (this.elements = []);
+      this.elements || (this.elements = {});
       return (_base = this.elements)[id] || (_base[id] = document.getElementById("teabag-" + id));
     };
 
@@ -5237,9 +5239,6 @@
 
     function Console() {
       this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.failures = [];
-      this.pending = [];
-      this.total = 0;
       this.start = new Teabag.Date().getTime();
     }
 
@@ -5249,51 +5248,62 @@
       result = this.spec.result();
       switch (result.status) {
         case "pending":
-          this.trackPending();
-          break;
+          return this.trackPending();
         case "failed":
-          this.trackFailure();
+          return this.trackFailure();
+        default:
+          return this.log({
+            type: "spec",
+            suite: this.spec.suiteName,
+            spec: this.spec.description,
+            status: result.status,
+            skipped: result.skipped,
+            full_description: this.spec.fullDescription
+          });
       }
-      this.total += 1;
-      return this.log({
-        type: "spec",
-        spec: this.spec.description,
-        status: result.status,
-        skipped: result.skipped
-      });
-    };
-
-    Console.prototype.reportRunnerResults = function() {
-      this.log({
-        type: "results",
-        total: this.total,
-        failures: this.failures,
-        pending: this.pending,
-        elapsed: ((new Teabag.Date().getTime() - this.start) / 1000).toFixed(5)
-      });
-      return Teabag.finished = true;
     };
 
     Console.prototype.trackPending = function() {
-      return this.pending.push({
-        spec: this.spec.fullDescription
+      var result;
+      result = this.spec.result();
+      return this.log({
+        type: "spec",
+        suite: this.spec.suiteName,
+        spec: this.spec.description,
+        status: result.status,
+        skipped: result.skipped,
+        full_description: this.spec.fullDescription
       });
     };
 
     Console.prototype.trackFailure = function() {
-      var error, _i, _len, _ref, _results;
+      var error, result, _i, _len, _ref, _results;
+      result = this.spec.result();
       _ref = this.spec.errors();
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         error = _ref[_i];
-        _results.push(this.failures.push({
-          spec: this.spec.fullDescription,
+        _results.push(this.log({
+          type: "spec",
+          suite: this.spec.suiteName,
+          spec: this.spec.description,
+          status: result.status,
+          skipped: result.skipped,
+          full_description: this.spec.fullDescription,
           link: this.spec.link,
           message: error.message,
           trace: error.stack || error.message || "Stack Trace Unavailable"
         }));
       }
       return _results;
+    };
+
+    Console.prototype.reportRunnerResults = function() {
+      this.log({
+        type: "results",
+        elapsed: ((new Teabag.Date().getTime() - this.start) / 1000).toFixed(5)
+      });
+      return Teabag.finished = true;
     };
 
     Console.prototype.log = function(obj) {
@@ -5339,7 +5349,6 @@
         specs: {},
         suites: {}
       };
-      this.elements = {};
       this.filter = false;
       this.readConfig();
       HTML.__super__.constructor.apply(this, arguments);
@@ -5349,6 +5358,7 @@
       this.buildLayout();
       this.el = this.findEl("report-all");
       this.setText("env-info", this.envInfo());
+      this.setText("version", Teabag.version);
       this.findEl("toggles").onclick = this.toggleConfig;
       this.showConfiguration();
       return this.buildProgress();
@@ -5358,19 +5368,11 @@
       var el;
       el = this.createEl("div");
       document.body.appendChild(el);
-      return el.innerHTML = "<div class=\"teabag-clearfix\">\n  <div id=\"teabag-title\">\n    <h1>Teabag</h1>\n    <ul>\n      <li>version: <b><%= Teabag::VERSION %></b></li>\n      <li id=\"teabag-env-info\"></li>\n    </ul>\n  </div>\n  <div id=\"teabag-progress\"></div>\n  <ul id=\"teabag-stats\">\n    <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n    <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n    <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n    <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n  </ul>\n</div>\n\n<div id=\"teabag-controls\" class=\"teabag-clearfix\">\n  <div id=\"teabag-toggles\">\n    <button id=\"teabag-use-catch\">Use Try/Catch</button>\n    <button id=\"teabag-build-full-report\">Build Full Report</button>\n    <button id=\"teabag-display-progress\">Display Progress</button>\n  </div>\n  <div id=\"teabag-filtered\">\n    <button onclick=\"window.location.href = window.location.pathname\">Run All Specs</button>\n  </div>\n</div>\n\n<hr/>\n\n<div id=\"teabag-report\">\n  <ol id=\"teabag-report-failures\"></ol>\n  <ol id=\"teabag-report-all\"></ol>\n</div>";
+      return el.innerHTML = "<div class=\"teabag-clearfix\">\n  <div id=\"teabag-title\">\n    <h1>Teabag</h1>\n    <ul>\n      <li>version: <b id=\"teabag-version\"></b></li>\n      <li id=\"teabag-env-info\"></li>\n    </ul>\n  </div>\n  <div id=\"teabag-progress\"></div>\n  <ul id=\"teabag-stats\">\n    <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n    <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n    <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n    <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n  </ul>\n</div>\n\n<div id=\"teabag-controls\" class=\"teabag-clearfix\">\n  <div id=\"teabag-toggles\">\n    <button id=\"teabag-use-catch\">Use Try/Catch</button>\n    <button id=\"teabag-build-full-report\">Build Full Report</button>\n    <button id=\"teabag-display-progress\">Display Progress</button>\n  </div>\n  <div id=\"teabag-filtered\">\n    <button onclick=\"window.location.href = window.location.pathname\">Run All Specs</button>\n  </div>\n</div>\n\n<hr/>\n\n<div id=\"teabag-report\">\n  <ol id=\"teabag-report-failures\"></ol>\n  <ol id=\"teabag-report-all\"></ol>\n</div>";
     };
 
     HTML.prototype.buildProgress = function() {
-      if (!this.config["display-progress"]) {
-        this.progress = new Teabag.Reporters.HTML.NoProgressView();
-      } else {
-        if (Teabag.Reporters.HTML.RadialProgressView.supported) {
-          this.progress = new Teabag.Reporters.HTML.RadialProgressView();
-        } else {
-          this.progress = new Teabag.Reporters.HTML.SimpleProgressView();
-        }
-      }
+      this.progress = Teabag.Reporters.HTML.ProgressView.create(this.config["display-progress"]);
       return this.progress.appendTo(this.findEl("progress"));
     };
 
@@ -5399,13 +5401,12 @@
       if (!this.total.run) {
         return;
       }
-      this.setText("stats-duration", "" + (((new Teabag.Date().getTime() - this.start) / 1000).toFixed(3)) + "s");
+      this.setText("stats-duration", this.elapsedTime());
       if (!this.total.failures) {
         this.setStatus("passed");
       }
       this.setText("stats-passes", this.total.passes);
       this.setText("stats-failures", this.total.failures);
-      this.setText("stats-skipped", this.total.skipped);
       if (this.total.run < this.total.exist) {
         this.total.skipped = this.total.exist - this.total.run;
         this.total.run = this.total.exist;
@@ -5414,10 +5415,11 @@
       return this.updateProgress();
     };
 
-    HTML.prototype.updateStat = function(name, value, force) {
-      if (force == null) {
-        force = false;
-      }
+    HTML.prototype.elapsedTime = function() {
+      return "" + (((new Teabag.Date().getTime() - this.start) / 1000).toFixed(3)) + "s";
+    };
+
+    HTML.prototype.updateStat = function(name, value) {
       if (!this.config["display-progress"]) {
         return;
       }
@@ -5491,6 +5493,10 @@
       name = button.getAttribute("id").replace(/^teabag-/, "");
       this.config[name] = !this.config[name];
       this.cookie("teabag", this.config);
+      return this.refresh();
+    };
+
+    HTML.prototype.refresh = function() {
       return window.location.href = window.location.href;
     };
 
@@ -5514,21 +5520,40 @@
 
   })(Teabag.Reporters.BaseView);
 
-  Teabag.Reporters.HTML.NoProgressView = (function(_super) {
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-    __extends(NoProgressView, _super);
+  Teabag.Reporters.HTML.ProgressView = (function(_super) {
 
-    function NoProgressView() {
-      return NoProgressView.__super__.constructor.apply(this, arguments);
+    __extends(ProgressView, _super);
+
+    function ProgressView() {
+      return ProgressView.__super__.constructor.apply(this, arguments);
     }
 
-    NoProgressView.prototype.build = function() {
+    ProgressView.create = function(displayProgress) {
+      if (displayProgress == null) {
+        displayProgress = true;
+      }
+      if (!displayProgress) {
+        return new Teabag.Reporters.HTML.ProgressView();
+      }
+      if (Teabag.Reporters.HTML.RadialProgressView.supported) {
+        return new Teabag.Reporters.HTML.RadialProgressView();
+      } else {
+        return Teabag.Reporters.HTML.SimpleProgressView();
+      }
+    };
+
+    ProgressView.prototype.build = function() {
       return this.el = this.createEl("div", "teabag-indicator modeset-logo");
     };
 
-    NoProgressView.prototype.update = function() {};
+    ProgressView.prototype.update = function() {};
 
-    return NoProgressView;
+    return ProgressView;
 
   })(Teabag.Reporters.BaseView);
 
@@ -5553,7 +5578,7 @@
 
     return SimpleProgressView;
 
-  })(Teabag.Reporters.HTML.NoProgressView);
+  })(Teabag.Reporters.HTML.ProgressView);
 
   Teabag.Reporters.HTML.RadialProgressView = (function(_super) {
 
@@ -5601,32 +5626,12 @@
 
     return RadialProgressView;
 
-  })(Teabag.Reporters.HTML.NoProgressView);
+  })(Teabag.Reporters.HTML.ProgressView);
 
-  Teabag.Reporters.HTML.FailureView = (function(_super) {
-
-    __extends(FailureView, _super);
-
-    function FailureView(spec) {
-      this.spec = spec;
-      FailureView.__super__.constructor.apply(this, arguments);
-    }
-
-    FailureView.prototype.build = function() {
-      var error, html, _i, _len, _ref;
-      FailureView.__super__.build.call(this, "spec");
-      html = "<h1 class=\"teabag-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
-      _ref = this.spec.errors();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        error = _ref[_i];
-        html += "<div>" + (this.htmlSafe(error.stack || error.message || "Stack trace unavailable")) + "</div>";
-      }
-      return this.el.innerHTML = html;
-    };
-
-    return FailureView;
-
-  })(Teabag.Reporters.BaseView);
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML.SpecView = (function(_super) {
     var viewId;
@@ -5700,6 +5705,41 @@
     return SpecView;
 
   })(Teabag.Reporters.BaseView);
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Teabag.Reporters.HTML.FailureView = (function(_super) {
+
+    __extends(FailureView, _super);
+
+    function FailureView(spec) {
+      this.spec = spec;
+      FailureView.__super__.constructor.apply(this, arguments);
+    }
+
+    FailureView.prototype.build = function() {
+      var error, html, _i, _len, _ref;
+      FailureView.__super__.build.call(this, "spec");
+      html = "<h1 class=\"teabag-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
+      _ref = this.spec.errors();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        error = _ref[_i];
+        html += "<div>" + (this.htmlSafe(error.stack || error.message || "Stack trace unavailable")) + "</div>";
+      }
+      return this.el.innerHTML = html;
+    };
+
+    return FailureView;
+
+  })(Teabag.Reporters.BaseView);
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML.SuiteView = (function(_super) {
     var viewId;
