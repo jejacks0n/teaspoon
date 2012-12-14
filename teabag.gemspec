@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "Teabag: A Javascript test runner built on top of Rails"
   s.description = "Run Javascript tests using Jasmine or Mocha (with custom reporters) in the browser or headless using PhantomJS"
 
-  s.files = Dir["{app,config,lib}/**/*"] + ["MIT.LICENSE", "README.md"]
+  s.files = Dir["{app,config,lib,vendor}/**/*"] + ["MIT.LICENSE", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
   s.add_dependency "railties", "~> 3.2.5"
