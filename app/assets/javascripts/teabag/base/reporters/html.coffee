@@ -15,6 +15,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     @buildLayout()
     @el = @findEl("report-all")
     @setText("env-info", @envInfo())
+    @setText("version", Teabag.version)
     @findEl("toggles").onclick = @toggleConfig
     @showConfiguration()
     @buildProgress()
@@ -28,7 +29,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
         <div id="teabag-title">
           <h1>Teabag</h1>
           <ul>
-            <li>version: <b><%= Teabag::VERSION %></b></li>
+            <li>version: <b id="teabag-version"></b></li>
             <li id="teabag-env-info"></li>
           </ul>
         </div>
