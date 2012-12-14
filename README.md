@@ -90,7 +90,7 @@ Failures:
        /teabag/default?grep=calculator%20should%20add%20two%20numbers.
 ```
 
-The Calculator Function Object is defined but it does not have an add method (undefined is not a function). Now we just need to finish it up and make the test pass by adding the `add` method to Calculator.
+The Calculator function object is defined but it does not have an add method (undefined is not a function). Now we just need to finish it up and make the test pass by adding the `add` method to Calculator.
 
 ```coffeescript
   add: (a, b) ->
