@@ -134,7 +134,7 @@ You can override a few configurations by using environment variables. `FAILS_FAL
 
 **Note:** By default the rake task runs within the development environment, but you can specify the environment using`RAILS_ENV=test rake teabag`. This is an asset compilation optimization, and to keep consistent with what you might see in the browser (since that's likely running in development).
 
-**Note:** We like to include our javascript specs into the default rake task, like so:
+**Note:** We usually like to include our Javascript specs into the default rake task, like so:
 
 ```ruby
 task :default => [:spec, :teabag, :cucumber]
