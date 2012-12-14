@@ -1,15 +1,15 @@
 Teabag.setup do |config|
 
   # Mounting / Route
-  # This determines where the Teabag spec path will be mounted. Changing this to /jasmine would allow you to browse to
-  # http://localhost:3000/jasmine to run your jasmine specs.
+  # This determines where the Teabag spec path will be mounted. Changing this to `"/jasmine"` would allow you to browse
+  # to `http://localhost:3000/jasmine` to run your specs.
   #
   # default: "/teabag"
   config.mount_at = "/teabag"
 
   # Root
   # The root path defaults to Rails.root if left nil, but if you're testing an engine using a dummy application it's
-  # useful to be able to set this to your engines root.. E.g. Teabag::Engine.root
+  # useful to be able to set this to your engines root.. E.g. `Teabag::Engine.root`
   #
   # default: nil, which forces defaulting to Rails.root
   config.root = nil
@@ -29,16 +29,16 @@ Teabag.setup do |config|
   config.fixture_path = "spec/javascripts/fixtures"
 
   # Server timeout
-  # Timeout for starting the server in seconds when running from the console. If your server is slow to start you may
-  # have to bump the timeout, or you may want to lower this if you know it shouldn't take long to start.
+  # Timeout for starting the server in seconds. If your server is slow to start you may have to bump the timeout, or you
+  # may want to lower this if you know it shouldn't take long to start.
   #
   # default: 20
   config.server_timeout = 20
 
   # Failing Fast
-  # When you run several suites it can be useful to make Teabag fail directly after the suite with failing examples is
-  # finished (not continuing on to the next suite), but in environments like CI this isn't as desirable. You can also
-  # configure this using the fail_fast environment variable.
+  # When you're running several suites it can be useful to make Teabag fail directly after any suite fails (not
+  # continuing on to the next suite), but in environments like CI this isn't as desirable. You can also configure this
+  # using the fail_fast environment variable.
   #
   # default: true
   # Note: override this directive by running `rake teabag fail_fast=false`
@@ -65,25 +65,24 @@ Teabag.setup do |config|
 
     # File Matcher
     # You can specify a file matcher for your specs, and the matching files will be automatically loaded when the suite
-    # is run. It's important that these files are serve-able from sprockets (aka the asset pipeline), otherwise it will
-    # reference the full path of the file, which probably work out that well.
+    # is run. It's important that these files are serve-able from sprockets (aka the asset pipeline), otherwise you'll
+    # receive a warning about it.
     #
     # default: "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
     # Note: set to nil if you want to load your spec files using a manifest from within the spec helper file.
     suite.matcher = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
 
     # Spec Helper
-    # Each suite can load a different spec helper, which can in turn require additional files. Since this file is served
-    # via the asset pipeline, you can use the require directive and include whatever else seems useful to you. This file
-    # is loaded before your specs are loaded -- so could potentially also include all of your specs (if you set the
-    # matcher to nil).
+    # Each suite can load a different spec helper, which can in turn require additional files since this file is also
+    # served via the asset pipeline. This file is loaded before your specs are loaded -- so could potentially include
+    # all of your specs (if you set the matcher to nil).
     #
     # default: "spec_helper"
     suite.helper = "spec_helper"
 
     # Javascripts
     # These are the core Teabag javascripts. Spec files should not go here -- but if you want to add additional support
-    # for jasmine matchers, switch to mocha, include expectation libraries etc., this is the right place to do it.
+    # for jasmine matchers, switch to mocha, include expectation libraries etc., this is a good place to do that.
     #
     # To use mocha, you should switch this to:
     #   "teabag-mocha"

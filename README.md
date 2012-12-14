@@ -5,11 +5,11 @@ Teabag is a Javascript test runner built on top of Rails. It can run tests in th
 
 Ok, another test runner, right? Really? Yeah, that's a tough one, but we're pretty confident Teabag is the nicest one you'll find at the moment. And if not, you can swing by our offices in Denver and we'll hang out with you and share a beer if you're so inclined.
 
-It's intention is to be the simplest to setup and most complete Javascript testing solution for Rails utilizing the asset pipeline. It ships with the ability to use Jasmine or Mocha and has custom reporters for both libraries.
+It's intention is to be the simplest, but most complete Javascript testing solution for Rails utilizing the asset pipeline. It ships with the ability to use Jasmine or Mocha and has custom reporters for both libraries.
 
 Check out the [screenshots](https://github.com/modeset/teabag/tree/master/screenshots).
 
-We've just released Teabag, and we expect to be working on it for a while longer to get a glossy shine to everything, so check it out, write a few specs, and let us know what you think. Feedback and ideas would be awesome.
+We've just released Teabag, and we expect to be working on it for a while to get a glossy shine to everything, so check it out, write a few specs, and let us know what you think. Feedback and ideas would be awesome.
 
 ## Table of Contents
 
@@ -32,7 +32,7 @@ group :assets do
 end
 ```
 
-Run the install generator to get the initializer and a basic spec helper.
+Optionally run the install generator to get the initializer and a basic spec helper if you want them.
 
 ```
 rails generate teabag:install
@@ -48,7 +48,7 @@ rails generate teabag:install
 
 ### Writing your first spec
 
-After you run the generator it will bootstrap you with a `spec/javascripts` directory. Teabag will automatically pick up any specs written in that folder that match the default [configuration](#suite-configuration-directives) directive. Here we are going to write the spec in coffeescript using jasmine.
+The install generator it will bootstrap you with a `spec/javascripts` directory. Teabag will automatically pick up any specs written in that folder that are named `[classname]_spec.js` (or .js.coffee/.coffee`). Here we're going to write the spec in CoffeeScript using Jasmine.
 
 ```
 mkdir -p spec/javascripts/models
@@ -58,7 +58,9 @@ open a file `spec/javascripts/models/calculator_spec.coffee` in your favorite ed
 
 ```coffeescript
 #= require models/calculator
+
 describe 'calculator', ->
+
   it 'should add two digits', ->
     calculator = new Calculator()
     expect( calculator.add(2,2) ).toBe(4)
@@ -67,14 +69,16 @@ describe 'calculator', ->
 Save and close that file and run `rake teabag` from within the rails directory. You should see an error that the Calculator class doesn't exist. Great. It doesn't, so we'll make it by opening a file at `app/assets/javascripts/models/calculator.coffee` and adding the following code.
 
 ```coffeescript
-class window.Calculator
-  add: (a,b)->
+class @Calculator
+
+  add: (a, b) ->
     a + b
 ```
 
 Run `rake teabag` again and you should have your first passing spec.
 
-Start up your rails server and visit `localhost:3000/jasmine` to run the specs in the browser.
+Start up your rails server and visit [localhost:3000/teabag](http://localhost:3000/teabag) to run the specs in the browser.
+
 
 ## Usage
 
@@ -108,7 +112,7 @@ rake teabag suite=my_fantastic_suite
 
 When a failure is encountered, a URL will be generated so you can pop open a browser and load a focused run to examine that specific failure.
 
-Additional arguments to the rake command are `fails_fast=[true/false]` and `suppress_logs=[true/false]`. You can read more about these options / configuration directives below.
+Additional arguments to the rake command are `fails_fast=[true/false]` and `suppress_logs=[false/true]`. You can read more about these options / configuration directives below.
 
 **Note:** By default the rake task runs within the development environment, but you can specify the environment using`RAILS_ENV=test rake teabag`. This is an asset compilation optimization, and to keep consistent with what you might see in the browser (since that's likely running in development).
 
@@ -248,7 +252,7 @@ end
 
 #### `matcher`
 
-You can specify a file matcher for your specs, and the matching files will be automatically loaded when the suite is run. It's important that these files are serve-able from sprockets (aka the asset pipeline), otherwise it will reference the full path of the file, which probably work out that well.
+You can specify a file matcher for your specs, and the matching files will be automatically loaded when the suite is run. It's important that these files are serve-able from sprockets (aka the asset pipeline), otherwise you'll receive a warning about it.
 
 **default:** `"{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"`
 
