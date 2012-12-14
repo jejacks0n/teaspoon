@@ -22,7 +22,7 @@ module Teabag
 
       # Errors are reported from the onError handler in Phantom, so they're not linked to a result
       def error(error)
-        log "#{error["msg"]}\n", RED
+        log "#{error["message"]}\n", RED
         for trace in error["trace"] || []
           log "  # #{filename(trace["file"])}:#{trace["line"]}#{trace["function"].present? ? " -- #{trace["function"]}" : ""}\n", CYAN
         end

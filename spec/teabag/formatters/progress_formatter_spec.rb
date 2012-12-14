@@ -39,7 +39,7 @@ describe Teabag::Formatters::ProgressFormatter do
 
     it "logs the error" do
       trace = {"file" => "http://127.0.0.1:31337/assets/path/file.js?foo=true&body=1", "line" => 42, "function" => "notAnAnonFunc"}
-      subject.error("msg" => "_message_", "trace" => [trace])
+      subject.error("message" => "_message_", "trace" => [trace])
       expect(@log).to eq("\e[31m_message_\n\e[0m\e[36m  # path/file.js?foo=true:42 -- notAnAnonFunc\n\e[0m\n")
     end
 
