@@ -77,8 +77,11 @@ describe "Teabag.Reporters.Console", ->
       spy = spyOn(@reporter, "log")
       @reporter.reportRunnerResults()
       Teabag.finished = false # race condition? - this may catch and think the results are done
-      expect(spy.mostRecentCall.args[0]).toEqual(
-        type: "results", total: 0, failures: @reporter.failures, pending: @reporter.pending, elapsed: "0.00000")
+      args = spy.mostRecentCall.args[0]
+      expect(args['type']).toEqual("results")
+      expect(args['total']).toEqual(0)
+      expect(args['failures']).toEqual(@reporter.failures)
+      expect(args['pending']).toEqual(@reporter.pending)
 
     it "tells Teabag that we're finished", ->
       @reporter.reportRunnerResults()
