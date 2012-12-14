@@ -3,13 +3,13 @@ Teabag
 
 Teabag is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS.
 
-Ok, another test runner, right? Really? Yeah, that's a tough one, but we're pretty confident Teabag is the nicest one you'll find at the moment. And if not, you can swing by our offices in Denver and we'll hang out with you and share a beer if you're so inclined.
+Ok, another test runner, right? Really? Yeah, that's a tough one, but we're pretty confident Teabag is the nicest one you'll find at the moment. And if you disagree, you can swing by our offices in Denver and we'll buy you a beer if you're so inclined.
 
-It's intention is to be the simplest, but most complete Javascript testing solution for Rails utilizing the asset pipeline. It ships with the ability to use Jasmine or Mocha and has custom reporters for both libraries.
+The intention is to be the simplest but most complete Javascript testing solution for Rails, taking full advantage of the asset pipeline. It ships with support for both Jasmine and Mocha, and has custom reporters for both libraries.
 
 Check out the [screenshots](https://github.com/modeset/teabag/tree/master/screenshots).
 
-We've just released Teabag, and we expect to be working on it for a while to get a glossy shine to everything, so check it out, write a few specs, and let us know what you think. Feedback and ideas are always welcome.
+We've just released Teabag, and we expect to be working on it for a while to get a glossy shine to everything, so check it out and let us know what you think. Feedback, ideas and pull requests would be awesome.
 
 ## Table of Contents
 
@@ -40,21 +40,19 @@ Optionally run the install generator to get the initializer and a basic spec hel
 rails generate teabag:install
 ```
 
-## Quickstart
+## Quick Start
 
-1. Create A new rails app
-2. Install teabag and bootstrap with the generator (as described above)
+1. Create a new Rails app
+2. Install Teabag and bootstrap it with the generator (`rails g teabag:install`)
 3. Write your first spec (explained in a sec)
 4. Run the test suite
 5. red. green. refactor.
 
 ### Writing your first spec
 
-The install generator will bootstrap you with a `spec/javascripts` directory. Teabag will automatically pick up any specs written in that folder that are named `[classname]_spec.js` (or .js.coffee/.coffee).
+The install generator will create a `spec/javascripts` directory for you. Teabag will automatically pick up any specs written in that folder named `[classname]_spec.(js|coffee|js.coffee)`.
 
-Here we're going to write the spec in CoffeeScript using [Jasmine](#jasmine), the default option, though Teabag also supports [Mocha](#mocha).
-
-Open a file `spec/javascripts/calculator_spec.coffee` in your favorite editor.
+Let's write a basic class and spec in CoffeeScript using Jasmine (though you could just as easily use vanilla Javascript and/or Mocha). Create `spec/javascripts/calculator_spec.coffee` and put this in it:
 
 ```coffeescript
 #= require calculator
@@ -66,15 +64,13 @@ describe 'Calculator', ->
     expect( calc.add(2,2) ).toBe(4)
 ```
 
-*Note that we added the Sprokets directive to the top of the file to require the `calculator` source file, even before we have written it. We're cheating a little here so by acknowledging our folly, hopefully [Uncle Bob Martin](http://www.butunclebob.com/CleanCoder.UncleBob) won't be sending us a cease and desist order.*
-
-Save the file and run `rake teabag` from within the rails directory. You should see an error that the `calculator` file can't be found. Great. It doesn't exist yet, so we'll make it by opening a file at `app/assets/javascripts/calculator.coffee` and adding the following code.
+Create `app/assets/javascripts/calculator.coffee` and put this in it:
 
 ```coffeescript
 class @Calculator
 ```
 
-Run `rake teabag` again, and now you should have your first legitimate failing spec (an implementation failure rather than a system one).  
+Run `rake teabag` - you should see your first failing spec.  
 
 ```
 Failures:
@@ -90,16 +86,16 @@ Failures:
        /teabag/default?grep=calculator%20should%20add%20two%20numbers.
 ```
 
-The Calculator function object is defined but it does not have an add method (undefined is not a function). Now we just need to finish it up and make the test pass by adding the `add` method to Calculator.
+Now we just need make the test pass. Let's implement the `add` method on Calculator.
 
 ```coffeescript
   add: (a, b) ->
     a + b
 ```
 
-Run `rake teabag` again and you should have your first passing spec!
+Run `rake teabag` again - that spec should now be passing!
 
-Start up your rails server and visit [localhost:3000/teabag](http://localhost:3000/teabag) to run the specs in the browser.
+If you'd prefer, you can also run your tests in the browser. Fire up your Rails server and visit [localhost:3000/teabag](http://localhost:3000/teabag) to run the specs.
 
 
 ## Usage
