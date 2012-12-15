@@ -59,8 +59,8 @@ module Teabag
       def failure_log
         log "Failures:\n"
         failures.each_with_index do |failure, index|
-          log "\n  #{index + 1}) #{failure["spec"]}\n"
-          log "     Failure/Error: #{failure["message"]}\n", RED
+          log "\n  #{index + 1}) #{failure.full_description}\n"
+          log "     Failure/Error: #{failure.message}\n", RED
         end
         log "\n"
       end
@@ -76,7 +76,7 @@ module Teabag
       def pending_log
         log "Pending:"
         pendings.each do |result|
-          log "\n  #{result.spec}\n", YELLOW
+          log "\n  #{result.full_description}\n", YELLOW
           log "    # Not yet implemented\n", CYAN
         end
         log "\n"
