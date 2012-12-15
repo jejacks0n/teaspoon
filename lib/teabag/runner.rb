@@ -9,7 +9,7 @@ module Teabag
 
     def initialize(suite_name = :default)
       @suite_name = suite_name
-      @formatters = Teabag.configuration.formatters.split(',').map {|f| resolve_formatter(f).new }
+      @formatters = Teabag.configuration.formatters.split(/,\s+/).map{ |f| resolve_formatter(f).new }
       @failure_count = 0
     end
 
@@ -21,7 +21,7 @@ module Teabag
     private
 
     def resolve_formatter(formatter)
-      Teabag::Formatters.const_get("#{formatter.to_s.capitalize}Formatter")
+      Teabag::Formatters.const_get("#{formatter.to_s.camelize}Formatter")
     end
 
     def output_from(line)

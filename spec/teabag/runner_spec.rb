@@ -1,6 +1,5 @@
 require "spec_helper"
 require "teabag/runner"
-require "teabag/formatters/progress_formatter"
 require "teabag/exceptions"
 
 describe Teabag::Runner do
@@ -13,7 +12,11 @@ describe Teabag::Runner do
   describe "its constructor" do
 
     it "creates a progress formatter if no other formatter is provided" do
-      subject.formatters.first.should be_a(Teabag::Formatters::ProgressFormatter)
+      Teabag::Formatters::XmlFormatter = Class.new
+      Teabag.configuration.formatters = "progress, xml"
+      expect(subject.formatters[0]).to be_a(Teabag::Formatters::ProgressFormatter)
+      expect(subject.formatters[1]).to be_a(Teabag::Formatters::XmlFormatter)
+      Teabag.configuration.formatters = "progress"
     end
 
   end
@@ -66,7 +69,7 @@ describe Teabag::Runner do
       subject.process('{"_teabag": true, "type": "error"}')
       subject.process('{"_teabag": true, "type": "exception"}')
       subject.process('{"_teabag": true, "type": "results"}')
-      subject.failure_count.should == 1
+      expect(subject.failure_count).to be(1)
     end
 
   end
