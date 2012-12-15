@@ -343,8 +343,16 @@ Timeout for starting the server in seconds. If your server is slow to start you 
 
 **default:** `20`
 
+#### `formatters`
+
+When running Teabag from the command line you can specify the formatters that it will use when displaying the results.
+
+**Note:** override this directive by running `rake teabag FORMATTERS=progress,other_formatter`
+
+**default:** `"progress"`
+
 #### `fail_fast`
-When you're running several suites it can be useful to make Teabag fail directly after any suite fails (not continuing on to the next suite), but in environments like CI this isn't as desirable. You can also configure this using the FAIL_FAST environment variable.
+When you're running several suites it can be useful to make Teabag fail directly after any suite fails (not continuing on to the next suite), but in environments like CI this isn't as desirable. You can also configure this using the `FAIL_FAST` environment variable.
 
 **Note:** override this directive by running `rake teabag FAIL_FAST=false`
 
