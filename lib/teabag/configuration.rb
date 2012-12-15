@@ -1,5 +1,4 @@
 require "singleton"
-require "teabag/formatters/progress_formatter"
 
 module Teabag
   class Configuration
@@ -16,7 +15,6 @@ module Teabag
 
     # console runner specific
     @@formatters        = "progress"
-    @@default_formatter = Teabag::Formatters::ProgressFormatter
     @@server_timeout    = 20
     @@fail_fast         = true
     @@suppress_log      = false
@@ -44,6 +42,8 @@ module Teabag
       end
     end
   end
+
+  autoload :Formatters, "teabag/formatters/base_formatter"
 
   mattr_accessor :configuration
   @@configuration = Configuration
