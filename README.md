@@ -76,7 +76,7 @@ Create `app/assets/javascripts/calculator.coffee` and put this in it:
 class @Calculator
 ```
 
-Run `rake teabag` - you should see your first failing spec.  
+Run `rake teabag` - you should see your first failing spec.
 
 ```
 Failures:
@@ -402,6 +402,7 @@ So, there's lots of directions we can take the Teabag project, but we'll give it
 
 - Ensure that the HTML reporter is working in IE6+ (give it a shot and let us know -- tested in IE9+).
 
+- Provide fixture support that works across frameworks.
 
 ## License
 
