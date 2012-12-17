@@ -2620,6 +2620,8 @@ jasmine.version_= {
 
     Teabag.location = window.location;
 
+    Teabag.console = window.console;
+
     Teabag.execute = function() {
       if (this.defer) {
         this.defer = false;
@@ -2914,7 +2916,7 @@ jasmine.version_= {
         obj = {};
       }
       obj["_teabag"] = true;
-      return console.log(JSON.stringify(obj));
+      return Teabag.console.log(JSON.stringify(obj));
     };
 
     return Console;

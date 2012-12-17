@@ -10,6 +10,7 @@ class @Teabag
   @Reporters   : {}
   @Date        : Date
   @location    : window.location
+  @console     : window.console
 
   @execute: ->
     if @defer

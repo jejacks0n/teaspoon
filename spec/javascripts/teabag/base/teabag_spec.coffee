@@ -3,9 +3,19 @@ describe "Teabag", ->
   describe "class level API", ->
 
     it "has the expected API", ->
-      expect(Object.keys(Teabag)).toEqual([
-        "defer", "slow", "fixturePath", "finished", "Reporters", "Date", "location", "execute", "Runner", "version"
-      ])
+      keys = Object.keys(Teabag)
+      # common
+      expect(keys).toContain("defer")
+      expect(keys).toContain("slow")
+      expect(keys).toContain("fixturePath")
+      expect(keys).toContain("finished")
+      expect(keys).toContain("execute")
+      expect(keys).toContain("version")
+      # caching
+      expect(keys).toContain("Date")
+      expect(keys).toContain("location")
+      expect(keys).toContain("console")
+
 
   describe "@execute", ->
 
