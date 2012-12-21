@@ -4,7 +4,7 @@ Teabag
 
 Teabag is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS.
 
-Ok, another test runner, right? Really? Yeah, that's a tough one, but we're pretty confident Teabag is the nicest one you'll find at the moment. And if you disagree, you can swing by our offices in Denver and we'll buy you a beer if you're so inclined.
+Ok, another test runner, right? Really? Yeah, that's a tough one, but we're pretty confident Teabag is the nicest one you'll find at the moment. And if you disagree, you can swing by our offices in Denver and we'll buy you a beer if you're so inclined.  And we'll probably fix whatever it is that you didn't like.
 
 The intention is to be the simplest but most complete Javascript testing solution for Rails, taking full advantage of the asset pipeline. It ships with support for both Jasmine and Mocha, and has custom reporters for both libraries.
 
