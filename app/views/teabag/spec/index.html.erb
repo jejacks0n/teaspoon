@@ -5,14 +5,19 @@
     <%= stylesheet_link_tag *@suite.stylesheets %>
     <%= javascript_include_tag *@suite.javascripts %>
     <%= csrf_meta_tags %>
+    <script type="text/javascript">
+      window.originalOnload = window.onload
+      window.onload = function() {
+        if (window.originalOnload) window.originalOnload();
+
+        // start the execution of the specs
+        Teabag.version = "<%= Teabag::VERSION %>";
+        Teabag.fixturePath = "<%= Teabag.configuration.mount_at %>/fixtures";
+        Teabag.execute()
+      }
+    </script>
   </head>
   <body>
     <div id="teabag-fixtures"></div>
-
-    <script type="text/javascript">
-      Teabag.version = "<%= Teabag::VERSION %>";
-      Teabag.fixturePath = "<%= Teabag.configuration.mount_at %>/fixtures";
-      Teabag.execute()
-    </script>
   </body>
 </html>
