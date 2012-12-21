@@ -3,7 +3,7 @@
   <head>
     <title>Teabag :: Javascript Test Runner</title>
     <%= stylesheet_link_tag *@suite.stylesheets %>
-    <%= javascript_include_tag *@suite.javascripts %>
+    <%= javascript_include_tag_for_teabag *@suite.javascripts %>
     <%= csrf_meta_tags %>
     <script type="text/javascript">
       window.originalOnload = window.onload
