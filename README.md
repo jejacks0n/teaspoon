@@ -136,7 +136,13 @@ rake teabag suite=my_fantastic_suite
 
 When a failure is encountered, a URL will be generated so you can pop open a browser and load a focused run to examine that specific failure.
 
-You can override a few configurations by using environment variables. `FAILS_FALSE=[true/false]` and `SUPPRESS_LOGS=[false/true]`. You can read more about these configuration directives below.
+You can override a few configurations by using environment variables. `FAILS_FALSE=[true/false]`, `SUPPRESS_LOGS=[false/true]` and `FORMATTERS=tap_y`. You can read more about these configuration directives below.
+
+Teabag has support for [tapout](https://github.com/rubyworks/tapout). You can use the tap_y formatter and pipe the results to tapout to use any of the reporters that tapout provides.
+
+```
+rake teabag SUPPRESS_LOG=true FORMATTERS=tap_y | tapout progress
+```
 
 **Note:** By default the rake task runs within the development environment, but you can specify the environment using`RAILS_ENV=test rake teabag`. This is an asset compilation optimization, and to keep consistent with what you might see in the browser (since that's likely running in development).
 
@@ -345,13 +351,16 @@ Timeout for starting the server in seconds. If your server is slow to start you 
 
 #### `formatters`
 
-When running Teabag from the command line you can specify the formatters that it will use when displaying the results.
+When running Teabag from the command line you can specify the formatters that it will use when displaying the results. Some formatters can be used together, and some are meant to be used by themselves. Play around, and see what you like.
 
-**Note:** Override this directive by running `rake teabag FORMATTERS=dot,other_formatter`, and for [tapout](https://github.com/rubyworks/tapout) support use `tap_y` (eg. `rake teabag SUPPRESS_LOG=true FORMATTERS=tap_y | tapout progress`)
+Supported formatters: dot, tap_y, swayze_or_oprah
+
+**Note:** Override this directive by running `rake teabag FORMATTERS=dot,other_formatter`.
 
 **default:** `"dot"`
 
 #### `fail_fast`
+
 When you're running several suites it can be useful to make Teabag fail directly after any suite fails (not continuing on to the next suite), but in environments like CI this isn't as desirable. You can also configure this using the `FAIL_FAST` environment variable.
 
 **Note:** override this directive by running `rake teabag FAIL_FAST=false`
