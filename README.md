@@ -268,7 +268,7 @@ It's worth noting that suites don't inherit from the default suite values, but i
 
 Teabag is happy to look for files for you, but you can disable this feature and maintain a manifest yourself.  Since each suite can utilize a different spec helper, you can use these to create your own manifest of specs using the `= require` directive.
 
-Tell the suite that you don't want it to match any files, and then retuire files in your spec helper.
+Tell the suite that you don't want it to match any files, and then require files in your spec helper.
 
 ```ruby
 config.suite do |suite|
@@ -409,17 +409,9 @@ More on this shortly....
 
 ## Roadmap
 
-So, there's lots of directions we can take the Teabag project, but we'll give it some time to see what people are looking for.  Here's a short list of things that will probably happen.
+So, there's lots of directions we can take the Teabag project, but we'll give it some time to see what people are looking for.
 
-- A Command Line Interface to allow running as `teabag spec/javascripts/calculator_spec.coffee` with proper arguments that will let you override configuration.
-
-- Add support for running Teabag using selenium.
-
-- Improve the user interface in the HTML reporter by adding a select for switching suites.
-
-- Ensure that the HTML reporter is working in IE6+ (give it a shot and let us know -- tested in IE9+).
-
-- Provide fixture support that works across frameworks.
+Check the issues to see / discuss features that we're considering or working on.
 
 ## License
 
