@@ -17,11 +17,11 @@ module Teabag
     end
 
     def execute
-      STDOUT.print "Starting server...\n"
+      STDOUT.print "Starting server...\n" unless Teabag.configuration.suppress_log
       start_server
       failure_count = 0
       @suites.each do |suite|
-        STDOUT.print "Teabag running #{suite} suite at #{url(suite)}...\n"
+        STDOUT.print "Teabag running #{suite} suite at #{url(suite)}...\n" unless Teabag.configuration.suppress_log
         failure_count += run_specs(suite)
       end
       failure_count > 0
