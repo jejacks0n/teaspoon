@@ -21,7 +21,7 @@ describe Teabag do
     after do
       Teabag.configuration.suppress_log = false
       Teabag.configuration.fail_fast = true
-      Teabag.configuration.formatters = 'progress'
+      Teabag.configuration.formatters = "dot"
     end
 
     it "allows overriding of fail_fast and suppress_log from the env" do
@@ -57,7 +57,7 @@ describe Teabag::Configuration do
     expect(subject.asset_paths).to include("spec/javascripts")
     expect(subject.asset_paths).to include("spec/javascripts/stylesheets")
     expect(subject.fixture_path).to eq("spec/javascripts/fixtures")
-    expect(subject.formatters).to eq('progress')
+    expect(subject.formatters).to eq('dot')
     expect(subject.server_timeout).to eq(20)
     expect(subject.fail_fast).to eq(true)
     expect(subject.suppress_log).to eq(false)

@@ -347,9 +347,9 @@ Timeout for starting the server in seconds. If your server is slow to start you 
 
 When running Teabag from the command line you can specify the formatters that it will use when displaying the results.
 
-**Note:** override this directive by running `rake teabag FORMATTERS=progress,other_formatter`
+**Note:** Override this directive by running `rake teabag FORMATTERS=dot,other_formatter`, and for [tapout](https://github.com/rubyworks/tapout) support use `tap_y` (eg. `rake teabag SUPPRESS_LOG=true FORMATTERS=tap_y | tapout progress`)
 
-**default:** `"progress"`
+**default:** `"dot"`
 
 #### `fail_fast`
 When you're running several suites it can be useful to make Teabag fail directly after any suite fails (not continuing on to the next suite), but in environments like CI this isn't as desirable. You can also configure this using the `FAIL_FAST` environment variable.
