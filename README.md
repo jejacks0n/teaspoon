@@ -13,6 +13,8 @@ We've just released Teabag, and we expect to be working on it for a while to get
 ## Screenshots
 ### Running in the console
 ![Console Reporter](https://raw.github.com/modeset/teabag/master/screenshots/console-reporter.png)
+### Running in the console using [Tapout](https://github.com/rubyworks/tapout)
+![Console Reporter Tapout](https://raw.github.com/modeset/teabag/master/screenshots/console-reporter-tapout.png)
 ### Running in the browser
 ![Browser Reporter](https://raw.github.com/modeset/teabag/master/screenshots/html-reporter.png)
 
