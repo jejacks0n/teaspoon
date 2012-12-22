@@ -2,13 +2,15 @@ module Teabag
   module Formatters
 
     autoload :ProgressFormatter,      'teabag/formatters/progress_formatter'
+    autoload :TapYFormatter,          'teabag/formatters/tap_y_formatter'
     autoload :SwayzeOrOprahFormatter, 'teabag/formatters/swayze_or_oprah_formatter'
 
     class BaseFormatter
 
       attr_accessor :total, :passes, :pendings, :failures, :errors
 
-      def initialize
+      def initialize(suite_name = :default)
+        @suite_name = suite_name.to_s
         @total    = 0
         @passes   = []
         @pendings = []

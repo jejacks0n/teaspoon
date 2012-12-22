@@ -11,12 +11,18 @@ describe Teabag::Runner do
 
   describe "its constructor" do
 
+    after do
+      Teabag.configuration.formatters = "progress"
+    end
+
     it "creates a progress formatter if no other formatter is provided" do
-      Teabag::Formatters::XmlFormatter = Class.new
+      Teabag::Formatters::XmlFormatter = Class.new do
+        def initialize(suite_name = :default)
+        end
+      end
       Teabag.configuration.formatters = "progress, xml"
       expect(subject.formatters[0]).to be_a(Teabag::Formatters::ProgressFormatter)
       expect(subject.formatters[1]).to be_a(Teabag::Formatters::XmlFormatter)
-      Teabag.configuration.formatters = "progress"
     end
 
   end
