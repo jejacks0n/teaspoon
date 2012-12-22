@@ -55,7 +55,10 @@ module Teabag
       def pending_spec
         log "type"   => "test",
             "status" => "pending",
-            "label"  => @result.label
+            "label"  => @result.label,
+            "exception" => {
+              "message"   => @result.message
+            }
       end
 
       def failing_spec

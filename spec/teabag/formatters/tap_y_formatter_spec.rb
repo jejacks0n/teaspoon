@@ -135,14 +135,17 @@ describe Teabag::Formatters::TapYFormatter do
 
   describe "#pending_spec" do
 
-    let(:json) { {"label" => "_label_"} }
+    let(:json) { {"label" => "_label_", "message" => "_message_"} }
 
     it "logs the information" do
       result = Teabag::Result.build_from_json(json)
       subject.should_receive(:log).with(
         "type"   => "test",
         "status" => "pending",
-        "label"  => "_label_"
+        "label"  => "_label_",
+        "exception" => {
+          "message"   => "_message_"
+        }
       )
       subject.instance_variable_set(:@result, result)
       subject.send(:pending_spec)
