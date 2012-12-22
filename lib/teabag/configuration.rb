@@ -14,7 +14,7 @@ module Teabag
     @@suites            = {}
 
     # console runner specific
-    @@formatters        = "progress"
+    @@formatters        = "dot"
     @@server_timeout    = 20
     @@fail_fast         = true
     @@suppress_log      = false

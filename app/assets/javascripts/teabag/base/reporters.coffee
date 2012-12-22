@@ -21,6 +21,17 @@ class Teabag.Reporters.NormalizedSpec
       {message: item.message, stack: item.trace.stack}
 
 
+  getParents: ->
+    return @parents if @parents
+    @parents ||= []
+    parent = @parent
+    while parent
+      parent = new Teabag.Reporters.NormalizedSuite(parent)
+      @parents.unshift(parent)
+      parent = parent.parent
+    @parents
+
+
   result: ->
     status = "failed"
     if @spec.results

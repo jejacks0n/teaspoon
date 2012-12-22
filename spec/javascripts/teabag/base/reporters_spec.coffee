@@ -74,7 +74,14 @@ describe "Teabag.Reporters.NormalizedSpec", ->
         expect(spec.errors()).toEqual([{message: "_mocha_message_", stack: "_mocha_stack_trace_"}])
 
 
-  describe "#results", ->
+  describe "#getParents", ->
+
+    it "gets the parent suites", ->
+      spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
+      expect(spec.getParents()[0].fullDescription).toEqual("_full jasmine name_")
+
+
+  describe "#result", ->
 
     describe "with jasmine type spec", ->
 

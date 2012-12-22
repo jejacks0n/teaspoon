@@ -2,6 +2,7 @@ class Teabag.Reporters.Console extends Teabag.Reporters.Console
 
   constructor: (runner) ->
     super
+    @reportRunnerStarting(runner)
     runner.on("fail", @reportSpecResults)
     runner.on("test end", @reportSpecResults)
     runner.on("end", @reportRunnerResults)

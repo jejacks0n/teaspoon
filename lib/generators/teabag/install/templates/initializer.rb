@@ -58,7 +58,7 @@ Teabag.setup do |config|
   #end
 
   # When Teabag is run from the command line these configuration directives apply.
-  #config.formatters = "progress"
+  #config.formatters = "dot"
   #config.server_timeout = 20
   #config.fail_fast = true
   #config.suppress_log = false

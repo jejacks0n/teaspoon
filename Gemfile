@@ -9,6 +9,7 @@ gem "sass-rails"
 gem "jquery-rails"
 gem "haml-rails"
 gem "haml_coffee_assets"
+gem "tapout"
 
 if RUBY_PLATFORM =~ /linux/
   gem 'phantomjs-linux'

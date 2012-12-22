@@ -2,7 +2,7 @@ require 'teabag/formatters/base_formatter'
 
 module Teabag
   module Formatters
-    class ProgressFormatter < BaseFormatter
+    class DotFormatter < BaseFormatter
 
       RED = 31
       GREEN = 32
@@ -29,7 +29,7 @@ module Teabag
         log "\n"
       end
 
-      def results(results)
+      def result(results)
         log "\n\n"
         pending_log if pendings.size > 0
         failure_log if failures.size > 0
@@ -59,7 +59,7 @@ module Teabag
       def failure_log
         log "Failures:\n"
         failures.each_with_index do |failure, index|
-          log "\n  #{index + 1}) #{failure.full_description}\n"
+          log "\n  #{index + 1}) #{failure.description}\n"
           log "     Failure/Error: #{failure.message}\n", RED
         end
         log "\n"
@@ -68,7 +68,7 @@ module Teabag
       def failed_examples
         log "\nFailed examples:\n"
         failures.each do |failure|
-          log "\n#{Teabag.configuration.mount_at}/#{failure.teabag_suite}#{failure.link}", RED
+          log "\n#{Teabag.configuration.mount_at}/#{@suite_name}#{failure.link}", RED
         end
         log "\n\n"
       end
@@ -76,7 +76,7 @@ module Teabag
       def pending_log
         log "Pending:"
         pendings.each do |result|
-          log "\n  #{result.full_description}\n", YELLOW
+          log "\n  #{result.description}\n", YELLOW
           log "    # Not yet implemented\n", CYAN
         end
         log "\n"
