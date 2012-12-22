@@ -1,34 +1,23 @@
 module Teabag
-  class Result < Struct.new(:teabag_suite,
-                            :type,
-                            :suite,
-                            :spec,
-                            :full_description,
-                            :status,
-                            :skipped,
-                            :link,
-                            :message,
-                            :trace,
-                            :elapsed,
-                            :failures,
-                            :pending,
-                            :total)
+  class Result < Struct.new(:type, :suite, :label, :status, :skipped, :link, :message, :trace, :elapsed, :total, :start, :level)
 
-    def self.build_from_json(suite_name, json)
-      new suite_name,
-        json["type"],
-        json["suite"],
-        json["spec"],
-        json["full_description"],
-        json["status"],
-        json["skipped"],
-        json["link"],
-        json["message"],
-        json["trace"],
-        json["elapsed"],
-        json["failures"],
-        json["pending"],
-        json["total"]
+    def self.build_from_json(json)
+      new json["type"],
+          json["suite"],
+          json["label"],
+          json["status"],
+          json["skipped"],
+          json["link"],
+          json["message"],
+          json["trace"],
+          json["elapsed"],
+          json["total"],
+          json["start"],
+          json["level"]
+    end
+
+    def description
+      "#{suite} #{label}"
     end
 
     def failing?

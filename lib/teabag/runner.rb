@@ -27,7 +27,7 @@ module Teabag
     def output_from(line)
       json = JSON.parse(line)
       return false unless json["_teabag"] && json["type"]
-      result = Teabag::Result.build_from_json(@suite_name, json)
+      result = Teabag::Result.build_from_json(json)
       notify_formatters result
       @failure_count += 1 if result.failing?
       return true

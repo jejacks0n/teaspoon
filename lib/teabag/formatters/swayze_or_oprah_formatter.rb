@@ -2,7 +2,7 @@ module Teabag
   module Formatters
     class SwayzeOrOprahFormatter < BaseFormatter
 
-      def results(results)
+      def result(results)
         quote = QUOTES[Random.rand(QUOTES.size)]
         STDOUT.print("\n#{quote.inspect} -- Oprah Winfrey or Patrick Swayze?\n")
       end

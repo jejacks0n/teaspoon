@@ -5106,6 +5106,21 @@
       return _results;
     };
 
+    NormalizedSpec.prototype.getParents = function() {
+      var parent;
+      if (this.parents) {
+        return this.parents;
+      }
+      this.parents || (this.parents = []);
+      parent = this.parent;
+      while (parent) {
+        parent = new Teabag.Reporters.NormalizedSuite(parent);
+        this.parents.unshift(parent);
+        parent = parent.parent;
+      }
+      return this.parents;
+    };
+
     NormalizedSpec.prototype.result = function() {
       var results, skipped, status;
       status = "failed";
@@ -5241,13 +5256,42 @@
 
     function Console() {
       this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.start = new Teabag.Date().getTime();
+      this.start = new Teabag.Date();
+      this.suites = {};
     }
+
+    Console.prototype.reportRunnerStarting = function(runner) {
+      return this.log({
+        type: "runner",
+        total: runner.total || runner.specs().length,
+        start: JSON.parse(JSON.stringify(this.start))
+      });
+    };
+
+    Console.prototype.reportSuites = function() {
+      var index, suite, _i, _len, _ref, _results;
+      _ref = this.spec.getParents();
+      _results = [];
+      for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
+        suite = _ref[index];
+        if (this.suites[suite.fullDescription]) {
+          continue;
+        }
+        this.suites[suite.fullDescription] = true;
+        _results.push(this.log({
+          type: "suite",
+          label: suite.description,
+          level: index
+        }));
+      }
+      return _results;
+    };
 
     Console.prototype.reportSpecResults = function(spec) {
       var result;
       this.spec = new Teabag.Reporters.NormalizedSpec(spec);
       result = this.spec.result();
+      this.reportSuites();
       switch (result.status) {
         case "pending":
           return this.trackPending();
@@ -5257,10 +5301,9 @@
           return this.log({
             type: "spec",
             suite: this.spec.suiteName,
-            spec: this.spec.description,
+            label: this.spec.description,
             status: result.status,
-            skipped: result.skipped,
-            full_description: this.spec.fullDescription
+            skipped: result.skipped
           });
       }
     };
@@ -5271,10 +5314,9 @@
       return this.log({
         type: "spec",
         suite: this.spec.suiteName,
-        spec: this.spec.description,
+        label: this.spec.description,
         status: result.status,
-        skipped: result.skipped,
-        full_description: this.spec.fullDescription
+        skipped: result.skipped
       });
     };
 
@@ -5288,10 +5330,9 @@
         _results.push(this.log({
           type: "spec",
           suite: this.spec.suiteName,
-          spec: this.spec.description,
+          label: this.spec.description,
           status: result.status,
           skipped: result.skipped,
-          full_description: this.spec.fullDescription,
           link: this.spec.link,
           message: error.message,
           trace: error.stack || error.message || "Stack Trace Unavailable"
@@ -5302,8 +5343,8 @@
 
     Console.prototype.reportRunnerResults = function() {
       this.log({
-        type: "results",
-        elapsed: ((new Teabag.Date().getTime() - this.start) / 1000).toFixed(5)
+        type: "result",
+        elapsed: ((new Teabag.Date().getTime() - this.start.getTime()) / 1000).toFixed(5)
       });
       return Teabag.finished = true;
     };
@@ -5817,6 +5858,7 @@
     function Console(runner) {
       this.reportSpecResults = __bind(this.reportSpecResults, this);
       Console.__super__.constructor.apply(this, arguments);
+      this.reportRunnerStarting(runner);
       runner.on("fail", this.reportSpecResults);
       runner.on("test end", this.reportSpecResults);
       runner.on("end", this.reportRunnerResults);

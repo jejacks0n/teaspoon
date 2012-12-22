@@ -1,7 +1,7 @@
 module Teabag
   module Formatters
 
-    autoload :ProgressFormatter,      'teabag/formatters/progress_formatter'
+    autoload :DotFormatter,           'teabag/formatters/dot_formatter'
     autoload :TapYFormatter,          'teabag/formatters/tap_y_formatter'
     autoload :SwayzeOrOprahFormatter, 'teabag/formatters/swayze_or_oprah_formatter'
 
