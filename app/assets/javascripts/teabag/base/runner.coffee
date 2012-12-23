@@ -18,5 +18,15 @@ class Teabag.Runner
     params
 
 
+  getReporter: ->
+    if @params["reporter"]
+      Teabag.Reporters[@params["reporter"]]
+    else
+      if navigator.userAgent.match(/PhantomJS/)
+        Teabag.Reporters.Console
+      else
+        Teabag.Reporters.HTML
+
+
   setup: ->
     # left for subclasses to implement

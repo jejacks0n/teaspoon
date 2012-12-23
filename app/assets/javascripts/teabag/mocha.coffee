@@ -13,9 +13,6 @@ class Teabag.Runner extends Teabag.Runner
 
   setup: ->
     # add the reporter and set the filter
-    if navigator.userAgent.match(/PhantomJS/)
-      reporter = Teabag.Reporters.Console
-    else
-      reporter = Teabag.Reporters.HTML
+    reporter = @getReporter()
     reporter.filter = @params["grep"]
     env.setup(reporter: reporter)

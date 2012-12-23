@@ -32,3 +32,23 @@ describe "Teabag.Runner", ->
       spyOn(String.prototype, "substring").andReturn("grep=foo&bar=baz")
       runner = new Teabag.Runner()
       expect(runner.params).toEqual(grep: "foo", bar: "baz")
+
+
+  describe "#getReporter", ->
+
+    it "returns the correct reporter when using PhantomJS", ->
+      runner = new Teabag.Runner()
+      spyOn(String.prototype, 'match').andReturn(20)
+      expect(runner.getReporter()).toBe(Teabag.Reporters.Console)
+
+    it "returns the correct reporter when using the browser", ->
+      runner = new Teabag.Runner()
+      spyOn(String.prototype, 'match').andReturn(0)
+      expect(runner.getReporter()).toBe(Teabag.Reporters.HTML)
+
+    it "allows setting the param", ->
+      runner = new Teabag.Runner()
+      runner.params = {reporter: "Console"}
+      expect(runner.getReporter()).toBe(Teabag.Reporters.Console)
+      runner.params = {reporter: "HTML"}
+      expect(runner.getReporter()).toBe(Teabag.Reporters.HTML)
