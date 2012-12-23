@@ -30,7 +30,7 @@ class Teabag.Reporters.BaseView
 
   setText: (id, value) ->
     el = @findEl(id)
-    el.innerText = value
+    el.innerHTML = value
 
 
   setHtml: (id, value, add = false) ->

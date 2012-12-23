@@ -175,4 +175,4 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     else
       date = new Teabag.Date()
       date.setDate(date.getDate() + 365)
-      document.cookie = "#{name}=#{escape(JSON.stringify(value))}; path=/; expires=#{date.toUTCString()};"
+      document.cookie = "#{name}=#{escape(JSON.stringify(value))}; path=\"/\"; expires=#{date.toUTCString()};"

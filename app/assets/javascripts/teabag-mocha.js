@@ -5171,6 +5171,18 @@
       return params;
     };
 
+    Runner.prototype.getReporter = function() {
+      if (this.params["reporter"]) {
+        return Teabag.Reporters[this.params["reporter"]];
+      } else {
+        if (navigator.userAgent.match(/PhantomJS/)) {
+          return Teabag.Reporters.Console;
+        } else {
+          return Teabag.Reporters.HTML;
+        }
+      }
+    };
+
     Runner.prototype.setup = function() {};
 
     return Runner;
@@ -5218,7 +5230,7 @@
     BaseView.prototype.setText = function(id, value) {
       var el;
       el = this.findEl(id);
-      return el.innerText = value;
+      return el.innerHTML = value;
     };
 
     BaseView.prototype.setHtml = function(id, value, add) {
@@ -5445,7 +5457,7 @@
       } else {
         date = new Teabag.Date();
         date.setDate(date.getDate() + 365);
-        return document.cookie = "" + name + "=" + (escape(JSON.stringify(value))) + "; path=/; expires=" + (date.toUTCString()) + ";";
+        return document.cookie = "" + name + "=" + (escape(JSON.stringify(value))) + "; path=\"/\"; expires=" + (date.toUTCString()) + ";";
       }
     };
 
@@ -5952,11 +5964,7 @@
 
     Runner.prototype.setup = function() {
       var reporter;
-      if (navigator.userAgent.match(/PhantomJS/)) {
-        reporter = Teabag.Reporters.Console;
-      } else {
-        reporter = Teabag.Reporters.HTML;
-      }
+      reporter = this.getReporter();
       reporter.filter = this.params["grep"];
       return env.setup({
         reporter: reporter
