@@ -23,7 +23,7 @@ class Teabag.Reporters.Console
 
 
   reportSpecResults: (spec) ->
-    @spec = new Teabag.Reporters.NormalizedSpec(spec)
+    @spec = new Teabag.Spec(spec)
     result = @spec.result()
     @reportSuites()
     switch result.status

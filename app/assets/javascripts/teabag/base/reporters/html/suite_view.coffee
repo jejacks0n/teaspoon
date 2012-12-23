@@ -6,7 +6,7 @@ class Teabag.Reporters.HTML.SuiteView extends Teabag.Reporters.BaseView
     @views = @reporter.views
     @suite.viewId = viewId += 1
     @views.suites[@suite.viewId] = @
-    @suite = new Teabag.Reporters.NormalizedSuite(suite)
+    @suite = new Teabag.Suite(suite)
     super
 
 

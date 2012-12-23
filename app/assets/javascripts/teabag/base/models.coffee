@@ -1,7 +1,4 @@
-#= require_self
-#= require_tree ./reporters
-
-class Teabag.Reporters.NormalizedSpec
+class Teabag.Spec
 
   constructor: (@spec) ->
     @fullDescription = @spec.getFullName?() || @spec.fullTitle()
@@ -26,7 +23,7 @@ class Teabag.Reporters.NormalizedSpec
     @parents ||= []
     parent = @parent
     while parent
-      parent = new Teabag.Reporters.NormalizedSuite(parent)
+      parent = new Teabag.Suite(parent)
       @parents.unshift(parent)
       parent = parent.parent
     @parents
@@ -47,7 +44,7 @@ class Teabag.Reporters.NormalizedSpec
 
 
 
-class Teabag.Reporters.NormalizedSuite
+class Teabag.Suite
 
   constructor: (@suite) ->
     @fullDescription = @suite.getFullName?() || @suite.fullTitle()
@@ -62,55 +59,3 @@ class Teabag.Reporters.NormalizedSuite
       if @suite.parent.root then null else @suite.parent
     else
       @suite.parentSuite
-
-
-
-class Teabag.Reporters.BaseView
-
-  constructor: ->
-    @elements = {}
-    @build()
-
-
-  build: (className) ->
-    @el = @createEl("li", className)
-
-
-  appendTo: (el) ->
-    el.appendChild(@el)
-
-
-  append: (el) ->
-    @el.appendChild(el)
-
-
-  createEl: (type, className = "") ->
-    el = document.createElement(type)
-    el.className = className
-    el
-
-
-  findEl: (id) ->
-    @elements ||= {}
-    @elements[id] ||= document.getElementById("teabag-#{id}")
-
-
-  setText: (id, value) ->
-    el = @findEl(id)
-    el.innerText = value
-
-
-  setHtml: (id, value, add = false) ->
-    el = @findEl(id)
-    if add then el.innerHTML += value else el.innerHTML = value
-
-
-  setClass: (id, value) ->
-    el = @findEl(id)
-    el.className = value
-
-
-  htmlSafe: (str) ->
-    el = document.createElement("div")
-    el.appendChild(document.createTextNode(str))
-    el.innerHTML

@@ -1,3 +1,4 @@
+#= require teabag/base/reporters/html/base_view
 #= require_self
 #= require teabag/base/reporters/html/progress_view
 #= require teabag/base/reporters/html/spec_view
@@ -78,7 +79,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
 
   reportSpecStarting: (spec) ->
-    spec = new Teabag.Reporters.NormalizedSpec(spec)
+    spec = new Teabag.Spec(spec)
     @reportView = new Teabag.Reporters.HTML.SpecView(spec, @) if @config["build-full-report"]
     @specStart = new Teabag.Date().getTime()
 
@@ -112,7 +113,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
 
   updateStatus: (spec) ->
-    spec = new Teabag.Reporters.NormalizedSpec(spec)
+    spec = new Teabag.Spec(spec)
     result = spec.result()
 
     if result.skipped || result.status == "pending"

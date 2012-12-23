@@ -121,26 +121,26 @@ describe "PhantomJS Runner", ->
       expect(Object.keys(object)).toEqual(["onError", "onConsoleMessage", "onLoadFinished"])
 
 
-  describe "page callback methods", ->
+  describe "callback method", ->
 
     beforeEach ->
       @callbacks = @runner.pageCallbacks()
 
-    describe "onError", ->
+    describe "#onError", ->
 
       it "logs the json of a message and trace", ->
         @callbacks.onError("_message_", ["trace1", "trace2"])
         expect(@logSpy).toHaveBeenCalledWith('{"_teabag":true,"type":"error","message":"_message_","trace":["trace1","trace2"]}')
 
 
-    describe "onConsoleMessage", ->
+    describe "#onConsoleMessage", ->
 
       it "logs the message", ->
         @callbacks.onConsoleMessage("_message_")
         expect(@logSpy).toHaveBeenCalledWith("_message_")
 
 
-    describe "onLoadFinish", ->
+    describe "#onLoadFinish", ->
 
       beforeEach ->
         @runner.initPage()

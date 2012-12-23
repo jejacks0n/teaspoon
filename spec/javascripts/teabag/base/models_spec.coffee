@@ -1,4 +1,4 @@
-describe "Teabag.Reporters.NormalizedSpec", ->
+describe "Teabag.Spec", ->
 
   beforeEach ->
     @jasmineSuite =
@@ -34,7 +34,7 @@ describe "Teabag.Reporters.NormalizedSpec", ->
     describe "with jasmine type spec", ->
 
       it "has the expected properties", ->
-        spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
+        spec = new Teabag.Spec(@jasmineSpec)
         expect(spec.fullDescription).toEqual("_full jasmine description_")
         expect(spec.description).toEqual("_jasmine_description_")
         expect(spec.link).toEqual("?grep=_full%20jasmine%20description_")
@@ -46,7 +46,7 @@ describe "Teabag.Reporters.NormalizedSpec", ->
     describe "with mocha type spec", ->
 
       it "has the expected properties", ->
-        spec = new Teabag.Reporters.NormalizedSpec(@mochaSpec)
+        spec = new Teabag.Spec(@mochaSpec)
         expect(spec.fullDescription).toEqual("_full mocha description_")
         expect(spec.description).toEqual("_mocha_description_")
         expect(spec.link).toEqual("?grep=_full%20mocha%20description_")
@@ -61,23 +61,23 @@ describe "Teabag.Reporters.NormalizedSpec", ->
     describe "with jasmine type spec", ->
 
       it "returns the expected object", ->
-        spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
+        spec = new Teabag.Spec(@jasmineSpec)
         expect(spec.errors()).toEqual([{message: "_jasmine_message1_", stack: "_jasmine_stack_trace1_"}, {message: "_jasmine_message2_", stack: "_jasmine_stack_trace2_"}])
         spyOn(@jasmineSpecResultsItems[0], "passed").andReturn(true)
-        spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
+        spec = new Teabag.Spec(@jasmineSpec)
         expect(spec.errors()).toEqual([{message: "_jasmine_message2_", stack: "_jasmine_stack_trace2_"}])
 
     describe "with mocha type spec", ->
 
       it "returns the expected object", ->
-        spec = new Teabag.Reporters.NormalizedSpec(@mochaSpec)
+        spec = new Teabag.Spec(@mochaSpec)
         expect(spec.errors()).toEqual([{message: "_mocha_message_", stack: "_mocha_stack_trace_"}])
 
 
   describe "#getParents", ->
 
     it "gets the parent suites", ->
-      spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
+      spec = new Teabag.Spec(@jasmineSpec)
       expect(spec.getParents()[0].fullDescription).toEqual("_full jasmine name_")
 
 
@@ -88,28 +88,28 @@ describe "Teabag.Reporters.NormalizedSpec", ->
       describe "passing", ->
 
         it "returns the expected object", ->
-          spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
+          spec = new Teabag.Spec(@jasmineSpec)
           expect(spec.result()).toEqual({status: "passed", skipped: false})
 
       describe "skipped", ->
 
         it "returns the expected object", ->
           @jasmineSpecResults.skipped = true
-          spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
+          spec = new Teabag.Spec(@jasmineSpec)
           expect(spec.result()).toEqual({status: "passed", skipped: true})
 
       describe "pending", ->
 
         it "returns the expected object", ->
           @jasmineSpec.pending = true
-          spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
+          spec = new Teabag.Spec(@jasmineSpec)
           expect(spec.result()).toEqual({status: "pending", skipped: false})
 
       describe "failing", ->
 
         it "returns the expected object", ->
           spyOn(@jasmineSpecResults, "passed").andReturn(false)
-          spec = new Teabag.Reporters.NormalizedSpec(@jasmineSpec)
+          spec = new Teabag.Spec(@jasmineSpec)
           expect(spec.result()).toEqual({status: "failed", skipped: false})
 
 
@@ -118,33 +118,33 @@ describe "Teabag.Reporters.NormalizedSpec", ->
       describe "passing", ->
 
         it "returns the expected object", ->
-          spec = new Teabag.Reporters.NormalizedSpec(@mochaSpec)
+          spec = new Teabag.Spec(@mochaSpec)
           expect(spec.result()).toEqual({status: "passed", skipped: false})
 
       describe "skipped", ->
 
         it "returns the expected object", ->
           @mochaSpec.state = "skipped"
-          spec = new Teabag.Reporters.NormalizedSpec(@mochaSpec)
+          spec = new Teabag.Spec(@mochaSpec)
           expect(spec.result()).toEqual({status: "passed", skipped: true})
 
       describe "pending", ->
 
         it "returns the expected object", ->
           @mochaSpec.pending = true
-          spec = new Teabag.Reporters.NormalizedSpec(@mochaSpec)
+          spec = new Teabag.Spec(@mochaSpec)
           expect(spec.result()).toEqual({status: "pending", skipped: false})
 
       describe "failing", ->
 
         it "returns the expected object", ->
           @mochaSpec.state = "failed"
-          spec = new Teabag.Reporters.NormalizedSpec(@mochaSpec)
+          spec = new Teabag.Spec(@mochaSpec)
           expect(spec.result()).toEqual({status: "failed", skipped: false})
 
 
 
-describe "Teabag.Reporters.NormalizedSuite", ->
+describe "Teabag.Suite", ->
 
   beforeEach ->
     @jasmineParentSuite = {}
@@ -165,7 +165,7 @@ describe "Teabag.Reporters.NormalizedSuite", ->
     describe "with jasmine type suite", ->
 
       it "has the expected properties", ->
-        suite = new Teabag.Reporters.NormalizedSuite(@jasmineSuite)
+        suite = new Teabag.Suite(@jasmineSuite)
         expect(suite.fullDescription).toEqual("_full jasmine description_")
         expect(suite.description).toEqual("_jasmine_description_")
         expect(suite.link).toEqual("?grep=_full%20jasmine%20description_")
@@ -175,7 +175,7 @@ describe "Teabag.Reporters.NormalizedSuite", ->
     describe "with mocha type suite", ->
 
       it "has the expected properties", ->
-        suite = new Teabag.Reporters.NormalizedSuite(@mochaSuite)
+        suite = new Teabag.Suite(@mochaSuite)
         expect(suite.fullDescription).toEqual("_full mocha description_")
         expect(suite.description).toEqual("_mocha_description_")
         expect(suite.link).toEqual("?grep=_full%20mocha%20description_")

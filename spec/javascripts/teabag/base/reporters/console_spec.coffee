@@ -15,7 +15,7 @@ describe "Teabag.Reporters.Console", ->
 
     @reporter = new Teabag.Reporters.Console()
     @reporter.spec = @spec
-    @normalizeSpy = spyOn(Teabag.Reporters, "NormalizedSpec").andReturn(@spec)
+    @normalizeSpy = spyOn(Teabag, "Spec").andReturn(@spec)
 
 
   describe "constructor", ->

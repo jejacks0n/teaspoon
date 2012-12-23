@@ -17,7 +17,7 @@ describe "Teabag", ->
       expect(keys).toContain("console")
 
 
-  describe "@execute", ->
+  describe ".execute", ->
 
     beforeEach ->
       Teabag.defer = false
