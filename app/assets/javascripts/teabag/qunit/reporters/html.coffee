@@ -52,6 +52,7 @@ class Teabag.Reporters.HTML.SpecView extends Teabag.Reporters.HTML.SpecView
 
   buildParent: ->
     parent = @spec.parent
+    return @reporter unless parent
     if @views.suites[parent.description]
       @views.suites[parent.description]
     else

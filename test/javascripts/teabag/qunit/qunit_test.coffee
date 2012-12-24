@@ -9,8 +9,7 @@ test "is awesome", ->
   ok(passing == true, "Passing is true")
 
 
-
-module "running tests"
+module "Running tests"
 
 test "actually tests", 2, ->
   ok(passing == true, "window.passing should be true")
@@ -25,8 +24,7 @@ test "can handle more than one test", ->
   , 1000
 
 
-
-module "failing tests"
+module "Failing tests"
 
 test "can fail", ->
   ok(failing == false, "Failing is false")
