@@ -1,6 +1,7 @@
 #= require mocha-1.7.3
 #= require teabag/base/teabag
-#= require_tree ./mocha/reporters
+#= require teabag/mocha/reporters/console
+#= require teabag/mocha/reporters/html
 
 class Teabag.Runner extends Teabag.Runner
 

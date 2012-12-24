@@ -1,6 +1,6 @@
 #= require jasmine-1.3.0
 #= require teabag/base/teabag
-#= require_tree ./jasmine/reporters
+#= require teabag/jasmine/reporters/html
 
 class Teabag.Runner extends Teabag.Runner
 
