@@ -24,7 +24,7 @@ class Teabag.Spec
 
   constructor: (@spec) ->
     @fullDescription = "#{@spec.module} #{@spec.name}"
-    @description = @spec.name
+    @description = "#{@spec.name} (#{@spec.failed}, #{@spec.passed}, #{@spec.total})"
     @link = "?grep=#{encodeURIComponent(@fullDescription)}"
     @parent = new Teabag.Suite({description: @spec.module})
     @suiteName = @spec.module
@@ -33,8 +33,10 @@ class Teabag.Spec
 
 
   errors: ->
-    return [] if @spec.result
-    [{message: @spec.message, stack: @spec.source}]
+    return [] unless @spec.failed
+    for item in @spec.assertions
+      continue if item.result
+      {message: item.message, stack: item.source}
 
 
   getParents: ->
@@ -43,7 +45,7 @@ class Teabag.Spec
 
   result: ->
     status = "failed"
-    status = "passed" if @spec.result
+    status = "passed" unless @spec.failed
     status: status
     skipped: false
 
