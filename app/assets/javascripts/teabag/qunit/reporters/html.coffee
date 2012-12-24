@@ -5,23 +5,23 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.HTML
     env.log(@reportSpecResults)
     env.testDone(@reportSpecResults)
     env.done(@reportRunnerResults)
+    @currentAssertions = []
     @reportRunnerStarting()
 
 
   reportRunnerStarting: ->
-    @currentAssertions = []
     @total.exist = null
     @setText("stats-duration", "...")
 
 
-  reportSpecResults: (result) =>
-    unless typeof(result.total) == "number"
-      @currentAssertions.push(result)
+  reportSpecResults: (spec) =>
+    unless typeof(spec.total) == "number"
+      @currentAssertions.push(spec)
       return
-    result.assertions = @currentAssertions
+    spec.assertions = @currentAssertions
     @currentAssertions = []
-    @reportSpecStarting(result)
-    super(result)
+    @reportSpecStarting(spec)
+    super(spec)
 
 
   reportRunnerResults: (result) =>

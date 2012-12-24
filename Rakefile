@@ -39,7 +39,7 @@ namespace :teabag do
     task :javascripts => :environment do
       env = Rails.application.assets
 
-      %w(teabag/jasmine.js teabag/mocha.js).each do |path|
+      %w(teabag/jasmine.js teabag/mocha.js teabag/qunit.js).each do |path|
         asset = env.find_asset(path)
         asset.write_to(Teabag::Engine.root.join("app/assets/javascripts/#{path.gsub(/\//, "-")}"))
       end

@@ -59,8 +59,3 @@ class Teabag.Suite
     @description = @suite.description
     @link = "?grep=#{encodeURIComponent(@fullDescription)}"
     @parent = null
-    @viewId = null
-
-
-  getParent: ->
-    null
