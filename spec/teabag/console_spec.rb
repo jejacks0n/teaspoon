@@ -21,14 +21,14 @@ describe Teabag::Console do
       subject.should_receive(:start_server)
       STDOUT.should_receive(:print).with("Teabag running default suite at http://url.com/teabag/default...\n")
       STDOUT.should_receive(:print).with("Teabag running foo suite at http://url.com/teabag/foo...\n")
-      subject.should_receive(:run_specs).twice.and_return(2)
+      subject.should_receive(:run_specs_with_selenium).twice.and_return(2)
       result = subject.execute
       expect(result).to be(true)
     end
 
     it "starts the server and calls run" do
       subject.should_receive(:start_server)
-      subject.should_receive(:run_specs).twice.and_return(0)
+      subject.should_receive(:run_specs_with_selenium).twice.and_return(0)
       result = subject.execute
       expect(result).to be(false)
     end
