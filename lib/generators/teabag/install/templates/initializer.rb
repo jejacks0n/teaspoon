@@ -58,7 +58,8 @@ Teabag.setup do |config|
   #end
 
   # When Teabag is run from the command line these configuration directives apply.
-  #config.formatters = "dot"
+  #config.driver = "phantomjs" # or selenium
+  #config.formatters = "dot" # or tap_y, swayze_or_oprah
   #config.server_timeout = 20
   #config.fail_fast = true
   #config.suppress_log = false

@@ -317,7 +317,7 @@ If you want to change how Teabag looks, or include your own stylesheets you can 
 
 ## Configuration
 
-The best way to read about the configuration options is to generate the initializer, but we've included the info here too.  For more information about using Selenium check this [wiki article]().
+The best way to read about the configuration options is to generate the initializer, but we've included the info here too.
 
 **Note:** `Teabag.setup` may not be available in all environments, so keep that in mind. The generator provides a check wrapped around Teabag.setup.
 
@@ -350,6 +350,16 @@ Fixtures are different than the specs, in that Rails is rendering them directly 
 Timeout for starting the server in seconds. If your server is slow to start you may have to bump the timeout, or you may want to lower this if you know it shouldn't take long to start.
 
 **default:** `20`
+
+#### `driver`
+
+Allows you to specify which driver you want to run your specs with -- Supports [PhantomJS](http://phantomjs.org/) and [Selenium Webdriver](http://seleniumhq.org/docs/03_webdriver.jsp). For more information about using Selenium WebDriver check this [wiki article](https://github.com/modeset/teabag/wiki/Using-Selenium-WebDriver).
+
+Supported drivers: phantomjs, selenium
+
+**Note:** Override this directive by running `rake teabag DRIVER=selenium`.
+
+**default:** `"phantomjs"`
 
 #### `formatters`
 
