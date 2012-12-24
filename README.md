@@ -168,16 +168,7 @@ describe("My great feature", function() {
 });
 ```
 
-Here's a similar test in CoffeeScript using Mocha + [expect.js](https://github.com/LearnBoost/expect.js) (Teabag ships with expect.js and other support libraries like [jasmine-jquery](https://github.com/velesin/jasmine-jquery).):
-
-```coffeescript
-#= require jquery
-describe "My great feature", ->
-
-  it "will change the world", ->
-    expect(true).to.be(true)
-    expect(jQuery).to.not.be(undefined)
-```
+Check out an example of a [Mocha Spec](https://github.com/modeset/teabag/wiki/Using-Mocha) and a [QUnit Test](https://github.com/modeset/teabag/wiki/Using-QUnit).
 
 ### Pending Specs
 
@@ -199,7 +190,7 @@ describe "My great feature", ->
       expect(true).to.be(false)
 ```
 
-If you're using one library and you want to take advantage of the things that that library provides you're completely free to do so, and this is provided as a suggestion. The Teabag reporters understand the techniques above and have specs for them.
+If you're using one library and you want to take advantage of the things that that library provides you're completely free to do so, and this is provided as a suggestion. The Teabag reporters understand the techniques above and have specs for them. QUnit doesn't support specifying a test as pending.
 
 ### Fixtures
 
@@ -295,7 +286,7 @@ These are the core Teabag javascripts. Spec files should not go here -- but if y
 To use Mocha switch this to: `"teabag-mocha"`
 To use QUnit switch this to: `"teabag-qunit"`
 
-To use the coffeescript source files: `"teabag/jasmine"` etc.
+To use the CoffeeScript source files: `"teabag/jasmine"` etc.
 
 **default:** `["teabag-jasmine"]`
 
