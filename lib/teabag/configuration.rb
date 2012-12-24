@@ -5,7 +5,16 @@ module Teabag
 
     include Singleton
 
-    cattr_accessor :root, :mount_at, :asset_paths, :fixture_path, :formatters, :server_timeout, :fail_fast, :suppress_log, :suites
+    cattr_accessor :root,
+                   :mount_at,
+                   :asset_paths,
+                   :fixture_path,
+                   :driver,
+                   :formatters,
+                   :server_timeout,
+                   :fail_fast,
+                   :suppress_log,
+                   :suites
 
     @@mount_at          = "/teabag"
     @@root              = nil # will default to Rails.root if left unset
@@ -14,6 +23,7 @@ module Teabag
     @@suites            = {}
 
     # console runner specific
+    @@driver            = "phantomjs"
     @@formatters        = "dot"
     @@server_timeout    = 20
     @@fail_fast         = true
@@ -44,6 +54,7 @@ module Teabag
   end
 
   autoload :Formatters, "teabag/formatters/base_formatter"
+  autoload :Drivers,    "teabag/drivers/base_driver"
 
   mattr_accessor :configuration
   @@configuration = Configuration
@@ -60,7 +71,7 @@ module Teabag
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive] == "true")
     end
-    %w(FORMATTERS).each do |directive|
+    %w(FORMATTERS DRIVER).each do |directive|
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive])
     end

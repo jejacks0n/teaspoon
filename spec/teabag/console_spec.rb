@@ -47,23 +47,11 @@ describe Teabag::Console do
 
   describe "#run_specs" do
 
-    before do
-      Phantomjs.stub(:run)
-    end
-
-    it "instantiates the formatter" do
-      formatter = mock(failure_count: nil)
-      Teabag::Runner.should_receive(:new).and_return(formatter)
-      subject.run_specs(:default)
-    end
-
-    it "phantomjs.run and logs the results of each line using the formatter" do
-      args = [Teabag::Engine.root.join("lib/teabag/phantomjs/runner.coffee").to_s, "http://url.com/teabag/default"]
-      Teabag::Runner.any_instance.should_receive(:process).with("_line_")
-      @block = nil
-      Phantomjs.should_receive(:run).with(*args) { |&b| @block = b }
-      subject.run_specs(:default)
-      @block.call("_line_")
+    it "calls run_specs on the driver" do
+      driver = mock(run_specs: nil)
+      subject.should_receive(:driver).and_return(driver)
+      driver.should_receive(:run_specs).with(:suite_name, "http://url.com/teabag/suite_name")
+      subject.run_specs(:suite_name)
     end
 
   end
