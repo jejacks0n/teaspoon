@@ -5019,12 +5019,27 @@
 
     Teabag.console = window.console;
 
+    Teabag.messages = [];
+
     Teabag.execute = function() {
       if (this.defer) {
         this.defer = false;
         return;
       }
       return new Teabag.Runner();
+    };
+
+    Teabag.log = function() {
+      var _ref;
+      this.messages.push(arguments[0]);
+      return (_ref = this.console).log.apply(_ref, arguments);
+    };
+
+    Teabag.getMessages = function() {
+      var messages;
+      messages = this.messages;
+      this.messages = [];
+      return messages;
     };
 
     return Teabag;
@@ -5175,7 +5190,7 @@
       if (this.params["reporter"]) {
         return Teabag.Reporters[this.params["reporter"]];
       } else {
-        if (navigator.userAgent.match(/PhantomJS/)) {
+        if (window.navigator.userAgent.match(/PhantomJS/)) {
           return Teabag.Reporters.Console;
         } else {
           return Teabag.Reporters.HTML;
@@ -5853,7 +5868,7 @@
         obj = {};
       }
       obj["_teabag"] = true;
-      return Teabag.console.log(JSON.stringify(obj));
+      return Teabag.log(JSON.stringify(obj));
     };
 
     return Console;

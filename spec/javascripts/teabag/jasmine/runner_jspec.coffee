@@ -20,7 +20,7 @@ describe "Jasmine Teabag.Runner", ->
     beforeEach ->
       @runner.params = {grep: "foo"}
       @instance = {setFilter: ->}
-      if navigator.userAgent.match(/PhantomJS/)
+      if window.navigator.userAgent.match(/PhantomJS/)
         @reporterSpy = spyOn(Teabag.Reporters, "Console").andReturn(@instance)
       else
         @reporterSpy = spyOn(Teabag.Reporters, "HTML").andReturn(@instance)

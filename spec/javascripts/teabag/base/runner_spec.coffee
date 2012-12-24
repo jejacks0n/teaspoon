@@ -38,11 +38,13 @@ describe "Teabag.Runner", ->
 
     it "returns the correct reporter when using PhantomJS", ->
       runner = new Teabag.Runner()
+      runner.params = {}
       spyOn(String.prototype, 'match').andReturn(20)
       expect(runner.getReporter()).toBe(Teabag.Reporters.Console)
 
     it "returns the correct reporter when using the browser", ->
       runner = new Teabag.Runner()
+      runner.params = {}
       spyOn(String.prototype, 'match').andReturn(0)
       expect(runner.getReporter()).toBe(Teabag.Reporters.HTML)
 

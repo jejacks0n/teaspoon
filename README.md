@@ -2,7 +2,7 @@ Teabag
 ======
 [![Build Status](https://travis-ci.org/modeset/teabag.png)](https://travis-ci.org/modeset/teabag)
 
-Teabag is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS.
+Teabag is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS (default) or Selenium WebDriver.
 
 Ok, another test runner, right? Really? Yeah, that's a tough one, but we're pretty confident Teabag is the nicest one you'll find at the moment. And if you disagree, you can swing by our offices in Denver and we'll buy you a beer if you're so inclined.  And we'll probably fix whatever it is that you didn't like.
 
@@ -175,7 +175,7 @@ describe("My great feature", function() {
 });
 ```
 
-Here's that same test written in CoffeeScript using Mocha + [expect.js](https://github.com/LearnBoost/expect.js) (Teabag ships with expect.js and other support libraries like [jasmine-jquery](https://github.com/velesin/jasmine-jquery).):
+Here's a similar test in CoffeeScript using Mocha + [expect.js](https://github.com/LearnBoost/expect.js) (Teabag ships with expect.js and other support libraries like [jasmine-jquery](https://github.com/velesin/jasmine-jquery).):
 
 ```coffeescript
 #= require jquery
@@ -317,7 +317,7 @@ If you want to change how Teabag looks, or include your own stylesheets you can 
 
 ## Configuration
 
-The best way to read about the configuration options is to generate the initializer, but we've included the info here too.
+The best way to read about the configuration options is to generate the initializer, but we've included the info here too.  For more information about using Selenium check this [wiki article]().
 
 **Note:** `Teabag.setup` may not be available in all environments, so keep that in mind. The generator provides a check wrapped around Teabag.setup.
 

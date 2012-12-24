@@ -1,7 +1,7 @@
 describe "Teabag.Reporters.Console", ->
 
   beforeEach ->
-    @logSpy = spyOn(window.console, "log")
+    @logSpy = spyOn(Teabag, "log")
     spyOn(Date, "now").andReturn(666)
 
     @spec =

@@ -1,6 +1,4 @@
 require "teabag/server"
-require "teabag/runner"
-require "phantomjs"
 
 module Teabag
   class Console
@@ -37,17 +35,13 @@ module Teabag
     end
 
     def run_specs(suite)
-      runner = Teabag::Runner.new(suite)
-      Phantomjs.run(script, url(suite)) do |line|
-        runner.process(line)
-      end
-      runner.failure_count
+      driver.run_specs(suite, url(suite))
     end
 
     protected
 
-    def script
-      File.expand_path("../phantomjs/runner.coffee", __FILE__)
+    def driver
+      @driver ||= Teabag::Drivers.const_get("#{Teabag.configuration.driver.to_s.camelize}Driver").new
     end
 
     def url(suite)
