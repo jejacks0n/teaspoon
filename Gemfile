@@ -1,6 +1,7 @@
 source :rubygems
 
 gemspec
+gem "selenium-webdriver"
 
 # Used by the dummy application
 gem "rails", ">= 3.2.9"

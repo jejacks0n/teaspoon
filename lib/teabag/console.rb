@@ -1,6 +1,7 @@
 require "teabag/server"
 require "teabag/runner"
 require "phantomjs"
+require "selenium-webdriver"
 
 module Teabag
   class Console
@@ -22,7 +23,7 @@ module Teabag
       failure_count = 0
       @suites.each do |suite|
         STDOUT.print "Teabag running #{suite} suite at #{url(suite)}...\n" unless Teabag.configuration.suppress_log
-        failure_count += run_specs(suite)
+        failure_count += run_specs_with_selenium(suite)
       end
       failure_count > 0
     rescue Teabag::Failure
@@ -42,6 +43,22 @@ module Teabag
         runner.process(line)
       end
       runner.failure_count
+    end
+
+    def run_specs_with_selenium(suite)
+      runner = Teabag::Runner.new(suite)
+      driver = Selenium::WebDriver.for(:firefox)
+      driver.navigate.to("#{url(suite)}?reporter=Console")
+      Selenium::WebDriver::Wait.new(timeout: 3000, interval: 0.01, message: "Timed out").until do
+        done = driver.execute_script("return window.Teabag && window.Teabag.finished")
+        driver.execute_script("return Teabag.getMessages()").each do |line|
+          runner.process("#{line}\n")
+        end
+        done
+      end
+      runner.failure_count
+    ensure
+      driver.quit
     end
 
     protected
