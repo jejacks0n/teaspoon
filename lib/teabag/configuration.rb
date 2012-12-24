@@ -18,7 +18,7 @@ module Teabag
 
     @@mount_at          = "/teabag"
     @@root              = nil # will default to Rails.root if left unset
-    @@asset_paths       = ["spec/javascripts", "spec/javascripts/stylesheets"]
+    @@asset_paths       = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
     @@fixture_path      = "spec/javascripts/fixtures"
     @@suites            = {}
 
