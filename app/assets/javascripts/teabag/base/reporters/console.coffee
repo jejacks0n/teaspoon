@@ -71,4 +71,4 @@ class Teabag.Reporters.Console
 
   log: (obj = {}) ->
     obj["_teabag"] = true
-    Teabag.console.log(JSON.stringify(obj))
+    Teabag.log(JSON.stringify(obj))
