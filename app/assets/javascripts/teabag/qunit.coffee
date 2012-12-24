@@ -26,7 +26,7 @@ class Teabag.Spec
     @fullDescription = "#{@spec.module} #{@spec.name}"
     @description = "#{@spec.name} (#{@spec.failed}, #{@spec.passed}, #{@spec.total})"
     @link = "?grep=#{encodeURIComponent(@fullDescription)}"
-    @parent = new Teabag.Suite({description: @spec.module})
+    @parent = if @spec.module then new Teabag.Suite({description: @spec.module}) else null
     @suiteName = @spec.module
     @viewId = @spec.viewId
     @pending = false
@@ -40,7 +40,8 @@ class Teabag.Spec
 
 
   getParents: ->
-    []
+    return [] unless @parent
+    [@parent]
 
 
   result: ->
@@ -58,7 +59,7 @@ class Teabag.Suite
     @description = @suite.description
     @link = "?grep=#{encodeURIComponent(@fullDescription)}"
     @parent = null
-    @viewId = null #Math.random() * 200000
+    @viewId = null
 
 
   getParent: ->

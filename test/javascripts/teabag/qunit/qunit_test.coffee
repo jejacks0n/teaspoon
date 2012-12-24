@@ -1,5 +1,8 @@
 console.log("testing console output")
 
+test "doesn't need a module", ->
+  ok(passing == true, "Passing is true")
+
 module "Teabag running QUnit"
 
 test "is awesome", ->
@@ -10,8 +13,8 @@ test "is awesome", ->
 module "running tests"
 
 test "actually tests", 2, ->
-  ok(true, "passing")
-  ok(true, "passing")
+  ok(passing == true, "window.passing should be true")
+  ok(failing == false, "window.failing should be false")
 
 test "can handle more than one test", ->
   expect(1)
