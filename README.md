@@ -85,13 +85,6 @@ Failures:
 
   1) Calculator should add two numbers.
      Failure/Error: TypeError: 'undefined' is not a function
-
-Finished in 0.01600 seconds
-1 example, 1 failure
-
-Failed examples:
-
-/teabag/default?grep=calculator%20should%20add%20two%20numbers.
 ```
 
 Now we just need make the test pass. Let's implement the `add` method on Calculator.
@@ -277,7 +270,6 @@ config.suite do |suite|
   suite.matcher = nil
   suite.helper = "my_spec_manifest"
 end
-
 ```
 
 ### Suite Configuration Directives
