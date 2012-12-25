@@ -7,7 +7,6 @@ test "constructor", 1, ->
   new Teabag.Runner()
   ok(QUnit.start.called, "QUnit.start was called")
 
-
 test "#setup", ->
   runner = new Teabag.Runner()
   runner.params = {grep: "foo"}
