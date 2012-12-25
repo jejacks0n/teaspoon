@@ -1,9 +1,7 @@
 module "QUnit Teabag.Runner",
   setup: ->
-    sinon.spy(QUnit, "start")
-  teardown: ->
-    QUnit.start.restore()
-
+    QUnit.start = sinon.spy()
+    Teabag.Runner.prototype.reportRunnerStarting = sinon.spy()
 
 test "constructor", 1, ->
   new Teabag.Runner()
