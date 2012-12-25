@@ -1,6 +1,6 @@
 #= require jasmine-1.3.0
 #= require teabag/base/teabag
-#= require_tree ./jasmine/reporters
+#= require teabag/jasmine/reporters/html
 
 class Teabag.Runner extends Teabag.Runner
 
@@ -33,3 +33,54 @@ class Teabag.Runner extends Teabag.Runner
     jasmine.getFixtures().fixturesPath = @fixturePath
     jasmine.getStyleFixtures().fixturesPath = @fixturePath
     jasmine.getJSONFixtures().fixturesPath = @fixturePath
+
+
+
+class Teabag.Spec
+
+  constructor: (@spec) ->
+    @fullDescription = @spec.getFullName()
+    @description = @spec.description
+    @link = "?grep=#{encodeURIComponent(@fullDescription)}"
+    @parent = @spec.suite
+    @suiteName = @parent.getFullName()
+    @viewId = @spec.viewId
+    @pending = @spec.pending
+
+
+  errors: ->
+    return [] unless @spec.results
+    for item in @spec.results().getItems()
+      continue if item.passed()
+      {message: item.message, stack: item.trace.stack}
+
+
+  getParents: ->
+    return @parents if @parents
+    @parents ||= []
+    parent = @parent
+    while parent
+      parent = new Teabag.Suite(parent)
+      @parents.unshift(parent)
+      parent = parent.parent
+    @parents
+
+
+  result: ->
+    results = @spec.results()
+    status = "failed"
+    status = "passed" if results.passed()
+    status = "pending" if @spec.pending
+    status: status
+    skipped: results.skipped
+
+
+
+class Teabag.Suite
+
+  constructor: (@suite) ->
+    @fullDescription = @suite.getFullName()
+    @description = @suite.description
+    @link = "?grep=#{encodeURIComponent(@fullDescription)}"
+    @parent = @suite.parentSuite
+    @viewId = @suite.viewId
