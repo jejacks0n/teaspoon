@@ -228,8 +228,6 @@ setTimeout(Teabag.execute, 1000) # defers execution for 1 second
 
 Teabag uses the concept of suites to group your tests at a high level. These suites are run in isolation from one another, and can have different configurations.
 
-When Teabag is run via the rake task, it will stop at any point that a suite fails, which allows you to create a hierarchy of suites -- crafting tiers of pass expectation.  The fail_fast configuration lets you override this behavior -- useful for CI (more on setting these via env in the configuration section).
-
 You can define suites in the configuration, and for brevity `config` is the argument passed to the `Teabag.setup` block.
 
 When creating a suite definition you simply pass it a name and a block. The following example defines a suite named "my_suite". You can focus to just this suite by browsing to `/teabag/my_suite` or running the rake task with `suite=my_suite`.
@@ -269,13 +267,14 @@ end
 
 You can specify a file matcher for your specs, and the matching files will be automatically loaded when the suite is run. It's important that these files are serve-able from sprockets (aka the asset pipeline), and you'll receive an exception if they aren't.
 
+**Note:** Set this to `nil` if you want to use your helper as a manifest.
+
 **default:** `"{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"`
 
-**Note:** set this to nil if you want to use your spec helper as a manifest.
 
 #### `helper`
 
-Each suite can load a different spec helper, which can in turn require additional files since this file is also served via the asset pipeline. This file is loaded before your specs are loaded -- so you can potentially include all of your spec files and use this as a manifest (if you set the matcher to nil).
+Each suite can load a different spec helper, which can in turn require additional files. This file is loaded before your specs are loaded -- so you can use this as a manifest if you set the matcher to nil.
 
 **default:** `"spec_helper"`
 
@@ -283,14 +282,13 @@ Each suite can load a different spec helper, which can in turn require additiona
 
 These are the core Teabag javascripts. Spec files should not go here -- but if you want to add additional support for jasmine matchers, switch to mocha, include expectation libraries etc., this is a good place to do that.
 
-To use Mocha switch this to: `"teabag-mocha"`
-To use QUnit switch this to: `"teabag-qunit"`
+Available frameworks: teabag-jasmine, teabag-mocha, teabag-qunit
 
-To use the CoffeeScript source files: `"teabag/jasmine"` etc.
+**Note:** To use the CoffeeScript source files use `"teabag/jasmine"` etc.
+
+**Note:** It's strongly encouraged to include only the base files in the `javascripts` directive. You can require other support libraries in your spec helper, which makes them easier to change (you don't have to restart the server.)
 
 **default:** `["teabag-jasmine"]`
-
-**Note:** It's strongly encouraged to only include the base files in the `javascripts` directive. You can require any other libraries you need in your spec helper. This makes it easier to maintain because you don't have to restart the server.
 
 #### `stylesheets`
 
@@ -389,6 +387,14 @@ Because we know that testing usually requires more than just the test framework 
 - [Sinon.JS](https://github.com/cjohansen/Sinon.JS) Great for stubbing / spying, and mocking Ajax (Mocha/Jasmine).
 - [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit (Mocha).
 
+You can require these files in your spec helper using:
+
+```javascript
+//=require jasmine-jquery
+//=require sinon
+//=require expect
+```
+
 
 ## CI Support
 
@@ -407,3 +413,5 @@ Check the [issues](https://github.com/modeset/teabag/issues) to see / discuss fe
 ## License
 
 Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)
+
+All licenses for the [bundled Javascript libraries](https://github.com/modeset/teabag/tree/master/vendor/assets/javascripts) are included (all MIT).
