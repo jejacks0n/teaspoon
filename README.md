@@ -6,7 +6,7 @@ Teabag is a Javascript test runner built on top of Rails. It can run tests in th
 
 Ok, another test runner, right? Really? Yeah, that's a tough one, but we're pretty confident Teabag is the nicest one you'll find at the moment. And if you disagree, you can swing by our offices in Denver and we'll buy you a beer if you're so inclined.  And we'll probably fix whatever it is that you didn't like.
 
-The intention is to be the simplest but most complete Javascript testing solution for Rails, taking full advantage of the asset pipeline. It ships with support for both Jasmine and Mocha, and has custom reporters for both libraries.
+The intention is to be the simplest but most complete Javascript testing solution for Rails, taking full advantage of the asset pipeline. It ships with support for Jasmine, Mocha and QUnit, and has custom reporters for each.
 
 We've just released Teabag, and we expect to be working on it for a while to get a glossy shine to everything, so check it out and let us know what you think. Feedback, ideas and pull requests would be awesome.
 
@@ -60,7 +60,7 @@ rails generate teabag:install
 
 The install generator will create a `spec/javascripts` directory for you. Teabag will automatically pick up any specs written in that folder named `[classname]_spec.(js|coffee|js.coffee)`.
 
-Let's write a basic class and spec in CoffeeScript using Jasmine (though you could just as easily use vanilla Javascript and/or Mocha). Create `spec/javascripts/calculator_spec.coffee` and put this in it:
+Let's write a basic class and spec in CoffeeScript using Jasmine (though you could just as easily use vanilla Javascript). Create `spec/javascripts/calculator_spec.coffee` and put this in it:
 
 ```coffeescript
 #= require calculator
@@ -83,15 +83,8 @@ Run `rake teabag` - you should see your first failing spec.
 ```
 Failures:
 
-  1) calculator should add two numbers.
-       Failure/Error: TypeError: 'undefined' is not a function
-
-       Finished in 0.01600 seconds
-       1 example, 1 failure
-
-       Failed examples:
-
-       /teabag/default?grep=calculator%20should%20add%20two%20numbers.
+  1) Calculator should add two numbers.
+     Failure/Error: TypeError: 'undefined' is not a function
 ```
 
 Now we just need make the test pass. Let's implement the `add` method on Calculator.
@@ -103,7 +96,7 @@ Now we just need make the test pass. Let's implement the `add` method on Calcula
 
 Run `rake teabag` again - that spec should now be passing!
 
-If you'd prefer, you can also run your tests in the browser. Fire up your Rails server and visit [localhost:3000/teabag](http://localhost:3000/teabag) to run the specs.
+If you'd prefer, you can also run your tests in the browser. Fire up your Rails server and visit [localhost:3000/teabag](http://localhost:3000/teabag) to run the specs in whichever browser you want.
 
 
 ## Usage
@@ -157,7 +150,7 @@ task :default => [:spec, :teabag, :cucumber]
 
 ## Writing Specs
 
-Depending on what framework you use this can be slightly different. There's an expectation that you have a certain level of familiarity with the test framework that you're using. Right now we support [Jasmine](http://pivotal.github.com/jasmine/) and [Mocha](http://visionmedia.github.com/mocha/).
+Depending on what framework you use this can be slightly different. There's an expectation that you have a certain level of familiarity with the test framework that you're using. Right now we support [Jasmine](http://pivotal.github.com/jasmine), [Mocha](http://visionmedia.github.com/mocha) and [QUnit](http://qunitjs.com).
 
 Since we have the asset pipeline at our fingertips you can feel free to use the `= require` directive throughout your specs and spec helpers.
 
@@ -175,16 +168,7 @@ describe("My great feature", function() {
 });
 ```
 
-Here's a similar test in CoffeeScript using Mocha + [expect.js](https://github.com/LearnBoost/expect.js) (Teabag ships with expect.js and other support libraries like [jasmine-jquery](https://github.com/velesin/jasmine-jquery).):
-
-```coffeescript
-#= require jquery
-describe "My great feature", ->
-
-  it "will change the world", ->
-    expect(true).to.be(true)
-    expect(jQuery).to.not.be(undefined)
-```
+Check out an example of a [Mocha Spec](https://github.com/modeset/teabag/wiki/Using-Mocha) and a [QUnit Test](https://github.com/modeset/teabag/wiki/Using-QUnit).
 
 ### Pending Specs
 
@@ -206,7 +190,7 @@ describe "My great feature", ->
       expect(true).to.be(false)
 ```
 
-If you're using one library and you want to take advantage of the things that that library provides you're completely free to do so, and this is provided as a suggestion. The Teabag reporters understand the techniques above and have specs for them.
+If you're using one library and you want to take advantage of the things that that library provides you're completely free to do so, and this is provided as a suggestion. The Teabag reporters understand the techniques above and have specs for them. QUnit doesn't support specifying a test as pending.
 
 ### Fixtures
 
@@ -277,7 +261,6 @@ config.suite do |suite|
   suite.matcher = nil
   suite.helper = "my_spec_manifest"
 end
-
 ```
 
 ### Suite Configuration Directives
@@ -300,9 +283,10 @@ Each suite can load a different spec helper, which can in turn require additiona
 
 These are the core Teabag javascripts. Spec files should not go here -- but if you want to add additional support for jasmine matchers, switch to mocha, include expectation libraries etc., this is a good place to do that.
 
-To use mocha switch this to: `"teabag-mocha"`
+To use Mocha switch this to: `"teabag-mocha"`
+To use QUnit switch this to: `"teabag-qunit"`
 
-To use the coffeescript source files: `"teabag/jasmine"` or `"teabag/mocha"`
+To use the CoffeeScript source files: `"teabag/jasmine"` etc.
 
 **default:** `["teabag-jasmine"]`
 
@@ -337,7 +321,7 @@ The root path defaults to Rails.root if left nil, but if you're testing an engin
 
 These paths are appended to the rails assets paths (relative to config.root), and by default is an array that you can replace or add to.
 
-**default:** `["spec/javascripts", "spec/javascripts/stylesheets"]`
+**default:** `["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]`
 
 #### `fixture_path`
 
@@ -390,17 +374,11 @@ When you run Teabag from the console, it will pipe all console.log/debug/etc. ca
 
 ## Test Frameworks
 
-[Jasmine](http://pivotal.github.com/jasmine/) is a pretty big aspect of the default setup. We've been using Jasmine for a long time, and have been pretty happy with it.  It lacks a few important things that could be in a test framework, so we've done a little bit of work to make that nicer.  Like adding pending spec support.
+[Jasmine](http://pivotal.github.com/jasmine) is used by default unless you specify otherwise. We've been using Jasmine for a long time, and have been pretty happy with it. It lacks a few important things that could be in a test framework, so we've done a little bit of work to make that nicer. Like adding pending spec support.
 
-[Mocha](http://visionmedia.github.com/mocha/) came up while we were working on Teabag -- we read up about it and thought it was a pretty awesome library with some really great approaches to some of the things that some of us browser types should consider more often, so we included it and added support for it. We encourage you to give it a try.
+[Mocha](http://visionmedia.github.com/mocha) came up while we were working on Teabag -- we read up about it and thought it was a pretty awesome library with some really great approaches to some of the things that some of us browser types should consider more often, so we included it and added support for it. We encourage you to give it a try. Read more about [Using Mocha|Using Mocha] with Teabag.
 
-By default Jasmine will be loaded, and to use Mocha just change your suite to include the Mocha javascript.
-
-```ruby
-config.suite do |suite|
-  suite.javascripts = ["teabag-mocha"]
-end
-```
+[QUnit](http://qunitjs.com) We're not sure about how many people use QUnit, but we like jQuery, and it wasn't that hard to add support for it, so we did. Show us some love if you're using it. Read more about [Using QUnit|Using QUnit] with Teabag.
 
 
 ## Support Libraries
@@ -423,7 +401,8 @@ More on this shortly....
 
 So, there's lots of directions we can take the Teabag project, but we'll give it some time to see what people are looking for.
 
-Check the issues to see / discuss features that we're considering or working on.
+Check the [issues](https://github.com/modeset/teabag/issues) to see / discuss features that we're considering or are working on.
+
 
 ## License
 

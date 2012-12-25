@@ -8,8 +8,8 @@ class Teabag.Reporters.Console extends Teabag.Reporters.Console
     runner.on("end", @reportRunnerResults)
 
 
-  reportSpecResults: (@spec, err) =>
+  reportSpecResults: (spec, err) =>
     if err
-      @spec.err = err
+      spec.err = err
       return
     super
