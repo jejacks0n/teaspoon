@@ -15,7 +15,7 @@ Teabag.setup do |config|
 
   config.suite :mocha do |suite|
     suite.matcher = "spec/javascripts/**/*_mspec.{js,js.coffee,coffee}"
-    suite.javascripts = ["teabag/mocha", "expect"]
+    suite.javascripts = ["teabag/mocha"]
     suite.helper = "mocha_helper"
   end
 

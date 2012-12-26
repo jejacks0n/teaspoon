@@ -390,9 +390,9 @@ Because we know that testing usually requires more than just the test framework 
 You can require these files in your spec helper using:
 
 ```javascript
-//=require jasmine-jquery
-//=require sinon
-//=require expect
+//=require support/jasmine-jquery
+//=require support/sinon
+//=require support/expect
 ```
 
 
