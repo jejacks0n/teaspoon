@@ -2865,6 +2865,9 @@
     SpecView.prototype.buildParent = function() {
       var parent, view;
       parent = this.spec.parent;
+      if (!parent) {
+        return this.reporter;
+      }
       if (this.views.suites[parent.description]) {
         return this.views.suites[parent.description];
       } else {

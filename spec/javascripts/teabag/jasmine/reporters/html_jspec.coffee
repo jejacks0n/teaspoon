@@ -14,4 +14,4 @@ describe "Jasmine Teabag.Reporters.HTML", ->
   describe "#envInfo", ->
 
     it "returns jasmine version information", ->
-      expect(@reporter.envInfo()).toBe("jasmine 1.3.0 revision 1354052693")
+      expect(@reporter.envInfo()).toBe("jasmine 1.3.1 revision 1354556913")

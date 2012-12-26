@@ -220,7 +220,7 @@ jasmine.any = function(clazz) {
  * @returns matchable object for the sample
  */
 jasmine.objectContaining = function (sample) {
-    return new jasmine.Matchers.ObjectContaining(sample);
+  return new jasmine.Matchers.ObjectContaining(sample);
 };
 
 /**
@@ -629,15 +629,15 @@ jasmine.XmlHttpRequest = (typeof XMLHttpRequest == "undefined") ? function() {
   var xhr = tryIt(function() {
     return new ActiveXObject("Msxml2.XMLHTTP.6.0");
   }) ||
-    tryIt(function() {
-      return new ActiveXObject("Msxml2.XMLHTTP.3.0");
-    }) ||
-    tryIt(function() {
-      return new ActiveXObject("Msxml2.XMLHTTP");
-    }) ||
-    tryIt(function() {
-      return new ActiveXObject("Microsoft.XMLHTTP");
-    });
+      tryIt(function() {
+        return new ActiveXObject("Msxml2.XMLHTTP.3.0");
+      }) ||
+      tryIt(function() {
+        return new ActiveXObject("Msxml2.XMLHTTP");
+      }) ||
+      tryIt(function() {
+        return new ActiveXObject("Microsoft.XMLHTTP");
+      });
 
   if (!xhr) throw new Error("This browser does not support XMLHttpRequest.");
 
@@ -695,8 +695,8 @@ jasmine.util.formatException = function(e) {
 jasmine.util.htmlEscape = function(str) {
   if (!str) return str;
   return str.replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
 };
 
 jasmine.util.argsToArray = function(args) {
@@ -1102,7 +1102,7 @@ jasmine.JsApiReporter.prototype.summarize_ = function(suiteOrSpec) {
     type: isSuite ? 'suite' : 'spec',
     children: []
   };
-  
+
   if (isSuite) {
     var children = suiteOrSpec.children();
     for (var i = 0; i < children.length; i++) {
@@ -1328,11 +1328,11 @@ jasmine.Matchers.prototype.toBeNull = function() {
  * Matcher that compares the actual to NaN.
  */
 jasmine.Matchers.prototype.toBeNaN = function() {
-	this.message = function() {
-		return [ "Expected " + jasmine.pp(this.actual) + " to be NaN." ];
-	};
+  this.message = function() {
+    return [ "Expected " + jasmine.pp(this.actual) + " to be NaN." ];
+  };
 
-	return (this.actual !== this.actual);
+  return (this.actual !== this.actual);
 };
 
 /**
@@ -1931,8 +1931,8 @@ jasmine.PrettyPrinter.prototype.iterateObject = function(obj, fn) {
   for (var property in obj) {
     if (!obj.hasOwnProperty(property)) continue;
     if (property == '__Jasmine_been_here_before__') continue;
-    fn(property, obj.__lookupGetter__ ? (obj.__lookupGetter__(property) !== jasmine.undefined && 
-                                         obj.__lookupGetter__(property) !== null) : false);
+    fn(property, obj.__lookupGetter__ ? (obj.__lookupGetter__(property) !== jasmine.undefined &&
+        obj.__lookupGetter__(property) !== null) : false);
   }
 };
 
@@ -2063,7 +2063,7 @@ jasmine.Queue.prototype.next_ = function() {
 
   while (goAgain) {
     goAgain = false;
-    
+
     if (self.index < self.blocks.length && !(this.abort && !this.ensured[self.index])) {
       var calledSynchronously = true;
       var completedSynchronously = false;
@@ -2101,7 +2101,7 @@ jasmine.Queue.prototype.next_ = function() {
       if (completedSynchronously) {
         onComplete();
       }
-      
+
     } else {
       self.running = false;
       if (self.onComplete) {
@@ -2597,8 +2597,8 @@ jasmine.WaitsForBlock.prototype.execute = function(onComplete) {
 jasmine.version_= {
   "major": 1,
   "minor": 3,
-  "build": 0,
-  "revision": 1354052693
+  "build": 1,
+  "revision": 1354556913
 };
 (function() {
 

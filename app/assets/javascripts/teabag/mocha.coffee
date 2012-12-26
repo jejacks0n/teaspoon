@@ -1,4 +1,4 @@
-#= require mocha-1.7.3
+#= require mocha-1.7.4
 #= require teabag/base/teabag
 #= require teabag/mocha/reporters/console
 #= require teabag/mocha/reporters/html

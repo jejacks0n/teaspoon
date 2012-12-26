@@ -414,4 +414,4 @@ Check the [issues](https://github.com/modeset/teabag/issues) to see / discuss fe
 
 Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)
 
-All licenses for the [bundled Javascript libraries](https://github.com/modeset/teabag/tree/master/vendor/assets/javascripts) are included (all MIT).
+All licenses for the [bundled Javascript libraries](https://github.com/modeset/teabag/tree/master/vendor/assets/javascripts) are included (MIT/BSD).
