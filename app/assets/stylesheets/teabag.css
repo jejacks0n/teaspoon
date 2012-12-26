@@ -340,3 +340,14 @@ body.teabag-passed #teabag-progress .teabag-indicator {
   left: 0;
   width: 10000px;
 }
+
+/* Responsive
+ *---------------------------------------------------------------------------*/
+@media (max-width: 540px) {
+  body {
+    padding: 25px 5px;
+  }
+  #teabag-progress {
+    margin-right: 15px;
+  }
+}
