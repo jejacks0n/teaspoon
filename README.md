@@ -204,7 +204,7 @@ To load fixtures in your specs you'll need to include jasmine-jquery -- and then
 
 ```coffeescript
 #= require jquery
-#= require jasmine-jquery
+#= require support/jasmine-jquery
 describe "fixtures", ->
 
   it "loads fixtures", ->
