@@ -15,8 +15,8 @@ describe "Teabag.Runner", ->
       new Teabag.Runner()
       expect(Teabag.Runner.run).toEqual(true)
 
-    it "sets @fixturePath to whatever was in Teabag.fixturePath", ->
-      Teabag.fixturePath = "/path/to/fixtures"
+    it "sets @fixturePath to whatever was in Teabag.root", ->
+      Teabag.root = "/path/to"
       runner = new Teabag.Runner()
       expect(runner.fixturePath).toEqual("/path/to/fixtures")
 

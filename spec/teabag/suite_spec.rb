@@ -54,4 +54,12 @@ describe Teabag::Suite do
 
   end
 
+  describe "#suites" do
+
+    it "returns as hash with expected results" do
+      expect(subject.suites).to eql({all: ["default"], active: "default"})
+    end
+
+  end
+
 end

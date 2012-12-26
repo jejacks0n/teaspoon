@@ -4,15 +4,15 @@
 #= require teabag/base/reporters/console
 
 class @Teabag
-  @defer       : false
-  @slow        : 75
-  @fixturePath : null
-  @finished    : false
-  @Reporters   : {}
-  @Date        : Date
-  @location    : window.location
-  @console     : window.console
-  @messages    : []
+  @defer:     false
+  @slow:      75
+  @root:      null
+  @finished:  false
+  @Reporters: {}
+  @Date:      Date
+  @location:  window.location
+  @console:   window.console
+  @messages:  []
 
   @execute: ->
     if @defer

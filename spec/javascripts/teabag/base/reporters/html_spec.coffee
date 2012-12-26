@@ -73,14 +73,29 @@ describe "Teabag.Reporters.HTML", ->
 
     beforeEach ->
       @el = {}
+      @buildSuiteSelectSpy = spyOn(@reporter, "buildSuiteSelect")
       @createElSpy = spyOn(@reporter, "createEl").andReturn(@el)
       @appendChildSpy = spyOn(document.body, "appendChild")
       @reporter.buildLayout()
+
+    it "calls buildSuiteSelect", ->
+      expect(@buildSuiteSelectSpy).toHaveBeenCalled()
 
     it "creates an element and appends it to the body", ->
       expect(@createElSpy).toHaveBeenCalledWith("div")
       expect(@appendChildSpy).toHaveBeenCalledWith(@el)
       expect(@el.innerHTML).toContain("Teabag")
+
+
+  describe "#buildSuiteSelect", ->
+
+    beforeEach ->
+      Teabag.suites = {all: ["default", "foo", "bar"], active: "foo"}
+
+    it "builds a select that displays the suites", ->
+      result = @reporter.buildSuiteSelect()
+      expect(result).toContain("select id=")
+      expect(result).toContain("selected='selected' value=\"foo\"")
 
 
   describe "#buildProgress", ->
@@ -308,8 +323,8 @@ describe "Teabag.Reporters.HTML", ->
       @reporter.setFilter("_filter_")
 
     it "sets a class and the html for the filter display", ->
-      expect(@setClassSpy).toHaveBeenCalledWith("filtered", "teabag-filtered")
-      expect(@setHtmlSpy).toHaveBeenCalledWith("filtered", "_filter_", true)
+      expect(@setClassSpy).toHaveBeenCalledWith("filter", "teabag-filtered")
+      expect(@setHtmlSpy).toHaveBeenCalledWith("filter-info", "_filter_", true)
 
 
   describe "#readConfig", ->

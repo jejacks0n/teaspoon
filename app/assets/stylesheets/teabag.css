@@ -1,6 +1,7 @@
 body {
   margin: 0;
-  padding: 60px 50px;
+  padding: 45px 50px 0;
+  min-width: 440px;
   background-color: #f4f3ee;
   border-top: 3px solid #18c2e8;
   font: 15px/1.5em "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -118,7 +119,6 @@ hr {
   width: 84px;
   height: 84px;
 }
-
 #teabag-progress .simple-progress em {
   display: block;
   text-align: center;
@@ -133,10 +133,7 @@ hr {
   display: block;
   height: 20px;
   border: 1px solid #5a423c;
-
 }
-
-
 
 /* Statistics
  *---------------------------------------------------------------------------*/
@@ -163,6 +160,7 @@ hr {
   padding: 3px 8px;
   zoom: 1;
   border: 1px solid #B3B3B3;
+  outline: none;
   border-radius: 0.4em;
   background-color: #fff;
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.05));
@@ -187,8 +185,17 @@ hr {
 #teabag-controls button:hover {
   background-color: #E6E6E6;
 }
-#teabag-controls #teabag-filtered {
-  display: none;
+#teabag-controls select {
+  position: relative;
+  top: -1px;
+  height: 21px;
+  max-width: 100px;
+  margin: 0;
+  border: 1px solid #B3B3B3;
+  outline: none;
+}
+
+#teabag-controls #teabag-filter {
   margin-right: 220px;
   white-space: nowrap;
   overflow: hidden;
@@ -196,8 +203,11 @@ hr {
   font-weight: 200;
   color: #7b4f49;
 }
-#teabag-controls #teabag-filtered.teabag-filtered {
-  display: block;
+#teabag-controls #teabag-filter button {
+  visibility: hidden;
+}
+#teabag-controls #teabag-filter.teabag-filtered button {
+  visibility: visible;
 }
 #teabag-controls #teabag-toggles {
   float: right;

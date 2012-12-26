@@ -23,6 +23,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     @setText("env-info", @envInfo())
     @setText("version", Teabag.version)
     @findEl("toggles").onclick = @toggleConfig
+    @findEl("suite-select").onchange = @changeSuite
     @showConfiguration()
     @buildProgress()
 
@@ -50,12 +51,14 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
       <div id="teabag-controls" class="teabag-clearfix">
         <div id="teabag-toggles">
-          <button id="teabag-use-catch">Use Try/Catch</button>
-          <button id="teabag-build-full-report">Build Full Report</button>
-          <button id="teabag-display-progress">Display Progress</button>
+          <button id="teabag-use-catch" title="Toggle using try/catch wrappers when possible">Try/Catch</button>
+          <button id="teabag-build-full-report" title="Toggle building the full report">Full Report</button>
+          <button id="teabag-display-progress" title="Toggle displaying progress as tests run">Progress</button>
         </div>
-        <div id="teabag-filtered">
-          <button onclick="window.location.href = window.location.pathname">Run All Specs</button>
+        <div id="teabag-filter">
+          #{@buildSuiteSelect()}
+          <button onclick="window.location.href = window.location.pathname">Run All</button>
+          <span id="teabag-filter-info">
         </div>
       </div>
 
@@ -66,6 +69,14 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
         <ol id="teabag-report-all"></ol>
       </div>
     """
+
+
+  buildSuiteSelect: ->
+    return "" if Teabag.suites.all.length == 1
+    options = []
+    for suite in Teabag.suites.all
+      options.push("""<option#{if Teabag.suites.active == suite then " selected='selected'" else ""} value="#{suite}">#{suite} suite</option>""")
+    """<select id="teabag-suite-select">#{options.join("")}</select>"""
 
 
   buildProgress: ->
@@ -146,8 +157,8 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
   setFilter: (filter) ->
     return unless filter
-    @setClass("filtered", "teabag-filtered")
-    @setHtml("filtered", "#{filter}", true)
+    @setClass("filter", "teabag-filtered")
+    @setHtml("filter-info", "#{filter}", true)
 
 
   readConfig: ->
@@ -161,6 +172,10 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     @config[name] = !@config[name]
     @cookie("teabag", @config)
     @refresh()
+
+
+  changeSuite: ->
+    window.location.href = "/teabag/#{@options[@options.selectedIndex].value}"
 
 
   refresh: ->

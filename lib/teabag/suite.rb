@@ -5,6 +5,7 @@ module Teabag
     delegate :stylesheets, :helper, to: :config
 
     def initialize(name = :default)
+      @name = name
       @config = suite_configuration(name)
     end
 
@@ -16,6 +17,10 @@ module Teabag
       Dir[config.matcher.present? ? Teabag.configuration.root.join(config.matcher) : ""].map do |filename|
         asset_path_from_filename(File.expand_path(filename))
       end
+    end
+
+    def suites
+      {all: Teabag.configuration.suites.keys, active: @name.to_s}
     end
 
     protected

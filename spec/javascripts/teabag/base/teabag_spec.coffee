@@ -7,7 +7,7 @@ describe "Teabag", ->
       # common
       expect(keys).toContain("defer")
       expect(keys).toContain("slow")
-      expect(keys).toContain("fixturePath")
+      expect(keys).toContain("root")
       expect(keys).toContain("finished")
       expect(keys).toContain("execute")
       expect(keys).toContain("version")
