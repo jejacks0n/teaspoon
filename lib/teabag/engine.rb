@@ -12,5 +12,12 @@ module Teabag
         app.config.assets.paths << Teabag.configuration.root.join(path).to_s
       end
     end
+
+    config.after_initialize do |app|
+      # prepend routes so a catchall doesn't get in the way
+      app.routes.prepend do
+        mount Teabag::Engine => Teabag.configuration.mount_at
+      end
+    end
   end
 end
