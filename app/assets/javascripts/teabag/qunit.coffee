@@ -8,6 +8,7 @@ class Teabag.Runner extends Teabag.Runner
   env = QUnit
   env.config.autostart = false
   env.config.altertitle = false
+  env.config.filter = @prototype.getParams()["grep"]
 
   constructor: ->
     super
@@ -25,7 +26,7 @@ class Teabag.Spec
   constructor: (@spec) ->
     @fullDescription = "#{@spec.module} #{@spec.name}"
     @description = "#{@spec.name} (#{@spec.failed}, #{@spec.passed}, #{@spec.total})"
-    @link = "?grep=#{encodeURIComponent(@fullDescription)}"
+    @link = "?grep=#{encodeURIComponent("#{@spec.module}: #{@spec.name}")}"
     @parent = if @spec.module then new Teabag.Suite({description: @spec.module}) else null
     @suiteName = @spec.module
     @viewId = @spec.viewId

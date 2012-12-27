@@ -2955,6 +2955,8 @@
 
     env.config.altertitle = false;
 
+    env.config.filter = Runner.prototype.getParams()["grep"];
+
     function Runner() {
       Runner.__super__.constructor.apply(this, arguments);
       env.start();
@@ -2976,7 +2978,7 @@
       this.spec = spec;
       this.fullDescription = "" + this.spec.module + " " + this.spec.name;
       this.description = "" + this.spec.name + " (" + this.spec.failed + ", " + this.spec.passed + ", " + this.spec.total + ")";
-      this.link = "?grep=" + (encodeURIComponent(this.fullDescription));
+      this.link = "?grep=" + (encodeURIComponent("" + this.spec.module + ": " + this.spec.name));
       this.parent = this.spec.module ? new Teabag.Suite({
         description: this.spec.module
       }) : null;
