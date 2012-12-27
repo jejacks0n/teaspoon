@@ -14,6 +14,4 @@ gem "jquery-rails"
 gem "haml-rails"
 
 # required for travis-ci and linux environments
-if RUBY_PLATFORM =~ /linux/
-  gem 'phantomjs-linux'
-end
+gem "phantomjs-linux" if RUBY_PLATFORM =~ /linux/

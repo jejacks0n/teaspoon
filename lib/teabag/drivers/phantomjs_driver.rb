@@ -1,19 +1,16 @@
 require "phantomjs"
 require "teabag/runner"
 
-module Phantomjs
-  private
-
-  def get_executable_with_override
-    return Teabag.configuration.phantomjs_bin if Teabag.configuration.phantomjs_bin.present?
-    get_executable_without_override
-  end
-  alias_method_chain :get_executable, :override
-end
-
 module Teabag
   module Drivers
     class PhantomjsDriver < BaseDriver
+
+      # inject into phantomjs to override the bin path
+      Phantomjs.send :extend, Module.new do
+        def get_executable
+          Teabag.configuration.phantomjs_bin
+        end
+      end if Teabag.configuration.phantomjs_bin.present?
 
       def run_specs(suite, url)
         runner = Teabag::Runner.new(suite)
