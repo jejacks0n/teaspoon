@@ -1,6 +1,7 @@
 Teabag
 ======
 [![Build Status](https://travis-ci.org/modeset/teabag.png)](https://travis-ci.org/modeset/teabag)
+[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/modeset/teabag)
 
 Teabag is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS (default) or Selenium WebDriver.
 
