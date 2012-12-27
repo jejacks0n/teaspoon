@@ -57,11 +57,12 @@ Teabag.setup do |config|
   #  suite.matcher = "spec/javascripts/targeted/*_spec.{js,js.coffee,coffee}"
   #end
 
-  # When Teabag is run from the command line these configuration directives apply.
+  # When Teabag is run from the rake task these configuration directives apply.
+  #
   #config.driver = "phantomjs" # or selenium
   #config.formatters = "dot" # or tap_y, swayze_or_oprah
-  #config.server_timeout = 20
-  #config.fail_fast = true
-  #config.suppress_log = false
+  #config.server_timeout = 20 # timeout for starting the server
+  #config.fail_fast = true # allow continuing running suites after one has failed
+  #config.suppress_log = false # suppress logs coming from console.[log/error/debug]
 
 end if defined?(Teabag) && Teabag.respond_to?(:setup) # let Teabag be undefined outside of development/test/asset groups

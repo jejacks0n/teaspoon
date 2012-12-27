@@ -335,7 +335,7 @@ Timeout for starting the server in seconds. If your server is slow to start you 
 
 #### `driver`
 
-Allows you to specify which driver you want to run your specs with -- Supports [PhantomJS](http://phantomjs.org/) and [Selenium Webdriver](http://seleniumhq.org/docs/03_webdriver.jsp). For more information about using Selenium WebDriver check this [wiki article](https://github.com/modeset/teabag/wiki/Using-Selenium-WebDriver).
+Allows you to specify which driver you want to run your specs with -- Supports [PhantomJS](http://phantomjs.org/) and [Selenium Webdriver](http://seleniumhq.org/docs/03_webdriver.jsp). For more information about using Selenium WebDriver check this [wiki article](https://github.com/modeset/teabag/wiki/Using-Selenium-WebDriver), or in case you're having trouble with [PhantomJS on Linux](https://github.com/modeset/teabag/wiki/PhantomJS-on-Linux).
 
 Supported drivers: phantomjs, selenium
 
