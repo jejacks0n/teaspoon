@@ -31,11 +31,51 @@ module Teabag
 
       def result(results)
         log "\n\n"
-        pending_log if pendings.size > 0
-        failure_log if failures.size > 0
-        status(results)
-        failed_examples if failures.size > 0
-        raise Teabag::Failure if failures.size > 0 && Teabag.configuration.fail_fast
+        log_information
+        log_stats(results)
+        log_failed_examples
+      end
+
+      protected
+
+      def log_information
+        log_pending if pendings.size > 0
+        log_failures if failures.size > 0
+      end
+
+      def log_pending
+        log "Pending:"
+        pendings.each do |result|
+          log "\n  #{result.description}\n", YELLOW
+          log "    # Not yet implemented\n", CYAN
+        end
+        log "\n"
+      end
+
+      def log_failures
+        log "Failures:\n"
+        failures.each_with_index do |failure, index|
+          log "\n  #{index + 1}) #{failure.description}\n"
+          log "     Failure/Error: #{failure.message}\n", RED
+        end
+        log "\n"
+      end
+
+      def log_stats(results)
+        log "Finished in #{results["elapsed"]} seconds\n"
+        stats = "#{pluralize("example", total)}, #{pluralize("failure", failures.size)}"
+        stats << ", #{pendings.size} pending" if pendings.size > 0
+        log "#{stats}\n", stats_color
+      end
+
+      def log_failed_examples
+        return if failures.size == 0
+        log "\nFailed examples:\n"
+        failures.each do |failure|
+          log "\n#{Teabag.configuration.mount_at}/#{@suite_name}#{failure.link}", RED
+        end
+        log "\n\n"
+        raise Teabag::Failure if Teabag.configuration.fail_fast
       end
 
       private
@@ -52,41 +92,12 @@ module Teabag
         value == 1 ? "#{value} #{str}" : "#{value} #{str}s"
       end
 
+      def stats_color
+        failures.size > 0 ? RED : pendings.size > 0 ? YELLOW : GREEN
+      end
+
       def filename(file)
         file.gsub(%r(^http://127.0.0.1:\d+/assets/), "").gsub(/[\?|&]?body=1/, "")
-      end
-
-      def failure_log
-        log "Failures:\n"
-        failures.each_with_index do |failure, index|
-          log "\n  #{index + 1}) #{failure.description}\n"
-          log "     Failure/Error: #{failure.message}\n", RED
-        end
-        log "\n"
-      end
-
-      def failed_examples
-        log "\nFailed examples:\n"
-        failures.each do |failure|
-          log "\n#{Teabag.configuration.mount_at}/#{@suite_name}#{failure.link}", RED
-        end
-        log "\n\n"
-      end
-
-      def pending_log
-        log "Pending:"
-        pendings.each do |result|
-          log "\n  #{result.description}\n", YELLOW
-          log "    # Not yet implemented\n", CYAN
-        end
-        log "\n"
-      end
-
-      def status(results)
-        log "Finished in #{results["elapsed"]} seconds\n"
-        stats = "#{pluralize("example", total)}, #{pluralize("failure", failures.size)}"
-        stats << ", #{pendings.size} pending" if pendings.size > 0
-        log "#{stats}\n", failures.size > 0 ? RED : pendings.size > 0 ? YELLOW : GREEN
       end
     end
   end
