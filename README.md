@@ -10,11 +10,17 @@ The intention is to be the simplest but most complete Javascript testing solutio
 
 We've just released Teabag, and we expect to be working on it for a while to get a glossy shine to everything, so check it out and let us know what you think. Feedback, ideas and pull requests would be awesome.
 
+[Follow @modeset_ on twitter](https://twitter.com/modeset_)
+
+
 ## Screenshots
+
 ### Running in the console
 ![Console Reporter](https://raw.github.com/modeset/teabag/master/screenshots/console-reporter.png)
+
 ### Running in the console using [Tapout](https://github.com/rubyworks/tapout)
 ![Console Reporter Tapout](https://raw.github.com/modeset/teabag/master/screenshots/console-reporter-tapout.png)
+
 ### Running in the browser
 ![Browser Reporter](https://raw.github.com/modeset/teabag/master/screenshots/html-reporter.jpg)
 
