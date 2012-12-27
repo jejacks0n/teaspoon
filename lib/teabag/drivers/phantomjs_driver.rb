@@ -1,6 +1,16 @@
 require "phantomjs"
 require "teabag/runner"
 
+module Phantomjs
+  private
+
+  def get_executable_with_override
+    return Teabag.configuration.phantomjs_bin if Teabag.configuration.phantomjs_bin.present?
+    get_executable_without_override
+  end
+  alias_method_chain :get_executable, :override
+end
+
 module Teabag
   module Drivers
     class PhantomjsDriver < BaseDriver

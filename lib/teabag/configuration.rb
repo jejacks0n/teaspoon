@@ -14,6 +14,7 @@ module Teabag
                    :server_timeout,
                    :fail_fast,
                    :suppress_log,
+                   :phantomjs_bin,
                    :suites
 
     @@mount_at          = "/teabag"
@@ -28,6 +29,7 @@ module Teabag
     @@server_timeout    = 20
     @@fail_fast         = true
     @@suppress_log      = false
+    @@phantomjs_bin     = nil
 
     def self.root=(path)
       @@root = Pathname.new(path.to_s) if path.present?
