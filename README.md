@@ -263,6 +263,8 @@ describe "Using fixtures", ->
     expect(@fixtures[1]).toEqual(fixture.json[0]) # the json for json fixtures is returned, and available in fixture.json
 ```
 
+Check out an example of using fixtures with [Mocha](https://github.com/modeset/teabag/wiki/Using-Mocha) and [QUnit](https://github.com/modeset/teabag/wiki/Using-QUnit).
+
 
 ## Suites
 

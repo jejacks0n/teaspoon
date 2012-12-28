@@ -105,9 +105,7 @@ class Teabag.fixture extends Teabag.fixture
     args = arguments
     throw "Teabag can't load fixtures outside of describe." unless env.currentSuite || env.currentSpec
     if env.currentSuite
-      env.beforeEach =>
-        console.debug(args)
-        fixture.__super__.constructor.set.apply(@, args)
+      env.beforeEach => fixture.__super__.constructor.set.apply(@, args)
       env.afterEach => @cleanup()
       super
     else
