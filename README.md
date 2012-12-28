@@ -32,12 +32,13 @@ We've just released Teabag, and we expect to be working on it for a while to get
 2. [Quickstart](#quickstart)
 3. [Usage](#usage)
 4. [Writing Specs](#writing-specs)
-5. [Suites](#suites)
-6. [Configuration](#configuration)
-7. [Test Frameworks](#test-frameworks)
-8. [Support Libraries](#support-libraries)
-9. [CI Support](#ci-support)
-10. [Roadmap](#roadmap)
+5. [Fixtures](#fixtures)
+6. [Suites](#suites)
+7. [Configuration](#configuration)
+8. [Test Frameworks](#test-frameworks)
+9. [Support Libraries](#support-libraries)
+10. [CI Support](#ci-support)
+11. [Roadmap](#roadmap)
 
 ## Installation
 
