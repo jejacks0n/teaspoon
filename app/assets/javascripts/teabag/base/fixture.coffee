@@ -5,11 +5,6 @@ class Teabag.fixture
   @json: []
 
   # Public API
-  #
-  # preload(url[, url, ...])
-  # load(url[, url, ...], append = false)
-  # set(html[, html, ...], append = false)
-  # cleanup()
 
   @preload: (urls...) -> preload(url) for url in urls
 
@@ -67,25 +62,25 @@ class Teabag.fixture
   putContent = (content) =>
     cleanup()
     create()
-    @el.innerHTML = content
-    return @el
+    Teabag.fixture.el.innerHTML = content
+    return Teabag.fixture.el
 
 
   addContent = (content) =>
-    create() unless @el
-    @el.innerHTML += content
-    return @el
+    create() unless Teabag.fixture.el
+    Teabag.fixture.el.innerHTML += content
+    return Teabag.fixture.el
 
 
   create = =>
-    @el = document.createElement("div")
-    @el.id = "teabag-fixtures"
-    document.body.appendChild(@el)
+    Teabag.fixture.el = document.createElement("div")
+    Teabag.fixture.el.id = "teabag-fixtures"
+    document.body?.appendChild(Teabag.fixture.el)
 
 
   cleanup = =>
-    @el ||= document.getElementById("teabag-fixtures")
-    @el?.parentNode?.removeChild(@el)
+    Teabag.fixture.el ||= document.getElementById("teabag-fixtures")
+    Teabag.fixture.el?.parentNode?.removeChild(Teabag.fixture.el)
 
 
   xhrRequest = (url, callback) ->

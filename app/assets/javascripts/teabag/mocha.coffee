@@ -73,8 +73,15 @@ class Teabag.fixture extends Teabag.fixture
   window.fixture = @
 
   @load: ->
+    args = arguments
     if env.started then super
-    else beforeEach => Teabag.Fixture.load.apply(@, args)
+    else beforeEach => fixture.__super__.constructor.load.apply(@, args)
+
+
+  @set: ->
+    args = arguments
+    if env.started then super
+    else beforeEach => fixture.__super__.constructor.set.apply(@, args)
 
 
 
