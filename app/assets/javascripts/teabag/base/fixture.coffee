@@ -39,7 +39,7 @@ class Teabag.fixture
 
 
   load = (url, append, preload = false) =>
-    return loadComplete(url, cached.type, cached.content, append, preload) if cached = @cache[url]
+    return loadComplete(url, cached.type, cached.content, append, preload) if cached = Teabag.fixture.cache[url]
     value = null
     xhrRequest url, ->
       return unless xhr.readyState == 4
@@ -49,10 +49,11 @@ class Teabag.fixture
 
 
   loadComplete = (url, type, content, append, preload) =>
-    @cache[url] = {type: type, content: content}
+    Teabag.fixture.cache[url] = {type: type, content: content}
     return @json[@json.push(JSON.parse(content)) - 1] if type.match(/application\/json;/)
     return content if preload
     if append then addContent(content) else putContent(content)
+    return Teabag.fixture.el
 
 
   set = (content, append) ->
@@ -63,13 +64,12 @@ class Teabag.fixture
     cleanup()
     create()
     Teabag.fixture.el.innerHTML = content
-    return Teabag.fixture.el
 
 
   addContent = (content) =>
     create() unless Teabag.fixture.el
     Teabag.fixture.el.innerHTML += content
-    return Teabag.fixture.el
+
 
 
   create = =>
@@ -81,6 +81,7 @@ class Teabag.fixture
   cleanup = =>
     Teabag.fixture.el ||= document.getElementById("teabag-fixtures")
     Teabag.fixture.el?.parentNode?.removeChild(Teabag.fixture.el)
+    Teabag.fixture.el = null
 
 
   xhrRequest = (url, callback) ->
