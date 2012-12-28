@@ -108,7 +108,7 @@ If you'd prefer, you can also run your tests in the browser. Fire up your Rails 
 
 ## Usage
 
-Teabag uses the Rails asset pipeline to serve files which means you're free to use things like CoffeeScript. This simplifies the fixtures as well and lets you do some pretty awesome things like use builder, hamlc, rabl, etc. to generate your views.
+Teabag uses the Rails asset pipeline to serve files which means you're free to use things like CoffeeScript. This simplifies the fixtures as well and lets you do some pretty awesome things like use HAML or RABL/JBuilder, etc. to generate your views.
 
 If you want a more visual experience you can browse to the specs in the browser, or you can use the rake task to run them headless on the command line with PhantomJS. Works great with CI, too!
 
@@ -199,26 +199,6 @@ describe "My great feature", ->
 
 If you're using one library and you want to take advantage of the things that that library provides you're completely free to do so, and this is provided as a suggestion. The Teabag reporters understand the techniques above and have specs for them. QUnit doesn't support specifying a test as pending.
 
-### Fixtures
-
-Teabag fixtures are using jasmine-jquery for now.
-
-If jasmine-jquery isn't your thing, you can also load your fixtures manually into the "#teabag-fixtures" element.
-
-The fixture path is configurable, and the views will be rendered by a controller.  This allows you to use things like rabl if you're building JSON, or haml if you're building markup.
-
-To load fixtures in your specs you'll need to include jasmine-jquery -- and then use the `loadFixtures` method.
-
-```coffeescript
-#= require jquery
-#= require support/jasmine-jquery
-describe "fixtures", ->
-
-  it "loads fixtures", ->
-    loadFixtures("fixture.html")
-    expect($("#fixture_view")).toExist()
-```
-
 ### Deferring Execution
 
 Teabag has the concept of deferring execution in the cases when you're using AMD or other asynchronous libraries. This is especially useful if you're using [CommonJS](http://www.commonjs.org/) or [RequireJS](http://requirejs.org/), etc.
@@ -229,6 +209,56 @@ You can tell Teabag to defer and then execute the runner later -- after loading 
 Teabag.defer = true
 setTimeout(Teabag.execute, 1000) # defers execution for 1 second
 ```
+
+
+## Fixtures
+
+You're free to use your own fixture library (like jasmine-jquery, which we've included as a support library), but Teabag ships with a fixture library that works with Mocha, Jasmine, and QUnit with a minimum of effort and a nice API.
+
+The fixture path is configurable within Teabag, and the views will be rendered by a standard controller.  This allows you to use things like RABL/JBuilder if you're building JSON, or HAML if you're building markup.
+
+### Loading Files
+
+To load fixtures from the server just use `fixture.load`.  This method takes any number of files to load, and if the fixtures should be appended to the fixture element, or replace what's currently there.
+
+`fixture.load(url[, url, ...], append = false)`
+`fixture(url[, url, ...], append = false)`
+
+### Setting Manually
+
+If you don't want to load files directly from the server you can provide strings instead of files.  To do that you can use the `fixture.set` method.
+
+`fixture.set(html[, html, ...], append = false)`
+
+### Cleaning Up
+
+You shouldn't have to cleanup (we do that for you based on your test framework), but you can call the `fixture.cleanup` method if you need it.
+
+`fixture.cleanup()`
+
+### Preloading Files
+
+When writing some test cases there are times when you have to stub Ajax requests, In those cases you may want to preload the fixture files -- so that later, when you want to use them they're already cached.  You can use the `fixture.preload` method in your spec helper, or before you start mocking Ajax methods.
+
+`fixture.preload(url[, url, ...])`
+
+```coffeescript
+fixture.preload("fixture.html", "fixture.json") # make the actual requests for the files
+describe "Using fixtures", ->
+
+  fixture.set("<h2>Another Title</h2>") # create some markup manually (will be in a beforeEach)
+
+  beforeEach ->
+    @fixtures = fixture.load("fixture.html", "fixture.json", true) # append these fixtures which were already cached
+
+  it "loads fixtures", ->
+    expect($("h1", fixture.el).text()).toBe("Title") # using fixture.el as a jquery scope
+    expect($("h2", fixture.el).text()).toBe("Another Title")
+    expect(@fixtures[0]).toBe(fixture.el) # the element is available as a return value and through fixture.el
+    expect(@fixtures[1]).toEqual(fixture.json[0]) # the json for json fixtures is returned, and available in fixture.json
+```
+
+**Note:** The fixture element that Teabag creates is `"#teabag-fixtures"`.
 
 
 ## Suites
@@ -330,7 +360,7 @@ These paths are appended to the rails assets paths (relative to config.root), an
 
 #### `fixture_path`
 
-Fixtures are different than the specs, in that Rails is rendering them directly through a controller. This means you can use haml, erb builder, rabl, etc. to render content in the views available in this path.
+Fixtures are different than the specs, in that Rails is rendering them directly through a controller. This means you can use things like HAML or RABL/JBuilder, etc. to render content in the views available in this path.
 
 **default:** `"spec/javascripts/fixtures"`
 
