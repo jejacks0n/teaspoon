@@ -3,25 +3,24 @@
   <head>
     <title>Teabag :: Javascript Test Runner</title>
     <%= stylesheet_link_tag *@suite.stylesheets %>
-    <%= javascript_include_tag_for_teabag *@suite.javascripts %>
     <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width, user-scalable=no">
+    <%= javascript_include_tag_for_teabag *@suite.core_javascripts %>
     <script type="text/javascript">
+      // pass relevant info to javascript
+      Teabag.version = <%=raw Teabag::VERSION.inspect %>;
+      Teabag.root = <%=raw Teabag.configuration.mount_at.inspect %>;
+      Teabag.suites = <%=raw @suite.suites.to_json %>;
+
+      // start the execution of the specs (on onload, handling existing onload events)
       window.originalOnload = window.onload;
       window.onload = function() {
         if (window.originalOnload) window.originalOnload();
-
-        // pass relevant info to javascript
-        Teabag.version = <%=raw Teabag::VERSION.inspect %>;
-        Teabag.root = <%=raw Teabag.configuration.mount_at.inspect %>;
-        Teabag.suites = <%=raw @suite.suites.to_json %>;
-
-        // start the execution of the specs
         Teabag.execute();
       }
     </script>
+    <%= javascript_include_tag_for_teabag *@suite.spec_javascripts %>
   </head>
   <body>
-    <div id="teabag-fixtures"></div>
   </body>
 </html>

@@ -5,11 +5,11 @@
 
 class Teabag.Runner extends Teabag.Runner
 
-  env = mocha.setup("bdd")
-
   constructor: ->
     super
     env.run()
+    env.started = true
+    afterEach -> Teabag.fixture.cleanup()
 
 
   setup: ->
@@ -65,3 +65,25 @@ class Teabag.Suite
     @link = "?grep=#{encodeURIComponent(@fullDescription)}"
     @parent = if @suite.parent.root then null else @suite.parent
     @viewId = @suite.viewId
+
+
+
+class Teabag.fixture extends Teabag.fixture
+
+  window.fixture = @
+
+  @load: ->
+    args = arguments
+    if env.started then super
+    else beforeEach => fixture.__super__.constructor.load.apply(@, args)
+
+
+  @set: ->
+    args = arguments
+    if env.started then super
+    else beforeEach => fixture.__super__.constructor.set.apply(@, args)
+
+
+
+# set the environment
+env = mocha.setup("bdd")
