@@ -9,11 +9,11 @@ test "is awesome", ->
   ok(passing == true, "Passing is true")
 
 
-module "Running tests"
+module "Running tests",
 
-test "actually tests", 2, ->
-  ok(passing == true, "window.passing should be true")
-  ok(failing == false, "window.failing should be false")
+test "actually tests", 1, ->
+  fixture("fixture.html")
+  ok(document.getElementById("fixture_view").tagName == "DIV", "loads the fixture")
 
 test "can handle more than one test", ->
   expect(1)

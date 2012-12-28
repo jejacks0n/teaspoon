@@ -4,8 +4,6 @@
 
 class Teabag.Runner extends Teabag.Runner
 
-  env = jasmine.getEnv()
-
   constructor: ->
     super
     env.execute()
@@ -84,3 +82,24 @@ class Teabag.Suite
     @link = "?grep=#{encodeURIComponent(@fullDescription)}"
     @parent = @suite.parentSuite
     @viewId = @suite.viewId
+
+
+
+class Teabag.fixture extends Teabag.fixture
+
+  window.fixture = @
+
+  @load: ->
+    args = arguments
+    throw "Teabag can't load fixtures outside of describe." unless env.currentSuite || env.currentSpec
+    if env.currentSuite
+      env.beforeEach => Teabag.fixture.load.apply(@, args)
+      env.afterEach => @cleanup()
+    else
+      super
+      env.currentSpec.after => @cleanup()
+
+
+
+# set the environment
+env = jasmine.getEnv()

@@ -5,11 +5,6 @@
 
 class Teabag.Runner extends Teabag.Runner
 
-  env = QUnit
-  env.config.autostart = false
-  env.config.altertitle = false
-  env.config.filter = @prototype.getParams()["grep"]
-
   constructor: ->
     super
     env.start()
@@ -60,3 +55,16 @@ class Teabag.Suite
     @description = @suite.description
     @link = "?grep=#{encodeURIComponent(@fullDescription)}"
     @parent = null
+
+
+# set the environment
+env = QUnit
+env.config.autostart = false
+env.config.altertitle = false
+env.config.filter = Teabag.Runner.prototype.getParams()["grep"]
+
+window.fixture = Teabag.fixture
+originalReset = env.reset
+env.reset = ->
+  originalReset()
+  Teabag.fixture.cleanup()

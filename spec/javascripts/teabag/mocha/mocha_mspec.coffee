@@ -9,9 +9,8 @@ describe "Teabag running Mocha", ->
   describe "running tests", ->
 
     it "actually tests", ->
-      # todo: provide similar fixture support for mocha
-      #loadFixtures("fixture.html")
-      #expect($("#fixture_view")).toExist()
+      fixture("fixture.html")
+      expect(document.getElementById("fixture_view").tagName).to.be("DIV")
 
     it "can handle more than one test", (done) ->
       test = ->

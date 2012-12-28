@@ -8,8 +8,9 @@ describe "Teabag running Jasmine", ->
 
   describe "running tests", ->
 
+    fixture.load("fixture.html")
+
     it "actually tests", ->
-      loadFixtures("fixture.html")
       expect($("#fixture_view")).toExist()
 
     it "can handle more than one test", ->
