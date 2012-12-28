@@ -1,49 +1,47 @@
 Teabag.setup do |config|
 
-  # This determines where the Teabag spec path will be mounted. Changing this to `"/jasmine"` would allow you to browse
-  # to `http://localhost:3000/jasmine` to run your specs.
+  # This determines where the Teabag routes will be mounted. Changing this to "/jasmine" would allow you to browse to
+  # http://localhost:3000/jasmine to run your specs.
   config.mount_at = "/teabag"
 
-  # The root path defaults to Rails.root if left nil, but if you're testing an engine using a dummy application it's
-  # useful to be able to set this to your engines root.. E.g. `Teabag::Engine.root`
+  # This defaults to Rails.root if left nil. If you're testing an engine using a dummy application it can be useful to
+  # set this to your engines root.. E.g. `Teabag::Engine.root`
   config.root = nil
 
-  # These paths are appended to the rails assets paths (relative to config.root), and by default is an array that you
+  # These paths are appended to the Rails assets paths (relative to config.root), and by default is an array that you
   # can replace or add to.
-  config.asset_paths = ["spec/javascripts", "spec/javascripts/stylesheets"]
+  config.asset_paths = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
 
-  # Fixtures are different than the specs, in that Rails is rendering them directly through a controller. This means you
-  # can use haml, erb builder, rabl, etc. to render content in the views available in this path.
+  # Fixtures are rendered through a standard controller. This means you can use things like HAML or RABL/JBuilder, etc.
+  # to generate fixtures within this path.
   config.fixture_path = "spec/javascripts/fixtures"
 
-  # You can modify the default suite configuration or create new suites here. Suites can be entirely isolated from one
-  # another. When defining a suite you can provide a name and a block. If the name is left blank, :default is assumed.
-  # When defining suites, you can omit various directives and the defaults will be used.
+  # You can modify the default suite configuration and create new suites here. Suites can be isolated from one another.
+  # When defining a suite you can provide a name and a block. If the name is left blank, :default is assumed. You can
+  # omit various directives and the defaults will be used.
   #
   # To run a specific suite
   #   - in the browser: http://localhost/teabag/[suite_name]
   #   - from the command line: rake teabag suite=[suite_name]
   config.suite do |suite|
 
-    # You can specify a file matcher for your specs and the matching files will be automatically loaded when the suite
-    # is run. It's important that these files are serve-able from sprockets (aka the asset pipeline).
+    # You can specify a file matcher and all matching files will be loaded when the suite is run. It's important that
+    # these files are serve-able from sprockets.
     #
-    # Note: set to nil if you want to load your spec files using a manifest from within the spec helper file.
+    # Note: Can also be set to nil.
     suite.matcher = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
 
-    # Each suite can load a different spec helper, which can in turn require additional files since this file is also
-    # served via the asset pipeline. This file is loaded before your specs are loaded -- so could potentially include
-    # all of your specs (if you set the matcher to nil).
+    # Each suite can load a different spec helper, which can in turn require additional files. This file is loaded
+    # before your specs are loaded, and can be used as a manifest.
     suite.helper = "spec_helper"
 
-    # These are the core Teabag javascripts. Spec files should not go here -- but if you want to add additional support
-    # for jasmine matchers, switch to mocha, include expectation libraries etc., this is a good place to do that.
+    # These are the core Teabag javascripts. It's strongly encouraged to include only the base files here. You can
+    # require other support libraries in your spec helper, which allows you to change them without having to restart the
+    # server.
     #
-    # To use mocha:
-    #   "teabag-mocha"
+    # Available frameworks: teabag-jasmine, teabag-mocha, teabag-qunit
     #
-    # To use the coffeescript source files:
-    #   "teabag/jasmine" or "teabag/mocha"
+    # Note: To use the CoffeeScript source files use `"teabag/jasmine"` etc.
     suite.javascripts = ["teabag-jasmine"]
 
     # If you want to change how Teabag looks, or include your own stylesheets you can do that here. The default is the
@@ -57,12 +55,12 @@ Teabag.setup do |config|
   #  suite.matcher = "spec/javascripts/targeted/*_spec.{js,js.coffee,coffee}"
   #end
 
-  # When Teabag is run from the rake task these configuration directives apply.
+  # When Teabag is run via the rake task these configuration directives apply.
   #
-  #config.driver = "phantomjs" # or selenium
-  #config.formatters = "dot" # or tap_y, swayze_or_oprah
   #config.server_timeout = 20 # timeout for starting the server
-  #config.fail_fast = true # allow continuing running suites after one has failed
-  #config.suppress_log = false # suppress logs coming from console.[log/error/debug]
+  #config.driver = "phantomjs" # available: phantomjs, selenium
+  #config.formatters = "dot" # available: dot, tap_y, swayze_or_oprah
+  #config.fail_fast = true # stop running suites after one has failures
+  #config.suppress_log = false # suppress logs coming from console[log/error/debug]
 
 end if defined?(Teabag) && Teabag.respond_to?(:setup) # let Teabag be undefined outside of development/test/asset groups

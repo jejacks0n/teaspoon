@@ -2698,6 +2698,186 @@ jasmine.version_= {
 
 }).call(this);
 (function() {
+  var __slice = [].slice;
+
+  Teabag.fixture = (function() {
+    var addContent, cleanup, create, load, loadComplete, preload, putContent, set, xhr, xhrRequest,
+      _this = this;
+
+    fixture.cache = {};
+
+    fixture.el = null;
+
+    fixture.json = [];
+
+    fixture.preload = function() {
+      var url, urls, _i, _len, _results;
+      urls = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      _results = [];
+      for (_i = 0, _len = urls.length; _i < _len; _i++) {
+        url = urls[_i];
+        _results.push(preload(url));
+      }
+      return _results;
+    };
+
+    fixture.load = function() {
+      var append, index, url, urls, _i, _j, _len, _results;
+      urls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
+      if (append == null) {
+        append = false;
+      }
+      if (typeof append !== "boolean") {
+        urls.push(append);
+        append = false;
+      }
+      _results = [];
+      for (index = _j = 0, _len = urls.length; _j < _len; index = ++_j) {
+        url = urls[index];
+        _results.push(load(url, append || index > 0));
+      }
+      return _results;
+    };
+
+    fixture.set = function() {
+      var append, html, htmls, index, _i, _j, _len, _results;
+      htmls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
+      if (append == null) {
+        append = false;
+      }
+      if (typeof append !== "boolean") {
+        htmls.push(append);
+        append = false;
+      }
+      _results = [];
+      for (index = _j = 0, _len = htmls.length; _j < _len; index = ++_j) {
+        html = htmls[index];
+        _results.push(set(html, append || index > 0));
+      }
+      return _results;
+    };
+
+    fixture.cleanup = function() {
+      return cleanup();
+    };
+
+    function fixture() {
+      Teabag.fixture.load.apply(window, arguments);
+    }
+
+    xhr = null;
+
+    preload = function(url) {
+      return load(url, false, true);
+    };
+
+    load = function(url, append, preload) {
+      var cached, value;
+      if (preload == null) {
+        preload = false;
+      }
+      if (cached = Teabag.fixture.cache[url]) {
+        return loadComplete(url, cached.type, cached.content, append, preload);
+      }
+      value = null;
+      xhrRequest(url, function() {
+        if (xhr.readyState !== 4) {
+          return;
+        }
+        if (xhr.status !== 200) {
+          throw "Unable to load fixture \"" + url + "\".";
+        }
+        return value = loadComplete(url, xhr.getResponseHeader("content-type"), xhr.responseText, append, preload);
+      });
+      return value;
+    };
+
+    loadComplete = function(url, type, content, append, preload) {
+      Teabag.fixture.cache[url] = {
+        type: type,
+        content: content
+      };
+      if (type.match(/application\/json;/)) {
+        return fixture.json[fixture.json.push(JSON.parse(content)) - 1];
+      }
+      if (preload) {
+        return content;
+      }
+      if (append) {
+        addContent(content);
+      } else {
+        putContent(content);
+      }
+      return Teabag.fixture.el;
+    };
+
+    set = function(content, append) {
+      if (append) {
+        return addContent(content);
+      } else {
+        return putContent(content);
+      }
+    };
+
+    putContent = function(content) {
+      cleanup();
+      create();
+      return Teabag.fixture.el.innerHTML = content;
+    };
+
+    addContent = function(content) {
+      if (!Teabag.fixture.el) {
+        create();
+      }
+      return Teabag.fixture.el.innerHTML += content;
+    };
+
+    create = function() {
+      var _ref;
+      Teabag.fixture.el = document.createElement("div");
+      Teabag.fixture.el.id = "teabag-fixtures";
+      return (_ref = document.body) != null ? _ref.appendChild(Teabag.fixture.el) : void 0;
+    };
+
+    cleanup = function() {
+      var _base, _ref, _ref1;
+      (_base = Teabag.fixture).el || (_base.el = document.getElementById("teabag-fixtures"));
+      if ((_ref = Teabag.fixture.el) != null) {
+        if ((_ref1 = _ref.parentNode) != null) {
+          _ref1.removeChild(Teabag.fixture.el);
+        }
+      }
+      return Teabag.fixture.el = null;
+    };
+
+    xhrRequest = function(url, callback) {
+      if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+      } else if (window.ActiveXObject) {
+        try {
+          xhr = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+          try {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+          } catch (e) {
+
+          }
+        }
+      }
+      if (!xhr) {
+        throw "Unable to make Ajax Request";
+      }
+      xhr.onreadystatechange = callback;
+      xhr.open("GET", "" + Teabag.root + "/fixtures/" + url, false);
+      return xhr.send();
+    };
+
+    return fixture;
+
+  }).call(this);
+
+}).call(this);
+(function() {
 
   Teabag.Reporters.BaseView = (function() {
 
@@ -3417,15 +3597,13 @@ jasmine.version_= {
 
 }).call(this);
 (function() {
-  var __hasProp = {}.hasOwnProperty,
+  var env,
+    __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Runner = (function(_super) {
-    var env;
 
     __extends(Runner, _super);
-
-    env = jasmine.getEnv();
 
     function Runner() {
       Runner.__super__.constructor.apply(this, arguments);
@@ -3544,5 +3722,67 @@ jasmine.version_= {
     return Suite;
 
   })();
+
+  Teabag.fixture = (function(_super) {
+
+    __extends(fixture, _super);
+
+    function fixture() {
+      return fixture.__super__.constructor.apply(this, arguments);
+    }
+
+    window.fixture = fixture;
+
+    fixture.load = function() {
+      var args,
+        _this = this;
+      args = arguments;
+      if (!(env.currentSuite || env.currentSpec)) {
+        throw "Teabag can't load fixtures outside of describe.";
+      }
+      if (env.currentSuite) {
+        env.beforeEach(function() {
+          return fixture.__super__.constructor.load.apply(_this, args);
+        });
+        env.afterEach(function() {
+          return _this.cleanup();
+        });
+        return fixture.__super__.constructor.load.apply(this, arguments);
+      } else {
+        env.currentSpec.after(function() {
+          return _this.cleanup();
+        });
+        return fixture.__super__.constructor.load.apply(this, arguments);
+      }
+    };
+
+    fixture.set = function() {
+      var args,
+        _this = this;
+      args = arguments;
+      if (!(env.currentSuite || env.currentSpec)) {
+        throw "Teabag can't load fixtures outside of describe.";
+      }
+      if (env.currentSuite) {
+        env.beforeEach(function() {
+          return fixture.__super__.constructor.set.apply(_this, args);
+        });
+        env.afterEach(function() {
+          return _this.cleanup();
+        });
+        return fixture.__super__.constructor.set.apply(this, arguments);
+      } else {
+        env.currentSpec.after(function() {
+          return _this.cleanup();
+        });
+        return fixture.__super__.constructor.set.apply(this, arguments);
+      }
+    };
+
+    return fixture;
+
+  })(Teabag.fixture);
+
+  env = jasmine.getEnv();
 
 }).call(this);
