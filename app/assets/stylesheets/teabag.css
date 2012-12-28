@@ -339,6 +339,7 @@ body.teabag-passed #teabag-progress .teabag-indicator {
   top: 0;
   left: 0;
   width: 10000px;
+  opacity: 0;
 }
 
 /* Responsive
