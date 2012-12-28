@@ -218,12 +218,14 @@ You're free to use your own fixture library (like jasmine-jquery, which we've in
 
 The fixture path is configurable within Teabag, and the views will be rendered by a standard controller.  This allows you to use things like RABL/JBuilder if you're building JSON, or HAML if you're building markup.
 
+The element that Teabag creates is "#teabag-fixtures", in case you need to access it directly.
+
+
 ### Loading Files
 
 To load fixtures from the server just use `fixture.load`.  This method takes any number of files to load, and if the fixtures should be appended to the fixture element, or replace what's currently there.
 
-`fixture.load(url[, url, ...], append = false)`
-`fixture(url[, url, ...], append = false)`
+`fixture.load(url[, url, ...], append = false)` or `fixture(url[, url, ...], append = false)`
 
 ### Setting Manually
 
@@ -243,6 +245,8 @@ When writing some test cases there are times when you have to stub Ajax requests
 
 `fixture.preload(url[, url, ...])`
 
+### Example Usage
+
 ```coffeescript
 fixture.preload("fixture.html", "fixture.json") # make the actual requests for the files
 describe "Using fixtures", ->
@@ -258,8 +262,6 @@ describe "Using fixtures", ->
     expect(@fixtures[0]).toBe(fixture.el) # the element is available as a return value and through fixture.el
     expect(@fixtures[1]).toEqual(fixture.json[0]) # the json for json fixtures is returned, and available in fixture.json
 ```
-
-**Note:** The fixture element that Teabag creates is `"#teabag-fixtures"`.
 
 
 ## Suites
