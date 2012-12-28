@@ -41,10 +41,32 @@ describe Teabag::Suite do
   describe "#javascripts" do
 
     it "returns an array of javascripts" do
-      expect(subject.javascripts).to include("teabag-jasmine")
+      results = subject.javascripts
+      expect(results).to include("teabag-jasmine")
+      expect(results).to include("spec_helper")
     end
 
   end
+
+  describe "#core_javascripts" do
+
+    it "returns an array of javascripts" do
+      results = subject.core_javascripts
+      expect(results).to eql(["teabag-jasmine"])
+    end
+
+  end
+
+  describe "#spec_javascripts" do
+
+    it "returns an array of javascripts" do
+      results = subject.spec_javascripts
+      expect(results).to include("spec_helper")
+      expect(results).to include("teabag/base/reporters/console_spec.js")
+    end
+
+  end
+
 
   describe "#stylesheets" do
 
