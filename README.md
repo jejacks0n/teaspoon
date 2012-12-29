@@ -3,7 +3,7 @@ Teabag
 [![Build Status](https://travis-ci.org/modeset/teabag.png)](https://travis-ci.org/modeset/teabag)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/modeset/teabag)
 
-Teabag is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS (default) or Selenium WebDriver.
+Teabag is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS (default) or with Selenium WebDriver.
 
 Ok, another test runner, right? Really? Yeah, that's a tough one, but we're pretty confident Teabag is the nicest one you'll find at the moment. And if you disagree, you can swing by our offices in Denver and we'll buy you a beer if you're so inclined.  And we'll probably fix whatever it is that you didn't like.
 
