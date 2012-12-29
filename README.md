@@ -3,11 +3,11 @@ Teabag
 [![Build Status](https://travis-ci.org/modeset/teabag.png)](https://travis-ci.org/modeset/teabag)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/modeset/teabag)
 
-Teabag is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS (default) or with Selenium WebDriver.
+Teabag is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS or with Selenium WebDriver.
 
-Ok, another test runner, right? Really? Yeah, that's a tough one, but we're pretty confident Teabag is the nicest one you'll find at the moment. And if you disagree, you can swing by our offices in Denver and we'll buy you a beer if you're so inclined.  And we'll probably fix whatever it is that you didn't like.
+Ok, another Javascript test runner, right? Really? Yeah, that's tough, but we're pretty confident Teabag is one of the nicest you'll find at the moment. And if you disagree, you can swing by our offices in Denver and we'll buy you a beer if you're so inclined -- and probably fix whatever it is that you didn't like.
 
-The intention is to be the simplest but most complete Javascript testing solution for Rails, taking full advantage of the asset pipeline. It ships with support for Jasmine, Mocha and QUnit, and has custom reporters for each.
+The goal for Teabag is to be the simplest and most complete Javascript testing solution for Rails. Teabag takes full advantage of the asset pipeline and ships with support for Jasmine, Mocha and QUnit.
 
 Feedback, ideas and pull requests are always welcome, or you can hit us up [@modeset_](https://twitter.com/modeset_).
 
