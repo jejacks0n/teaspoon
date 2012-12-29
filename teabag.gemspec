@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ["info@modeset.com"]
   s.homepage    = "https://github.com/modeset/teabag"
   s.summary     = "Teabag: A Javascript test runner built on top of Rails"
-  s.description = "Run Javascript tests using Jasmine or Mocha (with custom reporters) in the browser or headless using PhantomJS"
+  s.description = "Run Javascript tests using Jasmine, Mocha or QUnit in the browser or headlessly using PhantomJS or with Selenium Webdriver"
 
   s.files = Dir["{app,config,lib,vendor}/**/*"] + ["MIT.LICENSE", "README.md"]
   s.test_files = Dir["{spec,test}/**/*"]
