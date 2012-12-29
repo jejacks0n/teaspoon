@@ -2987,12 +2987,15 @@ jasmine.version_= {
     }
 
     HTML.prototype.build = function() {
+      var _ref;
       this.buildLayout();
       this.el = this.findEl("report-all");
       this.setText("env-info", this.envInfo());
       this.setText("version", Teabag.version);
       this.findEl("toggles").onclick = this.toggleConfig;
-      this.findEl("suite-select").onchange = this.changeSuite;
+      if ((_ref = this.findEl("suite-select")) != null) {
+        _ref.onchange = this.changeSuite;
+      }
       this.showConfiguration();
       return this.buildProgress();
     };

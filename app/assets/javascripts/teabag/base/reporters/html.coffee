@@ -23,7 +23,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     @setText("env-info", @envInfo())
     @setText("version", Teabag.version)
     @findEl("toggles").onclick = @toggleConfig
-    @findEl("suite-select").onchange = @changeSuite
+    @findEl("suite-select")?.onchange = @changeSuite
     @showConfiguration()
     @buildProgress()
 
