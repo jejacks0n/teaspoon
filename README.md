@@ -251,7 +251,7 @@ Check out an example of using fixtures with [Mocha](https://github.com/modeset/t
 
 Teabag uses the concept of suites to group your tests at a high level. These suites are run in isolation from one another, and can have different configurations. You can define suites in the configuration, and for brevity `config` is the argument passed to the `Teabag.setup` block.
 
-When creating a suite provide a name (optional) and a block. The following example defines a suite named "my_suite". You can focus to just this suite by browsing to `/teabag/my_suite` or running the rake task with `suite=my_suite`.
+When creating a suite, provide a name (optional) and a block. The following example defines a suite named "my_suite". You can focus to just this suite by browsing to `/teabag/my_suite` or running the rake task with `suite=my_suite`.
 
 ```ruby
 config.suite :my_suite do |suite|
