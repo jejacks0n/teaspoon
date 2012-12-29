@@ -130,7 +130,7 @@ Specify the suite by using:
 rake teabag suite=my_fantastic_suite
 ```
 
-You can override some configurations by using environment variables. `FAILS_FAST=[true/false]`, `SUPPRESS_LOGS=[false/true]`, `FORMATTERS=tap_y`, and `DRIVER=selenium` (read more about [configuration](#configuration) below.)
+You can override some configurations by using environment variables. `FAIL_FAST=[true/false]`, `SUPPRESS_LOGS=[false/true]`, `FORMATTERS=tap_y`, and `DRIVER=selenium` (read more about [configuration](#configuration) below.)
 
 Teabag also has support for [tapout](https://github.com/rubyworks/tapout). Use the tap_y formatter and pipe the results to tapout to use any of the reporters that tapout provides.
 
