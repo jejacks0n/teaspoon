@@ -7,14 +7,14 @@ require "teabag/version"
 Gem::Specification.new do |s|
   s.name        = "teabag"
   s.version     = Teabag::VERSION
-  s.authors     = ["jejacks0n"]
+  s.authors     = ["jejacks0n", "jayzes", "jedschneider"]
   s.email       = ["info@modeset.com"]
   s.homepage    = "https://github.com/modeset/teabag"
   s.summary     = "Teabag: A Javascript test runner built on top of Rails"
   s.description = "Run Javascript tests using Jasmine or Mocha (with custom reporters) in the browser or headless using PhantomJS"
 
   s.files = Dir["{app,config,lib,vendor}/**/*"] + ["MIT.LICENSE", "README.md"]
-  s.test_files = Dir["spec/**/*"]
+  s.test_files = Dir["{spec,test}/**/*"]
 
   s.add_dependency "railties", "~> 3.2.5"
   s.add_dependency "phantomjs.rb", "~> 0.0.5"
