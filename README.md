@@ -106,8 +106,6 @@ If you'd prefer, you can also run your tests in the browser. Fire up your Rails 
 
 Teabag uses the Rails asset pipeline to serve files. This simplifies the fixtures as well and lets you use things like HAML or RABL/JBuilder to generate your fixtures.
 
-If you want a more visual experience you can browse to the specs in the browser, or you can use the rake task to run them headlessly with PhantomJS or with Selenium WebDriver.
-
 ### Browser
 
 ```
@@ -126,13 +124,13 @@ http://localhost:3000/teabag/my_fantastic_suite
 rake teabag
 ```
 
-Specify the suite with the rake task by using:
+Specify the suite by using:
 
 ```
 rake teabag suite=my_fantastic_suite
 ```
 
-You can override a few configurations by using environment variables. `FAILS_FALSE=[true/false]`, `SUPPRESS_LOGS=[false/true]` and `FORMATTERS=tap_y` (read more about [configuration](#configuration) below.)
+You can override some configurations by using environment variables. `FAILS_FALSE=[true/false]`, `SUPPRESS_LOGS=[false/true]`, `FORMATTERS=tap_y`, and `DRIVER=selenium` (read more about [configuration](#configuration) below.)
 
 Teabag also has support for [tapout](https://github.com/rubyworks/tapout). Use the tap_y formatter and pipe the results to tapout to use any of the reporters that tapout provides.
 
@@ -140,7 +138,7 @@ Teabag also has support for [tapout](https://github.com/rubyworks/tapout). Use t
 rake teabag SUPPRESS_LOG=true FORMATTERS=tap_y | tapout progress
 ```
 
-**Note:** By default the rake task runs within the development environment, but you can specify the environment using `RAILS_ENV=test rake teabag`. This is an asset compilation optimization, and to keep consistent with what you might see in the browser (since that's likely running in development).
+**Note:** By default the rake task runs within the development environment, but you can specify the environment using `RAILS_ENV=test rake teabag`. This is to stay consistent with what you might see in the browser (since that's likely running in development).
 
 
 ## Writing Specs
@@ -185,7 +183,7 @@ describe "My great feature", ->
       expect(true).to.be(false)
 ```
 
-If you're using a specific framework and you want to take advantage of the things that that framerowk provides you're free to do so, and this is provided as a recommended standard. The Teabag reporters understand the techniques above and have specs for them. QUnit doesn't support specifying a test as pending.
+If you're using a specific framework and you want to take advantage of the things that framework provides you're free to do so. This is provided as the standard as the Teabag reporters understand the techniques above and have specs for them. QUnit doesn't support specifying a test as pending.
 
 ### Deferring Execution
 
@@ -212,7 +210,7 @@ Loading fixtures allows you to specify any number of files to load, and if they 
 
 ### Setting Manually
 
-If you don't want to load files directly from the server you can provide strings instead of files, otherwise functions exactly like `fixture.load`.
+If you don't want to load files directly from the server you can provide strings instead of files, otherwise behaves like load.
 
 `fixture.set(html[, html, ...], append = false)`
 
@@ -224,7 +222,7 @@ You shouldn't have to cleanup (we do that for you based on your test framework),
 
 ### Preloading Files
 
-Some test cases require stubbing Ajax requests, and in those cases you may want to preload the fixture files -- this caches them for later.  You can preload fixtures in your spec helper, or before you start mocking Ajax methods.
+Some test cases require stubbing Ajax requests, and in those cases you may want to preload the fixture files -- which caches them for later.  You can preload fixtures in your spec helper, or before you start mocking Ajax methods.
 
 `fixture.preload(url[, url, ...])`
 
