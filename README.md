@@ -426,6 +426,8 @@ More on this shortly....
 
 Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)
 
+Copyright 2012 [Mode Set](https://github.com/modeset]
+
 All licenses for the [bundled Javascript libraries](https://github.com/modeset/teabag/tree/master/vendor/assets/javascripts) are included (MIT/BSD).
 
 
