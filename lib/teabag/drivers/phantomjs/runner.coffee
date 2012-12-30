@@ -36,7 +36,7 @@ class @Runner
 
 
   finish: ->
-    console.log(" ")
+    console.log(" ------------ ")
     phantom.exit(0)
 
 
