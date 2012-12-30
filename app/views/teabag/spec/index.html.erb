@@ -5,7 +5,7 @@
     <%= stylesheet_link_tag *@suite.stylesheets %>
     <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width, user-scalable=no">
-    <%= javascript_include_tag_for_teabag *@suite.core_javascripts %>
+    <%= javascript_include_tag *@suite.core_javascripts %>
     <script type="text/javascript">
       // pass relevant info to javascript
       Teabag.version = <%=raw Teabag::VERSION.inspect %>;
@@ -20,7 +20,7 @@
         Teabag.execute();
       }
     </script>
-    <%= javascript_include_tag_for_teabag *@suite.spec_javascripts %>
+    <%= javascript_include_tag *@suite.spec_javascripts %>
   </head>
   <body>
   </body>
