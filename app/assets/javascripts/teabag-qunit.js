@@ -1988,6 +1988,8 @@
 
     Teabag.root = null;
 
+    Teabag.started = false;
+
     Teabag.finished = false;
 
     Teabag.Reporters = {};
@@ -2005,6 +2007,7 @@
         this.defer = false;
         return;
       }
+      this.started = true;
       return new Teabag.Runner();
     };
 
@@ -2380,7 +2383,7 @@
       var el;
       el = this.createEl("div");
       document.body.appendChild(el);
-      return el.innerHTML = "<div class=\"teabag-clearfix\">\n  <div id=\"teabag-title\">\n    <h1>Teabag</h1>\n    <ul>\n      <li>version: <b id=\"teabag-version\"></b></li>\n      <li id=\"teabag-env-info\"></li>\n    </ul>\n  </div>\n  <div id=\"teabag-progress\"></div>\n  <ul id=\"teabag-stats\">\n    <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n    <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n    <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n    <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n  </ul>\n</div>\n\n<div id=\"teabag-controls\" class=\"teabag-clearfix\">\n  <div id=\"teabag-toggles\">\n    <button id=\"teabag-use-catch\" title=\"Toggle using try/catch wrappers when possible\">Try/Catch</button>\n    <button id=\"teabag-build-full-report\" title=\"Toggle building the full report\">Full Report</button>\n    <button id=\"teabag-display-progress\" title=\"Toggle displaying progress as tests run\">Progress</button>\n  </div>\n  <div id=\"teabag-filter\">\n    " + (this.buildSuiteSelect()) + "\n    <button onclick=\"window.location.href = window.location.pathname\">Run All</button>\n    <span id=\"teabag-filter-info\">\n  </div>\n</div>\n\n<hr/>\n\n<div id=\"teabag-report\">\n  <ol id=\"teabag-report-failures\"></ol>\n  <ol id=\"teabag-report-all\"></ol>\n</div>";
+      return el.innerHTML = "<div id=\"teabag-html-reporter\">\n  <div class=\"teabag-clearfix\">\n    <div id=\"teabag-title\">\n      <h1>Teabag</h1>\n      <ul>\n        <li>version: <b id=\"teabag-version\"></b></li>\n        <li id=\"teabag-env-info\"></li>\n      </ul>\n    </div>\n    <div id=\"teabag-progress\"></div>\n    <ul id=\"teabag-stats\">\n      <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n      <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n      <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n      <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n    </ul>\n  </div>\n\n  <div id=\"teabag-controls\" class=\"teabag-clearfix\">\n    <div id=\"teabag-toggles\">\n      <button id=\"teabag-use-catch\" title=\"Toggle using try/catch wrappers when possible\">Try/Catch</button>\n      <button id=\"teabag-build-full-report\" title=\"Toggle building the full report\">Full Report</button>\n      <button id=\"teabag-display-progress\" title=\"Toggle displaying progress as tests run\">Progress</button>\n    </div>\n    <div id=\"teabag-filter\">\n      " + (this.buildSuiteSelect()) + "\n      <button onclick=\"window.location.href = window.location.pathname\">Run All</button>\n      <span id=\"teabag-filter-info\">\n    </div>\n  </div>\n\n  <hr/>\n\n  <div id=\"teabag-report\">\n    <ol id=\"teabag-report-failures\"></ol>\n    <ol id=\"teabag-report-all\"></ol>\n  </div>\n</div>";
     };
 
     HTML.prototype.buildSuiteSelect = function() {
@@ -2709,7 +2712,7 @@
       _ref = this.spec.errors();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         error = _ref[_i];
-        html += "" + (this.htmlSafe(error.stack || error.message || "Stack trace unavailable"));
+        html += "<strong>" + (this.htmlSafe(error.message)) + "</strong><br/>" + (this.htmlSafe(error.stack || "Stack trace unavailable"));
       }
       div.innerHTML = html;
       return this.append(div);
@@ -2757,7 +2760,7 @@
       _ref = this.spec.errors();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         error = _ref[_i];
-        html += "<div>" + (this.htmlSafe(error.stack || error.message || "Stack trace unavailable")) + "</div>";
+        html += "<div><strong>" + (this.htmlSafe(error.message)) + "</strong><br/>" + (this.htmlSafe(error.stack || "Stack trace unavailable")) + "</div>";
       }
       return this.el.innerHTML = html;
     };
