@@ -8,6 +8,7 @@ class @Teabag
   @defer:     false
   @slow:      75
   @root:      null
+  @started:   false
   @finished:  false
   @Reporters: {}
   @Date:      Date
@@ -19,6 +20,7 @@ class @Teabag
     if @defer
       @defer = false
       return
+    @started = true
     new Teabag.Runner()
 
 

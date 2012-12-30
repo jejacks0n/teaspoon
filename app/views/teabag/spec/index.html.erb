@@ -15,6 +15,7 @@
       // start the execution of the specs (on onload, handling existing onload events)
       window.originalOnload = window.onload;
       window.onload = function() {
+        if (Teabag.started) return; // ensure this never happens more than once
         if (window.originalOnload) window.originalOnload();
         Teabag.execute();
       }
