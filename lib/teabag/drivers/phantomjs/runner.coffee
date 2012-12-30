@@ -15,6 +15,7 @@ class @Runner
 
   initPage: ->
     @page = webpage.create()
+    @page.viewportSize = {width: 800, height: 800}
 
 
   loadPage: ->
