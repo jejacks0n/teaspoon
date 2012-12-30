@@ -5,7 +5,7 @@ module Teabag
 
     def initialize(suite_name = nil)
       # force asset debugging off -- gives us nicer errors on missing files, bad coffeescript, etc
-      #Rails.application.config.assets.debug = false
+      Rails.application.config.assets.debug = false
 
       if suite_name
         @suites = [suite_name]
