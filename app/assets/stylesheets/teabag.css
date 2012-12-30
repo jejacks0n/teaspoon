@@ -1,13 +1,25 @@
 body {
   margin: 0;
+  padding: 0;
+  font: 15px/1.5em "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #f4f3ee;
+}
+
+/* Base Reporter
+ *---------------------------------------------------------------------------*/
+#teabag-html-reporter {
   padding: 45px 50px 0;
   min-width: 440px;
-  background-color: #f4f3ee;
   border-top: 3px solid #18c2e8;
-  font: 15px/1.5em "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #000;
 }
-.teabag-clearfix:after {
+#teabag-html-reporter hr {
+  border: 0;
+  background: #cfc8c4;
+  height: 1px;
+  margin: 20px 0;
+}
+#teabag-html-reporter .teabag-clearfix:after {
   content: ".";
   display: block;
   clear: both;
@@ -15,17 +27,11 @@ body {
   line-height: 0;
   height: 0;
 }
-html[xmlns] .teabag-clearfix {
+html[xmlns] #teabag-html-reporter .teabag-clearfix {
   display: block;
 }
-* html .teabag-clearfix {
+* html #teabag-html-reporter .teabag-clearfix {
   height: 1%;
-}
-hr {
-  border: 0;
-  background: #cfc8c4;
-  height: 1px;
-  margin: 20px 0;
 }
 
 /* Title / Env info
@@ -319,10 +325,10 @@ hr {
 
 /* State Overrides
  *---------------------------------------------------------------------------*/
-body.teabag-failed {
+body.teabag-failed #teabag-html-reporter {
   border-top: 3px solid #ff3f3c;
 }
-body.teabag-passed {
+body.teabag-passed #teabag-html-reporter {
   border-top: 3px solid #51e431;
 }
 body.teabag-failed #teabag-progress .teabag-indicator {
@@ -336,10 +342,12 @@ body.teabag-passed #teabag-progress .teabag-indicator {
  *---------------------------------------------------------------------------*/
 #teabag-fixtures {
   position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 10000px;
   opacity: 0;
+  background: #fff;
 }
 
 /* Responsive

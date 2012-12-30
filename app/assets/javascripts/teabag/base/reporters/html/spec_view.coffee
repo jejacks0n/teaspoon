@@ -31,7 +31,7 @@ class Teabag.Reporters.HTML.SpecView extends Teabag.Reporters.BaseView
     div = @createEl("div")
     html = ""
     for error in @spec.errors()
-      html += """#{@htmlSafe(error.stack || error.message || "Stack trace unavailable")}"""
+      html += """<strong>#{@htmlSafe(error.message)}</strong><br/>#{@htmlSafe(error.stack || "Stack trace unavailable")}"""
     div.innerHTML = html
     @append(div)
 
