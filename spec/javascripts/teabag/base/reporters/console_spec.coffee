@@ -2,7 +2,7 @@ describe "Teabag.Reporters.Console", ->
 
   beforeEach ->
     @logSpy = spyOn(Teabag, "log")
-    spyOn(Date, "now").andReturn(666)
+    spyOn(Date.prototype, "getTime").andReturn(666)
 
     @spec =
       fullDescription: "_spec_description_"

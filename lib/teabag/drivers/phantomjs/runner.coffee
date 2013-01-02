@@ -24,7 +24,7 @@ class @Runner
 
 
   waitForResults: =>
-    @fail("Timed out") if (Date.now() - @start) >= @timeout
+    @fail("Timed out") if (new Date().getTime() - @start) >= @timeout
     finished = @page.evaluate(-> window.Teabag && window.Teabag.finished)
     if finished then @finish() else setTimeout(@waitForResults, 200)
 
@@ -50,7 +50,7 @@ class @Runner
 
 
     onLoadFinished: (status) =>
-      @start = Date.now()
+      @start = new Date().getTime()
       defined = @page.evaluate(-> window.Teabag)
       unless status == "success" && defined
         @fail("Failed to load: #{@url}")

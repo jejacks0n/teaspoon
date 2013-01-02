@@ -3,6 +3,7 @@ describe "Teabag", ->
   describe "class level API", ->
 
     it "has the expected API", ->
+      return unless Object.keys # can't test in ie
       keys = Object.keys(Teabag)
       # common
       expect(keys).toContain("defer")

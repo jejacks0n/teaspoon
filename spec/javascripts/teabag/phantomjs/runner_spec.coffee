@@ -117,6 +117,7 @@ describe "PhantomJS Runner", ->
   describe "#pageCallbacks", ->
 
     it "returns an object with the expected methods", ->
+      return unless Object.keys
       object = @runner.pageCallbacks()
       expect(Object.keys(object)).toEqual(["onError", "onConsoleMessage", "onLoadFinished"])
 

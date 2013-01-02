@@ -5,7 +5,7 @@ class Teabag.Reporters.HTML.ProgressView extends Teabag.Reporters.BaseView
     if Teabag.Reporters.HTML.RadialProgressView.supported
       new Teabag.Reporters.HTML.RadialProgressView()
     else
-      Teabag.Reporters.HTML.SimpleProgressView()
+      new Teabag.Reporters.HTML.SimpleProgressView()
 
 
   build: ->

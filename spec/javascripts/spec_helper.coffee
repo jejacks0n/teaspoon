@@ -1,3 +1,5 @@
+#= require support/json2
+
 window.passing = true
 window.failing = false
 
