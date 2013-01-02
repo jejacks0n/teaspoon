@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Teabag :: Javascript Test Runner</title>
-    <%= stylesheet_link_tag *@suite.stylesheets %>
+    <%= stylesheet_link_tag_for_teabag *@suite.stylesheets %>
     <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <%= javascript_include_tag_for_teabag *@suite.core_javascripts %>
