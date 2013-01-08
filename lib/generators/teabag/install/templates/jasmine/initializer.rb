@@ -10,7 +10,7 @@ Teabag.setup do |config|
 
   # These paths are appended to the Rails assets paths (relative to config.root), and by default is an array that you
   # can replace or add to.
-  config.asset_paths = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
+  config.asset_paths = ["spec/javascripts", "spec/javascripts/stylesheets"]
 
   # Fixtures are rendered through a standard controller. This means you can use things like HAML or RABL/JBuilder, etc.
   # to generate fixtures within this path.
@@ -31,8 +31,8 @@ Teabag.setup do |config|
     # Note: Can also be set to nil.
     suite.matcher = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
 
-    # Each suite can load a different spec helper, which can in turn require additional files. This file is loaded
-    # before your specs are loaded, and can be used as a manifest.
+    # Each suite can load a different helper, which can in turn require additional files. This file is loaded before
+    # your specs are loaded, and can be used as a manifest.
     suite.helper = "spec_helper"
 
     # These are the core Teabag javascripts. It's strongly encouraged to include only the base files here. You can
@@ -49,18 +49,10 @@ Teabag.setup do |config|
     suite.stylesheets = ["teabag"]
   end
 
-  # Example suite. Since we're actually just filtering specs to files already within the root spec/javascripts, these
-  # files will also be run in the default suite -- but can be focused into a more specific suite.
+  # Example suite. Since we're just filtering to files already within the root spec/javascripts, these files will also
+  # be run in the default suite -- but can be focused into a more specific suite.
   #config.suite :targeted do |suite|
   #  suite.matcher = "spec/javascripts/targeted/*_spec.{js,js.coffee,coffee}"
   #end
-
-  # When Teabag is run via the rake task these configuration directives apply.
-  #
-  #config.server_timeout = 20 # timeout for starting the server
-  #config.driver = "phantomjs" # available: phantomjs, selenium
-  #config.formatters = "dot" # available: dot, tap_y, swayze_or_oprah
-  #config.fail_fast = true # stop running suites after one has failures
-  #config.suppress_log = false # suppress logs coming from console[log/error/debug]
 
 end if defined?(Teabag) && Teabag.respond_to?(:setup) # let Teabag be undefined outside of development/test/asset groups
