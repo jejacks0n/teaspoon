@@ -8,7 +8,7 @@ class Teabag::SpecController < ActionController::Base
   end
 
   def index
-    @suite = Teabag::Suite.new(params[:suite])
+    @suite = Teabag::Suite.new(params)
   end
 
   def fixtures

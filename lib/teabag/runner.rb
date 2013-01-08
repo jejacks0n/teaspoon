@@ -9,7 +9,7 @@ module Teabag
 
     def initialize(suite_name = :default)
       @suite_name = suite_name
-      @formatters = Teabag.configuration.formatters.split(/,\s+/).map{ |f| resolve_formatter(f).new(suite_name) }
+      @formatters = Teabag.configuration.formatters.split(/,\s?/).map{ |f| resolve_formatter(f).new(suite_name) }
       @failure_count = 0
     end
 

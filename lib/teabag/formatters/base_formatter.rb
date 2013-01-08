@@ -29,6 +29,11 @@ module Teabag
         end
       end
 
+      def result(results)
+        return if failures.size == 0
+        raise Teabag::Failure if Teabag.configuration.fail_fast
+      end
+
       # Exceptions come from startup errors in the server
       def exception(exception = {})
         raise Teabag::RunnerException

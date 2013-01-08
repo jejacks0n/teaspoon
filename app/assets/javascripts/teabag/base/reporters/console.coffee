@@ -25,6 +25,7 @@ class Teabag.Reporters.Console
   reportSpecResults: (spec) ->
     @spec = new Teabag.Spec(spec)
     result = @spec.result()
+    return if result.skipped
     @reportSuites()
     switch result.status
       when "pending" then @trackPending()
@@ -57,7 +58,7 @@ class Teabag.Reporters.Console
         label:   @spec.description
         status:  result.status
         skipped: result.skipped
-        link:    @spec.link
+        link:    @spec.fullDescription
         message: error.message
         trace:   error.stack || error.message || "Stack Trace Unavailable"
 

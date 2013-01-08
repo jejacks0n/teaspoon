@@ -38,6 +38,7 @@ module Teabag
               "omit"  => 0,
               "todo"  => @pendings.size
             }
+        super
       end
 
       def error(error)

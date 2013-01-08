@@ -7,7 +7,7 @@ Teabag is a Javascript test runner built on top of Rails. It can run tests in th
 
 Ok, another Javascript test runner, right? Really? Yeah, that's tough, but we're pretty confident Teabag is one of the nicest you'll find at the moment. And if you disagree, you can swing by our offices in Denver and we'll buy you a beer if you're so inclined -- and probably fix whatever it is that you didn't like.
 
-The goal for Teabag is to be the simplest and most complete Javascript testing solution for Rails. Teabag takes full advantage of the asset pipeline and ships with support for Jasmine, Mocha and QUnit.
+The goal for Teabag is to be the simplest, and the most complete Javascript testing solution for Rails. Teabag takes full advantage of the asset pipeline and ships with support for Jasmine, Mocha and QUnit.
 
 Feedback, ideas and pull requests are always welcome, or you can hit us up [@modeset_](https://twitter.com/modeset_).
 
@@ -65,7 +65,7 @@ rails generate teabag:install
 
 The install generator will create a `spec/javascripts` directory for you. Teabag will automatically pick up any specs written in that folder named `[classname]_spec.(js|coffee|js.coffee)`.
 
-Let's write a basic implementation in CoffeeScript using Jasmine (you could just as easily use vanilla Javascript). Create a `spec/javascripts/calculator_spec.coffee` and put this in it:
+Let's write a basic implementation in CoffeeScript using Jasmine (though you could just as easily use vanilla Javascript). Start by creating a `spec/javascripts/calculator_spec.coffee` and put this in it:
 
 ```coffeescript
 #= require calculator
@@ -118,27 +118,46 @@ To run a specific suite use:
 http://localhost:3000/teabag/my_fantastic_suite
 ```
 
-### Console
+### Rake
 
-```
+```shell
 rake teabag
 ```
 
 Specify the suite by using:
 
-```
+```shell
 rake teabag suite=my_fantastic_suite
 ```
 
-You can override some configurations by using environment variables. `FAIL_FAST=[true/false]`, `SUPPRESS_LOGS=[false/true]`, `FORMATTERS=tap_y`, and `DRIVER=selenium` (read more about [configuration](#configuration) below.)
+### CLI
+
+```
+bundle exec teabag
+```
+
+Specify the suite by using:
+
+```
+bundle exec teabag --suite=my_fantastic_suite
+```
+
+Get full command line help:
+
+```
+bundle exec teabag --help
+```
 
 Teabag also has support for [tapout](https://github.com/rubyworks/tapout). Use the tap_y formatter and pipe the results to tapout to use any of the reporters that tapout provides.
 
 ```
-rake teabag SUPPRESS_LOG=true FORMATTERS=tap_y | tapout progress
+bundle exec teabag -q --format=tap_y | tapout progress
 ```
 
-**Note:** By default the rake task runs within the development environment, but you can specify the environment using `RAILS_ENV=test rake teabag`. This is to stay consistent with what you might see in the browser (since that's likely running in development).
+**Notes:**
+
+1. You can override some configurations by using environment variables. `FAIL_FAST=[true/false]`, `FORMATTERS=tap_y`, etc. (read more about [configuration](#configuration) below.)
+2. By default the console runner runs within the development environment, but you can specify the environment using `RAILS_ENV=test rake teabag`. This is to stay consistent with what you might see in the browser (since that's likely running in development).
 
 
 ## Writing Specs
@@ -165,9 +184,9 @@ Check out examples of a [Mocha Spec](https://github.com/modeset/teabag/wiki/Usin
 
 ### Pending Specs
 
-We've normalized declaring that a spec is pending between Mocha and Jasmine. Since Jasmine lacks the concept we've added it in, and since Mocha has several ways to accomplish it we thought it would be worth mentioning what we consider the standard between the two to be.
+We've normalized declaring that a spec is pending between Mocha and Jasmine. Since Jasmine lacks the concept we've added it in, and since Mocha has several ways to accomplish it we thought it would be worth mentioning what we consider the standard between the two to be. QUnit doesn't support specifying a test as pending.
 
-To mark a spec as pending you can either not provide a function as the second argument to `it`, or you can use `xit` and `xdescribe`.  Mocha provides some additional ways to accomplish this, but to keep it consistent we've normalized on what they both support.
+To mark a spec as pending you can either not provide a function as the second argument to `it`, or you can use `xit` and `xdescribe`. Mocha provides some additional ways to accomplish this, but to keep it consistent we've normalized on what they both support.
 
 ```coffeescript
 describe "My great feature", ->
@@ -183,24 +202,23 @@ describe "My great feature", ->
       expect(true).to.be(false)
 ```
 
-If you're using a specific framework and you want to take advantage of the things that framework provides you're free to do so. This is provided as the standard as the Teabag reporters understand the techniques above and have specs for them. QUnit doesn't support specifying a test as pending.
+If you're using a specific framework and you want to take advantage of the things that framework provides you're free to do so. This is provided as the standard as the Teabag reporters understand the techniques above and have specs for them.
 
 ### Deferring Execution
 
 Teabag allows deferring execution in the cases when you're using AMD or other asynchronous libraries. This is especially useful if you're using [CommonJS](http://www.commonjs.org/) or [RequireJS](http://requirejs.org/), etc.  You can tell Teabag to defer and then execute the runner yourself later -- after loading asychronously.
 
-```coffeescript
+```javascript
 Teabag.defer = true
-setTimeout(Teabag.execute, 1000) # defers execution for 1 second
+setTimeout(Teabag.execute, 1000) // defers execution for 1 second
 ```
 
 
 ## Fixtures
 
-You're free to use your own fixture library (like jasmine-jquery, which we've included as a support library), but Teabag ships with a fixture library that works with Mocha, Jasmine, and QUnit with a minimum of effort and a nice API.
+You're free to use your own fixture library (like jasmine-jquery, which we've included as a support library), but Teabag ships with a fixture library that works with Jasmine, Mocha, and QUnit with a minimum of effort and a nice consistent API.
 
-The fixture path is configurable within Teabag, and the views will be rendered by a standard controller.  This allows you to use things like RABL/JBuilder if you're building JSON, or HAML if you're building markup.  The element that Teabag creates is "#teabag-fixtures", in case you need to access it directly.
-
+The fixture path is configurable within Teabag, and the views will be rendered by a standard controller.  This allows you to use things like RABL/JBuilder if you're building JSON, or HAML if you're building markup.  The element that Teabag creates is "#teabag-fixtures", in case you need to access it directly -- or you can access it via `fixture.el` after loading fixtures.
 
 ### Loading Files
 
