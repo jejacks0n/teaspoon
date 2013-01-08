@@ -1,3 +1,4 @@
+require "teabag"
 require "teabag/server"
 
 module Teabag
