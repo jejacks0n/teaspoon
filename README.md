@@ -27,15 +27,14 @@ Feedback, ideas and pull requests are always welcome, or you can hit us up on Tw
 ## Table of Contents
 
 1. [Installation](#installation)
-2. [Quickstart](#quickstart)
-3. [Usage](#usage)
-4. [Writing Specs](#writing-specs)
-5. [Fixtures](#fixtures)
-6. [Suites](#suites)
-7. [Configuration](#configuration)
-8. [Test Frameworks](#test-frameworks)
-9. [Support Libraries](#support-libraries)
-10. [CI Support](#ci-support)
+2. [Usage](#usage)
+3. [Writing Specs](#writing-specs)
+4. [Fixtures](#fixtures)
+5. [Suites](#suites)
+6. [Configuration](#configuration)
+7. [Test Frameworks](#test-frameworks)
+8. [Support Libraries](#support-libraries)
+9. [CI Support](#ci-support)
 
 ## Installation
 
@@ -64,7 +63,7 @@ rails generate teabag:install --framework=mocha --coffee --env
 
 Teabag uses the Rails asset pipeline to serve files. This simplifies the fixtures as well and lets you use things like HAML or RABL/JBuilder to generate your fixtures.  You can run Teabag in three primary ways -- in the browser, via the rake task, and using the command line interface.
 
-Here's a really good [Quick Start Walkthrough] for writing and running your first tests.
+Here's a great [Quick Start Walkthrough](https://github.com/modeset/teabag/wiki/Quick-Start-Walkthrough) for writing and running your first tests.
 
 ### Browser
 
