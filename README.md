@@ -61,7 +61,7 @@ rails generate teabag:install --framework=mocha --coffee --env
 
 ## Usage
 
-Teabag uses the Rails asset pipeline to serve files. This simplifies the fixtures as well and lets you use things like HAML or RABL/JBuilder to generate your fixtures.  You can run Teabag in three primary ways -- in the browser, via the rake task, and using the command line interface.
+Teabag uses the Rails asset pipeline to serve files. This allows you to use `= require` in your test files, and allows you use things like HAML or RABL/JBuilder within your fixtures.  You can run Teabag in three ways -- in the browser, via the rake task, and using the command line interface.
 
 Here's a great [Quick Start Walkthrough](https://github.com/modeset/teabag/wiki/Quick-Start-Walkthrough) for writing and running your first tests.
 
