@@ -15,17 +15,18 @@ module Teabag
     end
 
     def self.require_environment(override = nil)
-      return require_env File.expand_path(override, Dir.pwd) if override
+      return require_env(File.expand_path(override, Dir.pwd)) if override
 
-      standard_environments.each do |file|
-        return require_env File.expand_path(file, Dir.pwd) if File.exists?(File.expand_path("#{file}.rb", Dir.pwd))
+      standard_environments.each do |filename|
+        file = File.expand_path(filename, Dir.pwd)
+        return require_env(file) if File.exists?(file)
       end
 
       raise Teabag::EnvironmentNotFound
     end
 
     def self.standard_environments
-      ["spec/teabag_env", "test/teabag_env", "teabag_env"]
+      ["spec/teabag_env.rb", "test/teabag_env.rb", "teabag_env.rb"]
     end
 
     def self.configure_from_options(options)

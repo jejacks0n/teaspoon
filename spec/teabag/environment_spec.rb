@@ -38,18 +38,18 @@ describe Teabag::Environment do
     it "looks for the standard files" do
       subject.stub(:require_env)
       File.should_receive(:exists?).with(File.expand_path("spec/teabag_env.rb", Dir.pwd)).and_return(true)
-      subject.should_receive(:require_env).with(File.expand_path("spec/teabag_env", Dir.pwd))
+      subject.should_receive(:require_env).with(File.expand_path("spec/teabag_env.rb", Dir.pwd))
       subject.require_environment
 
       File.should_receive(:exists?).with(File.expand_path("spec/teabag_env.rb", Dir.pwd)).and_return(false)
       File.should_receive(:exists?).with(File.expand_path("test/teabag_env.rb", Dir.pwd)).and_return(true)
-      subject.should_receive(:require_env).with(File.expand_path("test/teabag_env", Dir.pwd))
+      subject.should_receive(:require_env).with(File.expand_path("test/teabag_env.rb", Dir.pwd))
       subject.require_environment
 
       File.should_receive(:exists?).with(File.expand_path("spec/teabag_env.rb", Dir.pwd)).and_return(false)
       File.should_receive(:exists?).with(File.expand_path("test/teabag_env.rb", Dir.pwd)).and_return(false)
       File.should_receive(:exists?).with(File.expand_path("teabag_env.rb", Dir.pwd)).and_return(true)
-      subject.should_receive(:require_env).with(File.expand_path("teabag_env", Dir.pwd))
+      subject.should_receive(:require_env).with(File.expand_path("teabag_env.rb", Dir.pwd))
       subject.require_environment
     end
 
@@ -62,7 +62,7 @@ describe Teabag::Environment do
   describe ".standard_environments" do
 
     it "returns an array" do
-      expect(subject.standard_environments).to eql(["spec/teabag_env", "test/teabag_env", "teabag_env"])
+      expect(subject.standard_environments).to eql(["spec/teabag_env.rb", "test/teabag_env.rb", "teabag_env.rb"])
     end
 
   end
