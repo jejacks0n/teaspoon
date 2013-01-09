@@ -10,13 +10,12 @@ module Teabag
 
       begin
         require_console
+        abort if Teabag::Console.new(@options, @files).execute
       rescue Teabag::EnvironmentNotFound => e
         STDOUT.print "Unable to load Teabag environment in {#{Teabag::Environment.standard_environments.join(', ')}}.\n"
         STDOUT.print "Consider using -r path/to/teabag_env\n"
         abort
       end
-
-      abort if Teabag::Console.new(@options, @files).execute
     end
 
     def opt_parser
