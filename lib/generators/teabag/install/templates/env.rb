@@ -2,15 +2,16 @@
 # required from within the Rails environment, so overriding directives that have been defined within the initializer
 # is not possible.
 #
-# You can override various configuration directives defined here by using arguments with the teabag command.
-#
-# teabag --driver=selenium --fail_fast=false
-# rake teabag FAIL_FAST=false
-#
 # Set RAILS_ROOT and load the environment.
 ENV["RAILS_ROOT"] = File.expand_path("../../", __FILE__)
 require File.expand_path("../../config/environment", __FILE__)
 
+# Provide default configuration.
+#
+# You can override various configuration directives defined here by using arguments with the teabag command.
+#
+# teabag --driver=selenium --suppress-log
+# rake teabag DRIVER=selenium SUPPRESS_LOG=false
 Teabag.setup do |config|
   # Driver
   #config.driver         = "phantomjs" # available: phantomjs, selenium
