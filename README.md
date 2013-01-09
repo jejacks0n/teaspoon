@@ -328,7 +328,7 @@ Allows you to specify which driver you want to run your specs with -- Supports [
 
 Available: phantomjs, selenium
 
-- CLI: -d, --driver
+- CLI: -d, --driver DRIVER
 - ENV: DRIVER=selenium
 
 **default:** `"phantomjs"`
@@ -337,7 +337,7 @@ Available: phantomjs, selenium
 
 Timeout for starting the server in seconds. If your server is slow to start you may have to bump this, or you may want to lower this if you know it shouldn't take long to start.
 
-- CLI: --server-timeout
+- CLI: --server-timeout SECONDS
 - ENV: SERVER_TIMEOUT=10
 
 **default:** `20`
