@@ -5,41 +5,22 @@ module Teabag
 
     include Singleton
 
-    cattr_accessor :root,
-                   :mount_at,
-                   :asset_paths,
-                   :fixture_path,
-                   :driver,
-                   :formatters,
-                   :server_timeout,
-                   :fail_fast,
-                   :suppress_log,
-                   :phantomjs_bin,
-                   :suites
-
-    @@mount_at          = "/teabag"
-    @@root              = nil # will default to Rails.root if left unset
-    @@asset_paths       = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
-    @@fixture_path      = "spec/javascripts/fixtures"
-    @@suites            = {}
+    cattr_accessor :mount_at, :root, :asset_paths, :fixture_path, :suites
+    @@mount_at       = "/teabag"
+    @@root           = nil # will default to Rails.root if left unset
+    @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
+    @@fixture_path   = "spec/javascripts/fixtures"
+    @@suites         = {"default" => proc{}}
 
     # console runner specific
-    @@driver            = "phantomjs"
-    @@formatters        = "dot"
-    @@server_timeout    = 20
-    @@fail_fast         = true
-    @@suppress_log      = false
-    @@phantomjs_bin     = nil
-
-    def self.root=(path)
-      @@root = Pathname.new(path.to_s) if path.present?
-    end
-
-    def self.suite(name = :default, &block)
-      @@suites[name.to_s] = block
-    end
-
-    self.suite(:default) {}
+    cattr_accessor :driver, :phantomjs_bin, :server_timeout, :fail_fast, :formatters, :suppress_log, :color
+    @@driver         = "phantomjs"
+    @@phantomjs_bin  = nil
+    @@server_timeout = 20
+    @@fail_fast      = true
+    @@formatters     = "dot"
+    @@suppress_log   = false
+    @@color          = true
 
     class Suite
       attr_accessor :matcher, :helper, :stylesheets, :javascripts
@@ -53,6 +34,15 @@ module Teabag
         yield self if block_given?
       end
     end
+
+    def self.root=(path)
+      @@root = Pathname.new(path.to_s) if path.present?
+    end
+
+    def self.suite(name = :default, &block)
+      @@suites[name.to_s] = block
+    end
+
   end
 
   autoload :Formatters, "teabag/formatters/base_formatter"
@@ -69,11 +59,11 @@ module Teabag
   private
 
   def self.override_from_env
-    %w(FAIL_FAST SUPPRESS_LOG).each do |directive|
+    %w(FAIL_FAST SUPPRESS_LOG COLOR).each do |directive|
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive] == "true")
     end
-    %w(FORMATTERS DRIVER).each do |directive|
+    %w(DRIVER FORMATTERS SERVER_TIMEOUT PHANTOMJS_BIN).each do |directive|
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive])
     end

@@ -18,7 +18,7 @@ describe Teabag::Suite do
 
     it "accepts a suite configuration name" do
       Teabag.configuration.suite(:test) { |s| s.helper = "helper_file" }
-      subject = Teabag::Suite.new(:test)
+      subject = Teabag::Suite.new({suite: :test})
       expect(subject.config.helper).to eq("helper_file")
     end
 
@@ -63,6 +63,12 @@ describe Teabag::Suite do
       results = subject.spec_javascripts
       expect(results).to include("spec_helper")
       expect(results).to include("teabag/base/reporters/console_spec.js")
+    end
+
+    it "returns the file requested if one was passed" do
+      subject = Teabag::Suite.new({file: "spec/javascripts/foo.js"})
+      results = subject.spec_javascripts
+      expect(results).to eql(["spec_helper", "foo.js"])
     end
 
   end
