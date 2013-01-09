@@ -55,7 +55,7 @@ rails generate teabag:install
 You can tell the generator which framework you want to use, if you want coffeescript spec helper files, and if you want the env file created (used by the command line interface).
 
 ```
-rails generate teabag:install --framework=mocha --coffee --env
+rails generate teabag:install --framework=mocha --coffee
 ```
 
 
@@ -85,7 +85,7 @@ rake teabag suite=my_fantastic_suite
 
 ### CLI
 
-The command line interface requires a teabag_env.rb file that you can get by running the generator with the `--env` flag (`rails g teabag:install --env`). This file is used to load the Rails environment so Teabag can run within the context of Rails.
+The command line interface requires a teabag_env.rb file that you can get by running the generator. This file is used to load the Rails environment so Teabag can run within the context of Rails.
 
 ```
 bundle exec teabag
@@ -317,7 +317,7 @@ Fixtures are rendered through a standard controller. This means you can use thin
 
 ### Console Runner Specific
 
-These configuration directives are applicable only when running via the rake task or command line interface and should be set within the teabag_env.rb file. You can get this file by running the generator with the --env flag (`rails g teabag:install --env`).
+These configuration directives are applicable only when running via the rake task or command line interface and should be set within the teabag_env.rb file. You can get this file by running the generator.
 
 #### `driver`
 

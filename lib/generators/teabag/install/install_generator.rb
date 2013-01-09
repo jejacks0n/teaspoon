@@ -16,7 +16,7 @@ module Teabag::Generators
 
     class_option :env, type: :boolean,
                  aliases: "-e",
-                 default: false,
+                 default: true,
                  desc:    "Create the teabag_env.rb file used by the command line interface"
 
     def validate_framework
