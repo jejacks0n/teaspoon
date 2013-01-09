@@ -109,10 +109,7 @@ Teabag also has support for [tapout](https://github.com/rubyworks/tapout). Use t
 bundle exec teabag -q --format=tap_y | tapout progress
 ```
 
-**Notes:**
-
-1. By default the rake task and cli run within the development environment, but you can specify the environment using `RAILS_ENV=test rake teabag`. This is to stay consistent with what you might see in the browser (since that's likely running in development).
-2. You can override some configurations by using environment variables with the rake task. `FAIL_FAST=[true/false]`, `FORMATTERS=tap_y`, `COLOR=false`, etc. (read more about [configuration](#configuration) below.)
+**Note:** By default the rake task and command line interface run within the development environment, but you can specify the environment using `RAILS_ENV=test rake teabag`. This is to stay consistent with what you might see in the browser (since that's likely running in development).
 
 
 ## Writing Specs
