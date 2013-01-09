@@ -13,7 +13,7 @@ module Teabag
 
         Selenium::WebDriver::Wait.new(timeout: 180, interval: 0.01, message: "Timed out").until do
           done = driver.execute_script("return window.Teabag && window.Teabag.finished")
-          driver.execute_script("return Teabag.getMessages()").each do |line|
+          driver.execute_script("return window.Teabag && window.Teabag.getMessages() || []").each do |line|
             runner.process("#{line}\n")
           end
           done

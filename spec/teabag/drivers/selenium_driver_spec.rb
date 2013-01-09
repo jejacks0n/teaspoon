@@ -49,7 +49,7 @@ describe Teabag::Drivers::SeleniumDriver do
       @block = nil
       @wait.should_receive(:until) { |&b| @block = b }
       @driver.should_receive(:execute_script).with("return window.Teabag && window.Teabag.finished").and_return(true)
-      @driver.should_receive(:execute_script).with("return Teabag.getMessages()").and_return(["_line_"])
+      @driver.should_receive(:execute_script).with("return window.Teabag && window.Teabag.getMessages() || []").and_return(["_line_"])
       Teabag::Runner.any_instance.should_receive(:process).with("_line_\n")
       subject.run_specs(:default, "_url_")
       @block.call
