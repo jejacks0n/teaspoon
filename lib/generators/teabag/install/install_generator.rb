@@ -27,7 +27,7 @@ module Teabag::Generators
 
     def copy_initializers
       copy_file "templates/#{framework}/initializer.rb", "config/initializers/teabag.rb"
-      copy_file "templates/env.rb", "#{framework_type}/javascripts/teabag_env.rb" if options[:env]
+      copy_file "templates/env.rb", "#{framework_type}/teabag_env.rb" if options[:env]
     end
 
     def create_structure
