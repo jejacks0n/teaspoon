@@ -3200,7 +3200,7 @@ jasmine.version_= {
       if (Teabag.Reporters.HTML.RadialProgressView.supported) {
         return new Teabag.Reporters.HTML.RadialProgressView();
       } else {
-        return Teabag.Reporters.HTML.SimpleProgressView();
+        return new Teabag.Reporters.HTML.SimpleProgressView();
       }
     };
 
@@ -3502,6 +3502,9 @@ jasmine.version_= {
       var result;
       this.spec = new Teabag.Spec(spec);
       result = this.spec.result();
+      if (result.skipped) {
+        return;
+      }
       this.reportSuites();
       switch (result.status) {
         case "pending":
@@ -3544,7 +3547,7 @@ jasmine.version_= {
           label: this.spec.description,
           status: result.status,
           skipped: result.skipped,
-          link: this.spec.link,
+          link: this.spec.fullDescription,
           message: error.message,
           trace: error.stack || error.message || "Stack Trace Unavailable"
         }));
