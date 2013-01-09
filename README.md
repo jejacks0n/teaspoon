@@ -73,13 +73,13 @@ http://localhost:3000/teabag
 
 ### Rake
 
-```shell
+```
 rake teabag
 ```
 
 Specify the suite by using:
 
-```shell
+```
 rake teabag suite=my_fantastic_suite
 ```
 
