@@ -4,9 +4,10 @@ module Teabag
     attr_accessor :config
     delegate :stylesheets, :helper, to: :config
 
-    def initialize(name = :default)
-      @name = name
-      @config = suite_configuration(name)
+    def initialize(options = {})
+      @options = options
+      @name = @options[:suite] || :default
+      @config = suite_configuration
     end
 
     def javascripts
@@ -22,6 +23,9 @@ module Teabag
     end
 
     def specs
+      files = specs_from_file
+      return files unless files.empty?
+
       Dir[config.matcher.present? ? Teabag.configuration.root.join(config.matcher) : ""].map do |filename|
         asset_path_from_filename(File.expand_path(filename))
       end
@@ -33,9 +37,14 @@ module Teabag
 
     protected
 
-    def suite_configuration(name)
-      name ||= :default
-      config = Teabag.configuration.suites[name.to_s]
+    def specs_from_file
+      Array(@options[:file]).map do |filename|
+        asset_path_from_filename(File.expand_path(Teabag.configuration.root.join(filename)))
+      end
+    end
+
+    def suite_configuration
+      config = Teabag.configuration.suites[@name.to_s]
       raise Teabag::UnknownSuite unless config.present?
       Teabag::Configuration::Suite.new(&config)
     end

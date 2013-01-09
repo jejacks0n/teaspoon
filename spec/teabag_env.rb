@@ -8,12 +8,12 @@
 # rake teabag FAIL_FAST=false
 #
 # Set RAILS_ROOT and load the environment.
-ENV["RAILS_ROOT"] = File.expand_path("../../", __FILE__)
-require File.expand_path("../../config/environment", __FILE__)
+ENV["RAILS_ROOT"] = File.expand_path("../dummy", __FILE__)
+require File.expand_path("../dummy/config/environment", __FILE__)
 
 Teabag.setup do |config|
   # Driver
-  #config.driver         = "phantomjs" # available: phantomjs, selenium
+  #config.driver         = "selenium" # available: phantomjs, selenium
   #config.phantomjs_bin  = nil
 
   # Behaviors

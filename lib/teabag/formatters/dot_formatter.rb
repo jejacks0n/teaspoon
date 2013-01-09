@@ -34,6 +34,7 @@ module Teabag
         log_information
         log_stats(results)
         log_failed_examples
+        super
       end
 
       protected
@@ -72,10 +73,9 @@ module Teabag
         return if failures.size == 0
         log "\nFailed examples:\n"
         failures.each do |failure|
-          log "\n#{Teabag.configuration.mount_at}/#{@suite_name}#{failure.link}", RED
+          log "\nteabag -s #{@suite_name} --filter=\"#{failure.link}\"", RED
         end
         log "\n\n"
-        raise Teabag::Failure if Teabag.configuration.fail_fast
       end
 
       private
@@ -85,6 +85,7 @@ module Teabag
       end
 
       def colorize(str, color_code)
+        return str unless Teabag.configuration.color
         "\e[#{color_code}m#{str}\e[0m"
       end
 

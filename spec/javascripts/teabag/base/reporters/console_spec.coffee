@@ -79,6 +79,18 @@ describe "Teabag.Reporters.Console", ->
         @reporter.reportSpecResults()
         expect(@trackSpy).toHaveBeenCalled()
 
+    describe "skipped tests", ->
+
+      beforeEach ->
+        @reportSuitesSpy = spyOn(@reporter, "reportSuites")
+        @logSpy = spyOn(@reporter, "log")
+        @spec.result = -> {status: "pending", skipped: true}
+
+      it "doesn't report the suite or log the results", ->
+        @reporter.reportSpecResults()
+        expect(@reportSuitesSpy).not.toHaveBeenCalled()
+        expect(@logSpy).not.toHaveBeenCalled()
+
     describe "failing tests", ->
 
       beforeEach ->
@@ -120,7 +132,7 @@ describe "Teabag.Reporters.Console", ->
         label:   "_spec_name_"
         status:  "failed"
         skipped: false
-        link:    "?grep=_spec_description_"
+        link:    "_spec_description_"
         message: "_message_"
         trace:   "_message_"
 

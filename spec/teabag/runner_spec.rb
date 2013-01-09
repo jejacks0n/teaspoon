@@ -23,6 +23,10 @@ describe Teabag::Runner do
       Teabag.configuration.formatters = "dot, xml"
       expect(subject.formatters[0]).to be_a(Teabag::Formatters::DotFormatter)
       expect(subject.formatters[1]).to be_a(Teabag::Formatters::XmlFormatter)
+
+      Teabag.configuration.formatters = "dot,xml"
+      expect(subject.formatters[0]).to be_a(Teabag::Formatters::DotFormatter)
+      expect(subject.formatters[1]).to be_a(Teabag::Formatters::XmlFormatter)
     end
 
   end

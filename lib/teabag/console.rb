@@ -1,15 +1,19 @@
-require "teabag"
-require "teabag/server"
+require 'open-uri'
+require 'teabag/environment'
 
 module Teabag
   class Console
 
-    def initialize(suite_name = nil)
-      # force asset debugging off -- gives us nicer errors on missing files, bad coffeescript, etc
+    def initialize(options = nil, files = [])
+      @options = options || {}
+      @files = files
+
+      Teabag::Environment.load(@options)
+      require "teabag/server"
       Rails.application.config.assets.debug = false
 
-      if suite_name
-        @suites = [suite_name]
+      if @options[:suite].present?
+        @suites = [@options[:suite]]
       else
         @suites = Teabag.configuration.suites.keys
       end
@@ -45,8 +49,15 @@ module Teabag
       @driver ||= Teabag::Drivers.const_get("#{Teabag.configuration.driver.to_s.camelize}Driver").new
     end
 
+    def filter
+      parts = []
+      parts << "grep=#{URI::encode(@options[:filter])}" if @options[:filter].present?
+      @files.each { |file| parts << "file[]=#{URI::encode(file)}" }
+      "?#{parts.join('&')}"
+    end
+
     def url(suite)
-      ["#{@server.url}#{Teabag.configuration.mount_at}", suite].join("/")
+      ["#{@server.url}#{Teabag.configuration.mount_at}", suite, filter].join("/")
     end
   end
 end

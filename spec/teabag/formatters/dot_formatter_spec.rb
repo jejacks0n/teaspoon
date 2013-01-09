@@ -63,11 +63,11 @@ describe Teabag::Formatters::DotFormatter do
     describe "with failures" do
 
       it "logs the details and raises an exception" do
-        subject.failures << Teabag::Result.build_from_json("label" => "some spec", "suite" => "full description", "message" => "some message", "link" => "?grep=some%20spec")
+        subject.failures << Teabag::Result.build_from_json("label" => "some spec", "suite" => "full description", "message" => "some message", "link" => "full description")
         expect {
           subject.result("elapsed" => 0.31337)
         }.to raise_error(Teabag::Failure)
-        expect(@log).to eq("\n\nFailures:\n\n  1) full description some spec\n\e[31m     Failure/Error: some message\n\e[0m\nFinished in 0.31337 seconds\n\e[31m666 examples, 1 failure\n\e[0m\nFailed examples:\n\e[31m\n/teabag/default?grep=some%20spec\e[0m\n\n")
+        expect(@log).to eq("\n\nFailures:\n\n  1) full description some spec\n\e[31m     Failure/Error: some message\n\e[0m\nFinished in 0.31337 seconds\n\e[31m666 examples, 1 failure\n\e[0m\nFailed examples:\n\e[31m\nteabag -s default --filter=\"full description\"\e[0m\n\n")
         expect(subject.failures.length).to be(1)
       end
 
