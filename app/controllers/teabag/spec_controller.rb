@@ -4,7 +4,7 @@ class Teabag::SpecController < ActionController::Base
   layout false
 
   unless Rails.application.config.assets.debug
-    rescue_from Teabag::AssetNotServable, with: :javascript_exception
+    rescue_from Exception, with: :javascript_exception
   end
 
   def index

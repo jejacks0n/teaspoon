@@ -10,7 +10,7 @@ module Teabag
 
       Teabag::Environment.load(@options)
       require "teabag/server"
-      Rails.application.config.assets.debug = false
+      Rails.application.config.assets.debug = false if Teabag.configuration.driver == 'phantomjs'
 
       if @options[:suite].present?
         @suites = [@options[:suite]]
