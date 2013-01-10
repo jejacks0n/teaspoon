@@ -26,7 +26,7 @@ describe Teabag::CommandLine do
     end
 
     it "aborts with a message on Teabag::EnvironmentNotFound" do
-      Teabag::CommandLine.any_instance.should_receive(:require_console).and_raise(Teabag::EnvironmentNotFound)
+      Teabag::Console.should_receive(:new).and_raise(Teabag::EnvironmentNotFound)
       Teabag::CommandLine.any_instance.should_receive(:abort)
       STDOUT.should_receive(:print).with("Unable to load Teabag environment in {spec/teabag_env.rb, test/teabag_env.rb, teabag_env.rb}.\n")
       STDOUT.should_receive(:print).with("Consider using -r path/to/teabag_env\n")
