@@ -4,6 +4,7 @@ require File.expand_path("../dummy/config/environment", __FILE__)
 
 require "rspec/rails"
 require "rspec/autorun"
+require 'capybara/rails'
 require "ostruct"
 
 Dir[File.expand_path("../spec/support/**/*.rb", __FILE__)].each { |f| require f }

@@ -12,3 +12,8 @@ gem "coffee-rails"
 gem "sass-rails"
 gem "jquery-rails"
 gem "haml-rails"
+
+group :development, :test do
+  gem "rspec-rails"
+  gem "capybara"
+end

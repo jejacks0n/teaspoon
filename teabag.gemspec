@@ -19,6 +19,4 @@ Gem::Specification.new do |s|
 
   s.add_dependency "railties", [">= 3.2.5","< 5"]
   s.add_dependency "phantomjs.rb", "~> 0.0.5"
-
-  s.add_development_dependency "rspec-rails", ">= 2.11.4"
 end
