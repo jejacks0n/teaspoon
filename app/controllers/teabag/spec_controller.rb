@@ -7,7 +7,11 @@ class Teabag::SpecController < ActionController::Base
     rescue_from Exception, with: :javascript_exception
   end
 
-  def index
+  def suites
+    @suites = Teabag.configuration.suites.keys.map { |suite| Teabag::Suite.new(suite: suite) }
+  end
+
+  def runner
     @suite = Teabag::Suite.new(params)
   end
 

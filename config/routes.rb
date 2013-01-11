@@ -1,4 +1,5 @@
 Teabag::Engine.routes.draw do
-  get "/fixtures/*filename", to: "spec#fixtures", via: :get
-  get "/(:suite)", to: "spec#index", via: :get, defaults: { suite: "default" }
+  get "/fixtures/*filename", to: "spec#fixtures"
+  get "/suites", to: "spec#suites"
+  get "/(:suite)", to: "spec#runner", defaults: { suite: "default" }
 end
