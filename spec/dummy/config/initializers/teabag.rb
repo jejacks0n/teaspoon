@@ -4,6 +4,7 @@ Teabag.setup do |config|
   config.asset_paths << Teabag::Engine.root.join('lib/teabag')
 
   config.suite do |suite|
+    suite.matcher = "{spec/javascripts,spec/dummy/app/assets}/**/*_spec.{js,js.coffee,coffee}"
     suite.javascripts = ["teabag/jasmine"]
   end
 
