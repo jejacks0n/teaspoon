@@ -44,6 +44,9 @@ module Dummy
     # like if you have constraints or database-specific column types
     # config.active_record.schema_format = :sql
 
+    config.session_store :cookie_store, key: '_dummy_session'
+    config.secret_token = 'bc510a13d2fb96575782e90e9f2f64afc0ba4e63e5869b6139613686f104d4d3dd92ee696468de5bcbbb74daedb702d3da97554efbc6792abe75091b9df0a2ab'
+
     # Enable the asset pipeline
     config.assets.enabled = true
 
