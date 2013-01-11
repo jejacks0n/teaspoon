@@ -5,16 +5,10 @@ module Teabag
   module Drivers
     class PhantomjsDriver < BaseDriver
 
-      # inject into phantomjs to override the bin path
-      Phantomjs.send :extend, Module.new do
-        def get_executable
-          Teabag.configuration.phantomjs_bin
-        end
-      end if Teabag.configuration.phantomjs_bin.present?
-
       def run_specs(suite, url)
         runner = Teabag::Runner.new(suite)
 
+        Phantomjs.instance_variable_set(:@executable, Teabag.configuration.phantomjs_bin)
         Phantomjs.run(script, url) do |line|
           runner.process(line)
         end

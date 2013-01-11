@@ -12,6 +12,3 @@ gem "coffee-rails"
 gem "sass-rails"
 gem "jquery-rails"
 gem "haml-rails"
-
-# required for travis-ci and linux environments
-gem "phantomjs-linux" if RUBY_PLATFORM =~ /linux/
