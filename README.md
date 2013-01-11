@@ -71,13 +71,9 @@ Here's a great [Quick Start Walkthrough](https://github.com/modeset/teabag/wiki/
 http://localhost:3000/teabag
 ```
 
+You can focus tests in various ways (and we might be providing an interface for this eventually). We already provide a way to switch suites, but to run a specific file you can specify the file(s) to focus to with `/teabag?file[]=file1.js&file[]=file2.js` or `/teabag?file=file1.js`. To specify a match for the test description you can use `/teabag?grep=Calculator should add two digits`
+
 ### Rake
-
-```
-rake teabag
-```
-
-Specify the suite by using:
 
 ```
 rake teabag suite=my_fantastic_suite
@@ -91,22 +87,24 @@ The command line interface requires a teabag_env.rb file that you can get by run
 bundle exec teabag
 ```
 
-Specify the suite by using:
+The CLI provides several ways of focusing tests. You can specify the suite to run, the files to run, and a filter.
 
 ```
 bundle exec teabag --suite=my_fantastic_suite
-```
-
-Get full command line help:
-
-```
-bundle exec teabag --help
+bundle exec teabag spec/javascripts/file1.js
+bundle exec teabag --filter="Calculator should add two digits"
 ```
 
 Teabag also has support for [tapout](https://github.com/rubyworks/tapout). Use the tap_y formatter and pipe the results to tapout to use any of the reporters that tapout provides.
 
 ```
 bundle exec teabag -q --format=tap_y | tapout progress
+```
+
+Get full command line help:
+
+```
+bundle exec teabag --help
 ```
 
 **Note:** By default the rake task and command line interface run within the development environment, but you can specify the environment using `RAILS_ENV=test rake teabag`. This is to stay consistent with what you might see in the browser (since that's likely running in development).
