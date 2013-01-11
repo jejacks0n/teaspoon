@@ -321,7 +321,7 @@ These configuration directives are applicable only when running via the rake tas
 
 #### `driver`
 
-Allows you to specify which driver you want to run your specs with -- Supports [PhantomJS](http://phantomjs.org/) and [Selenium Webdriver](http://seleniumhq.org/docs/03_webdriver.jsp). Check this wiki article for information about [Using Selenium WebDriver](https://github.com/modeset/teabag/wiki/Using-Selenium-WebDriver), and this one if you're having issues with [PhantomJS on Linux](https://github.com/modeset/teabag/wiki/PhantomJS-on-Linux).
+Allows you to specify which driver you want to run your specs with -- Supports [PhantomJS](http://phantomjs.org/) and [Selenium Webdriver](http://seleniumhq.org/docs/03_webdriver.jsp). Check this wiki article for information about [Using Selenium WebDriver](https://github.com/modeset/teabag/wiki/Using-Selenium-WebDriver), and this one about [Using PhantomJS](https://github.com/modeset/teabag/wiki/Using-PhantomJS).
 
 Available: phantomjs, selenium
 
