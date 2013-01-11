@@ -1,0 +1,27 @@
+#= require integration/spec_helper
+
+describe "Integration tests", ->
+
+  it "tests", ->
+    expect(true).toBe(true)
+
+  it "handles multiple specs", ->
+    expect(true).toBe(true)
+
+  it "allows failing specs", ->
+    expect(true).toBe(false)
+
+  describe "nesting", ->
+
+    it "is allowed", ->
+      expect(true).toBe(true)
+
+  describe "pending", ->
+
+    it "is allowed"
+
+  describe "fixtures", ->
+
+    it "loads files", ->
+      fixture.load("fixture.html")
+      expect(fixture.el.innerHTML).toContain("Lorem ipsum dolor")
