@@ -13,7 +13,11 @@ gem "sass-rails"
 gem "jquery-rails"
 gem "haml-rails"
 
+# used by test rails apps
+gem "sqlite3"
+
 group :development, :test do
   gem "rspec-rails"
   gem "capybara"
+  gem "aruba"
 end
