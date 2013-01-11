@@ -15,6 +15,7 @@ gem "haml-rails"
 
 # used by test rails apps
 gem "sqlite3"
+gem "uglifier"
 
 group :development, :test do
   gem "rspec-rails"

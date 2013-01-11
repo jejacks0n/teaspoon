@@ -16,10 +16,17 @@ RSpec.configure do |config|
   config.order = "random"
   config.include Aruba::Api
 
-  config.before(:all, aruba: true) do
+  config.before(:each, aruba: true) do
     @aruba_timeout_seconds = 180
+    FileUtils.rm_rf(current_dir)
+    @__aruba_original_paths = (ENV['PATH'] || '').split(File::PATH_SEPARATOR)
+    ENV['PATH'] = ([File.expand_path('bin')] + @__aruba_original_paths).join(File::PATH_SEPARATOR)
   end
 
+  config.after(:each, aruba: true) do
+    ENV['PATH'] = @__aruba_original_paths.join(File::PATH_SEPARATOR)
+    restore_env
+  end
 end
 
 Teabag.configuration.suites = {}
