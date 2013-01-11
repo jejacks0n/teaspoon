@@ -79,7 +79,7 @@ You can focus tests in various ways (and we might be providing an interface for 
 rake teabag suite=my_fantastic_suite
 ```
 
-### CLI
+### Command Line Interface
 
 The command line interface requires a teabag_env.rb file that you can get by running the generator. This file is used to load the Rails environment so Teabag can run within the context of Rails.
 
