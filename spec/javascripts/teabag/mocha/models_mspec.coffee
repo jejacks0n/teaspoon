@@ -84,12 +84,10 @@ describe "Mocha Teabag.Suite", ->
 
   describe "constructor", ->
 
-    describe "with mocha type suite", ->
-
-      it "has the expected properties", ->
-        suite = new Teabag.Suite(@mockSuite)
-        expect(suite.fullDescription).to.be("_full mocha description_")
-        expect(suite.description).to.be("_mocha_description_")
-        expect(suite.link).to.be("?grep=_full%20mocha%20description_")
-        expect(suite.parent).to.be(@mockParentSuite)
-        expect(suite.viewId).to.be(420)
+    it "has the expected properties", ->
+      suite = new Teabag.Suite(@mockSuite)
+      expect(suite.fullDescription).to.be("_full mocha description_")
+      expect(suite.description).to.be("_mocha_description_")
+      expect(suite.link).to.be("?grep=_full%20mocha%20description_")
+      expect(suite.parent).to.be(@mockParentSuite)
+      expect(suite.viewId).to.be(420)

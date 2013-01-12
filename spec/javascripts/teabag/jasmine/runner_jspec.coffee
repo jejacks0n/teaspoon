@@ -33,7 +33,7 @@ describe "Jasmine Teabag.Runner", ->
       spy = spyOn(@instance, "setFilter")
       @runner.setup()
       expect(typeof(@env.specFilter)).toEqual("function")
-      expect(spy).toHaveBeenCalledWith("foo")
+      expect(spy).toHaveBeenCalledWith(grep: "foo")
 
     it "adds the reporter to the env", ->
       @runner.setup()
