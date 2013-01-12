@@ -320,11 +320,11 @@ describe "Teabag.Reporters.HTML", ->
     beforeEach ->
       @setClassSpy = spyOn(@reporter, "setClass")
       @setHtmlSpy = spyOn(@reporter, "setHtml")
-      @reporter.setFilter("_filter_")
+      @reporter.setFilter(grep: "_filter_")
 
     it "sets a class and the html for the filter display", ->
       expect(@setClassSpy).toHaveBeenCalledWith("filter", "teabag-filtered")
-      expect(@setHtmlSpy).toHaveBeenCalledWith("filter-info", "_filter_", true)
+      expect(@setHtmlSpy).toHaveBeenCalledWith("filter-info", "by filter: _filter_", true)
 
 
   describe "#readConfig", ->

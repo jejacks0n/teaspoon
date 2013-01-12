@@ -15,7 +15,7 @@ class Teabag.Runner extends Teabag.Runner
   setup: ->
     # add the reporter and set the filter
     reporter = @getReporter()
-    reporter.filter = @params["grep"]
+    reporter.filter = @params
     env.setup(reporter: reporter)
 
 

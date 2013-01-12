@@ -17,4 +17,4 @@ test "#setup", ->
   runner.setup()
 
   ok(runner.getReporter.called, "#getReporter was called")
-  ok(reporter.prototype.setFilter.args[0][0] == "foo", "#setFilter was called with 'foo'")
+  ok(reporter.prototype.setFilter.args[0][0].grep == "foo", "#setFilter was called with 'foo'")

@@ -157,10 +157,15 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     document.body.className = "teabag-#{status}"
 
 
-  setFilter: (filter) ->
-    return unless filter
+  setFilter: (params) ->
+    return unless params["grep"] || params["file"]
+    filters = []
+    filters.push("by filter: #{params["grep"]}") if params["grep"]
+    filters.push("by file: #{params["file"]}") if params["file"]
+    return unless filters.length
+
     @setClass("filter", "teabag-filtered")
-    @setHtml("filter-info", "#{filter}", true)
+    @setHtml("filter-info", "#{filters.join("<br>")}", true)
 
 
   readConfig: ->
