@@ -5447,7 +5447,7 @@
       if (this.filters.length) {
         this.setClass("filter", "teabag-filtered");
       }
-      return this.setHtml("filter-list", "" + (this.filters.join("<br>")), true);
+      return this.setHtml("filter-list", "<li>" + (this.filters.join("</li><li>")) + "</li>", true);
     };
 
     HTML.prototype.reportRunnerStarting = function(runner) {
@@ -5593,7 +5593,7 @@
       } else {
         date = new Teabag.Date();
         date.setDate(date.getDate() + 365);
-        return document.cookie = "" + name + "=" + (escape(JSON.stringify(value))) + "; path=\"/teabag\"; expires=" + (date.toUTCString()) + ";";
+        return document.cookie = "" + name + "=" + (escape(JSON.stringify(value))) + "; expires=" + (date.toUTCString()) + "; path=/;";
       }
     };
 
