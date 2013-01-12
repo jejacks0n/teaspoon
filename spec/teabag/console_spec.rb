@@ -48,8 +48,8 @@ describe Teabag::Console do
     it "starts the server and calls run" do
       STDOUT.should_receive(:print).with("Starting server...\n")
       subject.should_receive(:start_server)
-      STDOUT.should_receive(:print).with("Teabag running default suite at http://url.com/teabag/default/?...\n")
-      STDOUT.should_receive(:print).with("Teabag running foo suite at http://url.com/teabag/foo/?...\n")
+      STDOUT.should_receive(:print).with("Teabag running default suite at http://url.com/teabag/default...\n")
+      STDOUT.should_receive(:print).with("Teabag running foo suite at http://url.com/teabag/foo...\n")
       subject.should_receive(:run_specs).twice.and_return(2)
       result = subject.execute
       expect(result).to be(true)
@@ -79,7 +79,7 @@ describe Teabag::Console do
     it "calls run_specs on the driver" do
       driver = mock(run_specs: nil)
       subject.should_receive(:driver).and_return(driver)
-      driver.should_receive(:run_specs).with(:suite_name, "http://url.com/teabag/suite_name/?")
+      driver.should_receive(:run_specs).with(:suite_name, "http://url.com/teabag/suite_name")
       subject.run_specs(:suite_name)
     end
 

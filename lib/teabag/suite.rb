@@ -1,12 +1,12 @@
 module Teabag
   class Suite
 
-    attr_accessor :config
+    attr_accessor :config, :name
     delegate :stylesheets, :helper, to: :config
 
     def initialize(options = {})
       @options = options
-      @name = @options[:suite] || :default
+      @name = (@options[:suite] || :default).to_s
       @config = suite_configuration
     end
 
@@ -22,34 +22,44 @@ module Teabag
       [helper, specs].flatten
     end
 
-    def specs
-      files = specs_from_file
-      return files unless files.empty?
-
-      Dir[config.matcher.present? ? Teabag.configuration.root.join(config.matcher) : ""].map do |filename|
-        asset_path_from_filename(File.expand_path(filename))
-      end
+    def suites
+      {all: Teabag.configuration.suites.keys, active: name}
     end
 
-    def suites
-      {all: Teabag.configuration.suites.keys, active: @name.to_s}
+    def spec_files
+      glob.map { |file| {path: file, name: asset_from_file(file)} }
+    end
+
+    def link(params = {})
+      query = "?#{params.to_query}" if params.present?
+      [Teabag.configuration.mount_at, name, query].compact.join("/")
     end
 
     protected
 
-    def specs_from_file
-      Array(@options[:file]).map do |filename|
-        asset_path_from_filename(File.expand_path(Teabag.configuration.root.join(filename)))
-      end
+    def specs
+      files = specs_from_file
+      return files unless files.empty?
+      glob.map { |file| asset_from_file(file) }
+    end
+
+    def glob
+      Dir[config.matcher.present? ? Teabag.configuration.root.join(config.matcher) : ""]
     end
 
     def suite_configuration
-      config = Teabag.configuration.suites[@name.to_s]
+      config = Teabag.configuration.suites[name]
       raise Teabag::UnknownSuite unless config.present?
       Teabag::Configuration::Suite.new(&config)
     end
 
-    def asset_path_from_filename(original)
+    def specs_from_file
+      Array(@options[:file]).map do |filename|
+        asset_from_file(File.expand_path(Teabag.configuration.root.join(filename)))
+      end
+    end
+
+    def asset_from_file(original)
       filename = original
       Rails.application.config.assets.paths.each do |path|
         filename = filename.gsub(%r(^#{path}[\/|\\]), "")

@@ -1,0 +1,33 @@
+window.onload = function() {
+  var files = $u("#teabag-suite-list .file a");
+  var input = $u("#teabag-filter-input")[0];
+  input.onkeyup = function() {
+    for (var i = 0; i < files.length; ++i) {
+      var score = LiquidMetal.score(files[i].innerHTML, input.value);
+      if (score > 0) files[i].parentNode.style.display = "block";
+      else files[i].parentNode.style.display = "none";
+    }
+  }
+};
+
+/*!
+ * LiquidMetal, version: 0.1 (2009-02-05)
+ *
+ * A mimetic poly-alloy of Quicksilver's scoring algorithm, essentially
+ * LiquidMetal.
+ *
+ * For usage and examples, visit:
+ * http://github.com/rmm5t/liquidmetal
+ *
+ * Licensed under the MIT:
+ * http://www.opensource.org/licenses/mit-license.php
+ *
+ * Copyright (c) 2009, Ryan McGeary (ryanonjavascript -[at]- mcgeary [*dot*] org)
+ */
+var LiquidMetal=function(){var l=0.0;var m=1.0;var n=0.8;var o=0.9;var p=0.85;return{score:function(a,b){if(b.length==0)return n;if(b.length>a.length)return l;var c=this.buildScoreArray(a,b);var d=0.0;for(var i=0;i<c.length;i++){d+=c[i]}return(d/c.length)},buildScoreArray:function(a,b){var d=new Array(a.length);var e=a.toLowerCase();var f=b.toLowerCase().split("");var g=-1;var h=false;for(var i=0;i<f.length;i++){var c=f[i];var j=e.indexOf(c,g+1);if(j<0)return fillArray(d,l);if(j==0)h=true;if(isNewWord(a,j)){d[j-1]=1;fillArray(d,p,g+1,j-1)}else if(isUpperCase(a,j)){fillArray(d,p,g+1,j)}else{fillArray(d,l,g+1,j)}d[j]=m;g=j}var k=h?o:n;fillArray(d,k,g+1);return d}};function isUpperCase(a,b){var c=a.charAt(b);return("A"<=c&&c<="Z")}function isNewWord(a,b){var c=a.charAt(b-1);return(c==" "||c=="\t")}function fillArray(a,b,c,d){c=Math.max(c||0,0);d=Math.min(d||a.length,a.length);for(var i=c;i<d;i++){a[i]=b}return a}}();
+
+/*!
+ * uSelector
+ * author: Fabio Miranda Costa | github: fabiomcosta | twitter: @fabiomiranda | license: MIT-style license
+ */
+(function(h,i){var f,c,j,k,m={},e,l,q=/^\s+|\s+$/g,r=!!i.querySelectorAll,g=function(d,b,a){f=a||[];e=b||g.context;if(r)try{n(e.querySelectorAll(d));return f}catch(v){}l=e.ownerDocument||e;d=d.replace(q,"");for(c={};d=d.replace(/([#.:])?([^#.:]*)/,s););d=(b=c.id)&&c.tag||c.classes||c.pseudos||!b&&(c.classes||c.pseudos)?t:o;if(b){if(a=b=l.getElementById(b))if(!(a=l===e))a:{a=b;do if(a===e){a=true;break a}while(a=a.parentNode);a=false}a&&d([b])}else d(e.getElementsByTagName(c.tag||"*"));return f},u=function(d){if(c.tag){var b=d.nodeName.toUpperCase();if(c.tag=="*"){if(b<"@")return false}else if(b!=c.tag)return false}if(c.id&&d.getAttribute("id")!=c.id)return false;if(j=c.classes){var a=" "+d.className+" ";for(b=j.length;b--;)if(a.indexOf(" "+j[b]+" ")<0)return false}if(k=c.pseudos)for(b=k.length;b--;){a=m[k[b]];if(!(a&&a.call(g,d)))return false}return true},s=function(d,b,a){if(b)if(b=="#")c.id=a;else if(b==".")if(c.classes)c.classes.push(a);else c.classes=[a];else{if(b==":")if(c.pseudos)c.pseudos.push(a);else c.pseudos=[a]}else c.tag=a.toUpperCase();return""},p=Array.prototype.slice,n=function(d){f=p.call(d,0)},o=function(d){for(var b=0,a;a=d[b++];)f.push(a)};try{p.call(i.documentElement.childNodes,0)}catch(w){n=o}var t=function(d){for(var b=0,a;a=d[b++];)u(a)&&f.push(a)};g.pseudos=m;g.context=i;h.uSelector=g;h.$u||(h.$u=g)})(this,document);

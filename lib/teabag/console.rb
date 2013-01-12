@@ -53,11 +53,11 @@ module Teabag
       parts = []
       parts << "grep=#{URI::encode(@options[:filter])}" if @options[:filter].present?
       @files.each { |file| parts << "file[]=#{URI::encode(file)}" }
-      "?#{parts.join('&')}"
+      "?#{parts.join('&')}" if parts.present?
     end
 
     def url(suite)
-      ["#{@server.url}#{Teabag.configuration.mount_at}", suite, filter].join("/")
+      ["#{@server.url}#{Teabag.configuration.mount_at}", suite, filter].compact.join("/")
     end
   end
 end

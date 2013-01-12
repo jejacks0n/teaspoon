@@ -195,10 +195,22 @@ html[xmlns] #teabag-html-reporter .teabag-clearfix {
   position: relative;
   top: -1px;
   height: 21px;
-  max-width: 100px;
+  max-width: 150px;
   margin: 0;
   border: 1px solid #B3B3B3;
   outline: none;
+}
+#teabag-controls input {
+  margin: 0;
+  padding: 3px 8px;
+  zoom: 1;
+  border: 1px solid #B3B3B3;
+  outline: none;
+  font-size: 13px;
+  border-radius: 0.4em;
+  background-color: #fff;
+  width: 100%;
+  max-width: 530px;
 }
 
 #teabag-controls #teabag-filter {
@@ -231,16 +243,6 @@ html[xmlns] #teabag-html-reporter .teabag-clearfix {
   margin-left: -1px;
   float: left;
   position: relative;
-}
-#teabag-controls #teabag-filter input {
-  margin: 0;
-  padding: 3px 8px;
-  zoom: 1;
-  border: 1px solid #B3B3B3;
-  outline: none;
-  border-radius: 0.4em;
-  background-color: #fff;
-  width: 220px;
 }
 
 
