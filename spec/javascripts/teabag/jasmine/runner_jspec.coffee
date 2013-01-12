@@ -19,7 +19,6 @@ describe "Jasmine Teabag.Runner", ->
 
     beforeEach ->
       @runner.params = {grep: "foo"}
-      @instance = {setFilter: ->}
       if window.navigator.userAgent.match(/PhantomJS/)
         @reporterSpy = spyOn(Teabag.Reporters, "Console").andReturn(@instance)
       else
@@ -28,12 +27,6 @@ describe "Jasmine Teabag.Runner", ->
 
     it "sets the updateInterval", ->
       expect(@env.updateInterval).toEqual(1000)
-
-    it "sets the specFilter", ->
-      spy = spyOn(@instance, "setFilter")
-      @runner.setup()
-      expect(typeof(@env.specFilter)).toEqual("function")
-      expect(spy).toHaveBeenCalledWith(grep: "foo")
 
     it "adds the reporter to the env", ->
       @runner.setup()

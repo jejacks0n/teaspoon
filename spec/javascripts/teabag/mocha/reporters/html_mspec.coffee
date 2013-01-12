@@ -4,14 +4,10 @@ describe "Mocha Teabag.Reporters.HTML", ->
     @runner = {on: @onSpy = sinon.spy()}
     @superSpy = Teabag.Reporters.HTML.__super__.constructor = sinon.spy()
     Teabag.Reporters.HTML.filter = "foo"
-    @setFilterSpy = Teabag.Reporters.HTML.prototype.setFilter = sinon.spy()
     @reportRunnerStartingSpy = Teabag.Reporters.HTML.prototype.reportRunnerStarting = sinon.spy()
     @reporter = new Teabag.Reporters.HTML(@runner)
 
   describe "constructor", ->
-
-    it "calls setFilter", ->
-      assert.calledWith(@setFilterSpy, "foo")
 
     it "calls reporterRunnerStarting", ->
       assert.calledOnce(@reportRunnerStartingSpy, "foo")

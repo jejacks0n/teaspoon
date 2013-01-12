@@ -4,16 +4,17 @@
     <title>Teabag :: Suites</title>
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag_for_teabag *@suites.first.stylesheets if @suites.first.present? %>
-    <%= javascript_include_tag_for_teabag "teabag" %>
+    <%= stylesheet_link_tag_for_teabag *(@suites.first.present? ? @suites.first.stylesheets : "teabag") %>
+    <%= javascript_include_tag_for_teabag "teabag-teabag" %>
   </head>
   <body>
-    <div id="teabag-html-reporter">
+    <div id="teabag-interface">
       <div class="teabag-clearfix">
         <div id="teabag-title">
           <h1>Teabag</h1>
           <ul>
-            <li>version: <b id="teabag-version">0.5.1</b></li>
+            <li>version: <b><%= Teabag::VERSION %></b></li>
+            <li><a href="http://github.com/modeset/teabag" target="blank">http://github.com/modeset/teabag</a></li>
           </ul>
         </div>
         <div id="teabag-progress"><div class="teabag-indicator modeset-logo"></div></div>
@@ -25,7 +26,7 @@
       <ul id="teabag-suite-list">
         <% for suite in @suites %>
           <li class="suite">
-            <h3><%= link_to suite.name.humanize, suite.link %></h3>
+            <h1><%= link_to suite.name.humanize, suite.link %></h1>
             <ul class="file">
               <% for file in suite.spec_files %>
                 <h4><%= link_to file[:name], suite.link(file: file[:path]) %></h4>

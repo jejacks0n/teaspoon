@@ -2,7 +2,6 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.HTML
 
   constructor: (runner) ->
     super
-    @setFilter(Teabag.Reporters.HTML.filter)
     @reportRunnerStarting(runner)
     runner.on("fail", @reportSpecResults)
     runner.on("test end", @reportSpecResults)

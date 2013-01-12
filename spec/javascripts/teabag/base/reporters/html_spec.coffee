@@ -1,8 +1,10 @@
 describe "Teabag.Reporters.HTML", ->
 
   beforeEach ->
+    @originalParams = Teabag.params
     @buildSpy = spyOn(Teabag.Reporters.HTML.prototype, "build")
     @readConfigSpy = spyOn(Teabag.Reporters.HTML.prototype, "readConfig")
+    Teabag.params = grep: "foo"
     @reporter = new Teabag.Reporters.HTML()
     @jasmineSuite = {getFullName: -> "_full jasmine suite description_"}
     @jasmineSpecResultsItems = [
@@ -21,14 +23,18 @@ describe "Teabag.Reporters.HTML", ->
       getFullName: -> "_full jasmine description_"
       results: => @jasmineSpecResults
 
+  afterEach ->
+    Teabag.params = @originalParams
+
   describe "constructor", ->
 
     it "sets up the expected variables", ->
+
       expect(@reporter.start).toBeDefined()
       expect(@reporter.config).toEqual("use-catch": true, "build-full-report": false, "display-progress": true)
       expect(@reporter.total).toEqual({exist: 0, run: 0, passes: 0, failures: 0, skipped: 0})
       expect(@reporter.views).toEqual({specs: {}, suites: {}})
-      expect(@reporter.filter).toEqual(false)
+      expect(@reporter.filters).toEqual(["<a href='/teabag/default'>remove</a> by match: foo"])
 
     it "calls readConfig", ->
       expect(@readConfigSpy).toHaveBeenCalled()
@@ -44,6 +50,8 @@ describe "Teabag.Reporters.HTML", ->
       @setTextSpy = spyOn(@reporter, "setText")
       @showConfigurationSpy = spyOn(@reporter, "showConfiguration")
       @buildProgressSpy = spyOn(@reporter, "buildProgress")
+      @buildSuiteSelectSpy = spyOn(@reporter, "buildSuiteSelect")
+      @buildFiltersSpy = spyOn(@reporter, "buildFilters")
       spyOn(@reporter, "envInfo").andReturn("library 1.0.0")
       @reporter.build()
 
@@ -68,18 +76,21 @@ describe "Teabag.Reporters.HTML", ->
     it "calls buildProgress", ->
       expect(@buildProgressSpy).toHaveBeenCalled()
 
+    it "calls buildSuiteSelect", ->
+      expect(@buildSuiteSelectSpy).toHaveBeenCalled()
+
+    it "calls buildFilters", ->
+      expect(@buildFiltersSpy).toHaveBeenCalled()
+
 
   describe "#buildLayout", ->
 
     beforeEach ->
       @el = {}
-      @buildSuiteSelectSpy = spyOn(@reporter, "buildSuiteSelect")
       @createElSpy = spyOn(@reporter, "createEl").andReturn(@el)
       @appendChildSpy = spyOn(document.body, "appendChild")
       @reporter.buildLayout()
 
-    it "calls buildSuiteSelect", ->
-      expect(@buildSuiteSelectSpy).toHaveBeenCalled()
 
     it "creates an element and appends it to the body", ->
       expect(@createElSpy).toHaveBeenCalledWith("div")
@@ -90,7 +101,11 @@ describe "Teabag.Reporters.HTML", ->
   describe "#buildSuiteSelect", ->
 
     beforeEach ->
+      @originalSuites = Teabag.suites
       Teabag.suites = {all: ["default", "foo", "bar"], active: "foo"}
+
+    afterEach ->
+      Teabag.suites = @originalSuites
 
     it "builds a select that displays the suites", ->
       result = @reporter.buildSuiteSelect()
@@ -318,13 +333,14 @@ describe "Teabag.Reporters.HTML", ->
   describe "#setFilter", ->
 
     beforeEach ->
-      @setClassSpy = spyOn(@reporter, "setClass")
-      @setHtmlSpy = spyOn(@reporter, "setHtml")
-      @reporter.setFilter(grep: "_filter_")
+      Teabag.params = grep: "_grep_", file: "_file_"
+      @reporter.filters = []
+      @reporter.setFilters()
 
     it "sets a class and the html for the filter display", ->
-      expect(@setClassSpy).toHaveBeenCalledWith("filter", "teabag-filtered")
-      expect(@setHtmlSpy).toHaveBeenCalledWith("filter-info", "by filter: _filter_", true)
+      expect(@reporter.filters.length).toBe(2)
+      expect(@reporter.filters[0]).toBe("<a href='/teabag/default'>remove</a> by file: _file_")
+      expect(@reporter.filters[1]).toBe("<a href='/teabag/default'>remove</a> by match: _grep_")
 
 
   describe "#readConfig", ->

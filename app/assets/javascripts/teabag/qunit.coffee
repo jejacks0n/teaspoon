@@ -11,8 +11,7 @@ class Teabag.Runner extends Teabag.Runner
 
 
   setup: ->
-    reporter = new (@getReporter())(env)
-    reporter.setFilter?(@params)
+    new (@getReporter())(env)
 
 
 

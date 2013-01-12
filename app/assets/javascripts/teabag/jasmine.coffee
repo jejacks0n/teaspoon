@@ -18,7 +18,6 @@ class Teabag.Runner extends Teabag.Runner
 
     # add the reporter and set the filter
     reporter = new (@getReporter())()
-    reporter.setFilter?(@params)
     env.addReporter(reporter)
 
     # add fixture support

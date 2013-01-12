@@ -7,19 +7,19 @@ body {
 
 /* Base Reporter
  *---------------------------------------------------------------------------*/
-#teabag-html-reporter {
+#teabag-interface {
   padding: 45px 50px 0;
   min-width: 430px;
   border-top: 3px solid #18c2e8;
   color: #000;
 }
-#teabag-html-reporter hr {
+#teabag-interface hr {
   border: 0;
   background: #cfc8c4;
   height: 1px;
   margin: 20px 0;
 }
-#teabag-html-reporter .teabag-clearfix:after {
+#teabag-interface .teabag-clearfix:after {
   content: ".";
   display: block;
   clear: both;
@@ -27,10 +27,10 @@ body {
   line-height: 0;
   height: 0;
 }
-html[xmlns] #teabag-html-reporter .teabag-clearfix {
+html[xmlns] #teabag-interface .teabag-clearfix {
   display: block;
 }
-* html #teabag-html-reporter .teabag-clearfix {
+* html #teabag-interface .teabag-clearfix {
   height: 1%;
 }
 
@@ -57,6 +57,13 @@ html[xmlns] #teabag-html-reporter .teabag-clearfix {
 }
 #teabag-title b {
   font-weight: 400;
+}
+#teabag-title a {
+  text-decoration: none;
+  color: #000;
+}
+#teabag-title a:hover {
+  text-decoration: underline;
 }
 
 /* Progress indicator
@@ -202,31 +209,16 @@ html[xmlns] #teabag-html-reporter .teabag-clearfix {
 }
 #teabag-controls input {
   margin: 0;
-  padding: 3px 8px;
+  padding: 2px 8px;
   zoom: 1;
   border: 1px solid #B3B3B3;
   outline: none;
-  font-size: 13px;
+  font-size: 12px;
   border-radius: 0.4em;
   background-color: #fff;
   width: 100%;
-  max-width: 530px;
 }
 
-#teabag-controls #teabag-filter {
-  margin-right: 220px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 200;
-  color: #7b4f49;
-}
-#teabag-controls #teabag-filter button {
-  visibility: hidden;
-}
-#teabag-controls #teabag-filter.teabag-filtered button {
-  visibility: visible;
-}
 #teabag-controls #teabag-toggles {
   float: right;
 }
@@ -245,6 +237,32 @@ html[xmlns] #teabag-html-reporter .teabag-clearfix {
   position: relative;
 }
 
+/* Filter
+ *---------------------------------------------------------------------------*/
+#teabag-filter {
+  font-weight: 200;
+  display: none;
+}
+#teabag-filter.teabag-filtered {
+  display: block;
+}
+#teabag-filter h1 {
+  font-size: 17px;
+  font-weight: 200;
+  margin: -11px 15px 0 0;
+  padding: 0 4px;
+  background: #f4f3ee;
+  text-align: right;
+  float: right;
+  color: #7b4f49;
+}
+#teabag-filter ul {
+  margin: 0;
+  padding: 2px 10px;
+  list-style: none;
+  border: 1px solid #cfc8c4;
+  border-radius: 3px;
+}
 
 /* Reporting
  *---------------------------------------------------------------------------*/
@@ -337,10 +355,10 @@ html[xmlns] #teabag-html-reporter .teabag-clearfix {
 
 /* State Overrides
  *---------------------------------------------------------------------------*/
-body.teabag-failed #teabag-html-reporter {
+body.teabag-failed #teabag-interface {
   border-top: 3px solid #ff3f3c;
 }
-body.teabag-passed #teabag-html-reporter {
+body.teabag-passed #teabag-interface {
   border-top: 3px solid #51e431;
 }
 body.teabag-failed #teabag-progress .teabag-indicator {
@@ -370,21 +388,21 @@ body.teabag-passed #teabag-progress .teabag-indicator {
   padding: 0;
 }
 #teabag-suite-list ul {
-  margin: 20px 0;
-  padding: 0;
+  margin: 0 0 20px 0;
+  padding: 0 0 0 20px;
+  /*background: rgba(200, 184, 161, 0.1);*/
 }
 #teabag-suite-list a {
   text-decoration: none;
-  color: #5a423c;
+  color: #482b25;
 }
 #teabag-suite-list a:hover {
   text-decoration: underline;
 }
-#teabag-suite-list h3 {
-  margin: 0;
+#teabag-suite-list h1 {
+  margin: 0 0 -1px 0;
   font-weight: 400;
-  font-size: 25px;
-  line-height: 25px;
+  font-size: 20px;
   border-bottom: 1px dotted #cfc8c4;
 }
 #teabag-suite-list h4 {
@@ -395,7 +413,7 @@ body.teabag-passed #teabag-progress .teabag-indicator {
 /* Responsive
  *---------------------------------------------------------------------------*/
 @media (max-width: 540px) {
-  #teabag-html-reporter {
+  #teabag-interface {
     padding: 15px 5px;
   }
   #teabag-progress {

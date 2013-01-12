@@ -4,6 +4,7 @@
 #= require teabag/base/reporters/html/spec_view
 #= require teabag/base/reporters/html/failure_view
 #= require teabag/base/reporters/html/suite_view
+#= require teabag/base/reporters/html/template
 
 class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
@@ -12,65 +13,33 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     @config = {"use-catch": true, "build-full-report": false, "display-progress": true}
     @total = {exist: 0, run: 0, passes: 0, failures: 0, skipped: 0}
     @views = {specs: {}, suites: {}}
-    @filter = false
+    @filters = []
+    @setFilters()
     @readConfig()
     super
 
 
   build: ->
     @buildLayout()
-    @el = @findEl("report-all")
+
     @setText("env-info", @envInfo())
     @setText("version", Teabag.version)
     @findEl("toggles").onclick = @toggleConfig
+
+    @findEl("suites").innerHTML = @buildSuiteSelect()
     @findEl("suite-select")?.onchange = @changeSuite
+
+    @el = @findEl("report-all")
+
     @showConfiguration()
     @buildProgress()
+    @buildFilters()
 
 
   buildLayout: ->
     el = @createEl("div")
     document.body.appendChild(el)
-    el.innerHTML = """
-      <div id="teabag-html-reporter">
-        <div class="teabag-clearfix">
-          <div id="teabag-title">
-            <h1>Teabag</h1>
-            <ul>
-              <li>version: <b id="teabag-version"></b></li>
-              <li id="teabag-env-info"></li>
-            </ul>
-          </div>
-          <div id="teabag-progress"></div>
-          <ul id="teabag-stats">
-            <li>passes: <b id="teabag-stats-passes">0</b></li>
-            <li>failures: <b id="teabag-stats-failures">0</b></li>
-            <li>skipped: <b id="teabag-stats-skipped">0</b></li>
-            <li>duration: <b id="teabag-stats-duration">&infin;</b></li>
-          </ul>
-        </div>
-
-        <div id="teabag-controls" class="teabag-clearfix">
-          <div id="teabag-toggles">
-            <button id="teabag-use-catch" title="Toggle using try/catch wrappers when possible">Try/Catch</button>
-            <button id="teabag-build-full-report" title="Toggle building the full report">Full Report</button>
-            <button id="teabag-display-progress" title="Toggle displaying progress as tests run">Progress</button>
-          </div>
-          <div id="teabag-filter">
-            #{@buildSuiteSelect()}
-            <button onclick="window.location.href = window.location.pathname">Run All</button>
-            <span id="teabag-filter-info">
-          </div>
-        </div>
-
-        <hr/>
-
-        <div id="teabag-report">
-          <ol id="teabag-report-failures"></ol>
-          <ol id="teabag-report-all"></ol>
-        </div>
-      </div>
-    """
+    el.innerHTML = Teabag.Reporters.HTML.template
 
 
   buildSuiteSelect: ->
@@ -84,6 +53,11 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
   buildProgress: ->
     @progress = Teabag.Reporters.HTML.ProgressView.create(@config["display-progress"])
     @progress.appendTo(@findEl("progress"))
+
+
+  buildFilters: ->
+    @setClass("filter", "teabag-filtered") if @filters.length
+    @setHtml("filter-list", "#{@filters.join("<br>")}", true)
 
 
   reportRunnerStarting: (runner) ->
@@ -157,15 +131,10 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     document.body.className = "teabag-#{status}"
 
 
-  setFilter: (params) ->
-    return unless params["grep"] || params["file"]
-    filters = []
-    filters.push("by filter: #{params["grep"]}") if params["grep"]
-    filters.push("by file: #{params["file"]}") if params["file"]
-    return unless filters.length
-
-    @setClass("filter", "teabag-filtered")
-    @setHtml("filter-info", "#{filters.join("<br>")}", true)
+  setFilters: ->
+    link = [Teabag.root, Teabag.suites.active].join('/')
+    @filters.push("<a href='#{link}'>remove</a> by file: #{Teabag.params["file"]}") if Teabag.params["file"]
+    @filters.push("<a href='#{link}'>remove</a> by match: #{Teabag.params["grep"]}") if Teabag.params["grep"]
 
 
   readConfig: ->
@@ -182,7 +151,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
 
   changeSuite: ->
-    window.location.href = "/teabag/#{@options[@options.selectedIndex].value}"
+    window.location.href = [Teabag.root, @options[@options.selectedIndex].value].join('/')
 
 
   refresh: ->
@@ -197,4 +166,4 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     else
       date = new Teabag.Date()
       date.setDate(date.getDate() + 365)
-      document.cookie = "#{name}=#{escape(JSON.stringify(value))}; path=\"/\"; expires=#{date.toUTCString()};"
+      document.cookie = "#{name}=#{escape(JSON.stringify(value))}; path=\"/teabag\"; expires=#{date.toUTCString()};"

@@ -6,7 +6,7 @@ class Teabag.Runner
     return if @constructor.run
     @constructor.run = true
     @fixturePath = "#{Teabag.root}/fixtures"
-    @params = @getParams()
+    @params = Teabag.params = @getParams()
     @setup()
 
 

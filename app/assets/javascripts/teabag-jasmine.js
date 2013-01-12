@@ -2665,7 +2665,7 @@ jasmine.version_= {
       }
       this.constructor.run = true;
       this.fixturePath = "" + Teabag.root + "/fixtures";
-      this.params = this.getParams();
+      this.params = Teabag.params = this.getParams();
       this.setup();
     }
 
@@ -2984,7 +2984,8 @@ jasmine.version_= {
         specs: {},
         suites: {}
       };
-      this.filter = false;
+      this.filters = [];
+      this.setFilters();
       this.readConfig();
       HTML.__super__.constructor.apply(this, arguments);
     }
@@ -2992,22 +2993,24 @@ jasmine.version_= {
     HTML.prototype.build = function() {
       var _ref;
       this.buildLayout();
-      this.el = this.findEl("report-all");
       this.setText("env-info", this.envInfo());
       this.setText("version", Teabag.version);
       this.findEl("toggles").onclick = this.toggleConfig;
+      this.findEl("suites").innerHTML = this.buildSuiteSelect();
       if ((_ref = this.findEl("suite-select")) != null) {
         _ref.onchange = this.changeSuite;
       }
+      this.el = this.findEl("report-all");
       this.showConfiguration();
-      return this.buildProgress();
+      this.buildProgress();
+      return this.buildFilters();
     };
 
     HTML.prototype.buildLayout = function() {
       var el;
       el = this.createEl("div");
       document.body.appendChild(el);
-      return el.innerHTML = "<div id=\"teabag-html-reporter\">\n  <div class=\"teabag-clearfix\">\n    <div id=\"teabag-title\">\n      <h1>Teabag</h1>\n      <ul>\n        <li>version: <b id=\"teabag-version\"></b></li>\n        <li id=\"teabag-env-info\"></li>\n      </ul>\n    </div>\n    <div id=\"teabag-progress\"></div>\n    <ul id=\"teabag-stats\">\n      <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n      <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n      <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n      <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n    </ul>\n  </div>\n\n  <div id=\"teabag-controls\" class=\"teabag-clearfix\">\n    <div id=\"teabag-toggles\">\n      <button id=\"teabag-use-catch\" title=\"Toggle using try/catch wrappers when possible\">Try/Catch</button>\n      <button id=\"teabag-build-full-report\" title=\"Toggle building the full report\">Full Report</button>\n      <button id=\"teabag-display-progress\" title=\"Toggle displaying progress as tests run\">Progress</button>\n    </div>\n    <div id=\"teabag-filter\">\n      " + (this.buildSuiteSelect()) + "\n      <button onclick=\"window.location.href = window.location.pathname\">Run All</button>\n      <span id=\"teabag-filter-info\">\n    </div>\n  </div>\n\n  <hr/>\n\n  <div id=\"teabag-report\">\n    <ol id=\"teabag-report-failures\"></ol>\n    <ol id=\"teabag-report-all\"></ol>\n  </div>\n</div>";
+      return el.innerHTML = Teabag.Reporters.HTML.template;
     };
 
     HTML.prototype.buildSuiteSelect = function() {
@@ -3027,6 +3030,13 @@ jasmine.version_= {
     HTML.prototype.buildProgress = function() {
       this.progress = Teabag.Reporters.HTML.ProgressView.create(this.config["display-progress"]);
       return this.progress.appendTo(this.findEl("progress"));
+    };
+
+    HTML.prototype.buildFilters = function() {
+      if (this.filters.length) {
+        this.setClass("filter", "teabag-filtered");
+      }
+      return this.setHtml("filter-list", "" + (this.filters.join("<br>")), true);
     };
 
     HTML.prototype.reportRunnerStarting = function(runner) {
@@ -3122,12 +3132,15 @@ jasmine.version_= {
       return document.body.className = "teabag-" + status;
     };
 
-    HTML.prototype.setFilter = function(filter) {
-      if (!filter) {
-        return;
+    HTML.prototype.setFilters = function() {
+      var link;
+      link = [Teabag.root, Teabag.suites.active].join('/');
+      if (Teabag.params["file"]) {
+        this.filters.push("<a href='" + link + "'>remove</a> by file: " + Teabag.params["file"]);
       }
-      this.setClass("filter", "teabag-filtered");
-      return this.setHtml("filter-info", "" + filter, true);
+      if (Teabag.params["grep"]) {
+        return this.filters.push("<a href='" + link + "'>remove</a> by match: " + Teabag.params["grep"]);
+      }
     };
 
     HTML.prototype.readConfig = function() {
@@ -3150,7 +3163,7 @@ jasmine.version_= {
     };
 
     HTML.prototype.changeSuite = function() {
-      return window.location.href = "/teabag/" + this.options[this.options.selectedIndex].value;
+      return window.location.href = [Teabag.root, this.options[this.options.selectedIndex].value].join('/');
     };
 
     HTML.prototype.refresh = function() {
@@ -3169,7 +3182,7 @@ jasmine.version_= {
       } else {
         date = new Teabag.Date();
         date.setDate(date.getDate() + 365);
-        return document.cookie = "" + name + "=" + (escape(JSON.stringify(value))) + "; path=\"/\"; expires=" + (date.toUTCString()) + ";";
+        return document.cookie = "" + name + "=" + (escape(JSON.stringify(value))) + "; path=\"/teabag\"; expires=" + (date.toUTCString()) + ";";
       }
     };
 
@@ -3461,6 +3474,11 @@ jasmine.version_= {
 
 }).call(this);
 (function() {
+
+  Teabag.Reporters.HTML.template = "<div id=\"teabag-interface\">\n  <div class=\"teabag-clearfix\">\n    <div id=\"teabag-title\">\n      <h1>Teabag</h1>\n      <ul>\n        <li>version: <b id=\"teabag-version\"></b></li>\n        <li id=\"teabag-env-info\"></li>\n      </ul>\n    </div>\n    <div id=\"teabag-progress\"></div>\n    <ul id=\"teabag-stats\">\n      <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n      <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n      <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n      <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n    </ul>\n  </div>\n\n  <div id=\"teabag-controls\" class=\"teabag-clearfix\">\n    <div id=\"teabag-toggles\">\n      <button id=\"teabag-use-catch\" title=\"Toggle using try/catch wrappers when possible\">Try/Catch</button>\n      <button id=\"teabag-build-full-report\" title=\"Toggle building the full report\">Full Report</button>\n      <button id=\"teabag-display-progress\" title=\"Toggle displaying progress as tests run\">Progress</button>\n    </div>\n    <div id=\"teabag-suites\"></div>\n  </div>\n\n  <hr/>\n\n  <div id=\"teabag-filter\">\n    <h1>Filtering</h1>\n    <ul id=\"teabag-filter-list\"></ul>\n  </div>\n\n  <div id=\"teabag-report\">\n    <ol id=\"teabag-report-failures\"></ol>\n    <ol id=\"teabag-report-all\"></ol>\n  </div>\n</div>";
+
+}).call(this);
+(function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   Teabag.Reporters.Console = (function() {
@@ -3628,9 +3646,6 @@ jasmine.version_= {
         };
       }
       reporter = new (this.getReporter())();
-      if (typeof reporter.setFilter === "function") {
-        reporter.setFilter(this.params["grep"]);
-      }
       env.addReporter(reporter);
       return this.addFixtureSupport();
     };
