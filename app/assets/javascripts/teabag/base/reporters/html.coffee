@@ -57,7 +57,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
   buildFilters: ->
     @setClass("filter", "teabag-filtered") if @filters.length
-    @setHtml("filter-list", "#{@filters.join("<br>")}", true)
+    @setHtml("filter-list", "<li>#{@filters.join("</li><li>")}</li>", true)
 
 
   reportRunnerStarting: (runner) ->
@@ -166,4 +166,4 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     else
       date = new Teabag.Date()
       date.setDate(date.getDate() + 365)
-      document.cookie = "#{name}=#{escape(JSON.stringify(value))}; path=\"/teabag\"; expires=#{date.toUTCString()};"
+      document.cookie = "#{name}=#{escape(JSON.stringify(value))}; expires=#{date.toUTCString()}; path=/;"

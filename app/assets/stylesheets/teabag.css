@@ -247,22 +247,30 @@ html[xmlns] #teabag-interface .teabag-clearfix {
   display: block;
 }
 #teabag-filter h1 {
-  font-size: 17px;
-  font-weight: 200;
+  float: right;
+  height: 15px;
   margin: -11px 15px 0 0;
   padding: 0 4px;
   background: #f4f3ee;
   text-align: right;
-  float: right;
+  font-size: 17px;
+  font-weight: 200;
   color: #7b4f49;
 }
 #teabag-filter ul {
   margin: 0;
-  padding: 2px 10px;
+  padding: 3px 10px 6px;
   list-style: none;
   border: 1px solid #cfc8c4;
   border-radius: 3px;
 }
+#teabag-filter li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+
 
 /* Reporting
  *---------------------------------------------------------------------------*/
