@@ -1,8 +1,8 @@
 #= require integration/spec_helper
-
 describe "Integration tests", ->
 
   it "tests", ->
+    console.log("testing console output")
     expect(true).toBe(true)
 
   it "handles multiple specs", ->
