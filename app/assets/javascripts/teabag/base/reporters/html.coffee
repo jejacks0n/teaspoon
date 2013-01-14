@@ -46,7 +46,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     return "" if Teabag.suites.all.length == 1
     options = []
     for suite in Teabag.suites.all
-      options.push("""<option#{if Teabag.suites.active == suite then " selected='selected'" else ""} value="#{suite}">#{suite} suite</option>""")
+      options.push("""<option#{if Teabag.suites.active == suite then " selected='selected'" else ""} value="#{suite}">#{suite}</option>""")
     """<select id="teabag-suite-select">#{options.join("")}</select>"""
 
 
@@ -57,7 +57,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
   buildFilters: ->
     @setClass("filter", "teabag-filtered") if @filters.length
-    @setHtml("filter-list", "<li>#{@filters.join("</li><li>")}</li>", true)
+    @setHtml("filter-list", "<li>#{@filters.join("</li><li>")}", true)
 
 
   reportRunnerStarting: (runner) ->

@@ -26,7 +26,7 @@
       <ul id="teabag-suite-list">
         <% for suite in @suites %>
           <li class="suite">
-            <h1><%= link_to suite.name.humanize, suite.link %></h1>
+            <h1><%= link_to suite.name, suite.link %></h1>
             <ul class="file">
               <% for file in suite.spec_files %>
                 <h4><%= link_to file[:name], suite.link(file: file[:path]) %></h4>
