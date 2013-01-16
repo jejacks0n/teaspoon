@@ -50,6 +50,7 @@ class @Runner
 
 
     onLoadFinished: (status) =>
+      return if @start
       @start = new Date().getTime()
       defined = @page.evaluate(-> window.Teabag)
       unless status == "success" && defined
