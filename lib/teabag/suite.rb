@@ -4,6 +4,27 @@ module Teabag
     attr_accessor :config, :name
     delegate :stylesheets, :helper, to: :config
 
+    def self.all
+      Teabag.configuration.suites.keys.map { |suite| Teabag::Suite.new(suite: suite) }
+    end
+
+    def self.resolve(file)
+      file = File.expand_path(file)
+      all.each do |suite|
+        return suite.name if suite.include?(file)
+      end
+      nil
+    end
+
+    def self.resolve_spec_for(file)
+      suites = all
+      suites.each do |suite|
+        spec = suite.include_spec_for?(file)
+        return {suite: suite.name, path: spec} if spec
+      end
+      false
+    end
+
     def initialize(options = {})
       @options = options
       @name = (@options[:suite] || :default).to_s
@@ -33,6 +54,18 @@ module Teabag
     def link(params = {})
       query = "?#{params.to_query}" if params.present?
       [Teabag.configuration.mount_at, name, query].compact.join("/")
+    end
+
+    def include?(file)
+      glob.include?(file)
+    end
+
+    def include_spec_for?(file)
+      return file if include?(file)
+      glob.each do |spec|
+        return spec if spec.include?(file)
+      end
+      false
     end
 
     protected

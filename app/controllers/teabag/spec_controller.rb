@@ -8,7 +8,7 @@ class Teabag::SpecController < ActionController::Base
   end
 
   def suites
-    @suites = Teabag.configuration.suites.keys.map { |suite| Teabag::Suite.new(suite: suite) }
+    @suites = Teabag::Suite.all
   end
 
   def runner
