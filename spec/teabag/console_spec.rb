@@ -13,7 +13,7 @@ describe Teabag::Console do
 
   before do
     subject.instance_variable_set(:@server, server)
-    subject.instance_variable_set(:@suites, [:default, :foo])
+    subject.stub(:suites).and_return([:default, :foo])
     Teabag::Environment.stub(:load)
   end
 

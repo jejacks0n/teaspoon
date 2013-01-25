@@ -42,7 +42,7 @@ module Teabag
     end
 
     def suites
-      @suites = @options[:suite].present? ? [@options[:suite]] : Teabag.configuration.suites.keys
+      @options[:suite].present? ? [@options[:suite]] : Teabag.configuration.suites.keys
     end
 
     def driver
