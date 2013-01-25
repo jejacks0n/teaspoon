@@ -44,7 +44,7 @@ module Teabag
     end
 
     def glob
-      Dir[config.matcher.present? ? Teabag.configuration.root.join(config.matcher) : ""]
+      @glob ||= Dir[config.matcher.present? ? Teabag.configuration.root.join(config.matcher) : ""]
     end
 
     def suite_configuration
