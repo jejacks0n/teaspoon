@@ -8,6 +8,7 @@ describe Teabag::Server do
 
   before do
     Teabag::Server.any_instance.stub(find_available_port: 31337)
+    STDOUT.stub(:print)
   end
 
   describe "#start" do
@@ -22,6 +23,7 @@ describe Teabag::Server do
     end
 
     it "starts a rack server" do
+      STDOUT.should_receive(:print).with("Starting server...\n")
       server = mock(start: nil)
       Thread.stub(:new) { |&b| @block = b }
 
@@ -33,8 +35,8 @@ describe Teabag::Server do
     end
 
     it "rescues errors" do
-      Thread.should_receive(:new).and_raise("OMG TEABAGGERS!")
-      expect { subject.start }.to raise_error("Cannot start server: OMG TEABAGGERS!")
+      Thread.should_receive(:new).and_raise("OMG!")
+      expect { subject.start }.to raise_error("Cannot start server: OMG!")
     end
 
   end

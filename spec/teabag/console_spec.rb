@@ -4,6 +4,12 @@ require "teabag/console"
 describe Teabag::Console do
 
   let(:server) { mock(start: nil, url: "http://url.com") }
+  subject {
+    Teabag::Console.any_instance.stub(:start_server)
+    instance = Teabag::Console.new
+    instance.instance_variable_set(:@server, server)
+    instance
+  }
 
   before do
     subject.instance_variable_set(:@server, server)
@@ -12,11 +18,6 @@ describe Teabag::Console do
   end
 
   describe "#initialize" do
-
-    it "loads the environment" do
-      Teabag::Environment.should_receive(:load).once
-      Teabag::Console.new()
-    end
 
     it "assigns @options" do
       options = {foo: "bar"}
@@ -30,11 +31,17 @@ describe Teabag::Console do
       expect(instance.instance_variable_get(:@files)).to eql(files)
     end
 
-    it "assigns @suites" do
-      instance = Teabag::Console.new({suite: "foo"})
-      expect(instance.instance_variable_get(:@suites)).to eql(["foo"])
-      instance = Teabag::Console.new()
-      expect(instance.instance_variable_get(:@suites)).to eql(Teabag.configuration.suites.keys)
+    it "loads the environment" do
+      Teabag::Environment.should_receive(:load).once
+      Teabag::Console.new()
+    end
+
+    it "starts the server" do
+      Teabag::Console.any_instance.should_receive(:start_server).and_call_original
+      Teabag::Server.should_receive(:new).and_return(server)
+      server.should_receive(:start)
+      subject.start_server
+      Teabag::Console.new()
     end
 
   end
@@ -43,11 +50,23 @@ describe Teabag::Console do
 
     before do
       STDOUT.stub(:print)
+      subject.stub(:run_specs).and_return(0)
     end
 
-    it "starts the server and calls run" do
-      STDOUT.should_receive(:print).with("Starting server...\n")
-      subject.should_receive(:start_server)
+    it "assigns @options" do
+      options = {foo: "bar"}
+      instance = Teabag::Console.new(options)
+      expect(instance.instance_variable_get(:@options)).to eql(options)
+    end
+
+    it "assigns @files" do
+      subject.instance_variable_set(:@files, ["file2"])
+      files = ["file1"]
+      subject.execute({}, files)
+      expect(subject.instance_variable_get(:@files)).to eql(files)
+    end
+
+    it "runs the tests" do
       STDOUT.should_receive(:print).with("Teabag running default suite at http://url.com/teabag/default...\n")
       STDOUT.should_receive(:print).with("Teabag running foo suite at http://url.com/teabag/foo...\n")
       subject.should_receive(:run_specs).twice.and_return(2)
@@ -55,21 +74,10 @@ describe Teabag::Console do
       expect(result).to be(true)
     end
 
-    it "starts the server and calls run" do
-      subject.should_receive(:start_server)
+    it "tracks the failure count" do
       subject.should_receive(:run_specs).twice.and_return(0)
       result = subject.execute
       expect(result).to be(false)
-    end
-
-  end
-
-  describe "#start_server" do
-
-    it "starts the server" do
-      Teabag::Server.should_receive(:new).and_return(server)
-      server.should_receive(:start)
-      subject.start_server
     end
 
   end

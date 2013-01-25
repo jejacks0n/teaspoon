@@ -11,6 +11,7 @@ module Teabag
     end
 
     def start
+      STDOUT.print "Starting server...\n" unless Teabag.configuration.suppress_log
       @thread = Thread.new do
         server = Rack::Server.new(rack_options)
         server.start

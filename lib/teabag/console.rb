@@ -11,19 +11,15 @@ module Teabag
       Teabag::Environment.load(@options)
       require "teabag/server"
       Rails.application.config.assets.debug = false if Teabag.configuration.driver == 'phantomjs'
-
-      if @options[:suite].present?
-        @suites = [@options[:suite]]
-      else
-        @suites = Teabag.configuration.suites.keys
-      end
+      start_server
     end
 
-    def execute
-      STDOUT.print "Starting server...\n" unless Teabag.configuration.suppress_log
-      start_server
+    def execute(options = {}, files = [])
+      @options = @options.merge(options) if options.present?
+      @files = files unless files.blank?
+
       failure_count = 0
-      @suites.each do |suite|
+      suites.each do |suite|
         STDOUT.print "Teabag running #{suite} suite at #{url(suite)}...\n" unless Teabag.configuration.suppress_log
         failure_count += run_specs(suite)
       end
@@ -34,16 +30,20 @@ module Teabag
       true
     end
 
-    def start_server
-      @server = Teabag::Server.new
-      @server.start
-    end
-
     def run_specs(suite)
       driver.run_specs(suite, url(suite))
     end
 
     protected
+
+    def start_server
+      @server = Teabag::Server.new
+      @server.start
+    end
+
+    def suites
+      @suites ||= @options[:suite].present? ? [@options[:suite]] : Teabag.configuration.suites.keys
+    end
 
     def driver
       @driver ||= Teabag::Drivers.const_get("#{Teabag.configuration.driver.to_s.camelize}Driver").new
