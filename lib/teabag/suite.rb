@@ -8,14 +8,6 @@ module Teabag
       Teabag.configuration.suites.keys.map { |suite| Teabag::Suite.new(suite: suite) }
     end
 
-    def self.resolve(file)
-      file = File.expand_path(file)
-      all.each do |suite|
-        return suite.name if suite.include?(file)
-      end
-      nil
-    end
-
     def self.resolve_spec_for(file)
       suites = all
       suites.each do |suite|
@@ -56,12 +48,8 @@ module Teabag
       [Teabag.configuration.mount_at, name, query].compact.join("/")
     end
 
-    def include?(file)
-      glob.include?(file)
-    end
-
     def include_spec_for?(file)
-      return file if include?(file)
+      return file if glob.include?(file)
       glob.each do |spec|
         return spec if spec.include?(file)
       end

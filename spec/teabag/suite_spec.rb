@@ -10,7 +10,28 @@ describe Teabag::Suite do
     Teabag.configuration.suites = {}
   end
 
-  describe ".new" do
+  describe ".all" do
+
+    it "returns all the suites" do
+      Teabag.configuration.suite(:foo) {}
+      results = Teabag::Suite.all
+      expect(results.first).to be_a(Teabag::Suite)
+      expect(results.length).to be(2)
+    end
+
+  end
+
+  describe ".resolve_spec_for" do
+
+    it "return a hash with the suite name and path" do
+      results = Teabag::Suite.resolve_spec_for("fixture_spec")
+      expect(results[:suite]).to eq("default")
+      expect(results[:path]).to include("base/fixture_spec.")
+    end
+
+  end
+
+  describe "#initialize" do
 
     it "uses default suite configuration" do
       expect(subject.config.helper).to eq("spec_helper")
@@ -101,6 +122,24 @@ describe Teabag::Suite do
 
     it "returns a link with added params" do
       expect(subject.link(file: ["file1", "file2"], grep: "foo")).to eql("/teabag/default/?file%5B%5D=file1&file%5B%5D=file2&grep=foo")
+    end
+
+  end
+
+  describe "#include_spec_for?" do
+
+    it "returns the spec if an exact match was found" do
+      files = subject.send(:glob)
+      expect(subject.include_spec_for?(files.first)).to eq(files.first)
+    end
+
+    it "returns the spec when the file name looks like it could be a match" do
+      files = subject.send(:glob)
+      expect(subject.include_spec_for?('fixture_spec')).to eq(files.first)
+    end
+
+    it "returns false if a matching spec isn't found" do
+      expect(subject.include_spec_for?('_not_a_match_')).to eq(false)
     end
 
   end
