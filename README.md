@@ -389,16 +389,18 @@ Specify if you want color output by default.
 
 We know that testing usually requires more than just the test framework, so we've included some of the libraries that we use on a regular basis.
 
-- [jasmine-jquery.js](https://github.com/velesin/jasmine-jquery) jQuery matchers and fixture support (Jasmine).
-- [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit (Mocha).
-- [Sinon.JS](https://github.com/cjohansen/Sinon.JS) Great for stubbing / spying, and mocking Ajax.
+- [Sinon.JS](http://sinonjs.org) Standalone test spies, stubs and mocks for JavaScript. No dependencies, works with any unit testing framework.
+- [ChaiJS](http://chaijs.com/) BDD / TDD assertion library for node and the browser that can be delightfully paired with any javascript testing framework.
+- [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit based on should.js.
+- [jasmine-jquery.js](https://github.com/velesin/jasmine-jquery) A set of custom matchers for jQuery, and an API for handling HTML fixtures in your specs.
 
 You can require these files in your spec helper by using:
 
 ```javascript
-//=require support/jasmine-jquery
 //=require support/sinon
+//=require support/chai
 //=require support/expect
+//=require support/jasmine-jquery
 ```
 
 
