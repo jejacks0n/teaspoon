@@ -13,7 +13,6 @@ describe Teabag::Console do
 
   before do
     subject.instance_variable_set(:@server, server)
-    subject.stub(:suites).and_return([:default, :foo])
     Teabag::Environment.stub(:load)
   end
 
@@ -23,12 +22,6 @@ describe Teabag::Console do
       options = {foo: "bar"}
       instance = Teabag::Console.new(options)
       expect(instance.instance_variable_get(:@options)).to eql(options)
-    end
-
-    it "assigns @files" do
-      files = ["file1"]
-      instance = Teabag::Console.new(nil, files)
-      expect(instance.instance_variable_get(:@files)).to eql(files)
     end
 
     it "loads the environment" do
@@ -42,6 +35,12 @@ describe Teabag::Console do
       server.should_receive(:start)
       subject.start_server
       Teabag::Console.new()
+    end
+
+    it "resolves the files" do
+      files = ["file1"]
+      Teabag::Console.any_instance.should_receive(:resolve).with(files)
+      Teabag::Console.new(nil, files)
     end
 
   end
@@ -59,14 +58,19 @@ describe Teabag::Console do
       expect(instance.instance_variable_get(:@options)).to eql(options)
     end
 
-    it "assigns @files" do
-      subject.instance_variable_set(:@files, ["file2"])
-      files = ["file1"]
-      subject.execute({}, files)
-      expect(subject.instance_variable_get(:@files)).to eql(files)
+    it "resolves the files" do
+      files = ["file2"]
+      Teabag::Suite.should_receive(:resolve_spec_for).with("file2").and_return(suite: "foo", path: "file2")
+      subject.execute(nil, files)
+      expect(subject.instance_variable_get(:@files)).to eq(files)
+
+      suites = subject.send(:suites)
+      expect(suites).to eq(["foo"])
+      expect(subject.send(:filter, "foo")).to eq("?file[]=file2")
     end
 
     it "runs the tests" do
+      subject.should_receive(:suites).and_return([:default, :foo])
       STDOUT.should_receive(:print).with("Teabag running default suite at http://url.com/teabag/default\n")
       STDOUT.should_receive(:print).with("Teabag running foo suite at http://url.com/teabag/foo\n")
       subject.should_receive(:run_specs).twice.and_return(2)
@@ -75,6 +79,7 @@ describe Teabag::Console do
     end
 
     it "tracks the failure count" do
+      subject.should_receive(:suites).and_return([:default, :foo])
       subject.should_receive(:run_specs).twice.and_return(0)
       result = subject.execute
       expect(result).to be(false)

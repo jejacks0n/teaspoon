@@ -10,6 +10,8 @@ module Teabag
       end
 
       require "teabag"
+      require "teabag/suite"
+      require "teabag/server"
 
       configure_from_options(options)
     end

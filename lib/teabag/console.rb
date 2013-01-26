@@ -6,17 +6,19 @@ module Teabag
 
     def initialize(options = nil, files = [])
       @options = options || {}
-      @files = files
+      @suites = {}
+      @files = []
 
       Teabag::Environment.load(@options)
-      require "teabag/server"
-      Rails.application.config.assets.debug = false if Teabag.configuration.driver == 'phantomjs'
+      Rails.application.config.assets.debug = false if Teabag.configuration.driver == "phantomjs"
+
       start_server
+      resolve(files)
     end
 
     def execute(options = {}, files = [])
       @options = @options.merge(options) if options.present?
-      @files = files unless files.blank?
+      resolve(files)
 
       failure_count = 0
       suites.each do |suite|
@@ -36,28 +38,42 @@ module Teabag
 
     protected
 
+    def resolve(files)
+      return if files.length == 0
+      @suites = {}
+      @files = files
+      files.uniq.each do |path|
+        if result = Teabag::Suite.resolve_spec_for(path)
+          suite = @suites[result[:suite]] ||= []
+          suite << result[:path]
+        end
+      end
+    end
+
     def start_server
       @server = Teabag::Server.new
       @server.start
     end
 
     def suites
-      @options[:suite].present? ? [@options[:suite]] : Teabag.configuration.suites.keys
+      return [@options[:suite]] if @options[:suite].present?
+      return @suites.keys if @suites.present?
+      Teabag.configuration.suites.keys
     end
 
     def driver
       @driver ||= Teabag::Drivers.const_get("#{Teabag.configuration.driver.to_s.camelize}Driver").new
     end
 
-    def filter
+    def filter(suite)
       parts = []
       parts << "grep=#{URI::encode(@options[:filter])}" if @options[:filter].present?
-      @files.each { |file| parts << "file[]=#{URI::encode(file)}" }
+      (@suites[suite] || @files).each { |file| parts << "file[]=#{URI::encode(file)}" }
       "?#{parts.join('&')}" if parts.present?
     end
 
     def url(suite)
-      ["#{@server.url}#{Teabag.configuration.mount_at}", suite, filter].compact.join("/")
+      ["#{@server.url}#{Teabag.configuration.mount_at}", suite, filter(suite)].compact.join("/")
     end
   end
 end
