@@ -11,6 +11,7 @@ Ok, another Javascript test runner, right? Really? Yeah, that's tough, but we're
 
 Feedback, ideas and pull requests are always welcome, or you can hit us up on Twitter [@modeset_](https://twitter.com/modeset_).
 
+If you'd like to use Teabag with [Guard](https://github.com/guard/guard), check out the [guard-teabag](https://github.com/modeset/guard-teabag) project.
 
 ## Screenshots
 
