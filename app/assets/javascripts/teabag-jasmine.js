@@ -3022,7 +3022,7 @@ jasmine.version_= {
       _ref = Teabag.suites.all;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         suite = _ref[_i];
-        options.push("<option" + (Teabag.suites.active === suite ? " selected='selected'" : "") + " value=\"" + suite + "\">" + suite + " suite</option>");
+        options.push("<option" + (Teabag.suites.active === suite ? " selected='selected'" : "") + " value=\"" + suite + "\">" + suite + "</option>");
       }
       return "<select id=\"teabag-suite-select\">" + (options.join("")) + "</select>";
     };
@@ -3036,7 +3036,7 @@ jasmine.version_= {
       if (this.filters.length) {
         this.setClass("filter", "teabag-filtered");
       }
-      return this.setHtml("filter-list", "<li>" + (this.filters.join("</li><li>")) + "</li>", true);
+      return this.setHtml("filter-list", "<li>" + (this.filters.join("</li><li>")), true);
     };
 
     HTML.prototype.reportRunnerStarting = function(runner) {
