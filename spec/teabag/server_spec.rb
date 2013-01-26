@@ -23,7 +23,7 @@ describe Teabag::Server do
     end
 
     it "starts a rack server" do
-      STDOUT.should_receive(:print).with("Starting server...\n")
+      STDOUT.should_receive(:print).with("Starting the Teabag server...\n")
       server = mock(start: nil)
       Thread.stub(:new) { |&b| @block = b }
 
