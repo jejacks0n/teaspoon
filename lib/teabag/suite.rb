@@ -2,7 +2,6 @@ module Teabag
   class Suite
 
     attr_accessor :config, :name
-    delegate :stylesheets, :helper, to: :config
 
     def self.all
       Teabag.configuration.suites.keys.map { |suite| Teabag::Suite.new(suite: suite) }
@@ -21,6 +20,14 @@ module Teabag
       @options = options
       @name = (@options[:suite] || :default).to_s
       @config = suite_configuration
+    end
+
+    def stylesheets
+      config.stylesheets
+    end
+
+    def helper
+      config.helper
     end
 
     def javascripts

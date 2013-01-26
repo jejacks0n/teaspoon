@@ -45,6 +45,14 @@ describe Teabag::Suite do
 
   end
 
+  describe "#name" do
+
+    it "returns the name of the suite" do
+      expect(subject.name).to eql("default")
+    end
+
+  end
+
   describe "#stylesheets" do
 
     it "returns an array of stylesheets" do
@@ -53,10 +61,10 @@ describe Teabag::Suite do
 
   end
 
-  describe "#name" do
+  describe "#helper" do
 
-    it "returns the name of the suite" do
-      expect(subject.name).to eql("default")
+    it "returns the javascript helper" do
+      expect(subject.helper).to eq("spec_helper")
     end
 
   end
