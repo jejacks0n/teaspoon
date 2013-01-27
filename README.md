@@ -72,7 +72,7 @@ Here's a great [Quick Start Walkthrough](https://github.com/modeset/teabag/wiki/
 http://localhost:3000/teabag
 ```
 
-You can focus tests in various ways (and we might be providing an interface for this eventually). We already provide a way to switch suites, but to run a specific file you can specify the file(s) to focus to with `/teabag?file[]=file1.js&file[]=file2.js` or `/teabag?file=file1.js`. To specify a match for the test description you can use `/teabag?grep=Calculator should add two digits`
+You can focus tests in various ways, and Teabag provides an interface to run focus tests by suite, file, and filter.
 
 ### Rake
 
@@ -92,7 +92,7 @@ The CLI provides several ways of focusing tests. You can specify the suite to ru
 
 ```
 bundle exec teabag --suite=my_fantastic_suite
-bundle exec teabag spec/javascripts/file1.js
+bundle exec teabag spec/javascripts/calculator_spec.js
 bundle exec teabag --filter="Calculator should add two digits"
 ```
 
@@ -157,11 +157,11 @@ If you're using a specific framework and you want to take advantage of the thing
 
 ### Deferring Execution
 
-Teabag allows deferring execution in the cases when you're using AMD or other asynchronous libraries. This is especially useful if you're using [CommonJS](http://www.commonjs.org/) or [RequireJS](http://requirejs.org/), etc.  You can tell Teabag to defer and then execute the runner yourself later -- after loading asychronously.
+Teabag allows deferring execution in the cases when you're using AMD or other asynchronous libraries. This is especially useful if you're using [CommonJS](http://www.commonjs.org/) or [RequireJS](http://requirejs.org/), etc.  You can tell Teabag to defer and then execute the runner yourself later -- after loading asychronously. There's a wiki article about how you can setup your specs and spec helper when using [RequireJS with Teabag](https://github.com/modeset/teabag/wiki/RequireJS-with-Teabag).
 
 ```javascript
-Teabag.defer = true
-setTimeout(Teabag.execute, 1000) // defers execution for 1 second
+Teabag.defer = true;
+setTimeout(Teabag.execute, 1000); // defers execution for 1 second
 ```
 
 
