@@ -2635,6 +2635,32 @@ jasmine.version_= {
       return new Teabag.Runner();
     };
 
+    Teabag.resolveDependenciesFromParams = function(all) {
+      var dep, deps, file, parts, path, paths, _i, _j, _len, _len1;
+      if (all == null) {
+        all = [];
+      }
+      deps = [];
+      if ((paths = window.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) === null) {
+        return all;
+      }
+      for (_i = 0, _len = paths.length; _i < _len; _i++) {
+        path = paths[_i];
+        parts = decodeURIComponent(path.replace(/\+/g, " ")).match(/\/(.+)\.(js|js.coffee|coffee)$/i);
+        if (parts === null) {
+          continue;
+        }
+        file = parts[1].substr(parts[1].lastIndexOf("/") + 1);
+        for (_j = 0, _len1 = all.length; _j < _len1; _j++) {
+          dep = all[_j];
+          if (dep.indexOf(file) >= 0) {
+            deps.push(dep);
+          }
+        }
+      }
+      return deps;
+    };
+
     Teabag.log = function() {
       var _ref;
       this.messages.push(arguments[0]);
