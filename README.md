@@ -253,128 +253,159 @@ end
 
 ### Suite Configuration Directives
 
-#### `matcher`
+<dl>
 
-You can specify a file matcher and all matching files will be loaded when the suite is run. It's important that these files are serve-able from sprockets.
+<dt> matcher </dt><dd>
+  You can specify a file matcher and all matching files will be loaded when the suite is run. It's important that these files can be served via sprockets / are within an asset path.<br/><br/>
 
-**Note:** Can also be set to `nil`.
+  <b>Note:</b> Can also be set to <code>nil</code>.<br/><br/>
 
-**default:** `"{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"`
+  <b>default:</b> <code>"{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"</code>
+</dd>
 
-#### `helper`
+<dt> helper </dt><dd>
+  Each suite can load a different spec helper, which can in turn require additional files. This file is loaded before your specs are loaded, and can be used as a manifest.<br/><br/>
 
-Each suite can load a different spec helper, which can in turn require additional files. This file is loaded before your specs are loaded, and can be used as a manifest.
+  <b>default:</b> <code>"spec_helper"</code>
+</dd>
 
-**default:** `"spec_helper"`
+<dt> javascripts </dt><dd>
+  These are the core Teabag javascripts. It's strongly encouraged to include only the base files here. You can require other support libraries in your spec helper, which allows you to change them without having to restart the server.<br/><br/>
 
-#### `javascripts`
+  <b>Note:</b> To use the CoffeeScript source files use <code>"teabag/jasmine"</code> etc.<br/><br/>
 
-These are the core Teabag javascripts. It's strongly encouraged to include only the base files here. You can require other support libraries in your spec helper, which allows you to change them without having to restart the server.
+  <b>available:</b> teabag-jasmine, teabag-mocha, teabag-qunit<br/>
+  <b>default:</b> <code>["teabag-jasmine"]</code>
+</dd>
 
-Available: teabag-jasmine, teabag-mocha, teabag-qunit
+<dt> stylesheets </dt><dd>
+  If you want to change how Teabag looks, or include your own stylesheets you can do that here. The default is the stylesheet for the HTML reporter.<br/><br/>
 
-**Note:** To use the CoffeeScript source files use `"teabag/jasmine"` etc.
+  <b>default:</b> <code>["teabag"]</code>
+</dd>
 
-**default:** `["teabag-jasmine"]`
-
-#### `stylesheets`
-
-If you want to change how Teabag looks, or include your own stylesheets you can do that here. The default is the stylesheet for the HTML reporter.
-
-**default:** `["teabag"]`
+</dl>
 
 
 ## Configuration
 
 The best way to read about the configuration options is to generate the initializer and env, but we've included the info here as well.
 
-**Note:** `Teabag.setup` may not be available in all environments. The generator provides a check wrapped around Teabag.setup.
+**Note:** `Teabag.setup` may not be available in all environments. The generator wraps it within a check.
 
-#### `mount_at`
+<dl>
 
-This determines where the Teabag routes will be mounted. Changing this to "/jasmine" would allow you to browse to http://localhost:3000/jasmine to run your specs.
+<dt> mount_at </dt><dd>
+  This determines where the Teabag routes will be mounted. Changing this to "/jasmine" would allow you to browse to http://localhost:3000/jasmine to run your specs.<br/><br/>
 
-**default:** `"/teabag"`
+  <b>default:</b> <code>"/teabag"</code>
+</dd>
 
-#### `root`
+<dt> root </dt><dd>
+  This defaults to Rails.root if left nil. If you're testing an engine using a dummy application it can be useful to set this to your engines root.. E.g. <code>Teabag::Engine.root</code><br/><br/>
 
-This defaults to Rails.root if left nil. If you're testing an engine using a dummy application it can be useful to set this to your engines root.. E.g. `Teabag::Engine.root`
+  <b>default:</b> <code>nil</code>
+</dd>
 
-**default:** `nil`
+<dt> asset_paths </dt><dd>
+  These paths are appended to the Rails assets paths (relative to config.root), and by default is an array that you can replace or add to.<br/><br/>
 
-#### `asset_paths`
+  <b>default:</b> <code>["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]</code>
+</dd>
 
-These paths are appended to the Rails assets paths (relative to config.root), and by default is an array that you can replace or add to.
+<dt> fixture_path </dt><dd>
+  Fixtures are rendered through a standard controller. This means you can use things like HAML or RABL/JBuilder, etc. to generate fixtures within this path.<br/><br/>
 
-**default:** `["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]`
+  <b>default:</b> <code>"spec/javascripts/fixtures"</code>
+</dd>
 
-#### `fixture_path`
+<dt> fixture_path </dt><dd>
+  Fixtures are rendered through a standard controller. This means you can use things like HAML or RABL/JBuilder, etc. to generate fixtures within this path.<br/><br/>
 
-Fixtures are rendered through a standard controller. This means you can use things like HAML or RABL/JBuilder, etc. to generate fixtures within this path.
+  <b>default:</b> <code>"spec/javascripts/fixtures"</code>
+</dd>
 
-**default:** `"spec/javascripts/fixtures"`
+</dl>
 
-### Console Runner Specific
+### Console Runner Specific (Teabag Env)
 
 These configuration directives are applicable only when running via the rake task or command line interface and should be set within the teabag_env.rb file. You can get this file by running the generator.
 
-#### `driver`
+<dl>
 
-Allows you to specify which driver you want to run your specs with -- Supports [PhantomJS](http://phantomjs.org/) and [Selenium Webdriver](http://seleniumhq.org/docs/03_webdriver.jsp). Check this wiki article for information about [Using Selenium WebDriver](https://github.com/modeset/teabag/wiki/Using-Selenium-WebDriver), and this one about [Using PhantomJS](https://github.com/modeset/teabag/wiki/Using-PhantomJS).
+<dt> driver </dt><dd>
+  Allows you to specify which driver to use when running headlessly. Supports <a href="http://phantomjs.org">PhantomJS</a> and <a href="http://seleniumhq.org/docs/03_webdriver.jsp">Selenium Webdriver</a>.<br/><br/>
 
-Available: phantomjs, selenium
+  Check this wiki article for information about <a href="https://github.com/modeset/teabag/wiki/Using-Selenium-WebDriver">Using Selenium WebDriver</a>, and this one about <a href="https://github.com/modeset/teabag/wiki/Using-PhantomJS">Using PhantomJS</a>.<br/><br/>
 
-- CLI: -d, --driver DRIVER
-- ENV: DRIVER=selenium
+  <b>available:</b> phantomjs, selenium<br/>
+  <b>default:</b> <code>"phantomjs"</code>
 
-**default:** `"phantomjs"`
+  <ul>
+    <li>CLI: -d, --driver DRIVER</li>
+    <li>ENV: DRIVER=selenium</li>
+  </ul>
+</dd>
 
-#### `server_timeout`
 
-Timeout for starting the server in seconds. If your server is slow to start you may have to bump this, or you may want to lower this if you know it shouldn't take long to start.
+<dt> driver </dt><dd>
+  Timeout for starting the server in seconds. If your server is slow to start you may have to bump this, or you may want to lower this if you know it shouldn't take long to start.<br/><br/>
 
-- CLI: --server-timeout SECONDS
-- ENV: SERVER_TIMEOUT=10
+  <b>default:</b> <code>20</code>
 
-**default:** `20`
+  <ul>
+    <li>CLI: --server-timeout SECONDS</li>
+    <li>ENV: SERVER_TIMEOUT=10</li>
+  </ul>
+</dd>
 
-#### `fail_fast`
 
-If you have several suites it can be useful to make Teabag fail directly after any suite contains failures, but in environments like CI this may not be desirable.
+<dt> fail_fast </dt><dd>
+  If you have several suites it can be useful to make Teabag fail directly after any suite contains failures, but in environments like CI this may not be desirable.<br/><br/>
 
-- CLI: --[no-]fail-fast
-- ENV: FAIL_FAST=false
+  <b>default:</b> <code>true</code>
 
-**default:** `true`
+  <ul>
+    <li>CLI: --[no-]fail-fast</li>
+    <li>ENV: FAIL_FAST=false</li>
+  </ul>
+</dd>
 
-#### `formatters`
+<dt> formatters </dt><dd>
+  You can specify the formatters that Teabag will use when outputting the results.<br/><br/>
 
-You can specify the formatters that Teabag will use when outputting the results.
+  <b>available:</b> dot, tap_y, swayze_or_oprah<br/>
+  <b>default:</b> <code>"dot"</code>
 
-Supported formatters: dot, tap_y, swayze_or_oprah
+  <ul>
+    <li>CLI: -f, --format FORMATTERS</li>
+    <li>ENV: FORMATTERS=dot,swayze_or_oprah</li>
+  </ul>
+</dd>
 
-- CLI: -f, --format FORMATTERS
-- ENV: FORMATTERS=dot,swayze_or_oprah
+<dt> suppress_log </dt><dd>
+  Teabag pipes all console[log/debug/error] calls to STDOUT. This is useful to catch places where you've forgotten to remove them, but in verbose applications this may not be desirable.<br/><br/>
 
-**default:** `"dot"`
+  <b>default:</b> <code>false</code>
 
-#### `suppress_log`
+  <ul>
+    <li>CLI: -q, --[no-]suppress-log</li>
+    <li>ENV: SUPPRESS_LOG=true</li>
+  </ul>
+</dd>
 
-Teabag pipes all console[log/debug/error] calls to STDOUT. This is useful to catch places where you've forgotten to remove them, but in verbose applications this may not be desirable.
+<dt> color </dt><dd>
+  Specify if you want color output by default.<br/><br/>
 
-- CLI: -q, --[no-]suppress-log
-- ENV: SUPPRESS_LOG=true
+  <b>default:</b> <code>true</code>
 
-**default:** `false`
+  <ul>
+    <li>CLI: --[no-]color</li>
+    <li>ENV: COLOR=false</li>
+  </ul>
+</dd>
 
-#### `color`
-
-Specify if you want color output by default.
-
-- CLI: --[no-]color
-- ENV: COLOR=false
-
-**default:** `true`
+</dl>
 
 
 ## Test Frameworks
