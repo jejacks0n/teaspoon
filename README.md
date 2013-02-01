@@ -319,12 +319,6 @@ The best way to read about the configuration options is to generate the initiali
   <b>default:</b> <code>"spec/javascripts/fixtures"</code>
 </dd>
 
-<dt> fixture_path </dt><dd>
-  Fixtures are rendered through a standard controller. This means you can use things like HAML or RABL/JBuilder, etc. to generate fixtures within this path.<br/><br/>
-
-  <b>default:</b> <code>"spec/javascripts/fixtures"</code>
-</dd>
-
 </dl>
 
 ### Console Runner Specific (Teabag Env)
