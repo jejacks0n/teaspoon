@@ -348,7 +348,7 @@ These configuration directives are applicable only when running via the rake tas
 </dd>
 
 
-<dt> driver </dt><dd>
+<dt> server_timeout </dt><dd>
   Timeout for starting the server in seconds. If your server is slow to start you may have to bump this, or you may want to lower this if you know it shouldn't take long to start.<br/><br/>
 
   <b>default:</b> <code>20</code>
