@@ -1,4 +1,6 @@
+#= require integration/integration
 #= require integration/spec_helper
+
 describe "Integration tests", ->
 
   it "tests", ->
