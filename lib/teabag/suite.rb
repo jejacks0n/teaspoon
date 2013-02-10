@@ -55,6 +55,12 @@ module Teabag
       [Teabag.configuration.mount_at, name, query].compact.join("/")
     end
 
+    def include_spec?(file, source = nil)
+      return true if source && source == helper
+      return true if file == helper
+      glob.include?(file)
+    end
+
     def include_spec_for?(file)
       return file if glob.include?(file)
       glob.each do |spec|

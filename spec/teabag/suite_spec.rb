@@ -13,7 +13,7 @@ describe Teabag::Suite do
   describe ".all" do
 
     it "returns all the suites" do
-      Teabag.configuration.suite(:foo) {}
+      Teabag.configuration.suite(:foo) { }
       results = Teabag::Suite.all
       expect(results.first).to be_a(Teabag::Suite)
       expect(results.length).to be(2)
@@ -130,6 +130,27 @@ describe Teabag::Suite do
 
     it "returns a link with added params" do
       expect(subject.link(file: ["file1", "file2"], grep: "foo")).to eql("/teabag/default/?file%5B%5D=file1&file%5B%5D=file2&grep=foo")
+    end
+
+  end
+
+  describe "#include_spec?" do
+
+    it "returns true if the spec was found" do
+      files = subject.send(:glob)
+      expect(subject.include_spec?(files.first)).to eq(true)
+    end
+
+    it "returns true if the file matches the spec" do
+      expect(subject.include_spec?("spec_helper")).to eq(true)
+    end
+
+    it "returns true if the source matches the spec" do
+      expect(subject.include_spec?(nil, "spec_helper")).to eq(true)
+    end
+
+    it "returns false if no match was found" do
+      expect(subject.include_spec?("foo", "bar")).to eq(false)
     end
 
   end
