@@ -40,6 +40,10 @@ module Teabag
           @options[:server_timeout] = seconds
         end
 
+        parser.on("--server-port PORT", "Sets the server to use a specific port.") do |port|
+          @options[:server_port] = port
+        end
+
         parser.on("--[no-]fail-fast", "Abort after the first failing suite.") do |o|
           @options[:fail_fast] = o
         end

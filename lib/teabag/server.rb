@@ -56,6 +56,7 @@ module Teabag
     end
 
     def find_available_port
+      return Teabag.configuration.server_port if Teabag.configuration.server_port
       server = TCPServer.new("127.0.0.1", 0)
       server.addr[1]
     ensure

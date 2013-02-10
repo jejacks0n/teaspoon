@@ -357,6 +357,18 @@ These configuration directives are applicable only when running via the rake tas
 </dd>
 
 
+<dt> server_port </dt><dd>
+  By default Teabag will locate an open port when starting the server, but if you want to run on a specific port you can do so by providing one.
+
+  <b>default:</b> <code>nil</code>
+
+  <ul>
+    <li>CLI: --server-port PORT</li>
+    <li>ENV: SERVER_PORT=31337</li>
+  </ul>
+</dd>
+
+
 <dt> fail_fast </dt><dd>
   If you have several suites it can be useful to make Teabag fail directly after any suite contains failures, but in environments like CI this may not be desirable.<br/><br/>
 
