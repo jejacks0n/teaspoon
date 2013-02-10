@@ -42,7 +42,7 @@ class @Runner
 
   pageCallbacks: ->
     onError: (message, trace) ->
-      console.log(JSON.stringify({_teabag: true, type: "error", message: message, trace: trace}))
+      console.log(JSON.stringify(_teabag: true, type: "error", message: message, trace: trace))
 
 
     onConsoleMessage: (msg) =>

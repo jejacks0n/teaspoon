@@ -22,6 +22,9 @@ describe Teabag do
       Teabag.configuration.suppress_log = false
       Teabag.configuration.fail_fast = true
       Teabag.configuration.formatters = "dot"
+      ENV["SUPPRESS_LOG"] = nil
+      ENV["FAIL_FAST"] = nil
+      ENV["FORMATTERS"] = nil
     end
 
     it "allows overriding of fail_fast and suppress_log from the env" do
@@ -32,10 +35,7 @@ describe Teabag do
       Teabag.send(:override_from_env)
       expect(Teabag.configuration.suppress_log).to eq(true)
       expect(Teabag.configuration.fail_fast).to eq(false)
-      expect(Teabag.configuration.formatters).to eq('something')
-      ENV["SUPPRESS_LOG"] = nil
-      ENV["FAIL_FAST"] = nil
-      ENV["FORMATTERS"] = nil
+      expect(Teabag.configuration.formatters).to eq(['something'])
     end
 
   end
@@ -57,11 +57,13 @@ describe Teabag::Configuration do
     expect(subject.asset_paths).to include("spec/javascripts")
     expect(subject.asset_paths).to include("spec/javascripts/stylesheets")
     expect(subject.fixture_path).to eq("spec/javascripts/fixtures")
-    expect(subject.formatters).to eq('dot')
+    expect(subject.formatters).to eq(['dot'])
     expect(subject.server_timeout).to eq(20)
     expect(subject.fail_fast).to eq(true)
     expect(subject.suppress_log).to eq(false)
     expect(subject.suites).to eq({})
+    expect(subject.coverage).to eq(false)
+    expect(subject.coverage_reports).to eq(["text-summary"])
   end
 
   it "allows setting various configuration options" do

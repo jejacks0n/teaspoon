@@ -1,0 +1,1 @@
+instrumented1 = -> 'foo'

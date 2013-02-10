@@ -16,4 +16,8 @@ describe Teabag::Engine do
     expect(Rails.application.config.assets.paths).to include(Teabag.configuration.root.join("spec/javascripts/stylesheets").to_s)
   end
 
+  it "adds the instrumentation post processor" do
+    expect(Rails.application.assets.postprocessors('application/javascript')).to include(Teabag::Instrumentation)
+  end
+
 end

@@ -12,6 +12,8 @@ class Teabag::SpecController < ActionController::Base
   end
 
   def runner
+    @javascript_options = {}
+    @javascript_options[:instrument] = Teabag.configuration.coverage || params[:coverage] == "true"
     @suite = Teabag::Suite.new(params)
   end
 

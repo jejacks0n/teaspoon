@@ -22,4 +22,16 @@ Failures:
     OUTPUT
     assert_partial_output(expected, all_output)
   end
+
+  scenario "displays coverage information" do
+    pending("needs istanbul to be installed") unless Teabag::Instrumentation.which('istanbul')
+    run_simple("bundle exec teabag -r ../../spec/teabag_env --suite=default app/assets/javascripts/integration/integration_spec.coffee --coverage-reports=text", false)
+
+    expected = <<-OUTPUT
+------------------------------+-----------+-----------+-----------+-----------+
+File                          |   % Stmts |% Branches |   % Funcs |   % Lines |
+------------------------------+-----------+-----------+-----------+-----------+
+    OUTPUT
+    assert_partial_output(expected, all_output)
+  end
 end

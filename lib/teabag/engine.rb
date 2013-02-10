@@ -14,6 +14,9 @@ module Teabag
     end
 
     config.after_initialize do |app|
+      # add in instrumentation support using istanbul
+      app.assets.register_postprocessor 'application/javascript', Teabag::Instrumentation
+
       # prepend routes so a catchall doesn't get in the way
       app.routes.prepend do
         mount Teabag::Engine => Teabag.configuration.mount_at

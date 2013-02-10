@@ -409,8 +409,31 @@ These configuration directives are applicable only when running via the rake tas
   <b>default:</b> <code>true</code>
 
   <ul>
-    <li>CLI: --[no-]color</li>
+    <li>CLI: -c, --[no-]color</li>
     <li>ENV: COLOR=false</li>
+  </ul>
+</dd>
+
+<dt> coverage </dt><dd>
+  Add instrumentation to your code and display coverage information. Requires <a href="https://github.com/gotwarlost/istanbul">istanbul</a>.<br/><br/>
+
+  <b>default:</b> <code>false</code>
+
+  <ul>
+    <li>CLI: -C, --coverage</li>
+    <li>ENV: COVERAGE=true</li>
+  </ul>
+</dd>
+
+<dt> coverage </dt><dd>
+  Specify which code coverage reports instanbul should generate.<br/><br/>
+
+  <b>available:</b> text-summary, text, html, lcov, lcovonly, cobertura<br/>
+  <b>default:</b> <code>nil</code>
+
+  <ul>
+    <li>CLI: -R, --coverage-reports REPORTS</li>
+    <li>ENV: COVERAGE_REPORTS=text,html</li>
   </ul>
 </dd>
 
