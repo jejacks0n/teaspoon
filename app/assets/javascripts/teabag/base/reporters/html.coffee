@@ -38,8 +38,9 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
   buildLayout: ->
     el = @createEl("div")
-    document.body.appendChild(el)
+    el.id = "teabag-interface"
     el.innerHTML = Teabag.Reporters.HTML.template
+    document.body.appendChild(el)
 
 
   buildSuiteSelect: ->
