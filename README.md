@@ -358,7 +358,7 @@ These configuration directives are applicable only when running via the rake tas
 
 
 <dt> server_port </dt><dd>
-  By default Teabag will locate an open port when starting the server, but if you want to run on a specific port you can do so by providing one.
+  By default Teabag will locate an open port when starting the server, but if you want to run on a specific port you can do so by providing one.<br/><br/>
 
   <b>default:</b> <code>nil</code>
 
