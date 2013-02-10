@@ -37,6 +37,7 @@ If you'd like to use Teabag with [Guard](https://github.com/guard/guard), check 
 8. [Support Libraries](#support-libraries)
 9. [CI Support](#ci-support)
 
+
 ## Installation
 
 Add it to your Gemfile. In most cases you'll want to restrict it to the `:asset`, or `:development, :test` groups.
@@ -58,6 +59,8 @@ You can tell the generator which framework you want to use, if you want coffeesc
 ```
 rails generate teabag:install --framework=mocha --coffee
 ```
+
+You can optionally [install phantomjs](http://phantomjs.org/download.html).  If phantomjs is found it will be used, otherwise the gem will be used as a fallback -- which might not be optimal.
 
 
 ## Usage

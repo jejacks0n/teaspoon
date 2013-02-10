@@ -13,9 +13,8 @@ module Teabag
     @@suites         = {"default" => proc{}}
 
     # console runner specific
-    cattr_accessor :driver, :phantomjs_bin, :server_timeout, :fail_fast, :formatters, :suppress_log, :color
+    cattr_accessor :driver, :server_timeout, :fail_fast, :formatters, :suppress_log, :color
     @@driver         = "phantomjs"
-    @@phantomjs_bin  = nil
     @@server_timeout = 20
     @@fail_fast      = true
     @@formatters     = "dot"
@@ -63,7 +62,7 @@ module Teabag
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive] == "true")
     end
-    %w(DRIVER FORMATTERS SERVER_TIMEOUT PHANTOMJS_BIN).each do |directive|
+    %w(DRIVER FORMATTERS SERVER_TIMEOUT).each do |directive|
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive])
     end

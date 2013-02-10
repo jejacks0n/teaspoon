@@ -21,7 +21,7 @@ module Teabag
       protected
 
       def executable
-        @executable ||= Teabag.configuration.phantomjs_bin || which('phantomjs')
+        @executable ||= which('phantomjs')
       end
 
       def script

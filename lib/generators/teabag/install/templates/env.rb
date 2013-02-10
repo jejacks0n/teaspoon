@@ -15,7 +15,6 @@ require File.expand_path("../../config/environment", __FILE__)
 Teabag.setup do |config|
   # Driver
   #config.driver         = "phantomjs" # available: phantomjs, selenium
-  #config.phantomjs_bin  = nil
 
   # Behaviors
   #config.server_timeout = 20 # timeout for starting the server
