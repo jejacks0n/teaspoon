@@ -222,17 +222,15 @@ Check out an example of using fixtures with [Mocha](https://github.com/modeset/t
 
 ## Coverage
 
-Teabag can use [Istanbul](https://github.com/gotwarlost/istanbul) to generate code coverage statistics and reports.  You can install Istanbul and then when running via the command line or rake task generate code coverage reports.
+Teabag can use [Istanbul](https://github.com/gotwarlost/istanbul) to generate code coverage statistics and reports. Install Istanbul and adjust the configuration to always generate coverage reports, or specify using the cli. Check the [configuration](#configuration) for more information.
 
-You can configure to always generage coverage reports, or specify using the cli. Check the [configuration](#configuration) for more information.
+The following example will generate a simple text report and an HTML report with annotated source that you can inspect further.
 
 ```shell
 bundle exec teabag --coverage-reports=text,html
 ```
 
-The above example will generate a text report, much like the following, and will also generate an HTML report with annotated source that you can inspect.
-
-An example report that's output to the console after the tests have completed.
+An example text report that's output to the console after the tests have completed.
 ```
 --------------------+-----------+-----------+-----------+-----------+
 File                |   % Stmts |% Branches |   % Funcs |   % Lines |
