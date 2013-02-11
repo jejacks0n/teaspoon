@@ -69,18 +69,9 @@ describe Teabag::Environment do
 
   describe ".configure_from_options" do
 
-    before do
-      @stored_configuration = Teabag.configuration.color
-    end
-
-    after do
-      Teabag.configuration.color = @stored_configuration
-    end
-
     it "allows overriding configuration directives from options" do
-      Teabag.configuration.color = true
+      Teabag.configuration.should_receive(:color=).with(false)
       Teabag::Environment.configure_from_options(color: false)
-      expect(Teabag.configuration.color).to be(false)
     end
 
   end

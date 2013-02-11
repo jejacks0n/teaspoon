@@ -64,7 +64,7 @@ describe Teabag::Formatters::DotFormatter do
 
       it "logs the details and raises an exception" do
         subject.failures << Teabag::Result.build_from_json("label" => "some spec", "suite" => "full description", "message" => "some message", "link" => "full description")
-        expect {
+        expect{
           subject.result("elapsed" => 0.31337)
         }.to raise_error(Teabag::Failure)
         expect(@log).to eq("\n\nFailures:\n\n  1) full description some spec\n\e[31m     Failure/Error: some message\n\n\e[0mFinished in 0.31337 seconds\n\e[31m666 examples, 1 failure\n\e[0m\nFailed examples:\n\n\e[31mteabag -s default --filter=\"full description\"\n\e[0m\n")
@@ -73,12 +73,8 @@ describe Teabag::Formatters::DotFormatter do
 
       describe "when fail_fast is false" do
 
-        after do
-          Teabag.configuration.fail_fast = true
-        end
-
         it "doesn't raise the exception" do
-          Teabag.configuration.fail_fast = false
+          Teabag.configuration.should_receive(:fail_fast).and_return(false)
           subject.failures << Teabag::Result.build_from_json("message" => "some message")
           subject.result("elapsed" => 0.31337)
           expect(subject.failures.length).to be(1)
@@ -103,7 +99,7 @@ describe Teabag::Formatters::DotFormatter do
   describe "#exception" do
 
     it "raises" do
-      expect { subject.exception }.to raise_error(Teabag::RunnerException)
+      expect{ subject.exception }.to raise_error(Teabag::RunnerException)
     end
 
   end

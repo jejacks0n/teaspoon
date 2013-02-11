@@ -3,20 +3,18 @@ require "spec_helper"
 describe Teabag::Suite do
 
   before do
-    Teabag.configuration.suite(:default) {}
-  end
-
-  after do
-    Teabag.configuration.suites = {}
+    Teabag.configuration.stub(:suites).and_return "default" => proc{}
   end
 
   describe ".all" do
 
     it "returns all the suites" do
-      Teabag.configuration.suite(:foo) { }
+      Teabag.configuration.stub(:suites).and_return "default" => proc{}, "foo" => proc{}
       results = Teabag::Suite.all
       expect(results.first).to be_a(Teabag::Suite)
       expect(results.length).to be(2)
+      expect(results.first.name).to eq("default")
+      expect(results.last.name).to eq("foo")
     end
 
   end
@@ -38,7 +36,7 @@ describe Teabag::Suite do
     end
 
     it "accepts a suite configuration name" do
-      Teabag.configuration.suite(:test) { |s| s.helper = "helper_file" }
+      Teabag.configuration.should_receive(:suites).and_return "test" => proc{ |s| s.helper = "helper_file" }
       subject = Teabag::Suite.new({suite: :test})
       expect(subject.config.helper).to eq("helper_file")
     end
@@ -176,13 +174,13 @@ describe Teabag::Suite do
   describe "#specs" do
 
     it "converts file names that are in registered asset paths into usable asset urls" do
-      Teabag.configuration.suite { |s| s.matcher = Teabag::Engine.root.join("spec/javascripts/support/*.*") }
+      Teabag.configuration.should_receive(:suites).and_return "default" => proc{ |s| s.matcher = Teabag::Engine.root.join("spec/javascripts/support/*.*") }
       expect(subject.send(:specs)).to include("support/support.js")
     end
 
     it "raises an AssetNotServable exception if the file can't be served by sprockets" do
-      Teabag.configuration.suite { |s| s.matcher = __FILE__ }
-      expect { subject.send(:specs) }.to raise_error(Teabag::AssetNotServable, "#{__FILE__} is not within an asset path")
+      Teabag.configuration.should_receive(:suites).and_return "default" => proc{ |s| s.matcher = __FILE__ }
+      expect{ subject.send(:specs) }.to raise_error(Teabag::AssetNotServable, "#{__FILE__} is not within an asset path")
     end
 
   end

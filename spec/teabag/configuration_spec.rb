@@ -19,23 +19,19 @@ describe Teabag do
   describe ".override_from_env" do
 
     after do
-      Teabag.configuration.suppress_log = false
-      Teabag.configuration.fail_fast = true
-      Teabag.configuration.formatters = "dot"
       ENV["SUPPRESS_LOG"] = nil
       ENV["FAIL_FAST"] = nil
       ENV["FORMATTERS"] = nil
     end
 
     it "allows overriding of fail_fast and suppress_log from the env" do
-      Teabag.setup { |c| config = c }
       ENV["SUPPRESS_LOG"] = "true"
       ENV["FAIL_FAST"] = "false"
       ENV["FORMATTERS"] = "something"
+      Teabag.configuration.should_receive(:suppress_log=).with(true)
+      Teabag.configuration.should_receive(:fail_fast=).with(false)
+      Teabag.configuration.should_receive(:formatters=).with("something")
       Teabag.send(:override_from_env)
-      expect(Teabag.configuration.suppress_log).to eq(true)
-      expect(Teabag.configuration.fail_fast).to eq(false)
-      expect(Teabag.configuration.formatters).to eq(['something'])
     end
 
   end
@@ -49,7 +45,7 @@ describe Teabag::Configuration do
 
   after do
     Teabag::Configuration.mount_at = "/teabag"
-    Teabag::Configuration.suites = {}
+    Teabag::Configuration.suites.delete("test_suite")
   end
 
   it "has the default configuration" do
@@ -61,7 +57,7 @@ describe Teabag::Configuration do
     expect(subject.server_timeout).to eq(20)
     expect(subject.fail_fast).to eq(true)
     expect(subject.suppress_log).to eq(false)
-    expect(subject.suites).to eq({})
+    expect(subject.suites).to be_a(Hash)
     expect(subject.coverage).to eq(false)
     expect(subject.coverage_reports).to eq(["text-summary"])
   end
