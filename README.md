@@ -224,24 +224,24 @@ Check out an example of using fixtures with [Mocha](https://github.com/modeset/t
 
 Teabag can use [Istanbul](https://github.com/gotwarlost/istanbul) to generate code coverage statistics and reports.  You can install Istanbul and then when running via the command line or rake task generate code coverage reports.
 
-You can configure to always generage coverage reports, or you using the cli. Check the [configuration](#configuration) for more information.
+You can configure to always generage coverage reports, or specify using the cli. Check the [configuration](#configuration) for more information.
 
 ```shell
 bundle exec teabag --coverage-reports=text,html
 ```
 
-The above example will generate a text report, much like the following, and will also generate an html report with annotated source.
+The above example will generate a text report, much like the following, and will also generate an HTML report with annotated source that you can inspect.
 
 An example report that's output to the console after the tests have completed.
 ```
----------------------------------+-----------+-----------+-----------+-----------+
-File                             |   % Stmts |% Branches |   % Funcs |   % Lines |
----------------------------------+-----------+-----------+-----------+-----------+
-   lib/teabag/drivers/phantomjs/ |     93.75 |        75 |     94.12 |     93.65 |
-      runner.coffee              |     93.75 |        75 |     94.12 |     93.65 |
----------------------------------+-----------+-----------+-----------+-----------+
-All files                        |     93.75 |        75 |     94.12 |     93.65 |
----------------------------------+-----------+-----------+-----------+-----------+
+--------------------+-----------+-----------+-----------+-----------+
+File                |   % Stmts |% Branches |   % Funcs |   % Lines |
+--------------------+-----------+-----------+-----------+-----------+
+  phantomjs/        |     93.75 |        75 |     94.12 |     93.65 |
+    runner.coffee   |     93.75 |        75 |     94.12 |     93.65 |
+--------------------+-----------+-----------+-----------+-----------+
+All files           |     93.75 |        75 |     94.12 |     93.65 |
+--------------------+-----------+-----------+-----------+-----------+
 ```
 
 
