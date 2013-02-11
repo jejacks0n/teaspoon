@@ -139,18 +139,6 @@ describe Teabag::Suite do
       expect(subject.include_spec?(files.first)).to eq(true)
     end
 
-    it "returns true if the file matches the spec" do
-      expect(subject.include_spec?("spec_helper")).to eq(true)
-    end
-
-    it "returns true if the source matches the spec" do
-      expect(subject.include_spec?(nil, "spec_helper")).to eq(true)
-    end
-
-    it "returns false if no match was found" do
-      expect(subject.include_spec?("foo", "bar")).to eq(false)
-    end
-
   end
 
   describe "#include_spec_for?" do
