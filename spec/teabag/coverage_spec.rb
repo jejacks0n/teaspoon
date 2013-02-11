@@ -27,7 +27,7 @@ describe Teabag::Coverage do
       subject.should_receive(:generate_report).with(@output, "text")
       subject.should_receive(:generate_report).with(@output, "text-summary")
       subject.should_receive(:generate_report).with(@output, "html")
-      expect(subject.reports).to eq("_text_report_\n_text-summary_report_")
+      expect(subject.reports).to eq("\n_text_report_\n\n_text-summary_report_\n")
     end
 
   end

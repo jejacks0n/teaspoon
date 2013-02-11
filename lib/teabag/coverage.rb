@@ -15,7 +15,7 @@ module Teabag
           result = generate_report(input, format)
           results << result if ["text", "text-summary"].include?(format.to_s)
         end
-        results.join("\n")
+        "\n#{results.join("\n\n")}\n"
       end
     end
 
@@ -24,7 +24,7 @@ module Teabag
     def generate_report(input, format)
       result = %x{#{executable} report #{format} #{input.shellescape}}
       raise "Could not generate coverage report for #{format}" unless $?.exitstatus == 0
-      result.gsub("Done\n", "").gsub("Using reporter [#{format}]\n", "").gsub("\n\n", "")
+      result.gsub("Done", "").gsub("Using reporter [#{format}]", "").strip
     end
 
     def executable
