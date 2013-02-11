@@ -31,11 +31,12 @@ If you'd like to use Teabag with [Guard](https://github.com/guard/guard), check 
 2. [Usage](#usage)
 3. [Writing Specs](#writing-specs)
 4. [Fixtures](#fixtures)
-5. [Suites](#suites)
-6. [Configuration](#configuration)
-7. [Test Frameworks](#test-frameworks)
-8. [Support Libraries](#support-libraries)
-9. [CI Support](#ci-support)
+5. [Coverage](#coverage)
+6. [Suites](#suites)
+7. [Configuration](#configuration)
+8. [Test Frameworks](#test-frameworks)
+9. [Support Libraries](#support-libraries)
+10. [CI Support](#ci-support)
 
 
 ## Installation
@@ -217,6 +218,31 @@ describe "Using fixtures", ->
 ```
 
 Check out an example of using fixtures with [Mocha](https://github.com/modeset/teabag/wiki/Using-Mocha) and [QUnit](https://github.com/modeset/teabag/wiki/Using-QUnit).
+
+
+## Coverage
+
+Teabag can use [Istanbul](https://github.com/gotwarlost/istanbul) to generate code coverage statistics and reports.  You can install Istanbul and then when running via the command line or rake task generate code coverage reports.
+
+You can configure to always generage coverage reports, or you using the cli. Check the [configuration](#configuration) for more information.
+
+```shell
+bundle exec teabag --coverage-reports=text,html
+```
+
+The above example will generate a text report, much like the following, and will also generate an html report with annotated source.
+
+An example report that's output to the console after the tests have completed.
+```
+---------------------------------+-----------+-----------+-----------+-----------+
+File                             |   % Stmts |% Branches |   % Funcs |   % Lines |
+---------------------------------+-----------+-----------+-----------+-----------+
+   lib/teabag/drivers/phantomjs/ |     93.75 |        75 |     94.12 |     93.65 |
+      runner.coffee              |     93.75 |        75 |     94.12 |     93.65 |
+---------------------------------+-----------+-----------+-----------+-----------+
+All files                        |     93.75 |        75 |     94.12 |     93.65 |
+---------------------------------+-----------+-----------+-----------+-----------+
+```
 
 
 ## Suites
