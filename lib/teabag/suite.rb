@@ -55,9 +55,7 @@ module Teabag
       [Teabag.configuration.mount_at, name, query].compact.join("/")
     end
 
-    def include_spec?(file, source = nil)
-      return true if source && source == helper
-      return true if file == helper
+    def include_spec?(file)
       glob.include?(file)
     end
 

@@ -21,7 +21,7 @@ module Teabag::SpecHelper
 
   def asset_src(dep, source, instrument = false)
     params = "?body=1"
-    params << "&instrument=1" if instrument && !@suite.include_spec?(dep.pathname.to_s, source)
+    params << "&instrument=1" if instrument && !@suite.include_spec?(dep.pathname.to_s)
     "#{Rails.application.config.assets.prefix}/#{dep.logical_path}#{params}"
   end
 end
