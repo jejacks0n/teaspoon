@@ -53,12 +53,5 @@ module Teabag
     ensure
       Teabag::Instrumentation.env = env
     end
-
-    def find_asset(path, options = {})
-      if Teabag::Instrumentation.add? && @assets[cache_key_for(path, options)]
-        @assets.delete(cache_key_for(path, options))
-      end
-      super
-    end
   end
 end
