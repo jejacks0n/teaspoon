@@ -55,6 +55,18 @@ module Teabag
       [Teabag.configuration.mount_at, name, query].compact.join("/")
     end
 
+    def instrument_file?(file)
+      return false if include_spec?(file)
+      for ignored in @config.no_coverage
+        if ignored.is_a?(String)
+          return false if File.basename(file) == ignored
+        elsif ignored.is_a?(Regexp)
+          return false if file =~ ignored
+        end
+      end
+      true
+    end
+
     def include_spec?(file)
       glob.include?(file)
     end

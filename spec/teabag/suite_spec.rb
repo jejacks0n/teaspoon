@@ -132,6 +132,29 @@ describe Teabag::Suite do
 
   end
 
+  describe "#instrument_file?" do
+
+    before do
+      Teabag.configuration.stub(:suites).and_return "default" => proc{ |s| s.no_coverage = ["file_", /some\/other/] }
+      subject.stub(:include_spec?).and_return(false)
+    end
+
+    it "returns false if the file is a spec" do
+      subject.should_receive(:include_spec?).with("_some/file_").and_return(true)
+      expect(subject.instrument_file?("_some/file_")).to be(false)
+    end
+
+    it "returns false if the file should be ignored" do
+      expect(subject.instrument_file?("_some/file_")).to be(false)
+      expect(subject.instrument_file?("_some/other_file_")).to be(false)
+    end
+
+    it "returns true if it's a valid file that should get instrumented" do
+      expect(subject.instrument_file?("_some/file_for_instrumenting_")).to be(true)
+    end
+
+  end
+
   describe "#include_spec?" do
 
     it "returns true if the spec was found" do

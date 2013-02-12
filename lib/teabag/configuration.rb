@@ -24,13 +24,14 @@ module Teabag
     @@coverage_reports = nil
 
     class Suite
-      attr_accessor :matcher, :helper, :stylesheets, :javascripts
+      attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage
 
       def initialize
         @matcher     = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
         @helper      = "spec_helper"
         @javascripts = ["teabag-jasmine"]
         @stylesheets = ["teabag"]
+        @no_coverage = [%r{/support/}, %r{/spec_helper.}, %r{/test_helper.}]
 
         yield self if block_given?
       end

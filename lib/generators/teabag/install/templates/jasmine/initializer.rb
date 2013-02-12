@@ -47,6 +47,11 @@ Teabag.setup do |config|
     # If you want to change how Teabag looks, or include your own stylesheets you can do that here. The default is the
     # stylesheet for the HTML reporter.
     suite.stylesheets = ["teabag"]
+
+    # If you're running coverage reports you may want to exclude libraries like jQuery, or support libraries that you're
+    # not testing. Accepts an array of filenames or regular expressions.
+    suite.no_coverage = [%r{/support/}, %r{/spec_helper.}]
+
   end
 
   # Example suite. Since we're just filtering to files already within the root spec/javascripts, these files will also

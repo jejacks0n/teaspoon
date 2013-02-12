@@ -224,6 +224,8 @@ Check out an example of using fixtures with [Mocha](https://github.com/modeset/t
 
 Teabag can use [Istanbul](https://github.com/gotwarlost/istanbul) to generate code coverage statistics and reports. Install Istanbul and adjust the configuration to always generate coverage reports, or specify using the cli. Check the [configuration](#configuration) for more information.
 
+Each suite allows you to specify which files should be ignored when generating coverage reports which allows you to ignore support libraries and dependencies that you're not testing.
+
 The following example will generate a simple text report and an HTML report with annotated source that you can inspect further.
 
 ```shell
@@ -309,6 +311,12 @@ end
   If you want to change how Teabag looks, or include your own stylesheets you can do that here. The default is the stylesheet for the HTML reporter.<br/><br/>
 
   <b>default:</b> <code>["teabag"]</code>
+</dd>
+
+<dt> no_coverage </dt><dd>
+  If you're running coverage reports you may want to exclude libraries like jQuery, or support libraries that you're not testing. Accepts an array of filenames or regular expressions.<br/><br/>
+
+  <b>default:</b> <code>[]</code>
 </dd>
 
 </dl>
