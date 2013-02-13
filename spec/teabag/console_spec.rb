@@ -92,7 +92,7 @@ describe Teabag::Console do
     it "calls run_specs on the driver" do
       driver = mock(run_specs: nil)
       subject.should_receive(:driver).and_return(driver)
-      driver.should_receive(:run_specs).with(:suite_name, "http://url.com/teabag/suite_name")
+      driver.should_receive(:run_specs).with(:suite_name, "http://url.com/teabag/suite_name?reporter=Console")
       subject.run_specs(:suite_name)
     end
 

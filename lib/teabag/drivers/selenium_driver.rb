@@ -9,7 +9,7 @@ module Teabag
         runner = Teabag::Runner.new(suite)
 
         driver = Selenium::WebDriver.for(:firefox)
-        driver.navigate.to("#{url}&reporter=Console")
+        driver.navigate.to(url)
 
         Selenium::WebDriver::Wait.new(timeout: 180, interval: 0.01, message: "Timed out").until do
           done = driver.execute_script("return window.Teabag && window.Teabag.finished")

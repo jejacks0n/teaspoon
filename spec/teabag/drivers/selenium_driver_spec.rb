@@ -31,7 +31,7 @@ describe Teabag::Drivers::SeleniumDriver do
     end
 
     it "navigates to the correct url" do
-      @navigate.should_receive(:to).with("_url_&reporter=Console")
+      @navigate.should_receive(:to).with("_url_")
       subject.run_specs(:default, "_url_")
     end
 
