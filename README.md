@@ -314,9 +314,9 @@ end
 </dd>
 
 <dt> no_coverage </dt><dd>
-  If you're running coverage reports you may want to exclude libraries like jQuery, or support libraries that you're not testing. Accepts an array of filenames or regular expressions.<br/><br/>
+  If you're running coverage reports you may want to exclude libraries like jQuery, or support libraries that you're not testing. Accepts an array of filenames or regular expressions. For example, to remove jQuery use "jquery.min.js" etc.<br/><br/>
 
-  <b>default:</b> <code>[]</code>
+  <b>default:</b> <code>`[%r{/support/}, %r{/(.+)_helper.}]`</code>
 </dd>
 
 </dl>

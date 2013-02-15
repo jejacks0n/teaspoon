@@ -31,7 +31,7 @@ module Teabag
         @helper      = "spec_helper"
         @javascripts = ["teabag-jasmine"]
         @stylesheets = ["teabag"]
-        @no_coverage = [%r{/support/}, %r{/spec_helper.}, %r{/test_helper.}]
+        @no_coverage = [%r{/support/}, %r{/(.+)_helper.}]
 
         yield self if block_given?
       end

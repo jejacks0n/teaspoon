@@ -50,7 +50,8 @@ Teabag.setup do |config|
 
     # If you're running coverage reports you may want to exclude libraries like jQuery, or support libraries that you're
     # not testing. Accepts an array of filenames or regular expressions.
-    suite.no_coverage = [%r{/support/}, %r{/spec_helper.}]
+    suite.no_coverage = [%r{/support/}, %r{/(.+)_helper.}]
+    # suite.no_coverage << "jquery.min.js" # excludes jquery from coverage reports
 
   end
 
