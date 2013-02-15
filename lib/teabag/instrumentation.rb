@@ -44,7 +44,7 @@ module Teabag
     end
 
     def self.instrument(input)
-      result = %x{#{Teabag::Instrumentation.executable} instrument --embed-source #{input.shellescape}}
+      result = %x{#{executable} instrument --embed-source #{input.shellescape}}
       raise "Could not generate instrumentation for #{File.basename(input)}" unless $?.exitstatus == 0
       result
     end
