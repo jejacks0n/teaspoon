@@ -44,8 +44,8 @@ module Teabag
           @options[:server_port] = port
         end
 
-        parser.on("--[no-]fail-fast", "Abort after the first failing suite.") do |o|
-          @options[:fail_fast] = o
+        parser.on("--[no-]fail-fast", "Abort after the first failing suite.") do |bool|
+          @options[:fail_fast] = bool
         end
 
         parser.separator("\n  **** Filtering ****\n\n")
@@ -61,18 +61,35 @@ module Teabag
         parser.separator("\n  **** Output ****\n\n")
 
         parser.on("-f", "--format FORMATTERS", "Specify formatters (comma separated)",
-                  "  dot (default)",
-                  "  tap_y",
-                  "  swayze_or_oprah") do |formatters|
+                  "  dot (default) - dots",
+                  "  tap_y - format used by tapout",
+                  "  swayze_or_oprah - random quote from Patrick Swayze or Oprah Winfrey") do |formatters|
           @options[:formatters] = formatters
         end
 
-        parser.on("-q", "--[no-]suppress-log", "Suppress logs coming from console[log/debug/error].") do |o|
-          @options[:suppress_log] = o
+        parser.on("-q", "--[no-]suppress-log", "Suppress logs coming from console[log/debug/error].") do |bool|
+          @options[:suppress_log] = bool
         end
 
-        parser.on("-c", "--[no-]colour", "Enable/Disable color output.") do |o|
-          @options[:color] = o
+        parser.on("-c", "--[no-]colour", "Enable/Disable color output.") do |bool|
+          @options[:color] = bool
+        end
+
+        parser.separator("\n  **** Coverage ****\n\n")
+
+        parser.on("-C", "--coverage", "Generate coverage report (requires Istanbul).") do |bool|
+          @options[:coverage] = bool
+        end
+
+        parser.on("-R", "--coverage-reports FORMATS", "Specify which coverage reports to generate (comma separated)",
+                  "  text-summary (default) - compact text summary in results",
+                  "  text - text table with coverage for all files in results",
+                  "  html - HTML files with annotated source code",
+                  "  lcov - html + lcov files",
+                  "  lcovonly - an lcov.info file",
+                  "  cobertura - cobertura-coverage.xml used by Hudson") do |reports|
+          @options[:coverage] = true
+          @options[:coverage_reports] = reports
         end
 
         parser.separator("\n  **** Utility ****\n\n")

@@ -3035,8 +3035,9 @@ jasmine.version_= {
     HTML.prototype.buildLayout = function() {
       var el;
       el = this.createEl("div");
-      document.body.appendChild(el);
-      return el.innerHTML = Teabag.Reporters.HTML.template;
+      el.id = "teabag-interface";
+      el.innerHTML = Teabag.Reporters.HTML.template;
+      return document.body.appendChild(el);
     };
 
     HTML.prototype.buildSuiteSelect = function() {
@@ -3501,7 +3502,7 @@ jasmine.version_= {
 }).call(this);
 (function() {
 
-  Teabag.Reporters.HTML.template = "<div id=\"teabag-interface\">\n  <div class=\"teabag-clearfix\">\n    <div id=\"teabag-title\">\n      <h1>Teabag</h1>\n      <ul>\n        <li>version: <b id=\"teabag-version\"></b></li>\n        <li id=\"teabag-env-info\"></li>\n      </ul>\n    </div>\n    <div id=\"teabag-progress\"></div>\n    <ul id=\"teabag-stats\">\n      <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n      <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n      <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n      <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n    </ul>\n  </div>\n\n  <div id=\"teabag-controls\" class=\"teabag-clearfix\">\n    <div id=\"teabag-toggles\">\n      <button id=\"teabag-use-catch\" title=\"Toggle using try/catch wrappers when possible\">Try/Catch</button>\n      <button id=\"teabag-build-full-report\" title=\"Toggle building the full report\">Full Report</button>\n      <button id=\"teabag-display-progress\" title=\"Toggle displaying progress as tests run\">Progress</button>\n    </div>\n    <div id=\"teabag-suites\"></div>\n  </div>\n\n  <hr/>\n\n  <div id=\"teabag-filter\">\n    <h1>Filtering</h1>\n    <ul id=\"teabag-filter-list\"></ul>\n  </div>\n\n  <div id=\"teabag-report\">\n    <ol id=\"teabag-report-failures\"></ol>\n    <ol id=\"teabag-report-all\"></ol>\n  </div>\n</div>";
+  Teabag.Reporters.HTML.template = "<div class=\"teabag-clearfix\">\n  <div id=\"teabag-title\">\n    <h1>Teabag</h1>\n    <ul>\n      <li>version: <b id=\"teabag-version\"></b></li>\n      <li id=\"teabag-env-info\"></li>\n    </ul>\n  </div>\n  <div id=\"teabag-progress\"></div>\n  <ul id=\"teabag-stats\">\n    <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n    <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n    <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n    <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n  </ul>\n</div>\n\n<div id=\"teabag-controls\" class=\"teabag-clearfix\">\n  <div id=\"teabag-toggles\">\n    <button id=\"teabag-use-catch\" title=\"Toggle using try/catch wrappers when possible\">Try/Catch</button>\n    <button id=\"teabag-build-full-report\" title=\"Toggle building the full report\">Full Report</button>\n    <button id=\"teabag-display-progress\" title=\"Toggle displaying progress as tests run\">Progress</button>\n  </div>\n  <div id=\"teabag-suites\"></div>\n</div>\n\n<hr/>\n\n<div id=\"teabag-filter\">\n  <h1>Filtering</h1>\n  <ul id=\"teabag-filter-list\"></ul>\n</div>\n\n<div id=\"teabag-report\">\n  <ol id=\"teabag-report-failures\"></ol>\n  <ol id=\"teabag-report-all\"></ol>\n</div>";
 
 }).call(this);
 (function() {
@@ -3602,7 +3603,8 @@ jasmine.version_= {
     Console.prototype.reportRunnerResults = function() {
       this.log({
         type: "result",
-        elapsed: ((new Teabag.Date().getTime() - this.start.getTime()) / 1000).toFixed(5)
+        elapsed: ((new Teabag.Date().getTime() - this.start.getTime()) / 1000).toFixed(5),
+        coverage: window.__coverage__
       });
       return Teabag.finished = true;
     };

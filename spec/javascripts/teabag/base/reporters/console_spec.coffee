@@ -141,11 +141,13 @@ describe "Teabag.Reporters.Console", ->
 
     it "logs the results", ->
       spy = spyOn(@reporter, "log")
+      window.__coverage__ ||= {}
       @reporter.reportRunnerResults()
       Teabag.finished = false
       args = spy.mostRecentCall.args[0]
       expect(args["type"]).toEqual("result")
       expect(args["elapsed"]).toBeDefined()
+      expect(args["coverage"]).toBe(window.__coverage__)
 
     it "tells Teabag that we're finished", ->
       @reporter.reportRunnerResults()

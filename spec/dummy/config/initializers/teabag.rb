@@ -26,4 +26,10 @@ Teabag.setup do |config|
     suite.helper = "qunit_helper"
   end
 
+  #config.suite :integration do |suite|
+  #  suite.matcher = "spec/dummy/app/assets/javascripts/integration/*_spec.{js,js.coffee,coffee}"
+  #  suite.javascripts = ["teabag/jasmine"]
+  #  suite.helper = nil
+  #end
+
 end if defined?(Teabag) && Teabag.respond_to?(:setup) # let Teabag be undefined outside of development/test/asset groups

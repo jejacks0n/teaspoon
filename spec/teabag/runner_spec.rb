@@ -11,20 +11,12 @@ describe Teabag::Runner do
 
   describe "constructor" do
 
-    after do
-      Teabag.configuration.formatters = "dot"
-    end
-
     it "instantiates formatters based on configuration" do
+      Teabag.configuration.should_receive(:formatters).and_return(["dot", "xml"])
       Teabag::Formatters::XmlFormatter = Class.new do
         def initialize(suite_name = :default)
         end
       end
-      Teabag.configuration.formatters = "dot, xml"
-      expect(subject.formatters[0]).to be_a(Teabag::Formatters::DotFormatter)
-      expect(subject.formatters[1]).to be_a(Teabag::Formatters::XmlFormatter)
-
-      Teabag.configuration.formatters = "dot,xml"
       expect(subject.formatters[0]).to be_a(Teabag::Formatters::DotFormatter)
       expect(subject.formatters[1]).to be_a(Teabag::Formatters::XmlFormatter)
     end
@@ -40,11 +32,10 @@ describe Teabag::Runner do
     end
 
     it "doesn't output logs when suppressed" do
-      Teabag.configuration.suppress_log = true
+      Teabag.configuration.should_receive(:suppress_log).and_return(true)
       subject.should_not_receive(:log).with("_line_")
       subject.should_receive(:output_from).and_return(false)
       subject.process("_line_")
-      Teabag.configuration.suppress_log = false
     end
 
     it "handles lines and notifies formatters when it should" do

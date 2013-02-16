@@ -36,7 +36,7 @@ describe Teabag::Server do
 
     it "rescues errors" do
       Thread.should_receive(:new).and_raise("OMG!")
-      expect { subject.start }.to raise_error("Cannot start server: OMG!")
+      expect{ subject.start }.to raise_error("Cannot start server: OMG!")
     end
 
   end
@@ -50,7 +50,7 @@ describe Teabag::Server do
 
     it "handles Timeout::Error" do
       Timeout.should_receive(:timeout).and_raise(Timeout::Error)
-      expect { subject.wait_until_started }.to raise_error("Server failed to start. You may need to increase the timeout configuration.")
+      expect{ subject.wait_until_started }.to raise_error("Server failed to start. You may need to increase the timeout configuration.")
     end
 
   end
@@ -89,11 +89,10 @@ describe Teabag::Server do
   describe "integration" do
 
     it "really starts a server" do
-      Teabag.configuration.suite(:foo) {}
+      Teabag.configuration.stub(:suites).and_return "foo" => proc{ |suite| }
       subject.start
       response = Net::HTTP.get_response(URI.parse("#{subject.url}/teabag/foo"))
       expect(response.code).to eq("200")
-      Teabag.configuration.suites = {}
     end
 
   end

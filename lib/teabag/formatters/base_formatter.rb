@@ -31,13 +31,22 @@ module Teabag
       end
 
       def result(results)
+        log_coverage(results["coverage"])
         return if failures.size == 0
+        STDOUT.print("\n")
         raise Teabag::Failure if Teabag.configuration.fail_fast
       end
 
       # Exceptions come from startup errors in the server
       def exception(exception = {})
         raise Teabag::RunnerException
+      end
+
+      private
+
+      def log_coverage(data)
+        return if data.blank? || Teabag.configuration.suppress_log
+        STDOUT.print(Teabag::Coverage.new(data).reports)
       end
     end
   end
