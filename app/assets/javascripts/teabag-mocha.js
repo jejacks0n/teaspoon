@@ -5360,8 +5360,6 @@
 
     Teabag.location = window.location;
 
-    Teabag.console = window.console;
-
     Teabag.messages = [];
 
     Teabag.execute = function() {
@@ -5379,7 +5377,7 @@
         all = [];
       }
       deps = [];
-      if ((paths = window.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) === null) {
+      if ((paths = this.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) === null) {
         return all;
       }
       for (_i = 0, _len = paths.length; _i < _len; _i++) {
@@ -5400,9 +5398,12 @@
     };
 
     Teabag.log = function() {
-      var _ref;
       this.messages.push(arguments[0]);
-      return (_ref = this.console).log.apply(_ref, arguments);
+      try {
+        return console.log.apply(console, arguments);
+      } catch (e) {
+        throw new Error("Unable to use console.log for logging");
+      }
     };
 
     Teabag.getMessages = function() {
@@ -6381,6 +6382,9 @@
     Console.prototype.reportSpecResults = function(spec, err) {
       if (err) {
         spec.err = err;
+        if (spec.type === "hook") {
+          this.reportSpecResults(spec);
+        }
         return;
       }
       return Console.__super__.reportSpecResults.apply(this, arguments);
@@ -6412,6 +6416,9 @@
     HTML.prototype.reportSpecResults = function(spec, err) {
       if (err) {
         spec.err = err;
+        if (spec.type === "hook") {
+          this.reportSpecResults(spec);
+        }
         return;
       }
       this.reportSpecStarting(spec);
@@ -6419,7 +6426,7 @@
     };
 
     HTML.prototype.envInfo = function() {
-      return "mocha 1.7.4";
+      return "mocha 1.8.1";
     };
 
     return HTML;

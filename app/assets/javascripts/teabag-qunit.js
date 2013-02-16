@@ -1998,8 +1998,6 @@
 
     Teabag.location = window.location;
 
-    Teabag.console = window.console;
-
     Teabag.messages = [];
 
     Teabag.execute = function() {
@@ -2017,7 +2015,7 @@
         all = [];
       }
       deps = [];
-      if ((paths = window.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) === null) {
+      if ((paths = this.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) === null) {
         return all;
       }
       for (_i = 0, _len = paths.length; _i < _len; _i++) {
@@ -2038,9 +2036,12 @@
     };
 
     Teabag.log = function() {
-      var _ref;
       this.messages.push(arguments[0]);
-      return (_ref = this.console).log.apply(_ref, arguments);
+      try {
+        return console.log.apply(console, arguments);
+      } catch (e) {
+        throw new Error("Unable to use console.log for logging");
+      }
     };
 
     Teabag.getMessages = function() {
