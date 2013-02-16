@@ -70,7 +70,7 @@ describe Teabag::Instrumentation do
       Teabag::Instrumentation.stub(:add?).and_return(true)
 
       File.stub(:write)
-      subject.stub(:instrument).and_return("_foo_")
+      subject.any_instance.stub(:instrument).and_return("_foo_")
 
       path = nil
       Dir.mktmpdir { |p| path = p }
@@ -84,7 +84,7 @@ describe Teabag::Instrumentation do
     end
 
     it "instruments the javascript file" do
-      subject.should_receive(:instrument).with(@output).and_return("_instrumented_")
+      subject.any_instance.should_receive(:instrument).with(@output).and_return("_instrumented_")
       subject.add_to(response, env)
     end
 

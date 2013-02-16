@@ -20,37 +20,44 @@ module Teabag
 
     def self.add_to(response, env)
       return response unless add?(response, env)
+      Teabag::Instrumentation.new(response)
+      response
+    end
 
-      status, headers, asset = response
-      instrumented = process(asset.pathname.to_s, asset.source)
+    def initialize(response)
+      status, headers, @asset = response
+      headers, @asset = [headers.clone, @asset.clone]
+      result = process_and_instrument
+      length = result.length.to_s
 
-      asset, headers = [asset.clone, headers.clone]
-      headers["Content-Length"] = instrumented.length.to_s
-      asset.instance_variable_set(:@source, instrumented)
+      headers["Content-Length"] = length
+      @asset.instance_variable_set(:@source, result)
+      @asset.instance_variable_set(:@length, length)
 
-      response.replace([status, headers, asset])
+      response.replace([status, headers, @asset])
     end
 
     private
 
-    def self.process(file, data)
+    def process_and_instrument
+      file = @asset.pathname.to_s
       Dir.mktmpdir do |path|
         filename = File.basename(file)
         input = File.join(path, filename).sub(/\.js.+/, ".js")
-        File.write(input, data)
+        File.write(input, @asset.source)
 
         instrument(input).gsub(input, file)
       end
     end
 
-    def self.instrument(input)
-      result = %x{#{executable} instrument --embed-source #{input.shellescape}}
+    def instrument(input)
+      result = %x{#{Teabag::Instrumentation.executable} instrument --embed-source #{input.shellescape}}
       raise "Could not generate instrumentation for #{File.basename(input)}" unless $?.exitstatus == 0
       result
     end
   end
 
-  class ::Sprockets::Environment
+  module SprocketsInstrumentation
     def call(env)
       Teabag::Instrumentation.add_to(super, env)
     end
