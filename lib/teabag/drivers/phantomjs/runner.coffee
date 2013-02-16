@@ -41,12 +41,17 @@ class @Runner
 
 
   pageCallbacks: ->
-    onError: (message, trace) ->
+    onError: (message, trace) =>
       console.log(JSON.stringify(_teabag: true, type: "error", message: message, trace: trace))
+      @errored = true
 
 
     onConsoleMessage: (msg) =>
       console.log(msg)
+      clearTimeout(@errorTimeout) if @errorTimeout
+      if @errored
+        @errorTimeout = setTimeout((=> @fail('Javascript error has cause a timeout.')), 1000)
+        @errored = false
 
 
     onLoadFinished: (status) =>
