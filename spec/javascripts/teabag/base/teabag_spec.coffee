@@ -15,7 +15,6 @@ describe "Teabag", ->
       # caching
       expect(keys).toContain("Date")
       expect(keys).toContain("location")
-      expect(keys).toContain("console")
 
 
   describe ".execute", ->

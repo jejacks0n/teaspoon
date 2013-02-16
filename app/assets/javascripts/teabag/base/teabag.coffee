@@ -13,7 +13,6 @@ class @Teabag
   @Reporters: {}
   @Date:      Date
   @location:  window.location
-  @console:   window.console
   @messages:  []
 
   @execute: ->
@@ -27,7 +26,7 @@ class @Teabag
   # provides interface for AMD usage -- pass all dependencies in as an array, and params will be checked for matches
   @resolveDependenciesFromParams: (all = []) ->
     deps = []
-    return all if (paths = window.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) == null
+    return all if (paths = @location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) == null
 
     for path in paths
       parts = decodeURIComponent(path.replace(/\+/g, " ")).match(/\/(.+)\.(js|js.coffee|coffee)$/i)
@@ -40,7 +39,9 @@ class @Teabag
   # logging methods -- used by selenium / phantomJS to get information back to ruby
   @log: ->
     @messages.push(arguments[0])
-    @console.log(arguments...)
+    try console.log(arguments...)
+    catch e
+      throw new Error("Unable to use console.log for logging")
 
 
   @getMessages: ->
