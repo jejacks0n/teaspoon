@@ -222,9 +222,9 @@ Check out an example of using fixtures with [Mocha](https://github.com/modeset/t
 
 ## Coverage
 
-Teabag can use [Istanbul](https://github.com/gotwarlost/istanbul) to generate code coverage statistics and reports. Install Istanbul and adjust the configuration to always generate coverage reports, or specify using the cli. Check the [configuration](#configuration) for more information.
+Teabag can use [Istanbul](https://github.com/gotwarlost/istanbul) to generate code coverage statistics and reports. Install Istanbul and adjust the configuration to always generate coverage reports, or specify by passing `--coverage` to the command line interface. Check the [configuration](#configuration) for more information.
 
-Each suite allows you to specify which files should be ignored when generating coverage reports which allows you to ignore support libraries and dependencies that you're not testing.
+Each suite allows you to specify which files should be ignored when generating coverage reports, which allows you to ignore support libraries and dependencies that you're not testing.
 
 The following example will generate a simple text report and an HTML report with annotated source that you can inspect further.
 
