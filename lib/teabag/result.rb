@@ -1,19 +1,25 @@
 module Teabag
-  class Result < Struct.new(:type, :suite, :label, :status, :skipped, :link, :message, :trace, :elapsed, :total, :start, :level)
+
+  RESULT_ATTRS = [
+    :type,
+    :suite,
+    :label,
+    :status,
+    :skipped,
+    :link,
+    :message,
+    :trace,
+    :elapsed,
+    :total,
+    :start,
+    :level,
+    :coverage
+  ]
+
+  class Result < Struct.new(*RESULT_ATTRS)
 
     def self.build_from_json(json)
-      new json["type"],
-          json["suite"],
-          json["label"],
-          json["status"],
-          json["skipped"],
-          json["link"],
-          json["message"],
-          json["trace"],
-          json["elapsed"],
-          json["total"],
-          json["start"],
-          json["level"]
+      new(*RESULT_ATTRS.map{ |attr| json[attr.to_s] })
     end
 
     def description

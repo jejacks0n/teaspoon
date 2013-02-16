@@ -64,21 +64,17 @@ describe Teabag::Formatters::DotFormatter do
 
       it "logs the details and raises an exception" do
         subject.failures << Teabag::Result.build_from_json("label" => "some spec", "suite" => "full description", "message" => "some message", "link" => "full description")
-        expect {
+        expect{
           subject.result("elapsed" => 0.31337)
         }.to raise_error(Teabag::Failure)
-        expect(@log).to eq("\n\nFailures:\n\n  1) full description some spec\n\e[31m     Failure/Error: some message\n\e[0m\nFinished in 0.31337 seconds\n\e[31m666 examples, 1 failure\n\e[0m\nFailed examples:\n\e[31m\nteabag -s default --filter=\"full description\"\e[0m\n\n")
+        expect(@log).to eq("\n\nFailures:\n\n  1) full description some spec\n\e[31m     Failure/Error: some message\n\n\e[0mFinished in 0.31337 seconds\n\e[31m666 examples, 1 failure\n\e[0m\nFailed examples:\n\n\e[31mteabag -s default --filter=\"full description\"\n\e[0m\n")
         expect(subject.failures.length).to be(1)
       end
 
       describe "when fail_fast is false" do
 
-        after do
-          Teabag.configuration.fail_fast = true
-        end
-
         it "doesn't raise the exception" do
-          Teabag.configuration.fail_fast = false
+          Teabag.configuration.should_receive(:fail_fast).and_return(false)
           subject.failures << Teabag::Result.build_from_json("message" => "some message")
           subject.result("elapsed" => 0.31337)
           expect(subject.failures.length).to be(1)
@@ -93,7 +89,7 @@ describe Teabag::Formatters::DotFormatter do
       it "logs the details" do
         subject.pendings << Teabag::Result.build_from_json("label" => "some spec", "suite" => "full description")
         subject.result("elapsed" => 0.31337)
-        expect(@log).to eq("\n\nPending:\e[33m\n  full description some spec\n\e[0m\e[36m    # Not yet implemented\n\e[0m\nFinished in 0.31337 seconds\n\e[33m666 examples, 0 failures, 1 pending\n\e[0m")
+        expect(@log).to eq("\n\nPending:\n\e[33m  full description some spec\n\e[0m\e[36m    # Not yet implemented\n\n\e[0mFinished in 0.31337 seconds\n\e[33m666 examples, 0 failures, 1 pending\n\e[0m")
       end
 
     end
@@ -103,7 +99,7 @@ describe Teabag::Formatters::DotFormatter do
   describe "#exception" do
 
     it "raises" do
-      expect { subject.exception }.to raise_error(Teabag::RunnerException)
+      expect{ subject.exception }.to raise_error(Teabag::RunnerException)
     end
 
   end

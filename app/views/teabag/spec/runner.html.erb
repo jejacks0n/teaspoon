@@ -12,7 +12,7 @@
       Teabag.root = <%=raw Teabag.configuration.mount_at.inspect %>;
       Teabag.suites = <%=raw @suite.suites.to_json %>;
     </script>
-    <%= javascript_include_tag_for_teabag *@suite.spec_javascripts %>
+    <%= javascript_include_tag_for_teabag *@suite.spec_javascripts, @javascript_options %>
     <script type="text/javascript">
       // start the execution of the specs (on onload, handling existing onload events)
       window.originalOnload = window.onload;

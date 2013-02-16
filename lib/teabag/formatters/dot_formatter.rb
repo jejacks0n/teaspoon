@@ -45,21 +45,19 @@ module Teabag
       end
 
       def log_pending
-        log "Pending:"
+        log "Pending:\n"
         pendings.each do |result|
-          log "\n  #{result.description}\n", YELLOW
-          log "    # Not yet implemented\n", CYAN
+          log "  #{result.description}\n", YELLOW
+          log "    # Not yet implemented\n\n", CYAN
         end
-        log "\n"
       end
 
       def log_failures
-        log "Failures:\n"
+        log "Failures:\n\n"
         failures.each_with_index do |failure, index|
-          log "\n  #{index + 1}) #{failure.description}\n"
-          log "     Failure/Error: #{failure.message}\n", RED
+          log "  #{index + 1}) #{failure.description}\n"
+          log "     Failure/Error: #{failure.message}\n\n", RED
         end
-        log "\n"
       end
 
       def log_stats(results)
@@ -67,15 +65,15 @@ module Teabag
         stats = "#{pluralize("example", total)}, #{pluralize("failure", failures.size)}"
         stats << ", #{pendings.size} pending" if pendings.size > 0
         log "#{stats}\n", stats_color
+        log "\n" unless failures.size == 0
       end
 
       def log_failed_examples
         return if failures.size == 0
-        log "\nFailed examples:\n"
+        log "Failed examples:\n\n"
         failures.each do |failure|
-          log "\nteabag -s #{@suite_name} --filter=\"#{failure.link}\"", RED
+          log "teabag -s #{@suite_name} --filter=\"#{failure.link}\"\n", RED
         end
-        log "\n\n"
       end
 
       private

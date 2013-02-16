@@ -14,6 +14,9 @@ module Teabag
     end
 
     config.after_initialize do |app|
+      # inject our sprockets hack for instrumenting javacsripts
+      Sprockets::Environment.send(:include, Teabag::SprocketsInstrumentation)
+
       # prepend routes so a catchall doesn't get in the way
       app.routes.prepend do
         mount Teabag::Engine => Teabag.configuration.mount_at

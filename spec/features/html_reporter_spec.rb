@@ -3,14 +3,10 @@ require "spec_helper"
 feature "testing with teabag in the browser", js: true do
 
   before do
-    Teabag.configuration.suite :integration do |suite|
+    Teabag.configuration.stub(:suites).and_return "integration" => proc{ |suite|
       suite.matcher = "spec/dummy/app/assets/javascripts/integration/*_spec.{js,js.coffee,coffee}"
       suite.helper = nil
-    end
-  end
-
-  after do
-    Teabag.configuration.suites = {}
+    }
   end
 
   scenario "gives me the expected results" do

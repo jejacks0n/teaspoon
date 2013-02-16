@@ -67,6 +67,7 @@ class Teabag.Reporters.Console
     @log
       type:    "result"
       elapsed: ((new Teabag.Date().getTime() - @start.getTime()) / 1000).toFixed(5)
+      coverage: window.__coverage__
     Teabag.finished = true
 
 

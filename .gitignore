@@ -3,6 +3,7 @@
 log/*.log
 pkg/
 tmp
+coverage
 
 spec/dummy/log/*.log
 spec/dummy/tmp/

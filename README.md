@@ -31,11 +31,12 @@ If you'd like to use Teabag with [Guard](https://github.com/guard/guard), check 
 2. [Usage](#usage)
 3. [Writing Specs](#writing-specs)
 4. [Fixtures](#fixtures)
-5. [Suites](#suites)
-6. [Configuration](#configuration)
-7. [Test Frameworks](#test-frameworks)
-8. [Support Libraries](#support-libraries)
-9. [CI Support](#ci-support)
+5. [Coverage](#coverage)
+6. [Suites](#suites)
+7. [Configuration](#configuration)
+8. [Test Frameworks](#test-frameworks)
+9. [Support Libraries](#support-libraries)
+10. [CI Support](#ci-support)
 
 
 ## Installation
@@ -219,6 +220,31 @@ describe "Using fixtures", ->
 Check out an example of using fixtures with [Mocha](https://github.com/modeset/teabag/wiki/Using-Mocha) and [QUnit](https://github.com/modeset/teabag/wiki/Using-QUnit).
 
 
+## Coverage
+
+Teabag can use [Istanbul](https://github.com/gotwarlost/istanbul) to generate code coverage statistics and reports. Install Istanbul and adjust the configuration to always generate coverage reports, or specify using the cli. Check the [configuration](#configuration) for more information.
+
+Each suite allows you to specify which files should be ignored when generating coverage reports which allows you to ignore support libraries and dependencies that you're not testing.
+
+The following example will generate a simple text report and an HTML report with annotated source that you can inspect further.
+
+```shell
+bundle exec teabag --coverage-reports=text,html
+```
+
+An example text report that's output to the console after the tests have completed.
+```
+--------------------+-----------+-----------+-----------+-----------+
+File                |   % Stmts |% Branches |   % Funcs |   % Lines |
+--------------------+-----------+-----------+-----------+-----------+
+  phantomjs/        |     93.75 |        75 |     94.12 |     93.65 |
+    runner.coffee   |     93.75 |        75 |     94.12 |     93.65 |
+--------------------+-----------+-----------+-----------+-----------+
+All files           |     93.75 |        75 |     94.12 |     93.65 |
+--------------------+-----------+-----------+-----------+-----------+
+```
+
+
 ## Suites
 
 Teabag uses the concept of suites to group your tests at a high level. These suites are run in isolation from one another, and can have different configurations. You can define suites in the configuration, and for brevity `config` is the argument passed to the `Teabag.setup` block.
@@ -285,6 +311,12 @@ end
   If you want to change how Teabag looks, or include your own stylesheets you can do that here. The default is the stylesheet for the HTML reporter.<br/><br/>
 
   <b>default:</b> <code>["teabag"]</code>
+</dd>
+
+<dt> no_coverage </dt><dd>
+  If you're running coverage reports you may want to exclude libraries like jQuery, or support libraries that you're not testing. Accepts an array of filenames or regular expressions. For example, to remove jQuery use "jquery.min.js" etc.<br/><br/>
+
+  <b>default:</b> <code>`[%r{/support/}, %r{/(.+)_helper.}]`</code>
 </dd>
 
 </dl>
@@ -409,8 +441,31 @@ These configuration directives are applicable only when running via the rake tas
   <b>default:</b> <code>true</code>
 
   <ul>
-    <li>CLI: --[no-]color</li>
+    <li>CLI: -c, --[no-]color</li>
     <li>ENV: COLOR=false</li>
+  </ul>
+</dd>
+
+<dt> coverage </dt><dd>
+  Add instrumentation to your code and display coverage information. Requires <a href="https://github.com/gotwarlost/istanbul">istanbul</a>.<br/><br/>
+
+  <b>default:</b> <code>false</code>
+
+  <ul>
+    <li>CLI: -C, --coverage</li>
+    <li>ENV: COVERAGE=true</li>
+  </ul>
+</dd>
+
+<dt> coverage </dt><dd>
+  Specify which code coverage reports instanbul should generate.<br/><br/>
+
+  <b>available:</b> text-summary, text, html, lcov, lcovonly, cobertura<br/>
+  <b>default:</b> <code>nil</code>
+
+  <ul>
+    <li>CLI: -R, --coverage-reports REPORTS</li>
+    <li>ENV: COVERAGE_REPORTS=text,html</li>
   </ul>
 </dd>
 
