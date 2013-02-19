@@ -8,7 +8,7 @@ class Teabag.Reporters.Console
   reportRunnerStarting: (runner) ->
     @log
       type:  "runner"
-      total: runner.total || runner.specs().length
+      total: runner.total || runner.specs?().length || 0
       start: JSON.parse(JSON.stringify(@start))
 
 

@@ -62,7 +62,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
 
 
   reportRunnerStarting: (runner) ->
-    @total.exist = runner.total || runner.specs().length
+    @total.exist = runner.total || runner.specs?().length || 0
     @setText("stats-duration", "...") if @total.exist
 
 

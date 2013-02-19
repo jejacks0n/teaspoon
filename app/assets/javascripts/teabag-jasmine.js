@@ -3068,7 +3068,7 @@ jasmine.version_= {
     };
 
     HTML.prototype.reportRunnerStarting = function(runner) {
-      this.total.exist = runner.total || runner.specs().length;
+      this.total.exist = runner.total || (typeof runner.specs === "function" ? runner.specs().length : void 0) || 0;
       if (this.total.exist) {
         return this.setText("stats-duration", "...");
       }
@@ -3520,7 +3520,7 @@ jasmine.version_= {
     Console.prototype.reportRunnerStarting = function(runner) {
       return this.log({
         type: "runner",
-        total: runner.total || runner.specs().length,
+        total: runner.total || (typeof runner.specs === "function" ? runner.specs().length : void 0) || 0,
         start: JSON.parse(JSON.stringify(this.start))
       });
     };
