@@ -33,6 +33,8 @@ module Teabag
         @stylesheets = ["teabag"]
         @no_coverage = [%r{/support/}, %r{/(.+)_helper.}]
 
+        default = Teabag.configuration.suites["default"]
+        self.instance_eval(&default) if default
         yield self if block_given?
       end
     end
