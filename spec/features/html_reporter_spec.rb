@@ -10,7 +10,7 @@ feature "testing with teabag in the browser", js: true do
   end
 
   scenario "gives me the expected results" do
-    visit "/teabag/integration"
+    visit "/teabag/integration?reporter=HTML"
 
     within("#teabag-progress") do
       expect(find("em")).to have_text("100%")
