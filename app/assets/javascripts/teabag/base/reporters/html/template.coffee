@@ -1,7 +1,7 @@
 Teabag.Reporters.HTML.template = """
 <div class="teabag-clearfix">
   <div id="teabag-title">
-    <h1>Teabag</h1>
+    <h1><a href="" id="teabag-root-link">Teabag</a></h1>
     <ul>
       <li>version: <b id="teabag-version"></b></li>
       <li id="teabag-env-info"></li>

@@ -29,6 +29,8 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.BaseView
     @findEl("suites").innerHTML = @buildSuiteSelect()
     @findEl("suite-select")?.onchange = @changeSuite
 
+    @findEl("root-link").href = Teabag.root
+
     @el = @findEl("report-all")
 
     @showConfiguration()
