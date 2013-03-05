@@ -2,6 +2,7 @@ class Teabag.fixture
 
   @cache: {}
   @el: null
+  @$el: null # will only be defined if window.$ is defined.
   @json: []
 
   # Public API
@@ -74,6 +75,7 @@ class Teabag.fixture
 
   create = =>
     Teabag.fixture.el = document.createElement("div")
+    Teabag.fixture.$el = $(Teabag.fixture.el) if typeof(window.$) == 'function'
     Teabag.fixture.el.id = "teabag-fixtures"
     document.body?.appendChild(Teabag.fixture.el)
 

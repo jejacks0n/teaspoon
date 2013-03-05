@@ -2738,6 +2738,8 @@ jasmine.version_= {
 
     fixture.el = null;
 
+    fixture.$el = null;
+
     fixture.json = [];
 
     fixture.preload = function() {
@@ -2865,6 +2867,9 @@ jasmine.version_= {
     create = function() {
       var _ref;
       Teabag.fixture.el = document.createElement("div");
+      if (typeof window.$ === 'function') {
+        Teabag.fixture.$el = $(Teabag.fixture.el);
+      }
       Teabag.fixture.el.id = "teabag-fixtures";
       return (_ref = document.body) != null ? _ref.appendChild(Teabag.fixture.el) : void 0;
     };
