@@ -14,6 +14,12 @@ Teabag.setup do |config|
     suite.helper = "jasmine_helper"
   end
 
+  config.suite :jasmine2 do |suite|
+    suite.matcher = "spec/javascripts/**/*_jspec.{js,js.coffee,coffee}"
+    suite.javascripts = ["teabag/jasmine2"]
+    suite.helper = "jasmine2_helper"
+  end
+
   config.suite :mocha do |suite|
     suite.matcher = "spec/javascripts/**/*_mspec.{js,js.coffee,coffee}"
     suite.javascripts = ["teabag/mocha"]
