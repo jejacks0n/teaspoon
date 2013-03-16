@@ -6,10 +6,10 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.HTML
 
 
   bindScenarioOutput: (context, runner, model) =>
-    model.on "Specbegin", (spec) => @reportSpecStarting(spec)
-    model.on "SpecEnd", (spec) => @reportSpecResults(spec)
-    model.on "RunnerEnd", => @reportRunnerResults()
-    model.on "RunnerBegin", =>
+#    model.on "specBegin", (spec) => @reportSpecStarting(spec)
+    model.on "specEnd", (spec) => @reportSpecResults(spec)
+    model.on "runnerEnd", => @reportRunnerResults()
+    model.on "runnerBegin", =>
       @reportRunnerStarting(total: angular.scenario.Describe.specId)
       header = document.getElementById("header")
       header.parentNode.removeChild(header) if header

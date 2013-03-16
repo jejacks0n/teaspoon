@@ -26581,7 +26581,7 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
 }).call(this);
 (function() {
-  var _this = this,
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -26590,13 +26590,9 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
     __extends(HTML, _super);
 
     function HTML() {
-      var _this = this;
-      this.toggleConfig = function(e) {
-        return HTML.prototype.toggleConfig.apply(_this, arguments);
-      };
-      this.reportRunnerResults = function() {
-        return HTML.prototype.reportRunnerResults.apply(_this, arguments);
-      };
+      this.toggleConfig = __bind(this.toggleConfig, this);
+
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
       this.start = new Teabag.Date().getTime();
       this.config = {
         "use-catch": true,
@@ -27111,15 +27107,12 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
 }).call(this);
 (function() {
-  var _this = this;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   Teabag.Reporters.Console = (function() {
 
     function Console() {
-      var _this = this;
-      this.reportRunnerResults = function() {
-        return Console.prototype.reportRunnerResults.apply(_this, arguments);
-      };
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
       this.start = new Teabag.Date();
       this.suites = {};
     }
@@ -27231,7 +27224,8 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
 }).call(this);
 (function() {
-  var __hasProp = {}.hasOwnProperty,
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.Console = (function(_super) {
@@ -27239,22 +27233,25 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
     __extends(Console, _super);
 
     function Console() {
-      var _this = this;
+      this.bindScenarioOutput = __bind(this.bindScenarioOutput, this);
       Console.__super__.constructor.apply(this, arguments);
-      angular.scenario.output('teabag', function(_context, _runner, model) {
-        model.on('RunnerBegin', function() {
-          return _this.reportRunnerStarting({
-            total: angular.scenario.Describe.specId
-          });
-        });
-        model.on('SpecEnd', function(spec) {
-          return _this.reportSpecResults(spec);
-        });
-        return model.on('RunnerEnd', function() {
-          return _this.reportRunnerResults();
+      angular.scenario.output("teabag", this.bindScenarioOutput);
+    }
+
+    Console.prototype.bindScenarioOutput = function(context, runner, model) {
+      var _this = this;
+      model.on("runnerBegin", function() {
+        return _this.reportRunnerStarting({
+          total: angular.scenario.Describe.specId
         });
       });
-    }
+      model.on("specEnd", function(spec) {
+        return _this.reportSpecResults(spec);
+      });
+      return model.on("runnerEnd", function() {
+        return _this.reportRunnerResults();
+      });
+    };
 
     return Console;
 
@@ -27262,42 +27259,43 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
 }).call(this);
 (function() {
-  var __hasProp = {}.hasOwnProperty,
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML = (function(_super) {
 
     __extends(HTML, _super);
 
-    function HTML(runner) {
-      var _this = this;
+    function HTML() {
+      this.bindScenarioOutput = __bind(this.bindScenarioOutput, this);
       HTML.__super__.constructor.apply(this, arguments);
-      angular.scenario.output('teabag', function(_context, _runner, model) {
-        model.on('RunnerBegin', function() {
-          var header, specs;
-          _this.reportRunnerStarting({
-            total: angular.scenario.Describe.specId
-          });
-          header = document.getElementById('header');
-          if (header) {
-            header.parentNode.removeChild(header);
-          }
-          specs = document.getElementById('specs');
-          if (specs) {
-            return specs.style.paddingTop = 0;
-          }
-        });
-        model.on('Specbegin', function(spec) {
-          return _this.reportSpecStarting(spec);
-        });
-        model.on('SpecEnd', function(spec) {
-          return _this.reportSpecResults(spec);
-        });
-        return model.on('RunnerEnd', function() {
-          return _this.reportRunnerResults();
-        });
-      });
+      angular.scenario.output("teabag", this.bindScenarioOutput);
     }
+
+    HTML.prototype.bindScenarioOutput = function(context, runner, model) {
+      var _this = this;
+      model.on("specEnd", function(spec) {
+        return _this.reportSpecResults(spec);
+      });
+      model.on("runnerEnd", function() {
+        return _this.reportRunnerResults();
+      });
+      return model.on("runnerBegin", function() {
+        var header, specs;
+        _this.reportRunnerStarting({
+          total: angular.scenario.Describe.specId
+        });
+        header = document.getElementById("header");
+        if (header) {
+          header.parentNode.removeChild(header);
+        }
+        specs = document.getElementById("specs");
+        if (specs) {
+          return specs.style.paddingTop = 0;
+        }
+      });
+    };
 
     HTML.prototype.envInfo = function() {
       return "angular-scenario 1.0.5";
@@ -27323,7 +27321,7 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
     Runner.prototype.setup = function() {
       new (this.getReporter())(this);
       return angular.scenario.setUpAndRun({
-        scenario_output: 'teabag,html'
+        scenario_output: "teabag,html"
       });
     };
 
@@ -27357,7 +27355,7 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         step = _ref[_i];
-        if (step.status === 'success') {
+        if (step.status === "success") {
           continue;
         }
         _results.push({
@@ -27370,9 +27368,9 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Spec.prototype.result = function() {
       var status;
-      status = 'failed';
-      if (this.spec.status === 'success') {
-        status = 'passed';
+      status = "failed";
+      if (this.spec.status === "success") {
+        status = "passed";
       }
       return {
         status: status,
@@ -27391,7 +27389,9 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
       this.fullDescription = this.suite.fullDefinitionName;
       this.description = this.suite.fullDefinitionName;
       this.link = "#";
-      this.parent = null;
+      this.parent = {
+        root: true
+      };
       this.viewId = null;
     }
 

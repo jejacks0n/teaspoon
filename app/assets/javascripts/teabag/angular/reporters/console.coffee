@@ -6,6 +6,6 @@ class Teabag.Reporters.Console extends Teabag.Reporters.Console
 
 
   bindScenarioOutput: (context, runner, model) =>
-    model.on "RunnerBegin", => @reportRunnerStarting(total: angular.scenario.Describe.specId)
-    model.on "SpecEnd", (spec) => @reportSpecResults(spec)
-    model.on "RunnerEnd", => @reportRunnerResults()
+    model.on "runnerBegin", => @reportRunnerStarting(total: angular.scenario.Describe.specId)
+    model.on "specEnd", (spec) => @reportSpecResults(spec)
+    model.on "runnerEnd", => @reportRunnerResults()
