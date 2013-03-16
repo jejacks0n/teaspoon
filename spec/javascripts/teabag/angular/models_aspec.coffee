@@ -1,30 +1,28 @@
-describe "Angular Teabag.Spec", () ->
+describe "Angular Teabag.Spec", ->
 
   beforeEach ->
-    @mockStep = {
-      name: "_step name_",
-      startTime: 1363303012091,
-      endTime: 1363303012790,
-      duration: 699,
-      status: "failure",
-      line: "_step line_",
+    @mockStep =
+      name: "_step name_"
+      startTime: 1363303012091
+      endTime: 1363303012790
+      duration: 699
+      status: "failure"
+      line: "_step line_"
       error: "_step error_"
-    }
-    @mockSpec = {
-      id: 1,
-      fullDefinitionName: "_full angular name_",
-      name: "_angular description_",
-      startTime: 1363303012081,
-      endTime: 1363303013128,
-      duration: 1047,
-      status: "success",
-      steps: [ @mockStep ]
-    }
+    @mockSpec =
+      id: 1
+      fullDefinitionName: "_full angular name_"
+      name: "_angular description_"
+      startTime: 1363303012081
+      endTime: 1363303013128
+      duration: 1047
+      status: "success"
+      steps: [@mockStep]
 
   describe "#constructor", ->
 
     it "has the expected properties", ->
-      spec = new Teabag.Spec(this.mockSpec)
+      spec = new Teabag.Spec(@mockSpec)
       _expect(spec.fullDescription).toBe("_full angular name_: _angular description_")
       _expect(spec.description).toBe("_angular description_")
       _expect(spec.link).toBe("#")
@@ -75,7 +73,7 @@ describe "Angular Teabag.Spec", () ->
       it "returns the expected object", ->
         @mockSpec.status = "failure"
         spec = new Teabag.Spec(@mockSpec)
-        _expect(spec.result()).toEqual({status: "failed", skipped: false})
+        _expect(spec.result()).toEqual(status: "failed", skipped: false)
 
 
 describe "Angular Teabag.Suite", ->
@@ -92,6 +90,6 @@ describe "Angular Teabag.Suite", ->
       _expect(suite.fullDescription).toBe("_full angular name_")
       _expect(suite.description).toBe("_full angular name_")
       _expect(suite.link).toBe("#")
-      _expect(suite.parent).toEqual({root: true})
+      _expect(suite.parent).toEqual(root: true)
       _expect(suite.viewId).toBe(null)
 

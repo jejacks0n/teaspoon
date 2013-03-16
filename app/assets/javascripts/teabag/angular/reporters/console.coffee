@@ -1,13 +1,11 @@
 class Teabag.Reporters.Console extends Teabag.Reporters.Console
-  constructor: () ->
+
+  constructor: ->
     super
-    angular.scenario.output 'teabag', (_context, _runner, model) =>
-      model.on 'RunnerBegin', =>
-        @reportRunnerStarting(total: angular.scenario.Describe.specId)
+    angular.scenario.output("teabag", @bindScenarioOutput)
 
-      model.on 'SpecEnd', (spec) =>
-        @reportSpecResults(spec)
 
-      model.on 'RunnerEnd', =>
-        @reportRunnerResults()
-
+  bindScenarioOutput: (context, runner, model) =>
+    model.on "RunnerBegin", => @reportRunnerStarting(total: angular.scenario.Describe.specId)
+    model.on "SpecEnd", (spec) => @reportSpecResults(spec)
+    model.on "RunnerEnd", => @reportRunnerResults()
