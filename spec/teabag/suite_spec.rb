@@ -172,8 +172,7 @@ describe Teabag::Suite do
     end
 
     it "returns the spec when the file name looks like it could be a match" do
-      files = subject.send(:glob)
-      expect(subject.include_spec_for?('fixture_spec')).to eq(files.first)
+      expect(subject.include_spec_for?('fixture_spec')).to match(/fixture_spec\.coffee$/)
     end
 
     it "returns false if a matching spec isn't found" do
