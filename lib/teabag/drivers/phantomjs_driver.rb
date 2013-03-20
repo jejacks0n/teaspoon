@@ -10,7 +10,7 @@ module Teabag
       def run_specs(suite, url)
         runner = Teabag::Runner.new(suite)
 
-        Phantomjs.instance_variable_set(:@executable, executable)
+        Phantomjs.instance_variable_set(:@path, executable)
         Phantomjs.run(script, url) do |line|
           runner.process(line)
         end
