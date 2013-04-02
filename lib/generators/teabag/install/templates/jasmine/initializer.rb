@@ -48,9 +48,9 @@ Teabag.setup do |config|
     # stylesheet for the HTML reporter.
     suite.stylesheets = ["teabag"]
 
-    # If you're running coverage reports you may want to exclude libraries like jQuery, or support libraries that you're
-    # not testing. Accepts an array of filenames or regular expressions.
-    suite.no_coverage = [%r{/support/}, %r{/(.+)_helper.}]
+    # When running coverage reports, you probably want to exclude libraries that you're not testing.
+    # Accepts an array of filenames or regular expressions. The default is to exclude assets from vendors or gems.
+    suite.no_coverage = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
     # suite.no_coverage << "jquery.min.js" # excludes jquery from coverage reports
 
   end
