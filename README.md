@@ -503,9 +503,11 @@ You can require these files in your spec helper by using:
 
 ## CI Support
 
-There's a few things that we're doing to make Teabag nicer on CI. We're in the process of integrating a jUnit style XML reporter.
+Teabag works great on CI setups. If you're using TravisCI it just works, but if you're using something else all you should need is to ensure phantomjs is installed.
 
-More on this shortly....
+If you want to generate reports that CI can use you can install istanbul for coverage reports -- and output the report using the cobertura format, which Hudson can read.
+
+Again on hudson compatibile CI setups, you can track spec failure information/rate tracking by using tapout to generate a tap report that can then be parsed by hudson.
 
 
 ## License
