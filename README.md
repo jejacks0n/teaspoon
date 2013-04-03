@@ -314,9 +314,10 @@ end
 </dd>
 
 <dt> no_coverage </dt><dd>
-  If you're running coverage reports you may want to exclude libraries like jQuery, or support libraries that you're not testing. Accepts an array of filenames or regular expressions. For example, to remove jQuery use "jquery.min.js" etc.<br/><br/>
+  When running coverage reports, you probably want to exclude libraries that you're not testing.
+  Accepts an array of filenames or regular expressions. The default is to exclude assets from vendors or gems.<br/><br/>
 
-  <b>default:</b> <code>`[%r{/support/}, %r{/(.+)_helper.}]`</code>
+  <b>default:</b> <code>`[%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]`</code>
 </dd>
 
 </dl>
@@ -457,7 +458,7 @@ These configuration directives are applicable only when running via the rake tas
   </ul>
 </dd>
 
-<dt> coverage </dt><dd>
+<dt> coverage_reports </dt><dd>
   Specify which code coverage reports instanbul should generate.<br/><br/>
 
   <b>available:</b> text-summary, text, html, lcov, lcovonly, cobertura<br/>
