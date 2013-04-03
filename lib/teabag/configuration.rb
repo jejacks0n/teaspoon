@@ -31,7 +31,7 @@ module Teabag
         @helper      = "spec_helper"
         @javascripts = ["teabag-jasmine"]
         @stylesheets = ["teabag"]
-        @no_coverage = [%r{/support/}, %r{/(.+)_helper.}]
+        @no_coverage = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
 
         default = Teabag.configuration.suites["default"]
         self.instance_eval(&default) if default
