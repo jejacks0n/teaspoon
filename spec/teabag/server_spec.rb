@@ -39,6 +39,22 @@ describe Teabag::Server do
       expect{ subject.start }.to raise_error("Cannot start server: OMG!")
     end
 
+    describe "when the server configuration option is set" do
+      before do
+        Teabag.configuration.server = :cgi
+      end
+
+      after do
+        Teabag.configuration.server = nil
+      end
+
+      it "creates a Rack::Server with the correct setting" do
+        Rack::Server.should_receive(:new) do |options|
+          options.should include(:server => :cgi)
+        end
+        subject.start
+      end
+    end
   end
 
   describe "#wait_until_started" do
