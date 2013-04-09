@@ -49,10 +49,14 @@ describe Teabag::Server do
       end
 
       it "creates a Rack::Server with the correct setting" do
+        Thread.stub(:new) { |&b| @block = b }
+
         Rack::Server.should_receive(:new) do |options|
           options.should include(:server => :cgi)
-        end
+        end.and_return(mock(start: nil))
+
         subject.start
+        @block.call
       end
     end
   end
