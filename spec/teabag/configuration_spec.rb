@@ -46,6 +46,7 @@ describe Teabag::Configuration do
   after do
     Teabag::Configuration.mount_at = "/teabag"
     Teabag::Configuration.suites.delete("test_suite")
+    Teabag::Configuration.server = nil
   end
 
   it "has the default configuration" do
@@ -60,11 +61,14 @@ describe Teabag::Configuration do
     expect(subject.suites).to be_a(Hash)
     expect(subject.coverage).to eq(false)
     expect(subject.coverage_reports).to eq(["text-summary"])
+    expect(subject.server).to be_nil
   end
 
   it "allows setting various configuration options" do
     Teabag.configuration.mount_at = "/teabags_are_awesome"
     expect(subject.mount_at).to eq("/teabags_are_awesome")
+    Teabag.configuration.server = :webrick
+    expect(subject.server).to eq(:webrick)
   end
 
   it "allows defining suites" do
