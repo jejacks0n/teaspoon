@@ -12,7 +12,7 @@ module Teabag
     @@suites           = {"default" => proc{}}
 
     # console runner specific
-    cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :formatters, :suppress_log, :color, :coverage, :coverage_reports
+    cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :formatters, :suppress_log, :color, :coverage, :coverage_reports, :server
     @@driver           = "phantomjs"
     @@server_port      = nil
     @@server_timeout   = 20
@@ -22,6 +22,7 @@ module Teabag
     @@color            = true
     @@coverage         = false
     @@coverage_reports = nil
+    @@server           = nil
 
     class Suite
       attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage

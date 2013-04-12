@@ -51,7 +51,8 @@ module Teabag
         Port: port,
         environment: "test",
         AccessLog: [],
-        Logger: WEBrick::Log::new(nil, 0)
+        Logger: WEBrick::Log::new(nil, 0),
+        server: Teabag.configuration.server
       }
     end
 
