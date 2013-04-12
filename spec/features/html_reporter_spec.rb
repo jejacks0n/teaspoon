@@ -12,6 +12,8 @@ feature "testing with teabag in the browser", js: true do
   scenario "gives me the expected results" do
     visit "/teabag/integration?reporter=HTML"
 
+    sleep 2
+
     within("#teabag-progress") do
       expect(find("em")).to have_text("100%")
     end
