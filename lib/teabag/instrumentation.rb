@@ -28,7 +28,7 @@ module Teabag
       status, headers, @asset = response
       headers, @asset = [headers.clone, @asset.clone]
       result = process_and_instrument
-      length = result.length.to_s
+      length = result.bytesize.to_s
 
       headers["Content-Length"] = length
       @asset.instance_variable_set(:@source, result)

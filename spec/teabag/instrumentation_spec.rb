@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require "spec_helper"
 require "rack/test"
 
@@ -64,13 +66,14 @@ describe Teabag::Instrumentation do
 
   describe ".add_to" do
 
-    let(:asset) { mock(source: "function add(a, b) { return a + b }", pathname: 'path/to/instrument.js') }
+    let(:asset) { mock(source: source, pathname: 'path/to/instrument.js') }
+    let(:source) { "function add(a, b) { return a + b } // ☃ " }
 
     before do
       Teabag::Instrumentation.stub(:add?).and_return(true)
 
       File.stub(:write)
-      subject.any_instance.stub(:instrument).and_return("_foo_")
+      subject.any_instance.stub(:instrument).and_return(source + " // instrumented")
 
       path = nil
       Dir.mktmpdir { |p| path = p }
@@ -79,7 +82,7 @@ describe Teabag::Instrumentation do
     end
 
     it "writes the file to a tmp path" do
-      File.should_receive(:write).with(@output, "function add(a, b) { return a + b }")
+      File.should_receive(:write).with(@output, "function add(a, b) { return a + b } // ☃ ")
       subject.add_to(response, env)
     end
 
@@ -90,7 +93,7 @@ describe Teabag::Instrumentation do
 
     it "replaces the response array with the appropriate information" do
       response = [666, {"Content-Type" => "application/javascript"}, asset]
-      expected = [666, {"Content-Type" => "application/javascript", "Content-Length" => "5"}, asset]
+      expected = [666, {"Content-Type" => "application/javascript", "Content-Length" => "59"}, asset]
 
       subject.add_to(response, env)
       expect(response).to eq(expected)
