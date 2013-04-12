@@ -22,5 +22,5 @@ group :development, :test do
   gem "capybara"
   gem "aruba"
 
-  gem "poltergeist"
+  #gem "poltergeist"
 end
