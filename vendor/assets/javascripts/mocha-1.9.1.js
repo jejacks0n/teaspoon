@@ -1,6 +1,5 @@
 ;(function(){
 
-
 // CommonJS require()
 
   function require(p){
@@ -52,9 +51,9 @@
 
     module.exports = function(type){
       return function(){
-
       }
     };
+
   }); // module: browser/debug.js
 
   require.register("browser/diff.js", function(module, exports, require){
@@ -805,7 +804,6 @@
       this._error = err;
     };
 
-
   }); // module: hook.js
 
   require.register("interfaces/bdd.js", function(module, exports, require){
@@ -1006,6 +1004,7 @@
         }
       }
     };
+
   }); // module: interfaces/exports.js
 
   require.register("interfaces/index.js", function(module, exports, require){
@@ -1549,7 +1548,7 @@
       var options = this.options;
       var runner = new exports.Runner(suite);
       var reporter = new this._reporter(runner);
-      runner.ignoreLeaks = options.ignoreLeaks;
+      runner.ignoreLeaks = false !== options.ignoreLeaks;
       runner.asyncOnly = options.asyncOnly;
       if (options.grep) runner.grep(options.grep, options.invert);
       if (options.globals) runner.globals(options.globals);
@@ -2334,8 +2333,6 @@
       });
 
       runner.on('test end', function(test){
-        window.scrollTo(0, document.body.scrollHeight);
-
         // TODO: add to stats
         var percent = stats.tests / this.total * 100 | 0;
         if (progress) progress.update(percent).draw(ctx);
@@ -3100,10 +3097,10 @@
     Min.prototype = new F;
     Min.prototype.constructor = Min;
 
+
   }); // module: reporters/min.js
 
   require.register("reporters/nyan.js", function(module, exports, require){
-
     /**
      * Module dependencies.
      */
@@ -3249,44 +3246,39 @@
     NyanCat.prototype.drawNyanCat = function(status) {
       var self = this;
       var startWidth = this.scoreboardWidth + this.trajectories[0].length;
+      var color = '\u001b[' + startWidth + 'C';
+      var padding = '';
 
-      [0, 1, 2, 3].forEach(function(index) {
-        write('\u001b[' + startWidth + 'C');
+      write(color);
+      write('_,------,');
+      write('\n');
 
-        switch (index) {
-          case 0:
-            write('_,------,');
-            write('\n');
-            break;
-          case 1:
-            var padding = self.tick ? '  ' : '   ';
-            write('_|' + padding + '/\\_/\\ ');
-            write('\n');
-            break;
-          case 2:
-            var padding = self.tick ? '_' : '__';
-            var tail = self.tick ? '~' : '^';
-            var face;
-            switch (status) {
-              case 'pass':
-                face = '( ^ .^)';
-                break;
-              case 'fail':
-                face = '( o .o)';
-                break;
-              default:
-                face = '( - .-)';
-            }
-            write(tail + '|' + padding + face + ' ');
-            write('\n');
-            break;
-          case 3:
-            var padding = self.tick ? ' ' : '  ';
-            write(padding + '""  "" ');
-            write('\n');
-            break;
-        }
-      });
+      write(color);
+      padding = self.tick ? '  ' : '   ';
+      write('_|' + padding + '/\\_/\\ ');
+      write('\n');
+
+      write(color);
+      padding = self.tick ? '_' : '__';
+      var tail = self.tick ? '~' : '^';
+      var face;
+      switch (status) {
+        case 'pass':
+          face = '( ^ .^)';
+          break;
+        case 'fail':
+          face = '( o .o)';
+          break;
+        default:
+          face = '( - .-)';
+      }
+      write(tail + '|' + padding + face + ' ');
+      write('\n');
+
+      write(color);
+      padding = self.tick ? ' ' : '  ';
+      write(padding + '""  "" ');
+      write('\n');
 
       this.cursorUp(this.numberOfLines);
     };
@@ -4065,8 +4057,7 @@
         , Test = require('./test')
         , utils = require('./utils')
         , filter = utils.filter
-        , keys = utils.keys
-        , noop = function(){};
+        , keys = utils.keys;
 
     /**
      * Non-enumerable globals.
@@ -4117,6 +4108,15 @@
       this.grep(/.*/);
       this.globals(this.globalProps().concat(['errno']));
     }
+
+    /**
+     * Wrapper for setImmediate, process.nextTick, or browser polyfill.
+     *
+     * @param {Function} fn
+     * @api private
+     */
+
+    Runner.immediately = global.setImmediate || process.nextTick;
 
     /**
      * Inherit from `EventEmitter.prototype`.
@@ -4303,7 +4303,7 @@
         });
       }
 
-      process.nextTick(function(){
+      Runner.immediately(function(){
         next(0);
       });
     };
@@ -4546,14 +4546,16 @@
       var self = this
           , fn = fn || function(){};
 
+      function uncaught(err){
+        self.uncaught(err);
+      }
+
       debug('start');
 
       // callback
       this.on('end', function(){
         debug('end');
-        process.removeListener('uncaughtException', function(err){
-          self.uncaught(err);
-        });
+        process.removeListener('uncaughtException', uncaught);
         fn(self.failures);
       });
 
@@ -4565,9 +4567,7 @@
       });
 
       // uncaught exception
-      process.on('uncaughtException', function(err){
-        self.uncaught(err);
-      });
+      process.on('uncaughtException', uncaught);
 
       return this;
     };
@@ -5239,34 +5239,6 @@
   global = window;
 
   /**
-   * next tick implementation.
-   */
-
-  process.nextTick = (function(){
-    // postMessage behaves badly on IE8
-    if (window.ActiveXObject || !window.postMessage) {
-      return function(fn){ fn() };
-    }
-
-    // based on setZeroTimeout by David Baron
-    // - http://dbaron.org/log/20100309-faster-timeouts
-    var timeouts = []
-        , name = 'mocha-zero-timeout'
-
-    window.addEventListener('message', function(e){
-      if (e.source == window && e.data == name) {
-        if (e.stopPropagation) e.stopPropagation();
-        if (timeouts.length) timeouts.shift()();
-      }
-    }, true);
-
-    return function(fn){
-      timeouts.push(fn);
-      window.postMessage(name, '*');
-    }
-  })();
-
-  /**
    * Remove uncaughtException listener.
    */
 
@@ -5297,6 +5269,32 @@
 
     var Mocha = window.Mocha = require('mocha'),
         mocha = window.mocha = new Mocha({ reporter: 'html' });
+
+    var immediateQueue = []
+        , immediateTimeout;
+
+    function timeslice() {
+      var immediateStart = new Date().getTime();
+      while (immediateQueue.length && (new Date().getTime() - immediateStart) < 100) {
+        immediateQueue.shift()();
+      }
+      if (immediateQueue.length) {
+        immediateTimeout = setTimeout(timeslice, 0);
+      } else {
+        immediateTimeout = null;
+      }
+    }
+
+    /**
+     * High-performance override of Runner.immediately.
+     */
+
+    Mocha.Runner.immediately = function(callback) {
+      immediateQueue.push(callback);
+      if (!immediateTimeout) {
+        immediateTimeout = setTimeout(timeslice, 0);
+      }
+    };
 
     /**
      * Override ui to ensure that the ui functions are initialized.

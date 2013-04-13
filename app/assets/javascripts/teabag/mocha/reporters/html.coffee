@@ -18,7 +18,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.HTML
 
 
   envInfo: ->
-    "mocha 1.8.1"
+    "mocha 1.9.1"
 
 
 class Teabag.Reporters.HTML.SpecView extends Teabag.Reporters.HTML.SpecView

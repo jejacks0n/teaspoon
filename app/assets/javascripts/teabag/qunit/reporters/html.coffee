@@ -35,7 +35,7 @@ class Teabag.Reporters.HTML extends Teabag.Reporters.HTML
 
 
   envInfo: ->
-    "qunit 1.10.0"
+    "qunit 1.11.0"
 
 
 

@@ -1,4 +1,4 @@
-#= require qunit-1.10.0
+#= require qunit-1.11.0
 #= require teabag/base/teabag
 #= require teabag/qunit/reporters/console
 #= require teabag/qunit/reporters/html

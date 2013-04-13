@@ -29,7 +29,7 @@ describe "Mocha Teabag.Reporters.HTML", ->
   describe "#envInfo", ->
 
     it "returns the version", ->
-      expect(@reporter.envInfo()).to.be("mocha 1.8.1")
+      expect(@reporter.envInfo()).to.be("mocha 1.9.1")
 
 
 describe "Mocha Teabag.Reporters.HTML.SpecView", ->

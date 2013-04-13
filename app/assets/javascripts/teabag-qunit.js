@@ -1,5 +1,5 @@
 /**
- * QUnit v1.10.0 - A JavaScript Unit Testing Framework
+ * QUnit v1.11.0 - A JavaScript Unit Testing Framework
  *
  * http://qunitjs.com
  *
@@ -12,6 +12,7 @@
 (function( window ) {
 
   var QUnit,
+      assert,
       config,
       onErrorFnPrev,
       testId = 0,
@@ -32,6 +33,55 @@
             return false;
           }
         }())
+      },
+      /**
+       * Provides a normalized error string, correcting an issue
+       * with IE 7 (and prior) where Error.prototype.toString is
+       * not properly implemented
+       *
+       * Based on http://es5.github.com/#x15.11.4.4
+       *
+       * @param {String|Error} error
+       * @return {String} error message
+       */
+          errorString = function( error ) {
+        var name, message,
+            errorString = error.toString();
+        if ( errorString.substring( 0, 7 ) === "[object" ) {
+          name = error.name ? error.name.toString() : "Error";
+          message = error.message ? error.message.toString() : "";
+          if ( name && message ) {
+            return name + ": " + message;
+          } else if ( name ) {
+            return name;
+          } else if ( message ) {
+            return message;
+          } else {
+            return "Error";
+          }
+        } else {
+          return errorString;
+        }
+      },
+      /**
+       * Makes a clone of an object using only Array or Object as base,
+       * and copies over the own enumerable properties.
+       *
+       * @param {Object} obj
+       * @return {Object} New object with only the own properties (recursively).
+       */
+          objectValues = function( obj ) {
+        // Grunt 0.3.x uses an older version of jshint that still has jshint/jshint#392.
+        /*jshint newcap: false */
+        var key, val,
+            vals = QUnit.is( "array", obj ) ? [] : {};
+        for ( key in obj ) {
+          if ( hasOwn.call( obj, key ) ) {
+            val = obj[key];
+            vals[key] = val === Object(val) ? objectValues(val) : val;
+          }
+        }
+        return vals;
       };
 
   function Test( settings ) {
@@ -49,7 +99,7 @@
 
       if ( tests ) {
         b = document.createElement( "strong" );
-        b.innerHTML = this.name;
+        b.innerHTML = this.nameHtml;
 
         // `a` initialized at top of scope
         a = document.createElement( "a" );
@@ -93,6 +143,7 @@
         teardown: function() {}
       }, this.moduleTestEnvironment );
 
+      this.started = +new Date();
       runLoggingCallbacks( "testStart", QUnit, {
         name: this.testName,
         module: this.module
@@ -112,7 +163,7 @@
       try {
         this.testEnvironment.setup.call( this.testEnvironment );
       } catch( e ) {
-        QUnit.pushFailure( "Setup failed on " + this.testName + ": " + e.message, extractStacktrace( e, 1 ) );
+        QUnit.pushFailure( "Setup failed on " + this.testName + ": " + ( e.message || e ), extractStacktrace( e, 1 ) );
       }
     },
     run: function() {
@@ -121,22 +172,28 @@
       var running = id( "qunit-testresult" );
 
       if ( running ) {
-        running.innerHTML = "Running: <br/>" + this.name;
+        running.innerHTML = "Running: <br/>" + this.nameHtml;
       }
 
       if ( this.async ) {
         QUnit.stop();
       }
 
+      this.callbackStarted = +new Date();
+
       if ( config.notrycatch ) {
         this.callback.call( this.testEnvironment, QUnit.assert );
+        this.callbackRuntime = +new Date() - this.callbackStarted;
         return;
       }
 
       try {
         this.callback.call( this.testEnvironment, QUnit.assert );
+        this.callbackRuntime = +new Date() - this.callbackStarted;
       } catch( e ) {
-        QUnit.pushFailure( "Died on test #" + (this.assertions.length + 1) + " " + this.stack + ": " + e.message, extractStacktrace( e, 0 ) );
+        this.callbackRuntime = +new Date() - this.callbackStarted;
+
+        QUnit.pushFailure( "Died on test #" + (this.assertions.length + 1) + " " + this.stack + ": " + ( e.message || e ), extractStacktrace( e, 0 ) );
         // else next test will carry the responsibility
         saveGlobal();
 
@@ -149,38 +206,43 @@
     teardown: function() {
       config.current = this;
       if ( config.notrycatch ) {
+        if ( typeof this.callbackRuntime === "undefined" ) {
+          this.callbackRuntime = +new Date() - this.callbackStarted;
+        }
         this.testEnvironment.teardown.call( this.testEnvironment );
         return;
       } else {
         try {
           this.testEnvironment.teardown.call( this.testEnvironment );
         } catch( e ) {
-          QUnit.pushFailure( "Teardown failed on " + this.testName + ": " + e.message, extractStacktrace( e, 1 ) );
+          QUnit.pushFailure( "Teardown failed on " + this.testName + ": " + ( e.message || e ), extractStacktrace( e, 1 ) );
         }
       }
       checkPollution();
     },
     finish: function() {
       config.current = this;
-      if ( config.requireExpects && this.expected == null ) {
+      if ( config.requireExpects && this.expected === null ) {
         QUnit.pushFailure( "Expected number of assertions to be defined, but expect() was not called.", this.stack );
-      } else if ( this.expected != null && this.expected != this.assertions.length ) {
+      } else if ( this.expected !== null && this.expected !== this.assertions.length ) {
         QUnit.pushFailure( "Expected " + this.expected + " assertions, but " + this.assertions.length + " were run", this.stack );
-      } else if ( this.expected == null && !this.assertions.length ) {
+      } else if ( this.expected === null && !this.assertions.length ) {
         QUnit.pushFailure( "Expected at least one assertion, but none were run - call expect(0) to accept zero assertions.", this.stack );
       }
 
-      var assertion, a, b, i, li, ol,
+      var i, assertion, a, b, time, li, ol,
           test = this,
           good = 0,
           bad = 0,
           tests = id( "qunit-tests" );
 
+      this.runtime = +new Date() - this.started;
       config.stats.all += this.assertions.length;
       config.moduleStats.all += this.assertions.length;
 
       if ( tests ) {
         ol = document.createElement( "ol" );
+        ol.className = "qunit-assert-list";
 
         for ( i = 0; i < this.assertions.length; i++ ) {
           assertion = this.assertions[i];
@@ -209,22 +271,22 @@
         }
 
         if ( bad === 0 ) {
-          ol.style.display = "none";
+          addClass( ol, "qunit-collapsed" );
         }
 
         // `b` initialized at top of scope
         b = document.createElement( "strong" );
-        b.innerHTML = this.name + " <b class='counts'>(<b class='failed'>" + bad + "</b>, <b class='passed'>" + good + "</b>, " + this.assertions.length + ")</b>";
+        b.innerHTML = this.nameHtml + " <b class='counts'>(<b class='failed'>" + bad + "</b>, <b class='passed'>" + good + "</b>, " + this.assertions.length + ")</b>";
 
         addEvent(b, "click", function() {
-          var next = b.nextSibling.nextSibling,
-              display = next.style.display;
-          next.style.display = display === "none" ? "block" : "none";
+          var next = b.parentNode.lastChild,
+              collapsed = hasClass( next, "qunit-collapsed" );
+          ( collapsed ? removeClass : addClass )( next, "qunit-collapsed" );
         });
 
         addEvent(b, "dblclick", function( e ) {
           var target = e && e.target ? e.target : window.event.srcElement;
-          if ( target.nodeName.toLowerCase() == "span" || target.nodeName.toLowerCase() == "b" ) {
+          if ( target.nodeName.toLowerCase() === "span" || target.nodeName.toLowerCase() === "b" ) {
             target = target.parentNode;
           }
           if ( window.location && target.nodeName.toLowerCase() === "strong" ) {
@@ -232,13 +294,19 @@
           }
         });
 
+        // `time` initialized at top of scope
+        time = document.createElement( "span" );
+        time.className = "runtime";
+        time.innerHTML = this.runtime + " ms";
+
         // `li` initialized at top of scope
         li = id( this.id );
         li.className = bad ? "fail" : "pass";
         li.removeChild( li.firstChild );
         a = li.firstChild;
         li.appendChild( b );
-        li.appendChild ( a );
+        li.appendChild( a );
+        li.appendChild( time );
         li.appendChild( ol );
 
       } else {
@@ -256,7 +324,8 @@
         module: this.module,
         failed: bad,
         passed: this.assertions.length - bad,
-        total: this.assertions.length
+        total: this.assertions.length,
+        duration: this.runtime
       });
 
       QUnit.reset();
@@ -322,7 +391,7 @@
 
     test: function( testName, expected, callback, async ) {
       var test,
-          name = "<span class='test-name'>" + escapeInnerText( testName ) + "</span>";
+          nameHtml = "<span class='test-name'>" + escapeText( testName ) + "</span>";
 
       if ( arguments.length === 2 ) {
         callback = expected;
@@ -330,11 +399,11 @@
       }
 
       if ( config.currentModule ) {
-        name = "<span class='module-name'>" + config.currentModule + "</span>: " + name;
+        nameHtml = "<span class='module-name'>" + escapeText( config.currentModule ) + "</span>: " + nameHtml;
       }
 
       test = new Test({
-        name: name,
+        nameHtml: nameHtml,
         testName: testName,
         expected: expected,
         async: async,
@@ -361,6 +430,18 @@
     },
 
     start: function( count ) {
+      // QUnit hasn't been initialized yet.
+      // Note: RequireJS (et al) may delay onLoad
+      if ( config.semaphore === undefined ) {
+        QUnit.begin(function() {
+          // This is triggered at the top of QUnit.load, push start() to the event loop, to allow QUnit.load to finish first
+          setTimeout(function() {
+            QUnit.start( count );
+          });
+        });
+        return;
+      }
+
       config.semaphore -= count || 1;
       // don't start until equal number of stop-calls
       if ( config.semaphore > 0 ) {
@@ -369,6 +450,8 @@
       // ignore if start is called more often then stop
       if ( config.semaphore < 0 ) {
         config.semaphore = 0;
+        QUnit.pushFailure( "Called start() while already started (QUnit.config.semaphore was 0 already)", null, sourceFromStacktrace(2) );
+        return;
       }
       // A slight delay, to avoid any current callbacks
       if ( defined.setTimeout ) {
@@ -404,11 +487,14 @@
     }
   };
 
+// `assert` initialized at top of scope
 // Asssert helpers
-// All of these must call either QUnit.push() or manually do:
+// All of these must either call QUnit.push() or manually do:
 // - runLoggingCallbacks( "log", .. );
 // - config.current.assertions.push({ .. });
-  QUnit.assert = {
+// We attach it to the QUnit object *after* we expose the public API,
+// otherwise `assert` will become a global variable in browsers (#341).
+  assert = {
     /**
      * Asserts rough true-ish result.
      * @name ok
@@ -429,14 +515,14 @@
             message: msg
           };
 
-      msg = escapeInnerText( msg || (result ? "okay" : "failed" ) );
+      msg = escapeText( msg || (result ? "okay" : "failed" ) );
       msg = "<span class='test-message'>" + msg + "</span>";
 
       if ( !result ) {
         source = sourceFromStacktrace( 2 );
         if ( source ) {
           details.source = source;
-          msg += "<table><tr class='test-source'><th>Source: </th><td><pre>" + escapeInnerText( source ) + "</pre></td></tr></table>";
+          msg += "<table><tr class='test-source'><th>Source: </th><td><pre>" + escapeText( source ) + "</pre></td></tr></table>";
         }
       }
       runLoggingCallbacks( "log", QUnit, details );
@@ -454,6 +540,7 @@
      * @example equal( format( "Received {0} bytes.", 2), "Received 2 bytes.", "format() replaces {0} with next argument" );
      */
     equal: function( actual, expected, message ) {
+      /*jshint eqeqeq:false */
       QUnit.push( expected == actual, actual, expected, message );
     },
 
@@ -462,7 +549,28 @@
      * @function
      */
     notEqual: function( actual, expected, message ) {
+      /*jshint eqeqeq:false */
       QUnit.push( expected != actual, actual, expected, message );
+    },
+
+    /**
+     * @name propEqual
+     * @function
+     */
+    propEqual: function( actual, expected, message ) {
+      actual = objectValues(actual);
+      expected = objectValues(expected);
+      QUnit.push( QUnit.equiv(actual, expected), actual, expected, message );
+    },
+
+    /**
+     * @name notPropEqual
+     * @function
+     */
+    notPropEqual: function( actual, expected, message ) {
+      actual = objectValues(actual);
+      expected = objectValues(expected);
+      QUnit.push( !QUnit.equiv(actual, expected), actual, expected, message );
     },
 
     /**
@@ -497,8 +605,9 @@
       QUnit.push( expected !== actual, actual, expected, message );
     },
 
-    throws: function( block, expected, message ) {
+    "throws": function( block, expected, message ) {
       var actual,
+          expectedOutput = expected,
           ok = false;
 
       // 'expected' is optional
@@ -519,18 +628,20 @@
         // we don't want to validate thrown error
         if ( !expected ) {
           ok = true;
+          expectedOutput = null;
           // expected is a regexp
         } else if ( QUnit.objectType( expected ) === "regexp" ) {
-          ok = expected.test( actual );
+          ok = expected.test( errorString( actual ) );
           // expected is a constructor
         } else if ( actual instanceof expected ) {
           ok = true;
           // expected is a validation function which returns true is validation passed
         } else if ( expected.call( {}, actual ) === true ) {
+          expectedOutput = null;
           ok = true;
         }
 
-        QUnit.push( ok, actual, null, message );
+        QUnit.push( ok, actual, expectedOutput, message );
       } else {
         QUnit.pushFailure( message, null, 'No exception was thrown.' );
       }
@@ -539,15 +650,16 @@
 
   /**
    * @deprecate since 1.8.0
-   * Kept assertion helpers in root for backwards compatibility
+   * Kept assertion helpers in root for backwards compatibility.
    */
-  extend( QUnit, QUnit.assert );
+  extend( QUnit, assert );
 
   /**
    * @deprecated since 1.9.0
-   * Kept global "raises()" for backwards compatibility
+   * Kept root "raises()" for backwards compatibility.
+   * (Note that we don't introduce assert.raises).
    */
-  QUnit.raises = QUnit.assert.throws;
+  QUnit.raises = assert[ "throws" ];
 
   /**
    * @deprecated since 1.0.0, replaced with error pushes since 1.3.0
@@ -623,6 +735,15 @@
     moduleDone: []
   };
 
+// Export global variables, unless an 'exports' object exists,
+// in that case we assume we're in CommonJS (dealt with on the bottom of the script)
+  if ( typeof exports === "undefined" ) {
+    extend( window, QUnit );
+
+    // Expose QUnit object
+    window.QUnit = QUnit;
+  }
+
 // Initialize more QUnit.config and QUnit.urlParams
   (function() {
     var i,
@@ -656,18 +777,11 @@
     QUnit.isLocal = location.protocol === "file:";
   }());
 
-// Export global variables, unless an 'exports' object exists,
-// in that case we assume we're in CommonJS (dealt with on the bottom of the script)
-  if ( typeof exports === "undefined" ) {
-    extend( window, QUnit );
-
-    // Expose QUnit object
-    window.QUnit = QUnit;
-  }
-
 // Extend QUnit object,
 // these after set here because they should not be exposed as global functions
   extend( QUnit, {
+    assert: assert,
+
     config: config,
 
     // Initialize the configuration options
@@ -682,7 +796,7 @@
         autorun: false,
         filter: "",
         queue: [],
-        semaphore: 0
+        semaphore: 1
       });
 
       var tests, banner, result,
@@ -690,7 +804,7 @@
 
       if ( qunit ) {
         qunit.innerHTML =
-            "<h1 id='qunit-header'>" + escapeInnerText( document.title ) + "</h1>" +
+            "<h1 id='qunit-header'>" + escapeText( document.title ) + "</h1>" +
                 "<h2 id='qunit-banner'></h2>" +
                 "<div id='qunit-testrunner-toolbar'></div>" +
                 "<h2 id='qunit-userAgent'></h2>" +
@@ -746,7 +860,7 @@
 
     // Safe object type checking
     is: function( type, obj ) {
-      return QUnit.objectType( obj ) == type;
+      return QUnit.objectType( obj ) === type;
     },
 
     objectType: function( obj ) {
@@ -758,7 +872,8 @@
         return "null";
       }
 
-      var type = toString.call( obj ).match(/^\[object\s(.*)\]$/)[1] || "";
+      var match = toString.call( obj ).match(/^\[object\s(.*)\]$/),
+          type = match && match[1] || "";
 
       switch ( type ) {
         case "Number":
@@ -795,16 +910,16 @@
             expected: expected
           };
 
-      message = escapeInnerText( message ) || ( result ? "okay" : "failed" );
+      message = escapeText( message ) || ( result ? "okay" : "failed" );
       message = "<span class='test-message'>" + message + "</span>";
       output = message;
 
       if ( !result ) {
-        expected = escapeInnerText( QUnit.jsDump.parse(expected) );
-        actual = escapeInnerText( QUnit.jsDump.parse(actual) );
+        expected = escapeText( QUnit.jsDump.parse(expected) );
+        actual = escapeText( QUnit.jsDump.parse(actual) );
         output += "<table><tr class='test-expected'><th>Expected: </th><td><pre>" + expected + "</pre></td></tr>";
 
-        if ( actual != expected ) {
+        if ( actual !== expected ) {
           output += "<tr class='test-actual'><th>Result: </th><td><pre>" + actual + "</pre></td></tr>";
           output += "<tr class='test-diff'><th>Diff: </th><td><pre>" + QUnit.diff( expected, actual ) + "</pre></td></tr>";
         }
@@ -813,7 +928,7 @@
 
         if ( source ) {
           details.source = source;
-          output += "<tr class='test-source'><th>Source: </th><td><pre>" + escapeInnerText( source ) + "</pre></td></tr>";
+          output += "<tr class='test-source'><th>Source: </th><td><pre>" + escapeText( source ) + "</pre></td></tr>";
         }
 
         output += "</table>";
@@ -840,19 +955,19 @@
             message: message
           };
 
-      message = escapeInnerText( message ) || "error";
+      message = escapeText( message ) || "error";
       message = "<span class='test-message'>" + message + "</span>";
       output = message;
 
       output += "<table>";
 
       if ( actual ) {
-        output += "<tr class='test-actual'><th>Result: </th><td><pre>" + escapeInnerText( actual ) + "</pre></td></tr>";
+        output += "<tr class='test-actual'><th>Result: </th><td><pre>" + escapeText( actual ) + "</pre></td></tr>";
       }
 
       if ( source ) {
         details.source = source;
-        output += "<tr class='test-source'><th>Source: </th><td><pre>" + escapeInnerText( source ) + "</pre></td></tr>";
+        output += "<tr class='test-source'><th>Source: </th><td><pre>" + escapeText( source ) + "</pre></td></tr>";
       }
 
       output += "</table>";
@@ -877,7 +992,8 @@
         querystring += encodeURIComponent( key ) + "=" +
             encodeURIComponent( params[ key ] ) + "&";
       }
-      return window.location.pathname + querystring.slice( 0, -1 );
+      return window.location.protocol + "//" + window.location.host +
+          window.location.pathname + querystring.slice( 0, -1 );
     },
 
     extend: extend,
@@ -908,7 +1024,7 @@
     // testStart: { name }
     testStart: registerLoggingCallback( "testStart" ),
 
-    // testDone: { name, failed, passed, total }
+    // testDone: { name, failed, passed, total, duration }
     testDone: registerLoggingCallback( "testDone" ),
 
     // moduleStart: { name }
@@ -926,7 +1042,8 @@
     runLoggingCallbacks( "begin", QUnit, {} );
 
     // Initialize the config, saving the execution queue
-    var banner, filter, i, label, len, main, ol, toolbar, userAgent, val, urlConfigCheckboxes, moduleFilter,
+    var banner, filter, i, label, len, main, ol, toolbar, userAgent, val,
+        urlConfigCheckboxesContainer, urlConfigCheckboxes, moduleFilter,
         numModules = 0,
         moduleFilterHtml = "",
         urlConfigHtml = "",
@@ -949,14 +1066,24 @@
         };
       }
       config[ val.id ] = QUnit.urlParams[ val.id ];
-      urlConfigHtml += "<input id='qunit-urlconfig-" + val.id + "' name='" + val.id + "' type='checkbox'" + ( config[ val.id ] ? " checked='checked'" : "" ) + " title='" + val.tooltip + "'><label for='qunit-urlconfig-" + val.id + "' title='" + val.tooltip + "'>" + val.label + "</label>";
+      urlConfigHtml += "<input id='qunit-urlconfig-" + escapeText( val.id ) +
+          "' name='" + escapeText( val.id ) +
+          "' type='checkbox'" + ( config[ val.id ] ? " checked='checked'" : "" ) +
+          " title='" + escapeText( val.tooltip ) +
+          "'><label for='qunit-urlconfig-" + escapeText( val.id ) +
+          "' title='" + escapeText( val.tooltip ) + "'>" + val.label + "</label>";
     }
 
-    moduleFilterHtml += "<label for='qunit-modulefilter'>Module: </label><select id='qunit-modulefilter' name='modulefilter'><option value='' " + ( config.module === undefined  ? "selected" : "" ) + ">< All Modules ></option>";
+    moduleFilterHtml += "<label for='qunit-modulefilter'>Module: </label><select id='qunit-modulefilter' name='modulefilter'><option value='' " +
+        ( config.module === undefined  ? "selected='selected'" : "" ) +
+        ">< All Modules ></option>";
+
     for ( i in config.modules ) {
       if ( config.modules.hasOwnProperty( i ) ) {
         numModules += 1;
-        moduleFilterHtml += "<option value='" + encodeURIComponent(i) + "' " + ( config.module === i ? "selected" : "" ) + ">" + i + "</option>";
+        moduleFilterHtml += "<option value='" + escapeText( encodeURIComponent(i) ) + "' " +
+            ( config.module === i ? "selected='selected'" : "" ) +
+            ">" + escapeText(i) + "</option>";
       }
     }
     moduleFilterHtml += "</select>";
@@ -1015,20 +1142,26 @@
       label.innerHTML = "Hide passed tests";
       toolbar.appendChild( label );
 
-      urlConfigCheckboxes = document.createElement( 'span' );
-      urlConfigCheckboxes.innerHTML = urlConfigHtml;
-      addEvent( urlConfigCheckboxes, "change", function( event ) {
-        var params = {};
-        params[ event.target.name ] = event.target.checked ? true : undefined;
+      urlConfigCheckboxesContainer = document.createElement("span");
+      urlConfigCheckboxesContainer.innerHTML = urlConfigHtml;
+      urlConfigCheckboxes = urlConfigCheckboxesContainer.getElementsByTagName("input");
+      // For oldIE support:
+      // * Add handlers to the individual elements instead of the container
+      // * Use "click" instead of "change"
+      // * Fallback from event.target to event.srcElement
+      addEvents( urlConfigCheckboxes, "click", function( event ) {
+        var params = {},
+            target = event.target || event.srcElement;
+        params[ target.name ] = target.checked ? true : undefined;
         window.location = QUnit.url( params );
       });
-      toolbar.appendChild( urlConfigCheckboxes );
+      toolbar.appendChild( urlConfigCheckboxesContainer );
 
       if (numModules > 1) {
         moduleFilter = document.createElement( 'span' );
         moduleFilter.setAttribute( 'id', 'qunit-modulefilter-container' );
         moduleFilter.innerHTML = moduleFilterHtml;
-        addEvent( moduleFilter, "change", function() {
+        addEvent( moduleFilter.lastChild, "change", function() {
           var selectBox = moduleFilter.getElementsByTagName("select")[0],
               selectedModule = decodeURIComponent(selectBox.options[selectBox.selectedIndex].value);
 
@@ -1107,7 +1240,7 @@
           " milliseconds.<br/>",
           "<span class='passed'>",
           passed,
-          "</span> tests of <span class='total'>",
+          "</span> assertions of <span class='total'>",
           config.stats.all,
           "</span> passed, <span class='failed'>",
           config.stats.bad,
@@ -1200,7 +1333,7 @@
   function extractStacktrace( e, offset ) {
     offset = offset === undefined ? 3 : offset;
 
-    var stack, include, i, regex;
+    var stack, include, i;
 
     if ( e.stacktrace ) {
       // Opera
@@ -1214,7 +1347,7 @@
       if ( fileName ) {
         include = [];
         for ( i = offset; i < stack.length; i++ ) {
-          if ( stack[ i ].indexOf( fileName ) != -1 ) {
+          if ( stack[ i ].indexOf( fileName ) !== -1 ) {
             break;
           }
           include.push( stack[ i ] );
@@ -1243,17 +1376,27 @@
     }
   }
 
-  function escapeInnerText( s ) {
+  /**
+   * Escape text for attribute or text content.
+   */
+  function escapeText( s ) {
     if ( !s ) {
       return "";
     }
     s = s + "";
-    return s.replace( /[\&<>]/g, function( s ) {
+    // Both single quotes and double quotes (for attributes)
+    return s.replace( /['"<>&]/g, function( s ) {
       switch( s ) {
-        case "&": return "&amp;";
-        case "<": return "&lt;";
-        case ">": return "&gt;";
-        default: return s;
+        case '\'':
+          return '&#039;';
+        case '"':
+          return '&quot;';
+        case '<':
+          return '&lt;';
+        case '>':
+          return '&gt;';
+        case '&':
+          return '&amp;';
       }
     });
   }
@@ -1301,7 +1444,7 @@
     }
   }
 
-  function checkPollution( name ) {
+  function checkPollution() {
     var newGlobals,
         deletedGlobals,
         old = config.pollution;
@@ -1350,14 +1493,51 @@
     return a;
   }
 
+  /**
+   * @param {HTMLElement} elem
+   * @param {string} type
+   * @param {Function} fn
+   */
   function addEvent( elem, type, fn ) {
+    // Standards-based browsers
     if ( elem.addEventListener ) {
       elem.addEventListener( type, fn, false );
-    } else if ( elem.attachEvent ) {
-      elem.attachEvent( "on" + type, fn );
+      // IE
     } else {
-      fn();
+      elem.attachEvent( "on" + type, fn );
     }
+  }
+
+  /**
+   * @param {Array|NodeList} elems
+   * @param {string} type
+   * @param {Function} fn
+   */
+  function addEvents( elems, type, fn ) {
+    var i = elems.length;
+    while ( i-- ) {
+      addEvent( elems[i], type, fn );
+    }
+  }
+
+  function hasClass( elem, name ) {
+    return (" " + elem.className + " ").indexOf(" " + name + " ") > -1;
+  }
+
+  function addClass( elem, name ) {
+    if ( !hasClass( elem, name ) ) {
+      elem.className += (elem.className ? " " : "") + name;
+    }
+  }
+
+  function removeClass( elem, name ) {
+    var set = " " + elem.className + " ";
+    // Class name may appear multiple times
+    while ( set.indexOf(" " + name + " ") > -1 ) {
+      set = set.replace(" " + name + " " , " ");
+    }
+    // If possible, trim it for prettiness, but not neccecarily
+    elem.className = window.jQuery ? jQuery.trim( set ) : ( set.trim ? set.trim() : set );
   }
 
   function id( name ) {
@@ -1373,7 +1553,6 @@
 
 // Supports deprecated method of completely overwriting logging callbacks
   function runLoggingCallbacks( key, scope, args ) {
-    //debugger;
     var i, callbacks;
     if ( QUnit.hasOwnProperty( key ) ) {
       QUnit[ key ].call(scope, args );
@@ -1415,6 +1594,7 @@
 
           // for string, boolean, number and null
           function useStrictEquality( b, a ) {
+            /*jshint eqeqeq:false */
             if ( b instanceof a.constructor || a instanceof b.constructor ) {
               // to catch short annotaion VS 'new' annotation of a
               // declaration
@@ -1611,7 +1791,8 @@
 
     var reName = /^function (\w+)/,
         jsDump = {
-          parse: function( obj, type, stack ) { //type is used mostly internally, you can fix a (custom)type in advance
+          // type is used mostly internally, you can fix a (custom)type in advance
+          parse: function( obj, type, stack ) {
             stack = stack || [ ];
             var inStack, res,
                 parser = this.parsers[ type || this.typeOf(obj) ];
@@ -1619,18 +1800,16 @@
             type = typeof parser;
             inStack = inArray( obj, stack );
 
-            if ( inStack != -1 ) {
+            if ( inStack !== -1 ) {
               return "recursion(" + (inStack - stack.length) + ")";
             }
-            //else
-            if ( type == "function" )  {
+            if ( type === "function" )  {
               stack.push( obj );
               res = parser.call( this, obj, stack );
               stack.pop();
               return res;
             }
-            // else
-            return ( type == "string" ) ? parser : this.parsers.error;
+            return ( type === "string" ) ? parser : this.parsers.error;
           },
           typeOf: function( obj ) {
             var type;
@@ -1657,6 +1836,8 @@
                     ( typeof obj.length === "number" && typeof obj.item !== "undefined" && ( obj.length ? obj.item(0) === obj[0] : ( obj.item( 0 ) === null && typeof obj[0] === "undefined" ) ) )
                 ) {
               type = "array";
+            } else if ( obj.constructor === Error.prototype.constructor ) {
+              type = "error";
             } else {
               type = typeof obj;
             }
@@ -1665,7 +1846,8 @@
           separator: function() {
             return this.multiline ?	this.HTML ? "<br />" : "\n" : this.HTML ? "&nbsp;" : " ";
           },
-          indent: function( extra ) {// extra can be a number, shortcut for increasing-calling-decreasing
+          // extra can be a number, shortcut for increasing-calling-decreasing
+          indent: function( extra ) {
             if ( !this.multiline ) {
               return "";
             }
@@ -1694,13 +1876,16 @@
           parsers: {
             window: "[Window]",
             document: "[Document]",
-            error: "[ERROR]", //when no parser is found, shouldn"t happen
+            error: function(error) {
+              return "Error(\"" + error.message + "\")";
+            },
             unknown: "[Unknown]",
             "null": "null",
             "undefined": "undefined",
             "function": function( fn ) {
               var ret = "function",
-                  name = "name" in fn ? fn.name : (reName.exec(fn) || [])[1];//functions never have name in IE
+              // functions never have name in IE
+                  name = "name" in fn ? fn.name : (reName.exec(fn) || [])[1];
 
               if ( name ) {
                 ret += " " + name;
@@ -1716,13 +1901,9 @@
             object: function( map, stack ) {
               var ret = [ ], keys, key, val, i;
               QUnit.jsDump.up();
-              if ( Object.keys ) {
-                keys = Object.keys( map );
-              } else {
-                keys = [];
-                for ( key in map ) {
-                  keys.push( key );
-                }
+              keys = [];
+              for ( key in map ) {
+                keys.push( key );
               }
               keys.sort();
               for ( i = 0; i < keys.length; i++ ) {
@@ -1734,21 +1915,34 @@
               return join( "{", ret, "}" );
             },
             node: function( node ) {
-              var a, val,
+              var len, i, val,
                   open = QUnit.jsDump.HTML ? "&lt;" : "<",
                   close = QUnit.jsDump.HTML ? "&gt;" : ">",
                   tag = node.nodeName.toLowerCase(),
-                  ret = open + tag;
+                  ret = open + tag,
+                  attrs = node.attributes;
 
-              for ( a in QUnit.jsDump.DOMAttrs ) {
-                val = node[ QUnit.jsDump.DOMAttrs[a] ];
-                if ( val ) {
-                  ret += " " + a + "=" + QUnit.jsDump.parse( val, "attribute" );
+              if ( attrs ) {
+                for ( i = 0, len = attrs.length; i < len; i++ ) {
+                  val = attrs[i].nodeValue;
+                  // IE6 includes all attributes in .attributes, even ones not explicitly set.
+                  // Those have values like undefined, null, 0, false, "" or "inherit".
+                  if ( val && val !== "inherit" ) {
+                    ret += " " + attrs[i].nodeName + "=" + QUnit.jsDump.parse( val, "attribute" );
+                  }
                 }
               }
-              return ret + close + open + "/" + tag + close;
+              ret += close;
+
+              // Show content of TextNode or CDATASection
+              if ( node.nodeType === 3 || node.nodeType === 4 ) {
+                ret += node.nodeValue;
+              }
+
+              return ret + open + "/" + tag + close;
             },
-            functionArgs: function( fn ) {//function calls it internally, it's the arguments part of the function
+            // function calls it internally, it's the arguments part of the function
+            functionArgs: function( fn ) {
               var args,
                   l = fn.length;
 
@@ -1758,53 +1952,33 @@
 
               args = new Array(l);
               while ( l-- ) {
-                args[l] = String.fromCharCode(97+l);//97 is 'a'
+                // 97 is 'a'
+                args[l] = String.fromCharCode(97+l);
               }
               return " " + args.join( ", " ) + " ";
             },
-            key: quote, //object calls it internally, the key part of an item in a map
-            functionCode: "[code]", //function calls it internally, it's the content of the function
-            attribute: quote, //node calls it internally, it's an html attribute value
+            // object calls it internally, the key part of an item in a map
+            key: quote,
+            // function calls it internally, it's the content of the function
+            functionCode: "[code]",
+            // node calls it internally, it's an html attribute value
+            attribute: quote,
             string: quote,
             date: quote,
-            regexp: literal, //regex
+            regexp: literal,
             number: literal,
             "boolean": literal
           },
-          DOMAttrs: {
-            //attributes to dump from nodes, name=>realName
-            id: "id",
-            name: "name",
-            "class": "className"
-          },
-          HTML: false,//if true, entities are escaped ( <, >, \t, space and \n )
-          indentChar: "  ",//indentation unit
-          multiline: true //if true, items in a collection, are separated by a \n, else just a space.
+          // if true, entities are escaped ( <, >, \t, space and \n )
+          HTML: false,
+          // indentation unit
+          indentChar: "  ",
+          // if true, items in a collection, are separated by a \n, else just a space.
+          multiline: true
         };
 
     return jsDump;
   }());
-
-// from Sizzle.js
-  function getText( elems ) {
-    var i, elem,
-        ret = "";
-
-    for ( i = 0; elems[i]; i++ ) {
-      elem = elems[i];
-
-      // Get the text from text nodes and CDATA nodes
-      if ( elem.nodeType === 3 || elem.nodeType === 4 ) {
-        ret += elem.nodeValue;
-
-        // Traverse everything else, except comment nodes
-      } else if ( elem.nodeType !== 8 ) {
-        ret += getText( elem.childNodes );
-      }
-    }
-
-    return ret;
-  }
 
 // from jquery.js
   function inArray( elem, array ) {
@@ -1836,13 +2010,14 @@
    * QUnit.diff( "the quick brown fox jumped over", "the quick fox jumps over" ) == "the  quick <del>brown </del> fox <del>jumped </del><ins>jumps </ins> over"
    */
   QUnit.diff = (function() {
+    /*jshint eqeqeq:false, eqnull:true */
     function diff( o, n ) {
       var i,
           ns = {},
           os = {};
 
       for ( i = 0; i < n.length; i++ ) {
-        if ( ns[ n[i] ] == null ) {
+        if ( !hasOwn.call( ns, n[i] ) ) {
           ns[ n[i] ] = {
             rows: [],
             o: null
@@ -1852,7 +2027,7 @@
       }
 
       for ( i = 0; i < o.length; i++ ) {
-        if ( os[ o[i] ] == null ) {
+        if ( !hasOwn.call( os, o[i] ) ) {
           os[ o[i] ] = {
             rows: [],
             n: null
@@ -1865,7 +2040,7 @@
         if ( !hasOwn.call( ns, i ) ) {
           continue;
         }
-        if ( ns[i].rows.length == 1 && typeof os[i] != "undefined" && os[i].rows.length == 1 ) {
+        if ( ns[i].rows.length === 1 && hasOwn.call( os, i ) && os[i].rows.length === 1 ) {
           n[ ns[i].rows[0] ] = {
             text: n[ ns[i].rows[0] ],
             row: os[i].rows[0]
@@ -1971,15 +2146,13 @@
 
 // for CommonJS enviroments, export everything
   if ( typeof exports !== "undefined" ) {
-    extend(exports, QUnit);
+    extend( exports, QUnit );
   }
 
 // get at whatever the global object is, like window in browsers
 }( (function() {return this;}.call()) ));
 (function() {
-
   this.Teabag = (function() {
-
     function Teabag() {}
 
     Teabag.defer = false;
@@ -2011,6 +2184,7 @@
 
     Teabag.resolveDependenciesFromParams = function(all) {
       var dep, deps, file, parts, path, paths, _i, _j, _len, _len1;
+
       if (all == null) {
         all = [];
       }
@@ -2036,16 +2210,20 @@
     };
 
     Teabag.log = function() {
+      var e;
+
       this.messages.push(arguments[0]);
       try {
         return console.log.apply(console, arguments);
-      } catch (e) {
+      } catch (_error) {
+        e = _error;
         throw new Error("Unable to use console.log for logging");
       }
     };
 
     Teabag.getMessages = function() {
       var messages;
+
       messages = this.messages;
       this.messages = [];
       return messages;
@@ -2057,9 +2235,7 @@
 
 }).call(this);
 (function() {
-
   Teabag.Runner = (function() {
-
     Runner.run = false;
 
     function Runner() {
@@ -2074,6 +2250,7 @@
 
     Runner.prototype.getParams = function() {
       var name, param, params, value, _i, _len, _ref, _ref1;
+
       params = {};
       _ref = Teabag.location.search.substring(1).split("&");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -2120,6 +2297,7 @@
 
     fixture.preload = function() {
       var url, urls, _i, _len, _results;
+
       urls = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _results = [];
       for (_i = 0, _len = urls.length; _i < _len; _i++) {
@@ -2131,6 +2309,7 @@
 
     fixture.load = function() {
       var append, index, url, urls, _i, _j, _len, _results;
+
       urls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -2149,6 +2328,7 @@
 
     fixture.set = function() {
       var append, html, htmls, index, _i, _j, _len, _results;
+
       htmls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -2181,6 +2361,7 @@
 
     load = function(url, append, preload) {
       var cached, value;
+
       if (preload == null) {
         preload = false;
       }
@@ -2242,6 +2423,7 @@
 
     create = function() {
       var _ref;
+
       Teabag.fixture.el = document.createElement("div");
       if (typeof window.$ === 'function') {
         Teabag.fixture.$el = $(Teabag.fixture.el);
@@ -2252,6 +2434,7 @@
 
     cleanup = function() {
       var _base, _ref, _ref1;
+
       (_base = Teabag.fixture).el || (_base.el = document.getElementById("teabag-fixtures"));
       if ((_ref = Teabag.fixture.el) != null) {
         if ((_ref1 = _ref.parentNode) != null) {
@@ -2262,16 +2445,19 @@
     };
 
     xhrRequest = function(url, callback) {
+      var e;
+
       if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest();
       } else if (window.ActiveXObject) {
         try {
           xhr = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
+        } catch (_error) {
+          e = _error;
           try {
             xhr = new ActiveXObject("Microsoft.XMLHTTP");
-          } catch (e) {
-
+          } catch (_error) {
+            e = _error;
           }
         }
       }
@@ -2289,9 +2475,7 @@
 
 }).call(this);
 (function() {
-
   Teabag.Reporters.BaseView = (function() {
-
     function BaseView() {
       this.elements = {};
       this.build();
@@ -2311,6 +2495,7 @@
 
     BaseView.prototype.createEl = function(type, className) {
       var el;
+
       if (className == null) {
         className = "";
       }
@@ -2321,18 +2506,21 @@
 
     BaseView.prototype.findEl = function(id) {
       var _base;
+
       this.elements || (this.elements = {});
       return (_base = this.elements)[id] || (_base[id] = document.getElementById("teabag-" + id));
     };
 
     BaseView.prototype.setText = function(id, value) {
       var el;
+
       el = this.findEl(id);
       return el.innerHTML = value;
     };
 
     BaseView.prototype.setHtml = function(id, value, add) {
       var el;
+
       if (add == null) {
         add = false;
       }
@@ -2346,12 +2534,14 @@
 
     BaseView.prototype.setClass = function(id, value) {
       var el;
+
       el = this.findEl(id);
       return el.className = value;
     };
 
     BaseView.prototype.htmlSafe = function(str) {
       var el;
+
       el = document.createElement("div");
       el.appendChild(document.createTextNode(str));
       return el.innerHTML;
@@ -2368,14 +2558,11 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML = (function(_super) {
-
     __extends(HTML, _super);
 
     function HTML() {
       this.toggleConfig = __bind(this.toggleConfig, this);
-
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.start = new Teabag.Date().getTime();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teabag.Date().getTime();
       this.config = {
         "use-catch": true,
         "build-full-report": false,
@@ -2400,6 +2587,7 @@
 
     HTML.prototype.build = function() {
       var _ref;
+
       this.buildLayout();
       this.setText("env-info", this.envInfo());
       this.setText("version", Teabag.version);
@@ -2417,6 +2605,7 @@
 
     HTML.prototype.buildLayout = function() {
       var el;
+
       el = this.createEl("div");
       el.id = "teabag-interface";
       el.innerHTML = Teabag.Reporters.HTML.template;
@@ -2425,6 +2614,7 @@
 
     HTML.prototype.buildSuiteSelect = function() {
       var options, suite, _i, _len, _ref;
+
       if (Teabag.suites.all.length === 1) {
         return "";
       }
@@ -2501,6 +2691,7 @@
 
     HTML.prototype.updateStatus = function(spec) {
       var elapsed, result, _ref, _ref1;
+
       spec = new Teabag.Spec(spec);
       result = spec.result();
       if (result.skipped || result.status === "pending") {
@@ -2529,6 +2720,7 @@
 
     HTML.prototype.showConfiguration = function() {
       var key, value, _ref, _results;
+
       _ref = this.config;
       _results = [];
       for (key in _ref) {
@@ -2544,6 +2736,7 @@
 
     HTML.prototype.setFilters = function() {
       var link;
+
       link = [Teabag.root, Teabag.suites.active].join('/');
       if (Teabag.params["file"]) {
         this.filters.push("<a href='" + link + "'>remove</a> by file: " + Teabag.params["file"]);
@@ -2555,6 +2748,7 @@
 
     HTML.prototype.readConfig = function() {
       var config;
+
       if (config = this.cookie("teabag")) {
         return this.config = config;
       }
@@ -2562,6 +2756,7 @@
 
     HTML.prototype.toggleConfig = function(e) {
       var button, name;
+
       button = e.target;
       if (button.tagName.toLowerCase() !== "button") {
         return;
@@ -2582,6 +2777,7 @@
 
     HTML.prototype.cookie = function(name, value) {
       var date, match;
+
       if (value == null) {
         value = void 0;
       }
@@ -2602,15 +2798,16 @@
 
 }).call(this);
 (function() {
-  var __hasProp = {}.hasOwnProperty,
+  var _ref, _ref1, _ref2,
+    __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML.ProgressView = (function(_super) {
-
     __extends(ProgressView, _super);
 
     function ProgressView() {
-      return ProgressView.__super__.constructor.apply(this, arguments);
+      _ref = ProgressView.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     ProgressView.create = function(displayProgress) {
@@ -2638,11 +2835,11 @@
   })(Teabag.Reporters.BaseView);
 
   Teabag.Reporters.HTML.SimpleProgressView = (function(_super) {
-
     __extends(SimpleProgressView, _super);
 
     function SimpleProgressView() {
-      return SimpleProgressView.__super__.constructor.apply(this, arguments);
+      _ref1 = SimpleProgressView.__super__.constructor.apply(this, arguments);
+      return _ref1;
     }
 
     SimpleProgressView.prototype.build = function() {
@@ -2652,6 +2849,7 @@
 
     SimpleProgressView.prototype.update = function(total, run) {
       var percent;
+
       percent = total ? Math.ceil((run * 100) / total) : 0;
       return this.setHtml("progress-percent", "" + percent + "%");
     };
@@ -2661,11 +2859,11 @@
   })(Teabag.Reporters.HTML.ProgressView);
 
   Teabag.Reporters.HTML.RadialProgressView = (function(_super) {
-
     __extends(RadialProgressView, _super);
 
     function RadialProgressView() {
-      return RadialProgressView.__super__.constructor.apply(this, arguments);
+      _ref2 = RadialProgressView.__super__.constructor.apply(this, arguments);
+      return _ref2;
     }
 
     RadialProgressView.supported = !!document.createElement("canvas").getContext;
@@ -2676,7 +2874,8 @@
     };
 
     RadialProgressView.prototype.appendTo = function() {
-      var canvas;
+      var canvas, e;
+
       RadialProgressView.__super__.appendTo.apply(this, arguments);
       this.size = 80;
       try {
@@ -2685,13 +2884,14 @@
         this.ctx = canvas.getContext("2d");
         this.ctx.strokeStyle = "#fff";
         return this.ctx.lineWidth = 1.5;
-      } catch (e) {
-
+      } catch (_error) {
+        e = _error;
       }
     };
 
     RadialProgressView.prototype.update = function(total, run) {
       var half, percent;
+
       percent = total ? Math.ceil((run * 100) / total) : 0;
       this.setHtml("progress-percent", "" + percent + "%");
       if (!this.ctx) {
@@ -2731,6 +2931,7 @@
 
     SpecView.prototype.build = function() {
       var classes;
+
       classes = ["spec"];
       if (this.spec.pending) {
         classes.push("state-pending");
@@ -2743,6 +2944,7 @@
 
     SpecView.prototype.buildParent = function() {
       var parent, view;
+
       parent = this.spec.parent;
       if (parent.viewId) {
         return this.views.suites[parent.viewId];
@@ -2754,6 +2956,7 @@
 
     SpecView.prototype.buildErrors = function() {
       var div, error, html, _i, _len, _ref;
+
       div = this.createEl("div");
       html = "";
       _ref = this.spec.errors();
@@ -2767,6 +2970,7 @@
 
     SpecView.prototype.updateState = function(state, elapsed) {
       var classes, result, _base;
+
       result = this.spec.result();
       classes = ["state-" + state];
       if (elapsed > Teabag.slow) {
@@ -2792,7 +2996,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML.FailureView = (function(_super) {
-
     __extends(FailureView, _super);
 
     function FailureView(spec) {
@@ -2802,6 +3005,7 @@
 
     FailureView.prototype.build = function() {
       var error, html, _i, _len, _ref;
+
       FailureView.__super__.build.call(this, "spec");
       html = "<h1 class=\"teabag-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
       _ref = this.spec.errors();
@@ -2847,6 +3051,7 @@
 
     SuiteView.prototype.buildParent = function() {
       var parent, view;
+
       parent = this.suite.parent;
       if (!parent) {
         return this.reporter;
@@ -2868,6 +3073,7 @@
 
     SuiteView.prototype.updateState = function(state) {
       var _base;
+
       if (this.state === "failed") {
         return;
       }
@@ -2884,7 +3090,6 @@
 
 }).call(this);
 (function() {
-
   Teabag.Reporters.HTML.template = "<div class=\"teabag-clearfix\">\n  <div id=\"teabag-title\">\n    <h1><a href=\"\" id=\"teabag-root-link\">Teabag</a></h1>\n    <ul>\n      <li>version: <b id=\"teabag-version\"></b></li>\n      <li id=\"teabag-env-info\"></li>\n    </ul>\n  </div>\n  <div id=\"teabag-progress\"></div>\n  <ul id=\"teabag-stats\">\n    <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n    <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n    <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n    <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n  </ul>\n</div>\n\n<div id=\"teabag-controls\" class=\"teabag-clearfix\">\n  <div id=\"teabag-toggles\">\n    <button id=\"teabag-use-catch\" title=\"Toggle using try/catch wrappers when possible\">Try/Catch</button>\n    <button id=\"teabag-build-full-report\" title=\"Toggle building the full report\">Full Report</button>\n    <button id=\"teabag-display-progress\" title=\"Toggle displaying progress as tests run\">Progress</button>\n  </div>\n  <div id=\"teabag-suites\"></div>\n</div>\n\n<hr/>\n\n<div id=\"teabag-filter\">\n  <h1>Filtering</h1>\n  <ul id=\"teabag-filter-list\"></ul>\n</div>\n\n<div id=\"teabag-report\">\n  <ol id=\"teabag-report-failures\"></ol>\n  <ol id=\"teabag-report-all\"></ol>\n</div>";
 
 }).call(this);
@@ -2892,10 +3097,8 @@
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   Teabag.Reporters.Console = (function() {
-
     function Console() {
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.start = new Teabag.Date();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teabag.Date();
       this.suites = {};
     }
 
@@ -2909,6 +3112,7 @@
 
     Console.prototype.reportSuites = function() {
       var index, suite, _i, _len, _ref, _results;
+
       _ref = this.spec.getParents();
       _results = [];
       for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
@@ -2928,6 +3132,7 @@
 
     Console.prototype.reportSpecResults = function(spec) {
       var result;
+
       this.spec = new Teabag.Spec(spec);
       result = this.spec.result();
       if (result.skipped) {
@@ -2952,6 +3157,7 @@
 
     Console.prototype.trackPending = function() {
       var result;
+
       result = this.spec.result();
       return this.log({
         type: "spec",
@@ -2964,6 +3170,7 @@
 
     Console.prototype.trackFailure = function() {
       var error, result, _i, _len, _ref, _results;
+
       result = this.spec.result();
       _ref = this.spec.errors();
       _results = [];
@@ -3048,19 +3255,17 @@
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  var _ref, _ref1,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML = (function(_super) {
-
     __extends(HTML, _super);
 
     function HTML(env) {
       this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-
-      this.reportSpecResults = __bind(this.reportSpecResults, this);
-      HTML.__super__.constructor.apply(this, arguments);
+      this.reportSpecResults = __bind(this.reportSpecResults, this);      HTML.__super__.constructor.apply(this, arguments);
       env.log(this.reportSpecResults);
       env.testDone(this.reportSpecResults);
       env.done(this.reportRunnerResults);
@@ -3095,7 +3300,7 @@
     };
 
     HTML.prototype.envInfo = function() {
-      return "qunit 1.10.0";
+      return "qunit 1.11.0";
     };
 
     return HTML;
@@ -3103,20 +3308,21 @@
   })(Teabag.Reporters.HTML);
 
   Teabag.Reporters.HTML.SpecView = (function(_super) {
-
     __extends(SpecView, _super);
 
     function SpecView() {
-      return SpecView.__super__.constructor.apply(this, arguments);
+      _ref = SpecView.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     SpecView.prototype.buildErrors = function() {
-      var div, error, html, _i, _len, _ref;
+      var div, error, html, _i, _len, _ref1;
+
       div = this.createEl("div");
       html = "";
-      _ref = this.spec.errors();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        error = _ref[_i];
+      _ref1 = this.spec.errors();
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        error = _ref1[_i];
         html += "<strong>" + error.message + "</strong><br/>" + (this.htmlSafe(error.stack || "Stack trace unavailable")) + "<br/>";
       }
       div.innerHTML = html;
@@ -3125,6 +3331,7 @@
 
     SpecView.prototype.buildParent = function() {
       var parent, view;
+
       parent = this.spec.parent;
       if (!parent) {
         return this.reporter;
@@ -3142,20 +3349,21 @@
   })(Teabag.Reporters.HTML.SpecView);
 
   Teabag.Reporters.HTML.FailureView = (function(_super) {
-
     __extends(FailureView, _super);
 
     function FailureView() {
-      return FailureView.__super__.constructor.apply(this, arguments);
+      _ref1 = FailureView.__super__.constructor.apply(this, arguments);
+      return _ref1;
     }
 
     FailureView.prototype.build = function() {
-      var error, html, _i, _len, _ref;
+      var error, html, _i, _len, _ref2;
+
       FailureView.__super__.build.call(this, "spec");
       html = "<h1 class=\"teabag-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
-      _ref = this.spec.errors();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        error = _ref[_i];
+      _ref2 = this.spec.errors();
+      for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
+        error = _ref2[_i];
         html += "<div><strong>" + error.message + "</strong><br/>" + (this.htmlSafe(error.stack || "Stack trace unavailable")) + "</div>";
       }
       return this.el.innerHTML = html;
@@ -3166,7 +3374,6 @@
   })(Teabag.Reporters.HTML.FailureView);
 
   Teabag.Reporters.HTML.SuiteView = (function(_super) {
-
     __extends(SuiteView, _super);
 
     function SuiteView(suite, reporter) {
@@ -3188,7 +3395,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Runner = (function(_super) {
-
     __extends(Runner, _super);
 
     function Runner() {
@@ -3205,7 +3411,6 @@
   })(Teabag.Runner);
 
   Teabag.Spec = (function() {
-
     function Spec(spec) {
       this.spec = spec;
       this.fullDescription = "" + this.spec.module + " " + this.spec.name;
@@ -3221,6 +3426,7 @@
 
     Spec.prototype.errors = function() {
       var item, _i, _len, _ref, _results;
+
       if (!this.spec.failed) {
         return [];
       }
@@ -3248,6 +3454,7 @@
 
     Spec.prototype.result = function() {
       var status;
+
       status = "failed";
       if (!this.spec.failed) {
         status = "passed";
@@ -3263,7 +3470,6 @@
   })();
 
   Teabag.Suite = (function() {
-
     function Suite(suite) {
       this.suite = suite;
       this.fullDescription = this.suite.description;

@@ -1,6 +1,5 @@
 ;(function(){
 
-
 // CommonJS require()
 
   function require(p){
@@ -52,9 +51,9 @@
 
     module.exports = function(type){
       return function(){
-
       }
     };
+
   }); // module: browser/debug.js
 
   require.register("browser/diff.js", function(module, exports, require){
@@ -805,7 +804,6 @@
       this._error = err;
     };
 
-
   }); // module: hook.js
 
   require.register("interfaces/bdd.js", function(module, exports, require){
@@ -1006,6 +1004,7 @@
         }
       }
     };
+
   }); // module: interfaces/exports.js
 
   require.register("interfaces/index.js", function(module, exports, require){
@@ -1549,7 +1548,7 @@
       var options = this.options;
       var runner = new exports.Runner(suite);
       var reporter = new this._reporter(runner);
-      runner.ignoreLeaks = options.ignoreLeaks;
+      runner.ignoreLeaks = false !== options.ignoreLeaks;
       runner.asyncOnly = options.asyncOnly;
       if (options.grep) runner.grep(options.grep, options.invert);
       if (options.globals) runner.globals(options.globals);
@@ -2334,8 +2333,6 @@
       });
 
       runner.on('test end', function(test){
-        window.scrollTo(0, document.body.scrollHeight);
-
         // TODO: add to stats
         var percent = stats.tests / this.total * 100 | 0;
         if (progress) progress.update(percent).draw(ctx);
@@ -3100,10 +3097,10 @@
     Min.prototype = new F;
     Min.prototype.constructor = Min;
 
+
   }); // module: reporters/min.js
 
   require.register("reporters/nyan.js", function(module, exports, require){
-
     /**
      * Module dependencies.
      */
@@ -3249,44 +3246,39 @@
     NyanCat.prototype.drawNyanCat = function(status) {
       var self = this;
       var startWidth = this.scoreboardWidth + this.trajectories[0].length;
+      var color = '\u001b[' + startWidth + 'C';
+      var padding = '';
 
-      [0, 1, 2, 3].forEach(function(index) {
-        write('\u001b[' + startWidth + 'C');
+      write(color);
+      write('_,------,');
+      write('\n');
 
-        switch (index) {
-          case 0:
-            write('_,------,');
-            write('\n');
-            break;
-          case 1:
-            var padding = self.tick ? '  ' : '   ';
-            write('_|' + padding + '/\\_/\\ ');
-            write('\n');
-            break;
-          case 2:
-            var padding = self.tick ? '_' : '__';
-            var tail = self.tick ? '~' : '^';
-            var face;
-            switch (status) {
-              case 'pass':
-                face = '( ^ .^)';
-                break;
-              case 'fail':
-                face = '( o .o)';
-                break;
-              default:
-                face = '( - .-)';
-            }
-            write(tail + '|' + padding + face + ' ');
-            write('\n');
-            break;
-          case 3:
-            var padding = self.tick ? ' ' : '  ';
-            write(padding + '""  "" ');
-            write('\n');
-            break;
-        }
-      });
+      write(color);
+      padding = self.tick ? '  ' : '   ';
+      write('_|' + padding + '/\\_/\\ ');
+      write('\n');
+
+      write(color);
+      padding = self.tick ? '_' : '__';
+      var tail = self.tick ? '~' : '^';
+      var face;
+      switch (status) {
+        case 'pass':
+          face = '( ^ .^)';
+          break;
+        case 'fail':
+          face = '( o .o)';
+          break;
+        default:
+          face = '( - .-)';
+      }
+      write(tail + '|' + padding + face + ' ');
+      write('\n');
+
+      write(color);
+      padding = self.tick ? ' ' : '  ';
+      write(padding + '""  "" ');
+      write('\n');
 
       this.cursorUp(this.numberOfLines);
     };
@@ -4065,8 +4057,7 @@
         , Test = require('./test')
         , utils = require('./utils')
         , filter = utils.filter
-        , keys = utils.keys
-        , noop = function(){};
+        , keys = utils.keys;
 
     /**
      * Non-enumerable globals.
@@ -4117,6 +4108,15 @@
       this.grep(/.*/);
       this.globals(this.globalProps().concat(['errno']));
     }
+
+    /**
+     * Wrapper for setImmediate, process.nextTick, or browser polyfill.
+     *
+     * @param {Function} fn
+     * @api private
+     */
+
+    Runner.immediately = global.setImmediate || process.nextTick;
 
     /**
      * Inherit from `EventEmitter.prototype`.
@@ -4303,7 +4303,7 @@
         });
       }
 
-      process.nextTick(function(){
+      Runner.immediately(function(){
         next(0);
       });
     };
@@ -4546,14 +4546,16 @@
       var self = this
           , fn = fn || function(){};
 
+      function uncaught(err){
+        self.uncaught(err);
+      }
+
       debug('start');
 
       // callback
       this.on('end', function(){
         debug('end');
-        process.removeListener('uncaughtException', function(err){
-          self.uncaught(err);
-        });
+        process.removeListener('uncaughtException', uncaught);
         fn(self.failures);
       });
 
@@ -4565,9 +4567,7 @@
       });
 
       // uncaught exception
-      process.on('uncaughtException', function(err){
-        self.uncaught(err);
-      });
+      process.on('uncaughtException', uncaught);
 
       return this;
     };
@@ -5239,34 +5239,6 @@
   global = window;
 
   /**
-   * next tick implementation.
-   */
-
-  process.nextTick = (function(){
-    // postMessage behaves badly on IE8
-    if (window.ActiveXObject || !window.postMessage) {
-      return function(fn){ fn() };
-    }
-
-    // based on setZeroTimeout by David Baron
-    // - http://dbaron.org/log/20100309-faster-timeouts
-    var timeouts = []
-        , name = 'mocha-zero-timeout'
-
-    window.addEventListener('message', function(e){
-      if (e.source == window && e.data == name) {
-        if (e.stopPropagation) e.stopPropagation();
-        if (timeouts.length) timeouts.shift()();
-      }
-    }, true);
-
-    return function(fn){
-      timeouts.push(fn);
-      window.postMessage(name, '*');
-    }
-  })();
-
-  /**
    * Remove uncaughtException listener.
    */
 
@@ -5297,6 +5269,32 @@
 
     var Mocha = window.Mocha = require('mocha'),
         mocha = window.mocha = new Mocha({ reporter: 'html' });
+
+    var immediateQueue = []
+        , immediateTimeout;
+
+    function timeslice() {
+      var immediateStart = new Date().getTime();
+      while (immediateQueue.length && (new Date().getTime() - immediateStart) < 100) {
+        immediateQueue.shift()();
+      }
+      if (immediateQueue.length) {
+        immediateTimeout = setTimeout(timeslice, 0);
+      } else {
+        immediateTimeout = null;
+      }
+    }
+
+    /**
+     * High-performance override of Runner.immediately.
+     */
+
+    Mocha.Runner.immediately = function(callback) {
+      immediateQueue.push(callback);
+      if (!immediateTimeout) {
+        immediateTimeout = setTimeout(timeslice, 0);
+      }
+    };
 
     /**
      * Override ui to ensure that the ui functions are initialized.
@@ -5339,9 +5337,7 @@
   })();
 })();
 (function() {
-
   this.Teabag = (function() {
-
     function Teabag() {}
 
     Teabag.defer = false;
@@ -5373,6 +5369,7 @@
 
     Teabag.resolveDependenciesFromParams = function(all) {
       var dep, deps, file, parts, path, paths, _i, _j, _len, _len1;
+
       if (all == null) {
         all = [];
       }
@@ -5398,16 +5395,20 @@
     };
 
     Teabag.log = function() {
+      var e;
+
       this.messages.push(arguments[0]);
       try {
         return console.log.apply(console, arguments);
-      } catch (e) {
+      } catch (_error) {
+        e = _error;
         throw new Error("Unable to use console.log for logging");
       }
     };
 
     Teabag.getMessages = function() {
       var messages;
+
       messages = this.messages;
       this.messages = [];
       return messages;
@@ -5419,9 +5420,7 @@
 
 }).call(this);
 (function() {
-
   Teabag.Runner = (function() {
-
     Runner.run = false;
 
     function Runner() {
@@ -5436,6 +5435,7 @@
 
     Runner.prototype.getParams = function() {
       var name, param, params, value, _i, _len, _ref, _ref1;
+
       params = {};
       _ref = Teabag.location.search.substring(1).split("&");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -5482,6 +5482,7 @@
 
     fixture.preload = function() {
       var url, urls, _i, _len, _results;
+
       urls = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _results = [];
       for (_i = 0, _len = urls.length; _i < _len; _i++) {
@@ -5493,6 +5494,7 @@
 
     fixture.load = function() {
       var append, index, url, urls, _i, _j, _len, _results;
+
       urls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -5511,6 +5513,7 @@
 
     fixture.set = function() {
       var append, html, htmls, index, _i, _j, _len, _results;
+
       htmls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -5543,6 +5546,7 @@
 
     load = function(url, append, preload) {
       var cached, value;
+
       if (preload == null) {
         preload = false;
       }
@@ -5604,6 +5608,7 @@
 
     create = function() {
       var _ref;
+
       Teabag.fixture.el = document.createElement("div");
       if (typeof window.$ === 'function') {
         Teabag.fixture.$el = $(Teabag.fixture.el);
@@ -5614,6 +5619,7 @@
 
     cleanup = function() {
       var _base, _ref, _ref1;
+
       (_base = Teabag.fixture).el || (_base.el = document.getElementById("teabag-fixtures"));
       if ((_ref = Teabag.fixture.el) != null) {
         if ((_ref1 = _ref.parentNode) != null) {
@@ -5624,16 +5630,19 @@
     };
 
     xhrRequest = function(url, callback) {
+      var e;
+
       if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest();
       } else if (window.ActiveXObject) {
         try {
           xhr = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
+        } catch (_error) {
+          e = _error;
           try {
             xhr = new ActiveXObject("Microsoft.XMLHTTP");
-          } catch (e) {
-
+          } catch (_error) {
+            e = _error;
           }
         }
       }
@@ -5651,9 +5660,7 @@
 
 }).call(this);
 (function() {
-
   Teabag.Reporters.BaseView = (function() {
-
     function BaseView() {
       this.elements = {};
       this.build();
@@ -5673,6 +5680,7 @@
 
     BaseView.prototype.createEl = function(type, className) {
       var el;
+
       if (className == null) {
         className = "";
       }
@@ -5683,18 +5691,21 @@
 
     BaseView.prototype.findEl = function(id) {
       var _base;
+
       this.elements || (this.elements = {});
       return (_base = this.elements)[id] || (_base[id] = document.getElementById("teabag-" + id));
     };
 
     BaseView.prototype.setText = function(id, value) {
       var el;
+
       el = this.findEl(id);
       return el.innerHTML = value;
     };
 
     BaseView.prototype.setHtml = function(id, value, add) {
       var el;
+
       if (add == null) {
         add = false;
       }
@@ -5708,12 +5719,14 @@
 
     BaseView.prototype.setClass = function(id, value) {
       var el;
+
       el = this.findEl(id);
       return el.className = value;
     };
 
     BaseView.prototype.htmlSafe = function(str) {
       var el;
+
       el = document.createElement("div");
       el.appendChild(document.createTextNode(str));
       return el.innerHTML;
@@ -5730,14 +5743,11 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML = (function(_super) {
-
     __extends(HTML, _super);
 
     function HTML() {
       this.toggleConfig = __bind(this.toggleConfig, this);
-
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.start = new Teabag.Date().getTime();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teabag.Date().getTime();
       this.config = {
         "use-catch": true,
         "build-full-report": false,
@@ -5762,6 +5772,7 @@
 
     HTML.prototype.build = function() {
       var _ref;
+
       this.buildLayout();
       this.setText("env-info", this.envInfo());
       this.setText("version", Teabag.version);
@@ -5779,6 +5790,7 @@
 
     HTML.prototype.buildLayout = function() {
       var el;
+
       el = this.createEl("div");
       el.id = "teabag-interface";
       el.innerHTML = Teabag.Reporters.HTML.template;
@@ -5787,6 +5799,7 @@
 
     HTML.prototype.buildSuiteSelect = function() {
       var options, suite, _i, _len, _ref;
+
       if (Teabag.suites.all.length === 1) {
         return "";
       }
@@ -5863,6 +5876,7 @@
 
     HTML.prototype.updateStatus = function(spec) {
       var elapsed, result, _ref, _ref1;
+
       spec = new Teabag.Spec(spec);
       result = spec.result();
       if (result.skipped || result.status === "pending") {
@@ -5891,6 +5905,7 @@
 
     HTML.prototype.showConfiguration = function() {
       var key, value, _ref, _results;
+
       _ref = this.config;
       _results = [];
       for (key in _ref) {
@@ -5906,6 +5921,7 @@
 
     HTML.prototype.setFilters = function() {
       var link;
+
       link = [Teabag.root, Teabag.suites.active].join('/');
       if (Teabag.params["file"]) {
         this.filters.push("<a href='" + link + "'>remove</a> by file: " + Teabag.params["file"]);
@@ -5917,6 +5933,7 @@
 
     HTML.prototype.readConfig = function() {
       var config;
+
       if (config = this.cookie("teabag")) {
         return this.config = config;
       }
@@ -5924,6 +5941,7 @@
 
     HTML.prototype.toggleConfig = function(e) {
       var button, name;
+
       button = e.target;
       if (button.tagName.toLowerCase() !== "button") {
         return;
@@ -5944,6 +5962,7 @@
 
     HTML.prototype.cookie = function(name, value) {
       var date, match;
+
       if (value == null) {
         value = void 0;
       }
@@ -5964,15 +5983,16 @@
 
 }).call(this);
 (function() {
-  var __hasProp = {}.hasOwnProperty,
+  var _ref, _ref1, _ref2,
+    __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML.ProgressView = (function(_super) {
-
     __extends(ProgressView, _super);
 
     function ProgressView() {
-      return ProgressView.__super__.constructor.apply(this, arguments);
+      _ref = ProgressView.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     ProgressView.create = function(displayProgress) {
@@ -6000,11 +6020,11 @@
   })(Teabag.Reporters.BaseView);
 
   Teabag.Reporters.HTML.SimpleProgressView = (function(_super) {
-
     __extends(SimpleProgressView, _super);
 
     function SimpleProgressView() {
-      return SimpleProgressView.__super__.constructor.apply(this, arguments);
+      _ref1 = SimpleProgressView.__super__.constructor.apply(this, arguments);
+      return _ref1;
     }
 
     SimpleProgressView.prototype.build = function() {
@@ -6014,6 +6034,7 @@
 
     SimpleProgressView.prototype.update = function(total, run) {
       var percent;
+
       percent = total ? Math.ceil((run * 100) / total) : 0;
       return this.setHtml("progress-percent", "" + percent + "%");
     };
@@ -6023,11 +6044,11 @@
   })(Teabag.Reporters.HTML.ProgressView);
 
   Teabag.Reporters.HTML.RadialProgressView = (function(_super) {
-
     __extends(RadialProgressView, _super);
 
     function RadialProgressView() {
-      return RadialProgressView.__super__.constructor.apply(this, arguments);
+      _ref2 = RadialProgressView.__super__.constructor.apply(this, arguments);
+      return _ref2;
     }
 
     RadialProgressView.supported = !!document.createElement("canvas").getContext;
@@ -6038,7 +6059,8 @@
     };
 
     RadialProgressView.prototype.appendTo = function() {
-      var canvas;
+      var canvas, e;
+
       RadialProgressView.__super__.appendTo.apply(this, arguments);
       this.size = 80;
       try {
@@ -6047,13 +6069,14 @@
         this.ctx = canvas.getContext("2d");
         this.ctx.strokeStyle = "#fff";
         return this.ctx.lineWidth = 1.5;
-      } catch (e) {
-
+      } catch (_error) {
+        e = _error;
       }
     };
 
     RadialProgressView.prototype.update = function(total, run) {
       var half, percent;
+
       percent = total ? Math.ceil((run * 100) / total) : 0;
       this.setHtml("progress-percent", "" + percent + "%");
       if (!this.ctx) {
@@ -6093,6 +6116,7 @@
 
     SpecView.prototype.build = function() {
       var classes;
+
       classes = ["spec"];
       if (this.spec.pending) {
         classes.push("state-pending");
@@ -6105,6 +6129,7 @@
 
     SpecView.prototype.buildParent = function() {
       var parent, view;
+
       parent = this.spec.parent;
       if (parent.viewId) {
         return this.views.suites[parent.viewId];
@@ -6116,6 +6141,7 @@
 
     SpecView.prototype.buildErrors = function() {
       var div, error, html, _i, _len, _ref;
+
       div = this.createEl("div");
       html = "";
       _ref = this.spec.errors();
@@ -6129,6 +6155,7 @@
 
     SpecView.prototype.updateState = function(state, elapsed) {
       var classes, result, _base;
+
       result = this.spec.result();
       classes = ["state-" + state];
       if (elapsed > Teabag.slow) {
@@ -6154,7 +6181,6 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML.FailureView = (function(_super) {
-
     __extends(FailureView, _super);
 
     function FailureView(spec) {
@@ -6164,6 +6190,7 @@
 
     FailureView.prototype.build = function() {
       var error, html, _i, _len, _ref;
+
       FailureView.__super__.build.call(this, "spec");
       html = "<h1 class=\"teabag-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
       _ref = this.spec.errors();
@@ -6209,6 +6236,7 @@
 
     SuiteView.prototype.buildParent = function() {
       var parent, view;
+
       parent = this.suite.parent;
       if (!parent) {
         return this.reporter;
@@ -6230,6 +6258,7 @@
 
     SuiteView.prototype.updateState = function(state) {
       var _base;
+
       if (this.state === "failed") {
         return;
       }
@@ -6246,7 +6275,6 @@
 
 }).call(this);
 (function() {
-
   Teabag.Reporters.HTML.template = "<div class=\"teabag-clearfix\">\n  <div id=\"teabag-title\">\n    <h1><a href=\"\" id=\"teabag-root-link\">Teabag</a></h1>\n    <ul>\n      <li>version: <b id=\"teabag-version\"></b></li>\n      <li id=\"teabag-env-info\"></li>\n    </ul>\n  </div>\n  <div id=\"teabag-progress\"></div>\n  <ul id=\"teabag-stats\">\n    <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n    <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n    <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n    <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n  </ul>\n</div>\n\n<div id=\"teabag-controls\" class=\"teabag-clearfix\">\n  <div id=\"teabag-toggles\">\n    <button id=\"teabag-use-catch\" title=\"Toggle using try/catch wrappers when possible\">Try/Catch</button>\n    <button id=\"teabag-build-full-report\" title=\"Toggle building the full report\">Full Report</button>\n    <button id=\"teabag-display-progress\" title=\"Toggle displaying progress as tests run\">Progress</button>\n  </div>\n  <div id=\"teabag-suites\"></div>\n</div>\n\n<hr/>\n\n<div id=\"teabag-filter\">\n  <h1>Filtering</h1>\n  <ul id=\"teabag-filter-list\"></ul>\n</div>\n\n<div id=\"teabag-report\">\n  <ol id=\"teabag-report-failures\"></ol>\n  <ol id=\"teabag-report-all\"></ol>\n</div>";
 
 }).call(this);
@@ -6254,10 +6282,8 @@
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   Teabag.Reporters.Console = (function() {
-
     function Console() {
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.start = new Teabag.Date();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teabag.Date();
       this.suites = {};
     }
 
@@ -6271,6 +6297,7 @@
 
     Console.prototype.reportSuites = function() {
       var index, suite, _i, _len, _ref, _results;
+
       _ref = this.spec.getParents();
       _results = [];
       for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
@@ -6290,6 +6317,7 @@
 
     Console.prototype.reportSpecResults = function(spec) {
       var result;
+
       this.spec = new Teabag.Spec(spec);
       result = this.spec.result();
       if (result.skipped) {
@@ -6314,6 +6342,7 @@
 
     Console.prototype.trackPending = function() {
       var result;
+
       result = this.spec.result();
       return this.log({
         type: "spec",
@@ -6326,6 +6355,7 @@
 
     Console.prototype.trackFailure = function() {
       var error, result, _i, _len, _ref, _results;
+
       result = this.spec.result();
       _ref = this.spec.errors();
       _results = [];
@@ -6402,17 +6432,16 @@
 
 }).call(this);
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  var _ref,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML = (function(_super) {
-
     __extends(HTML, _super);
 
     function HTML(runner) {
-      this.reportSpecResults = __bind(this.reportSpecResults, this);
-      HTML.__super__.constructor.apply(this, arguments);
+      this.reportSpecResults = __bind(this.reportSpecResults, this);      HTML.__super__.constructor.apply(this, arguments);
       this.reportRunnerStarting(runner);
       runner.on("fail", this.reportSpecResults);
       runner.on("test end", this.reportSpecResults);
@@ -6432,7 +6461,7 @@
     };
 
     HTML.prototype.envInfo = function() {
-      return "mocha 1.8.1";
+      return "mocha 1.9.1";
     };
 
     return HTML;
@@ -6440,11 +6469,11 @@
   })(Teabag.Reporters.HTML);
 
   Teabag.Reporters.HTML.SpecView = (function(_super) {
-
     __extends(SpecView, _super);
 
     function SpecView() {
-      return SpecView.__super__.constructor.apply(this, arguments);
+      _ref = SpecView.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     SpecView.prototype.updateState = function(state) {
@@ -6457,12 +6486,11 @@
 
 }).call(this);
 (function() {
-  var env,
+  var env, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Runner = (function(_super) {
-
     __extends(Runner, _super);
 
     function Runner() {
@@ -6476,6 +6504,7 @@
 
     Runner.prototype.setup = function() {
       var reporter;
+
       reporter = this.getReporter();
       return env.setup({
         reporter: reporter
@@ -6487,7 +6516,6 @@
   })(Teabag.Runner);
 
   Teabag.Spec = (function() {
-
     function Spec(spec) {
       this.spec = spec;
       this.fullDescription = this.spec.fullTitle();
@@ -6508,6 +6536,7 @@
 
     Spec.prototype.getParents = function() {
       var parent;
+
       if (this.parents) {
         return this.parents;
       }
@@ -6523,6 +6552,7 @@
 
     Spec.prototype.result = function() {
       var status;
+
       status = "failed";
       if (this.spec.state === "passed" || this.spec.state === "skipped") {
         status = "passed";
@@ -6541,7 +6571,6 @@
   })();
 
   Teabag.Suite = (function() {
-
     function Suite(suite) {
       this.suite = suite;
       this.fullDescription = this.suite.fullTitle();
@@ -6556,11 +6585,11 @@
   })();
 
   Teabag.fixture = (function(_super) {
-
     __extends(fixture, _super);
 
     function fixture() {
-      return fixture.__super__.constructor.apply(this, arguments);
+      _ref = fixture.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     window.fixture = fixture;
@@ -6568,6 +6597,7 @@
     fixture.load = function() {
       var args,
         _this = this;
+
       args = arguments;
       if (env.started) {
         return fixture.__super__.constructor.load.apply(this, arguments);
@@ -6581,6 +6611,7 @@
     fixture.set = function() {
       var args,
         _this = this;
+
       args = arguments;
       if (env.started) {
         return fixture.__super__.constructor.set.apply(this, arguments);
