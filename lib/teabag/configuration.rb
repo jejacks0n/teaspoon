@@ -14,6 +14,7 @@ module Teabag
     # console runner specific
     cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :formatters, :suppress_log, :color, :coverage, :coverage_reports, :server
     @@driver           = "phantomjs"
+    @@server           = nil
     @@server_port      = nil
     @@server_timeout   = 20
     @@fail_fast        = true
@@ -22,7 +23,6 @@ module Teabag
     @@color            = true
     @@coverage         = false
     @@coverage_reports = nil
-    @@server           = nil
 
     class Suite
       attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage
@@ -79,7 +79,7 @@ module Teabag
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive] == "true")
     end
-    %w(DRIVER FORMATTERS SERVER_TIMEOUT SERVER_PORT COVERAGE_REPORTS).each do |directive|
+    %w(DRIVER SERVER SERVER_TIMEOUT SERVER_PORT FORMATTERS COVERAGE_REPORTS).each do |directive|
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive])
     end

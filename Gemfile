@@ -5,6 +5,7 @@ gemspec
 # gems that teabag can utilize
 gem "selenium-webdriver"
 gem "tapout"
+gem "thin"
 
 # used by the dummy application
 gem "rails", ">= 3.2.9"

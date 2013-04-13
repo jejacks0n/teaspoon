@@ -36,6 +36,10 @@ module Teabag
           @options[:driver] = driver
         end
 
+        parser.on("--server SERVER", "Sets server to use with Rack.") do |server|
+          @options[:server] = server
+        end
+
         parser.on("--server-timeout SECONDS", "Sets the timeout for the server to start.") do |seconds|
           @options[:server_timeout] = seconds
         end

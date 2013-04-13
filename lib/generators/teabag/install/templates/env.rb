@@ -13,8 +13,9 @@ require File.expand_path("../../config/environment", __FILE__)
 # teabag --driver=selenium --suppress-log
 # rake teabag DRIVER=selenium SUPPRESS_LOG=false
 Teabag.setup do |config|
-  # Driver
+  # Driver / Server
   #config.driver           = "phantomjs" # available: phantomjs, selenium
+  #config.server           = nil # defaults to Rack::Server
 
   # Behaviors
   #config.server_timeout   = 20 # timeout for starting the server
