@@ -5,6 +5,7 @@ class TeabagInterface
     @input = $u("#teabag-filter-input")[0]
     @input.value = ""
     @input.onkeyup = @filter
+    @input.focus()
 
 
   filter: =>
