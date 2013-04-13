@@ -5,9 +5,9 @@ Teabag
 
 Teabag is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS or with Selenium WebDriver.
 
-It's objective is to be the simplest, while also being the most complete Javascript testing solution for Rails. It takes full advantage of the asset pipeline and ships with support for Jasmine, Mocha and QUnit.
+It's objective is to be the simplest, while also being the most complete Javascript testing solution for Rails. It takes full advantage of the asset pipeline and ships with support for Jasmine, Mocha, QUnit, and (experiementally) Angular.
 
-Ok, another Javascript test runner, right? Really? Yeah, that's tough, but we're pretty confident Teabag is one of the nicest you'll find at the moment. And if you disagree, you can swing by our offices in Denver and we'll buy you a beer if you're so inclined -- and probably fix whatever it is that you didn't like.
+Ok, another Javascript test runner, right? Really? Yeah, that's tough, but we're pretty confident Teabag is one of the nicest and most full featured you'll find at the moment. And if you disagree, let us know and we'll probably fix whatever it is that you didn't like.
 
 Feedback, ideas and pull requests are always welcome, or you can hit us up on Twitter [@modeset_](https://twitter.com/modeset_).
 
@@ -86,7 +86,7 @@ rake teabag suite=my_fantastic_suite
 
 ### Command Line Interface
 
-The command line interface requires a teabag_env.rb file that you can get by running the generator. This file is used to load the Rails environment so Teabag can run within the context of Rails.
+The command line interface requires a `teabag_env.rb` file that you can get by running the generator. This file is used to load the Rails environment so Teabag can run within the context of Rails. This file can be in the spec, test, or root path -- but can be specified using the `--require` option.
 
 ```
 bundle exec teabag
@@ -135,7 +135,7 @@ describe("My great feature", function() {
 });
 ```
 
-Check out examples of a [Mocha Spec](https://github.com/modeset/teabag/wiki/Using-Mocha) and a [QUnit Test](https://github.com/modeset/teabag/wiki/Using-QUnit).
+Check out examples of a [Mocha Spec](https://github.com/modeset/teabag/wiki/Using-Mocha), a [QUnit Test](https://github.com/modeset/teabag/wiki/Using-QUnit), and an [Angular Test](https://github.com/modeset/teabag/wiki/Using-Angular).
 
 ### Pending Specs
 
@@ -171,7 +171,7 @@ setTimeout(Teabag.execute, 1000); // defers execution for 1 second
 
 ## Fixtures
 
-You're free to use your own fixture library (like jasmine-jquery, which we've included as a support library), but Teabag ships with a fixture library that works with Jasmine, Mocha, and QUnit with a minimum of effort and a nice consistent API.
+You're free to use your own fixture library (like jasmine-jquery, which we've included as a support library), but Teabag ships with a fixture library that works with Jasmine, Mocha, and QUnit with a minimum of effort, has a nice consistent API, and isn't dependent on jQuery.
 
 The fixture path is configurable within Teabag, and the views will be rendered by a standard controller.  This allows you to use things like RABL/JBuilder if you're building JSON, or HAML if you're building markup.  The element that Teabag creates is "#teabag-fixtures", in case you need to access it directly -- or you can access it via `fixture.el` after loading fixtures.
 
@@ -217,7 +217,7 @@ describe "Using fixtures", ->
     expect(@fixtures[1]).toEqual(fixture.json[0]) # the json for json fixtures is returned, and available in fixture.json
 ```
 
-Check out an example of using fixtures with [Mocha](https://github.com/modeset/teabag/wiki/Using-Mocha) and [QUnit](https://github.com/modeset/teabag/wiki/Using-QUnit).
+Check out some example of using fixtures with [Mocha](https://github.com/modeset/teabag/wiki/Using-Mocha), [QUnit](https://github.com/modeset/teabag/wiki/Using-QUnit), and [Angular](https://github.com/modeset/teabag/wiki/Using-Angular).
 
 
 ## Coverage
@@ -249,7 +249,7 @@ All files           |     93.75 |        75 |     94.12 |     93.65 |
 
 Teabag uses the concept of suites to group your tests at a high level. These suites are run in isolation from one another, and can have different configurations. You can define suites in the configuration, and for brevity `config` is the argument passed to the `Teabag.setup` block.
 
-When creating a suite, provide a name (optional) and a block. The following example defines a suite named "my_suite". You can focus to just this suite by browsing to `/teabag/my_suite` or running the rake task with `suite=my_suite`.
+When creating a suite, provide a name (optional) and a block. The following example defines a suite named "my_suite". You can focus run this suite by browsing to `/teabag/my_suite` or running the rake task with `suite=my_suite`.
 
 ```ruby
 config.suite :my_suite do |suite|
@@ -265,11 +265,11 @@ config.suite do |suite|
 end
 ```
 
-**Note:** Suites don't inherit from the default suite, but instead always fall back to the defaults outlined below.
+**Note:** Suites inherit from the default suite, so default configuration will propagate to all other suites.
 
 ### Manifest Style
 
-Teabag is happy to look for files for you, but you can disable this feature and maintain a manifest yourself.  Each suite can utilize a different spec helper and you can use these to create your own manifest using the `= require` directive. This limits your abilities to run specific files from the command line interface, but it's available if you want to use it.
+Teabag is happy to look for files for you, but you can disable this feature and maintain a manifest yourself.  Each suite can utilize a different spec helper and you can use these to create your own manifest using the `= require` directive. This isn't recommended because it limits your abilities to run specific files from the command line interface, but it's available if you want to use it.
 
 Tell the suite that you don't want it to match any files, and then require files in your spec helper.
 
@@ -310,6 +310,8 @@ end
 <dt> stylesheets </dt><dd>
   If you want to change how Teabag looks, or include your own stylesheets you can do that here. The default is the stylesheet for the HTML reporter.<br/><br/>
 
+  <b>Note:</b> Spec related CSS can and should be loaded using fixtures.
+
   <b>default:</b> <code>["teabag"]</code>
 </dd>
 
@@ -327,7 +329,7 @@ end
 
 The best way to read about the configuration options is to generate the initializer and env, but we've included the info here as well.
 
-**Note:** `Teabag.setup` may not be available in all environments. The generator wraps it within a check.
+**Note:** `Teabag.setup` may not be available in all environments, so the generator wraps it within a check.
 
 <dl>
 
@@ -377,6 +379,16 @@ These configuration directives are applicable only when running via the rake tas
   </ul>
 </dd>
 
+<dt> server </dt><dd>
+  Specify a server to use with Rack (eg. thin, mongrel). If nil is provided Rack::Server is used.<br/><br/>
+
+  <b>default:</b> <code>nil</code>
+
+  <ul>
+    <li>CLI: --server SERVER</li>
+    <li>ENV: SERVER=thin</li>
+  </ul>
+</dd>
 
 <dt> server_timeout </dt><dd>
   Timeout for starting the server in seconds. If your server is slow to start you may have to bump this, or you may want to lower this if you know it shouldn't take long to start.<br/><br/>
@@ -388,7 +400,6 @@ These configuration directives are applicable only when running via the rake tas
     <li>ENV: SERVER_TIMEOUT=10</li>
   </ul>
 </dd>
-
 
 <dt> server_port </dt><dd>
   By default Teabag will locate an open port when starting the server, but if you want to run on a specific port you can do so by providing one.<br/><br/>
@@ -481,6 +492,8 @@ These configuration directives are applicable only when running via the rake tas
 
 [QUnit](http://qunitjs.com) We're not sure about how many people use QUnit, but we like jQuery, so we added it. Read more about [Using QUnit](https://github.com/modeset/teabag/wiki/Using-QUnit) with Teabag.
 
+[Angular](http://angularjs.org/) This is an experimental addition, and feedback is needed. Read more about [Using Angular](https://github.com/modeset/teabag/wiki/Using-Angular) with Teabag.
+
 
 ## Support Libraries
 
@@ -490,6 +503,7 @@ We know that testing usually requires more than just the test framework, so we'v
 - [ChaiJS](http://chaijs.com/) BDD / TDD assertion library for node and the browser that can be delightfully paired with any javascript testing framework.
 - [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit based on should.js.
 - [jasmine-jquery.js](https://github.com/velesin/jasmine-jquery) A set of custom matchers for jQuery, and an API for handling HTML fixtures in your specs.
+- [angular-scenario.js](https://github.com/angular/angular.js) Angular test setup.
 
 You can require these files in your spec helper by using:
 
@@ -498,6 +512,7 @@ You can require these files in your spec helper by using:
 //=require support/chai
 //=require support/expect
 //=require support/jasmine-jquery
+//=require support/angular-scenario
 ```
 
 
