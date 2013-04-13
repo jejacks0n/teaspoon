@@ -14,8 +14,7 @@ describe Teabag::Runner do
     it "instantiates formatters based on configuration" do
       Teabag.configuration.should_receive(:formatters).and_return(["dot", "xml"])
       Teabag::Formatters::XmlFormatter = Class.new do
-        def initialize(suite_name = :default)
-        end
+        def initialize(suite_name = :default) end
       end
       expect(subject.formatters[0]).to be_a(Teabag::Formatters::DotFormatter)
       expect(subject.formatters[1]).to be_a(Teabag::Formatters::XmlFormatter)
@@ -23,7 +22,32 @@ describe Teabag::Runner do
 
   end
 
+  describe "#suppress_logs?" do
+
+    it "returns true if the configuration is true" do
+      Teabag.configuration.should_receive(:suppress_log).and_return(true)
+      expect(subject.suppress_logs?).to be(true)
+    end
+
+    it "asks each formatter if it needs to suppress logs" do
+      Teabag.configuration.should_receive(:suppress_log).and_return(false)
+      subject.formatters = [mock(suppress_logs?: true)]
+      expect(subject.suppress_logs?).to be(true)
+    end
+
+    it "memoizes" do
+      Teabag.configuration.should_not_receive(:suppress_log)
+      subject.instance_variable_set(:@suppress_logs, true)
+      expect(subject.suppress_logs?).to be(true)
+    end
+
+  end
+
   describe "#process" do
+
+    before do
+      subject.instance_variable_set(:@suppress_logs, false)
+    end
 
     it "just outputs logs that it doesn't understand" do
       subject.should_receive(:log).with("_line_")
@@ -32,7 +56,7 @@ describe Teabag::Runner do
     end
 
     it "doesn't output logs when suppressed" do
-      Teabag.configuration.should_receive(:suppress_log).and_return(true)
+      subject.should_receive(:suppress_logs?).and_return(true)
       subject.should_not_receive(:log).with("_line_")
       subject.should_receive(:output_from).and_return(false)
       subject.process("_line_")

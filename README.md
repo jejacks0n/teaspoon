@@ -427,7 +427,7 @@ These configuration directives are applicable only when running via the rake tas
 <dt> formatters </dt><dd>
   You can specify the formatters that Teabag will use when outputting the results.<br/><br/>
 
-  <b>available:</b> dot, tap_y, swayze_or_oprah<br/>
+  <b>available:</b> dot, tap, tap_y, swayze_or_oprah<br/>
   <b>default:</b> <code>"dot"</code>
 
   <ul>
@@ -522,7 +522,19 @@ Teabag works great on CI setups. If you're using TravisCI it just works, but if 
 
 If you want to generate reports that CI can use you can install istanbul for coverage reports -- and output the report using the cobertura format, which Hudson can read.
 
-Again on hudson compatibile CI setups, you can track spec failure information/rate tracking by using tapout to generate a tap report that can then be parsed by hudson.
+Again on hudson compatibile CI setups, you can track spec failure information/rate tracking by using the tap formatter, which can be parsed by hudson.
+
+A good setup:
+
+```
+teabag -q --coverage-reports=cobertura --format=tap
+```
+
+Or using Rake/ENV:
+
+```
+SUPPRESS_LOG=true COVERAGE_REPORTS=cobertura FORMATTERS=tap rake
+```
 
 
 ## License

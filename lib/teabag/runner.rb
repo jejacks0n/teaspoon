@@ -13,9 +13,19 @@ module Teabag
       @failure_count = 0
     end
 
+    def suppress_logs?
+      return @suppress_logs unless @suppress_logs.nil?
+      @suppress_logs = Teabag.configuration.suppress_log
+      return true if @suppress_logs
+      for formatter in @formatters
+        return @suppress_logs = true if formatter.suppress_logs?
+      end
+      @suppress_logs = false
+    end
+
     def process(line)
       return if output_from(line)
-      log line unless Teabag.configuration.suppress_log
+      log line unless suppress_logs?
     end
 
     private

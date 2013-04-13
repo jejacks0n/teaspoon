@@ -34,7 +34,7 @@ describe Teabag::Formatters::BaseFormatter do
     end
 
     it "doesn't log when suppressing logs" do
-      Teabag.configuration.should_receive(:suppress_log).and_return(true)
+      subject.should_receive(:suppress_logs?).and_return(true)
       Teabag::Coverage.should_not_receive(:new)
       subject.send(:log_coverage, "_data_")
     end

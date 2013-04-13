@@ -4,6 +4,7 @@ module Teabag
     autoload :DotFormatter,           'teabag/formatters/dot_formatter'
     autoload :CleanFormatter,         'teabag/formatters/clean_formatter'
     autoload :TapYFormatter,          'teabag/formatters/tap_y_formatter'
+    autoload :TapFormatter,           'teabag/formatters/tap_formatter'
     autoload :SwayzeOrOprahFormatter, 'teabag/formatters/swayze_or_oprah_formatter'
 
     class BaseFormatter
@@ -42,10 +43,14 @@ module Teabag
         raise Teabag::RunnerException
       end
 
+      def suppress_logs?
+        false
+      end
+
       private
 
       def log_coverage(data)
-        return if data.blank? || Teabag.configuration.suppress_log
+        return if data.blank? || suppress_logs?
         STDOUT.print(Teabag::Coverage.new(data).reports)
       end
     end
