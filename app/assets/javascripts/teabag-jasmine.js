@@ -2601,9 +2601,7 @@ jasmine.version_= {
   "revision": 1354556913
 };
 (function() {
-
   this.Teabag = (function() {
-
     function Teabag() {}
 
     Teabag.defer = false;
@@ -2635,6 +2633,7 @@ jasmine.version_= {
 
     Teabag.resolveDependenciesFromParams = function(all) {
       var dep, deps, file, parts, path, paths, _i, _j, _len, _len1;
+
       if (all == null) {
         all = [];
       }
@@ -2660,16 +2659,20 @@ jasmine.version_= {
     };
 
     Teabag.log = function() {
+      var e;
+
       this.messages.push(arguments[0]);
       try {
         return console.log.apply(console, arguments);
-      } catch (e) {
+      } catch (_error) {
+        e = _error;
         throw new Error("Unable to use console.log for logging");
       }
     };
 
     Teabag.getMessages = function() {
       var messages;
+
       messages = this.messages;
       this.messages = [];
       return messages;
@@ -2681,9 +2684,7 @@ jasmine.version_= {
 
 }).call(this);
 (function() {
-
   Teabag.Runner = (function() {
-
     Runner.run = false;
 
     function Runner() {
@@ -2698,6 +2699,7 @@ jasmine.version_= {
 
     Runner.prototype.getParams = function() {
       var name, param, params, value, _i, _len, _ref, _ref1;
+
       params = {};
       _ref = Teabag.location.search.substring(1).split("&");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -2744,6 +2746,7 @@ jasmine.version_= {
 
     fixture.preload = function() {
       var url, urls, _i, _len, _results;
+
       urls = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _results = [];
       for (_i = 0, _len = urls.length; _i < _len; _i++) {
@@ -2755,6 +2758,7 @@ jasmine.version_= {
 
     fixture.load = function() {
       var append, index, url, urls, _i, _j, _len, _results;
+
       urls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -2773,6 +2777,7 @@ jasmine.version_= {
 
     fixture.set = function() {
       var append, html, htmls, index, _i, _j, _len, _results;
+
       htmls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -2805,6 +2810,7 @@ jasmine.version_= {
 
     load = function(url, append, preload) {
       var cached, value;
+
       if (preload == null) {
         preload = false;
       }
@@ -2866,6 +2872,7 @@ jasmine.version_= {
 
     create = function() {
       var _ref;
+
       Teabag.fixture.el = document.createElement("div");
       if (typeof window.$ === 'function') {
         Teabag.fixture.$el = $(Teabag.fixture.el);
@@ -2876,6 +2883,7 @@ jasmine.version_= {
 
     cleanup = function() {
       var _base, _ref, _ref1;
+
       (_base = Teabag.fixture).el || (_base.el = document.getElementById("teabag-fixtures"));
       if ((_ref = Teabag.fixture.el) != null) {
         if ((_ref1 = _ref.parentNode) != null) {
@@ -2886,16 +2894,19 @@ jasmine.version_= {
     };
 
     xhrRequest = function(url, callback) {
+      var e;
+
       if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest();
       } else if (window.ActiveXObject) {
         try {
           xhr = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
+        } catch (_error) {
+          e = _error;
           try {
             xhr = new ActiveXObject("Microsoft.XMLHTTP");
-          } catch (e) {
-
+          } catch (_error) {
+            e = _error;
           }
         }
       }
@@ -2913,9 +2924,7 @@ jasmine.version_= {
 
 }).call(this);
 (function() {
-
   Teabag.Reporters.BaseView = (function() {
-
     function BaseView() {
       this.elements = {};
       this.build();
@@ -2935,6 +2944,7 @@ jasmine.version_= {
 
     BaseView.prototype.createEl = function(type, className) {
       var el;
+
       if (className == null) {
         className = "";
       }
@@ -2945,18 +2955,21 @@ jasmine.version_= {
 
     BaseView.prototype.findEl = function(id) {
       var _base;
+
       this.elements || (this.elements = {});
       return (_base = this.elements)[id] || (_base[id] = document.getElementById("teabag-" + id));
     };
 
     BaseView.prototype.setText = function(id, value) {
       var el;
+
       el = this.findEl(id);
       return el.innerHTML = value;
     };
 
     BaseView.prototype.setHtml = function(id, value, add) {
       var el;
+
       if (add == null) {
         add = false;
       }
@@ -2970,12 +2983,14 @@ jasmine.version_= {
 
     BaseView.prototype.setClass = function(id, value) {
       var el;
+
       el = this.findEl(id);
       return el.className = value;
     };
 
     BaseView.prototype.htmlSafe = function(str) {
       var el;
+
       el = document.createElement("div");
       el.appendChild(document.createTextNode(str));
       return el.innerHTML;
@@ -2992,14 +3007,11 @@ jasmine.version_= {
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML = (function(_super) {
-
     __extends(HTML, _super);
 
     function HTML() {
       this.toggleConfig = __bind(this.toggleConfig, this);
-
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.start = new Teabag.Date().getTime();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teabag.Date().getTime();
       this.config = {
         "use-catch": true,
         "build-full-report": false,
@@ -3024,6 +3036,7 @@ jasmine.version_= {
 
     HTML.prototype.build = function() {
       var _ref;
+
       this.buildLayout();
       this.setText("env-info", this.envInfo());
       this.setText("version", Teabag.version);
@@ -3041,6 +3054,7 @@ jasmine.version_= {
 
     HTML.prototype.buildLayout = function() {
       var el;
+
       el = this.createEl("div");
       el.id = "teabag-interface";
       el.innerHTML = Teabag.Reporters.HTML.template;
@@ -3049,6 +3063,7 @@ jasmine.version_= {
 
     HTML.prototype.buildSuiteSelect = function() {
       var options, suite, _i, _len, _ref;
+
       if (Teabag.suites.all.length === 1) {
         return "";
       }
@@ -3125,6 +3140,7 @@ jasmine.version_= {
 
     HTML.prototype.updateStatus = function(spec) {
       var elapsed, result, _ref, _ref1;
+
       spec = new Teabag.Spec(spec);
       result = spec.result();
       if (result.skipped || result.status === "pending") {
@@ -3153,6 +3169,7 @@ jasmine.version_= {
 
     HTML.prototype.showConfiguration = function() {
       var key, value, _ref, _results;
+
       _ref = this.config;
       _results = [];
       for (key in _ref) {
@@ -3168,6 +3185,7 @@ jasmine.version_= {
 
     HTML.prototype.setFilters = function() {
       var link;
+
       link = [Teabag.root, Teabag.suites.active].join('/');
       if (Teabag.params["file"]) {
         this.filters.push("<a href='" + link + "'>remove</a> by file: " + Teabag.params["file"]);
@@ -3179,6 +3197,7 @@ jasmine.version_= {
 
     HTML.prototype.readConfig = function() {
       var config;
+
       if (config = this.cookie("teabag")) {
         return this.config = config;
       }
@@ -3186,6 +3205,7 @@ jasmine.version_= {
 
     HTML.prototype.toggleConfig = function(e) {
       var button, name;
+
       button = e.target;
       if (button.tagName.toLowerCase() !== "button") {
         return;
@@ -3206,6 +3226,7 @@ jasmine.version_= {
 
     HTML.prototype.cookie = function(name, value) {
       var date, match;
+
       if (value == null) {
         value = void 0;
       }
@@ -3226,15 +3247,16 @@ jasmine.version_= {
 
 }).call(this);
 (function() {
-  var __hasProp = {}.hasOwnProperty,
+  var _ref, _ref1, _ref2,
+    __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML.ProgressView = (function(_super) {
-
     __extends(ProgressView, _super);
 
     function ProgressView() {
-      return ProgressView.__super__.constructor.apply(this, arguments);
+      _ref = ProgressView.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     ProgressView.create = function(displayProgress) {
@@ -3262,11 +3284,11 @@ jasmine.version_= {
   })(Teabag.Reporters.BaseView);
 
   Teabag.Reporters.HTML.SimpleProgressView = (function(_super) {
-
     __extends(SimpleProgressView, _super);
 
     function SimpleProgressView() {
-      return SimpleProgressView.__super__.constructor.apply(this, arguments);
+      _ref1 = SimpleProgressView.__super__.constructor.apply(this, arguments);
+      return _ref1;
     }
 
     SimpleProgressView.prototype.build = function() {
@@ -3276,6 +3298,7 @@ jasmine.version_= {
 
     SimpleProgressView.prototype.update = function(total, run) {
       var percent;
+
       percent = total ? Math.ceil((run * 100) / total) : 0;
       return this.setHtml("progress-percent", "" + percent + "%");
     };
@@ -3285,11 +3308,11 @@ jasmine.version_= {
   })(Teabag.Reporters.HTML.ProgressView);
 
   Teabag.Reporters.HTML.RadialProgressView = (function(_super) {
-
     __extends(RadialProgressView, _super);
 
     function RadialProgressView() {
-      return RadialProgressView.__super__.constructor.apply(this, arguments);
+      _ref2 = RadialProgressView.__super__.constructor.apply(this, arguments);
+      return _ref2;
     }
 
     RadialProgressView.supported = !!document.createElement("canvas").getContext;
@@ -3300,7 +3323,8 @@ jasmine.version_= {
     };
 
     RadialProgressView.prototype.appendTo = function() {
-      var canvas;
+      var canvas, e;
+
       RadialProgressView.__super__.appendTo.apply(this, arguments);
       this.size = 80;
       try {
@@ -3309,13 +3333,14 @@ jasmine.version_= {
         this.ctx = canvas.getContext("2d");
         this.ctx.strokeStyle = "#fff";
         return this.ctx.lineWidth = 1.5;
-      } catch (e) {
-
+      } catch (_error) {
+        e = _error;
       }
     };
 
     RadialProgressView.prototype.update = function(total, run) {
       var half, percent;
+
       percent = total ? Math.ceil((run * 100) / total) : 0;
       this.setHtml("progress-percent", "" + percent + "%");
       if (!this.ctx) {
@@ -3355,6 +3380,7 @@ jasmine.version_= {
 
     SpecView.prototype.build = function() {
       var classes;
+
       classes = ["spec"];
       if (this.spec.pending) {
         classes.push("state-pending");
@@ -3367,6 +3393,7 @@ jasmine.version_= {
 
     SpecView.prototype.buildParent = function() {
       var parent, view;
+
       parent = this.spec.parent;
       if (parent.viewId) {
         return this.views.suites[parent.viewId];
@@ -3378,6 +3405,7 @@ jasmine.version_= {
 
     SpecView.prototype.buildErrors = function() {
       var div, error, html, _i, _len, _ref;
+
       div = this.createEl("div");
       html = "";
       _ref = this.spec.errors();
@@ -3391,6 +3419,7 @@ jasmine.version_= {
 
     SpecView.prototype.updateState = function(state, elapsed) {
       var classes, result, _base;
+
       result = this.spec.result();
       classes = ["state-" + state];
       if (elapsed > Teabag.slow) {
@@ -3416,7 +3445,6 @@ jasmine.version_= {
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML.FailureView = (function(_super) {
-
     __extends(FailureView, _super);
 
     function FailureView(spec) {
@@ -3426,6 +3454,7 @@ jasmine.version_= {
 
     FailureView.prototype.build = function() {
       var error, html, _i, _len, _ref;
+
       FailureView.__super__.build.call(this, "spec");
       html = "<h1 class=\"teabag-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
       _ref = this.spec.errors();
@@ -3471,6 +3500,7 @@ jasmine.version_= {
 
     SuiteView.prototype.buildParent = function() {
       var parent, view;
+
       parent = this.suite.parent;
       if (!parent) {
         return this.reporter;
@@ -3492,6 +3522,7 @@ jasmine.version_= {
 
     SuiteView.prototype.updateState = function(state) {
       var _base;
+
       if (this.state === "failed") {
         return;
       }
@@ -3508,7 +3539,6 @@ jasmine.version_= {
 
 }).call(this);
 (function() {
-
   Teabag.Reporters.HTML.template = "<div class=\"teabag-clearfix\">\n  <div id=\"teabag-title\">\n    <h1><a href=\"\" id=\"teabag-root-link\">Teabag</a></h1>\n    <ul>\n      <li>version: <b id=\"teabag-version\"></b></li>\n      <li id=\"teabag-env-info\"></li>\n    </ul>\n  </div>\n  <div id=\"teabag-progress\"></div>\n  <ul id=\"teabag-stats\">\n    <li>passes: <b id=\"teabag-stats-passes\">0</b></li>\n    <li>failures: <b id=\"teabag-stats-failures\">0</b></li>\n    <li>skipped: <b id=\"teabag-stats-skipped\">0</b></li>\n    <li>duration: <b id=\"teabag-stats-duration\">&infin;</b></li>\n  </ul>\n</div>\n\n<div id=\"teabag-controls\" class=\"teabag-clearfix\">\n  <div id=\"teabag-toggles\">\n    <button id=\"teabag-use-catch\" title=\"Toggle using try/catch wrappers when possible\">Try/Catch</button>\n    <button id=\"teabag-build-full-report\" title=\"Toggle building the full report\">Full Report</button>\n    <button id=\"teabag-display-progress\" title=\"Toggle displaying progress as tests run\">Progress</button>\n  </div>\n  <div id=\"teabag-suites\"></div>\n</div>\n\n<hr/>\n\n<div id=\"teabag-filter\">\n  <h1>Filtering</h1>\n  <ul id=\"teabag-filter-list\"></ul>\n</div>\n\n<div id=\"teabag-report\">\n  <ol id=\"teabag-report-failures\"></ol>\n  <ol id=\"teabag-report-all\"></ol>\n</div>";
 
 }).call(this);
@@ -3516,10 +3546,8 @@ jasmine.version_= {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   Teabag.Reporters.Console = (function() {
-
     function Console() {
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.start = new Teabag.Date();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teabag.Date();
       this.suites = {};
     }
 
@@ -3533,6 +3561,7 @@ jasmine.version_= {
 
     Console.prototype.reportSuites = function() {
       var index, suite, _i, _len, _ref, _results;
+
       _ref = this.spec.getParents();
       _results = [];
       for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
@@ -3552,6 +3581,7 @@ jasmine.version_= {
 
     Console.prototype.reportSpecResults = function(spec) {
       var result;
+
       this.spec = new Teabag.Spec(spec);
       result = this.spec.result();
       if (result.skipped) {
@@ -3576,6 +3606,7 @@ jasmine.version_= {
 
     Console.prototype.trackPending = function() {
       var result;
+
       result = this.spec.result();
       return this.log({
         type: "spec",
@@ -3588,6 +3619,7 @@ jasmine.version_= {
 
     Console.prototype.trackFailure = function() {
       var error, result, _i, _len, _ref, _results;
+
       result = this.spec.result();
       _ref = this.spec.errors();
       _results = [];
@@ -3630,15 +3662,16 @@ jasmine.version_= {
 
 }).call(this);
 (function() {
-  var __hasProp = {}.hasOwnProperty,
+  var _ref,
+    __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.HTML = (function(_super) {
-
     __extends(HTML, _super);
 
     function HTML() {
-      return HTML.__super__.constructor.apply(this, arguments);
+      _ref = HTML.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     HTML.prototype.readConfig = function() {
@@ -3648,6 +3681,7 @@ jasmine.version_= {
 
     HTML.prototype.envInfo = function() {
       var ver, verString;
+
       ver = jasmine.getEnv().version();
       verString = [ver.major, ver.minor, ver.build].join(".");
       return "jasmine " + verString + " revision " + ver.revision;
@@ -3659,12 +3693,11 @@ jasmine.version_= {
 
 }).call(this);
 (function() {
-  var env,
+  var env, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Runner = (function(_super) {
-
     __extends(Runner, _super);
 
     function Runner() {
@@ -3674,6 +3707,7 @@ jasmine.version_= {
 
     Runner.prototype.setup = function() {
       var grep, reporter;
+
       env.updateInterval = 1000;
       if (grep = this.params["grep"]) {
         env.specFilter = function(spec) {
@@ -3700,7 +3734,6 @@ jasmine.version_= {
   })(Teabag.Runner);
 
   Teabag.Spec = (function() {
-
     function Spec(spec) {
       this.spec = spec;
       this.fullDescription = this.spec.getFullName();
@@ -3714,6 +3747,7 @@ jasmine.version_= {
 
     Spec.prototype.errors = function() {
       var item, _i, _len, _ref, _results;
+
       if (!this.spec.results) {
         return [];
       }
@@ -3734,6 +3768,7 @@ jasmine.version_= {
 
     Spec.prototype.getParents = function() {
       var parent;
+
       if (this.parents) {
         return this.parents;
       }
@@ -3749,6 +3784,7 @@ jasmine.version_= {
 
     Spec.prototype.result = function() {
       var results, status;
+
       results = this.spec.results();
       status = "failed";
       if (results.passed()) {
@@ -3768,7 +3804,6 @@ jasmine.version_= {
   })();
 
   Teabag.Suite = (function() {
-
     function Suite(suite) {
       this.suite = suite;
       this.fullDescription = this.suite.getFullName();
@@ -3783,11 +3818,11 @@ jasmine.version_= {
   })();
 
   Teabag.fixture = (function(_super) {
-
     __extends(fixture, _super);
 
     function fixture() {
-      return fixture.__super__.constructor.apply(this, arguments);
+      _ref = fixture.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     window.fixture = fixture;
@@ -3795,6 +3830,7 @@ jasmine.version_= {
     fixture.load = function() {
       var args,
         _this = this;
+
       args = arguments;
       if (!(env.currentSuite || env.currentSpec)) {
         throw "Teabag can't load fixtures outside of describe.";
@@ -3818,6 +3854,7 @@ jasmine.version_= {
     fixture.set = function() {
       var args,
         _this = this;
+
       args = arguments;
       if (!(env.currentSuite || env.currentSpec)) {
         throw "Teabag can't load fixtures outside of describe.";
