@@ -2182,6 +2182,18 @@
       return new Teabag.Runner();
     };
 
+    Teabag.onWindowLoad = function(method) {
+      var originalOnload;
+
+      originalOnload = window.onload;
+      return window.onload = function() {
+        if (originalOnload && originalOnload.call) {
+          originalOnload();
+        }
+        return method();
+      };
+    };
+
     Teabag.resolveDependenciesFromParams = function(all) {
       var dep, deps, file, parts, path, paths, _i, _j, _len, _len1;
 
@@ -3218,12 +3230,10 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teabag.Reporters.Console = (function(_super) {
-
     __extends(Console, _super);
 
     function Console(env) {
-      this.reportSpecResults = __bind(this.reportSpecResults, this);
-      Console.__super__.constructor.apply(this, arguments);
+      this.reportSpecResults = __bind(this.reportSpecResults, this);      Console.__super__.constructor.apply(this, arguments);
       env.log(this.reportSpecResults);
       env.testDone(this.reportSpecResults);
       env.done(this.reportRunnerResults);

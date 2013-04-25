@@ -22,6 +22,10 @@ module Teabag
       @config = suite_configuration
     end
 
+    def use_require
+      config.use_require
+    end
+
     def stylesheets
       config.stylesheets
     end
@@ -31,7 +35,7 @@ module Teabag
     end
 
     def javascripts
-      [core_javascripts, spec_javascripts].flatten
+      [core_javascripts, helper, spec_javascripts].flatten
     end
 
     def core_javascripts
@@ -40,6 +44,10 @@ module Teabag
 
     def spec_javascripts
       [helper, specs].flatten
+    end
+
+    def spec_javascripts_for_require
+      specs.map { |path| "Teabag/#{path.slice(0..-4)}" }
     end
 
     def suites

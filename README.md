@@ -159,9 +159,32 @@ describe "My great feature", ->
 
 If you're using a specific framework and you want to take advantage of the things that framework provides you're free to do so. This is provided as the standard as the Teabag reporters understand the techniques above and have specs for them.
 
+### Using Require.js
+If you are using require.js to get your files you can set a configuration option for your suite of "use_require".
+```ruby
+Teabag.setup do |config|
+  config.suite do |suite|
+    suite.use_require = true
+  end
+end
+```
+Then in your suite spec helper, add require.js to be included, if you have not already. (Note: Teabag doesn't include require.js with it, so you will need to provide your own require.js and require the correct path.)
+```javascript
+//= require require
+```
+
+Once you've done that, when that suite is executed, Teabag will use require.js to get all the specs in the suite (or specific files). In your specs you will need to use require to pull down the dependencies as you would normally. Here is an example with mocha.
+```javascript
+define(['Model'] , function (Model) {
+  describe('Model' , function () {
+    // put your tests here
+  });
+});
+```
+
 ### Deferring Execution
 
-Teabag allows deferring execution in the cases when you're using AMD or other asynchronous libraries. This is especially useful if you're using [CommonJS](http://www.commonjs.org/) or [RequireJS](http://requirejs.org/), etc.  You can tell Teabag to defer and then execute the runner yourself later -- after loading asychronously. There's a wiki article about how you can setup your specs and spec helper when using [RequireJS with Teabag](https://github.com/modeset/teabag/wiki/RequireJS-with-Teabag).
+Teabag allows deferring execution in the cases when you're using AMD or other asynchronous libraries. This is especially useful if you're using [CommonJS](http://www.commonjs.org/), etc.  You can tell Teabag to defer and then execute the runner yourself later -- after loading asychronously. There's a wiki article about how you can setup your specs and spec helper when using [RequireJS with Teabag](https://github.com/modeset/teabag/wiki/RequireJS-with-Teabag).
 
 ```javascript
 Teabag.defer = true;
