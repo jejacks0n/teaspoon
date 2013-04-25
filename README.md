@@ -536,6 +536,17 @@ Or using Rake/ENV:
 SUPPRESS_LOG=true COVERAGE_REPORTS=cobertura FORMATTERS=tap rake
 ```
 
+There is also a TeamCity formatter:
+
+```
+teabag -q --format=teamcity
+```
+
+Or using Rake/ENV:
+
+```
+SUPPRESS_LOG=true FORMATTERS=teamcity rake
+```
 
 ## License
 
