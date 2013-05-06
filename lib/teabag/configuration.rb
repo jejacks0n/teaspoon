@@ -25,7 +25,7 @@ module Teabag
     @@coverage_reports = nil
 
     class Suite
-      attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage
+      attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :use_require
 
       def initialize
         @matcher     = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
@@ -33,6 +33,7 @@ module Teabag
         @javascripts = ["teabag-jasmine"]
         @stylesheets = ["teabag"]
         @no_coverage = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
+        @use_require = false
 
         default = Teabag.configuration.suites["default"]
         self.instance_eval(&default) if default

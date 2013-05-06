@@ -51,6 +51,12 @@ describe Teabag::Suite do
 
   end
 
+  describe "#use_require" do
+    it "returns an boolean" do
+      expect(subject.use_require).to eq(false)
+    end
+  end
+
   describe "#stylesheets" do
 
     it "returns an array of stylesheets" do
@@ -100,6 +106,13 @@ describe Teabag::Suite do
       expect(results).to eql(["spec_helper", "foo.js"])
     end
 
+  end
+
+  describe "#spec_javascripts_for_require" do
+    it "returns an array of spec javascripts without .js and Teabag prefix" do
+      results = subject.spec_javascripts_for_require
+      expect(results).to include("Teabag/teabag/base/reporters/console_spec")
+    end
   end
 
   describe "#suites" do

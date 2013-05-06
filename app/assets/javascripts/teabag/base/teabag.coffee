@@ -22,6 +22,11 @@ class @Teabag
     @started = true
     new Teabag.Runner()
 
+  @onWindowLoad: (method) ->
+    originalOnload = window.onload
+    window.onload = ->
+      originalOnload() if originalOnload && originalOnload.call
+      method()
 
   # provides interface for AMD usage -- pass all dependencies in as an array, and params will be checked for matches
   @resolveDependenciesFromParams: (all = []) ->
