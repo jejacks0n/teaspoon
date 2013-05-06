@@ -35,7 +35,7 @@ module Teabag
     end
 
     def javascripts
-      [core_javascripts, helper, spec_javascripts].flatten
+      [core_javascripts, spec_javascripts].flatten
     end
 
     def core_javascripts
