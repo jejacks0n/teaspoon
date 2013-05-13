@@ -2631,6 +2631,18 @@ jasmine.version_= {
       return new Teabag.Runner();
     };
 
+    Teabag.onWindowLoad = function(method) {
+      var originalOnload;
+
+      originalOnload = window.onload;
+      return window.onload = function() {
+        if (originalOnload && originalOnload.call) {
+          originalOnload();
+        }
+        return method();
+      };
+    };
+
     Teabag.resolveDependenciesFromParams = function(all) {
       var dep, deps, file, parts, path, paths, _i, _j, _len, _len1;
 

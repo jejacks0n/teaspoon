@@ -12,16 +12,31 @@
       Teabag.root = <%=raw Teabag.configuration.mount_at.inspect %>;
       Teabag.suites = <%=raw @suite.suites.to_json %>;
     </script>
-    <%= javascript_include_tag_for_teabag *@suite.spec_javascripts, @javascript_options %>
-    <script type="text/javascript">
-      // start the execution of the specs (on onload, handling existing onload events)
-      window.originalOnload = window.onload;
-      window.onload = function() {
-        if (Teabag.started) return; // ensure this never happens more than once
-        if (window.originalOnload) window.originalOnload();
-        Teabag.execute();
-      }
-    </script>
+    <% if !@suite.use_require %>
+      <%= javascript_include_tag_for_teabag *@suite.spec_javascripts, @javascript_options %>
+      <script type="text/javascript">
+        // start the execution of the specs
+        Teabag.onWindowLoad(Teabag.execute);
+      </script>
+    <% else %>
+      <%= javascript_include_tag_for_teabag *@suite.helper %>
+      <script type="text/javascript">
+        // When the DOM is loaded, we then use require to include currently selected file/suite, then once those are all loaded, we run Teabag
+        // @suite.spec_javascripts_for_require strips off the .js and adds the Teabag prefix
+        Teabag.onWindowLoad(function () {
+          //setup the Teabag path prefix to load /assets
+          require.config({
+            paths: {
+              Teabag: '/assets'
+            }
+          });
+          require(<%= json_escape @suite.spec_javascripts_for_require.to_json.html_safe %>, function () {
+            Teabag.execute();
+          });
+        });
+      </script>
+      
+    <% end %>
   </head>
   <body>
   </body>
