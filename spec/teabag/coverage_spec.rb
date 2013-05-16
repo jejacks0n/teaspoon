@@ -10,7 +10,7 @@ describe Teabag::Coverage do
     before do
       Teabag.configuration.should_receive(:coverage_reports).and_return(["text", "text-summary", "html"])
       subject.stub(:generate_report) { |i, f| "_#{f}_report_" }
-      File.stub(:write)
+      File.stub(:open)
 
       path = nil
       Dir.mktmpdir { |p| path = p }
@@ -19,7 +19,9 @@ describe Teabag::Coverage do
     end
 
     it "writes the data to a file" do
-      File.should_receive(:write).with(@output, '{"foo":"bar"}')
+      file = mock('file')
+      File.should_receive(:open).with(@output, "w").and_yield(file)
+      file.should_receive(:write).with('{"foo":"bar"}')
       subject.reports
     end
 
