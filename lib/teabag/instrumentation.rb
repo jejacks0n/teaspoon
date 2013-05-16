@@ -44,7 +44,7 @@ module Teabag
       Dir.mktmpdir do |path|
         filename = File.basename(file)
         input = File.join(path, filename).sub(/\.js.+/, ".js")
-        File.write(input, @asset.source)
+        File.open(input, 'w') { |file| file.write(@asset.source) }
 
         instrument(input).gsub(input, file)
       end

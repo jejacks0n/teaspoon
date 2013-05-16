@@ -72,7 +72,7 @@ describe Teabag::Instrumentation do
     before do
       Teabag::Instrumentation.stub(:add?).and_return(true)
 
-      File.stub(:write)
+      File.stub(:open)
       subject.any_instance.stub(:instrument).and_return(source + " // instrumented")
 
       path = nil
@@ -82,7 +82,9 @@ describe Teabag::Instrumentation do
     end
 
     it "writes the file to a tmp path" do
-      File.should_receive(:write).with(@output, "function add(a, b) { return a + b } // ☃ ")
+      file = mock('file')
+      File.should_receive(:open).with(@output, "w").and_yield(file)
+      file.should_receive(:write).with("function add(a, b) { return a + b } // ☃ ")
       subject.add_to(response, env)
     end
 
