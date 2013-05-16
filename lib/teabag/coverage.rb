@@ -9,7 +9,7 @@ module Teabag
     def reports
       Dir.mktmpdir do |path|
         input = File.join(path, 'coverage.json')
-        File.write(input, @data.to_json)
+        File.open(input, 'w') { |file| file.write(@data.to_json) }
         results = []
         for format in Teabag.configuration.coverage_reports
           result = generate_report(input, format)
