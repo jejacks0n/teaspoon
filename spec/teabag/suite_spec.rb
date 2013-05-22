@@ -109,9 +109,20 @@ describe Teabag::Suite do
   end
 
   describe "#spec_javascripts_for_require" do
-    it "returns an array of spec javascripts without .js and Teabag prefix" do
-      results = subject.spec_javascripts_for_require
-      expect(results).to include("Teabag/teabag/base/reporters/console_spec")
+    before do
+      subject.should_receive(:specs).and_return(%w(
+                                                    test/js_ext.js.coffee
+                                                    test/coffee_ext.coffee
+                                                    test/coffee_and_erb_ext.coffee.erb
+                                                    test/js_and_erb_ext.js.erb
+      ))
+    end
+    it 'returns an array of spec javascripts without .js and Teabag prefix' do
+      result = subject.spec_javascripts_for_require
+      expect(result[0]).to eq 'Teabag/test/js_ext'
+      expect(result[1]).to eq 'Teabag/test/coffee_ext'
+      expect(result[2]).to eq 'Teabag/test/coffee_and_erb_ext'
+      expect(result[3]).to eq 'Teabag/test/js_and_erb_ext'
     end
   end
 
