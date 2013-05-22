@@ -47,7 +47,10 @@ module Teabag
     end
 
     def spec_javascripts_for_require
-      specs.map { |path| "Teabag/#{path.slice(0..-4)}" }
+      specs.map { |path|
+        file_without_ext = path.split('.').first
+        "Teabag/#{file_without_ext}"
+      }
     end
 
     def suites
@@ -60,7 +63,7 @@ module Teabag
 
     def link(params = {})
       query = "?#{params.to_query}" if params.present?
-      [Teabag.configuration.mount_at, name, query].compact.join("/")
+      [Teabag.configuration.mount_at, name, query].compact.join('/')
     end
 
     def instrument_file?(file)
