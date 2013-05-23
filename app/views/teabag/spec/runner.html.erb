@@ -30,7 +30,7 @@
               Teabag: '/assets'
             }
           });
-          require(<%= json_escape @suite.spec_javascripts_for_require.to_json.html_safe %>, function () {
+          require(<%= html_escape @suite.spec_javascripts_for_require.to_json.html_safe %>, function () {
             Teabag.execute();
           });
         });
