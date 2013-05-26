@@ -1,43 +1,47 @@
 <!DOCTYPE>
 <html>
-  <head>
-    <title>Teabag :: Javascript Test Runner</title>
-    <meta name="viewport" content="width=device-width, user-scalable=no">
-    <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag_for_teabag *@suite.stylesheets %>
-    <%= javascript_include_tag_for_teabag *@suite.core_javascripts %>
+<head>
+  <title>Teabag :: Javascript Test Runner</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <%= csrf_meta_tags %>
+  <%= stylesheet_link_tag_for_teabag *@suite.stylesheets %>
+  <%= javascript_include_tag_for_teabag *@suite.core_javascripts %>
+  <script type="text/javascript">
+    // pass relevant info to javascript
+    Teabag.version = <%=raw Teabag::VERSION.inspect %>;
+    Teabag.root = <%=raw Teabag.configuration.mount_at.inspect %>;
+    Teabag.suites = <%=raw @suite.suites.to_json %>;
+  </script>
+  <% if @suite.use_require %>
+    <%= javascript_include_tag_for_teabag *@suite.helper %>
     <script type="text/javascript">
-      // pass relevant info to javascript
-      Teabag.version = <%=raw Teabag::VERSION.inspect %>;
-      Teabag.root = <%=raw Teabag.configuration.mount_at.inspect %>;
-      Teabag.suites = <%=raw @suite.suites.to_json %>;
-    </script>
-    <% if !@suite.use_require %>
-      <%= javascript_include_tag_for_teabag *@suite.spec_javascripts, @javascript_options %>
-      <script type="text/javascript">
-        // start the execution of the specs
-        Teabag.onWindowLoad(Teabag.execute);
-      </script>
-    <% else %>
-      <%= javascript_include_tag_for_teabag *@suite.helper %>
-      <script type="text/javascript">
-        // When the DOM is loaded, we then use require to include currently selected file/suite, then once those are all loaded, we run Teabag
-        // @suite.spec_javascripts_for_require strips off the .js and adds the Teabag prefix
-        Teabag.onWindowLoad(function () {
-          //setup the Teabag path prefix to load /assets
-          require.config({
-            paths: {
-              Teabag: '/assets'
-            }
-          });
-          require(<%= html_escape @suite.spec_javascripts_for_require.to_json.html_safe %>, function () {
-            Teabag.execute();
-          });
+      // When the DOM is loaded, we then use require to include currently selected file/suite, then once those are all loaded, we run Teabag
+      // @suite.spec_javascripts_for_require strips off the .js and adds the Teabag prefix
+      Teabag.onWindowLoad(function () {
+        //setup the Teabag path prefix to load /assets
+        require.config(
+            <% if Rails.application.config.requirejs %>
+              <%= Rails.application.config.requirejs.user_config.merge({baseUrl: '/assets'}).to_json.html_safe %>
+            <% else %>
+              {
+                baseUrl: '/assets'
+              }
+            <% end %>
+        );
+
+        require(<%= html_escape @suite.spec_javascripts_for_require.to_json.html_safe %>, function () {
+          Teabag.execute();
         });
-      </script>
-      
-    <% end %>
-  </head>
-  <body>
-  </body>
+      });
+    </script>
+  <% else %>
+    <%= javascript_include_tag_for_teabag *@suite.spec_javascripts, @javascript_options %>
+    <script type="text/javascript">
+      // start the execution of the specs
+      Teabag.onWindowLoad(Teabag.execute);
+    </script>
+  <% end %>
+</head>
+<body>
+</body>
 </html>

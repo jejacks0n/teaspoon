@@ -4,6 +4,7 @@ log/*.log
 pkg/
 tmp
 coverage
+.idea
 
 spec/dummy/log/*.log
 spec/dummy/tmp/
