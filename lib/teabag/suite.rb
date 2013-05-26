@@ -49,7 +49,7 @@ module Teabag
     def spec_javascripts_for_require
       specs.map { |path|
         file_without_ext = path.split('.').first
-        "Teabag/#{file_without_ext}"
+        "#{file_without_ext}"
       }
     end
 
