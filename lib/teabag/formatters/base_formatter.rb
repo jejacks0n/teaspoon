@@ -6,6 +6,7 @@ module Teabag
     autoload :TapYFormatter,          'teabag/formatters/tap_y_formatter'
     autoload :TapFormatter,           'teabag/formatters/tap_formatter'
     autoload :SwayzeOrOprahFormatter, 'teabag/formatters/swayze_or_oprah_formatter'
+    autoload :TeamcityFormatter,      'teabag/formatters/teamcity_formatter'
 
     class BaseFormatter
 
