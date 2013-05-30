@@ -20,7 +20,7 @@
       Teabag.onWindowLoad(function () {
         //setup the Teabag path prefix to load /assets
         require.config(
-            <% if Rails.application.config.requirejs %>
+            <% if Rails.application.config.respond_to?('requirejs') %>
               <%= Rails.application.config.requirejs.user_config.merge({baseUrl: '/assets'}).to_json.html_safe %>
             <% else %>
               {
