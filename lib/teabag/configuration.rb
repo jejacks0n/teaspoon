@@ -4,12 +4,13 @@ module Teabag
   class Configuration
     include Singleton
 
-    cattr_accessor :mount_at, :root, :asset_paths, :fixture_path, :suites
+    cattr_accessor :mount_at, :root, :asset_paths, :fixture_path, :suites, :driver_cli_options
     @@mount_at         = "/teabag"
     @@root             = nil # will default to Rails.root if left unset
     @@asset_paths      = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
     @@fixture_path     = "spec/javascripts/fixtures"
     @@suites           = {"default" => proc{}}
+    @@driver_cli_options = nil
 
     # console runner specific
     cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :formatters, :suppress_log, :color, :coverage, :coverage_reports, :server
@@ -80,7 +81,7 @@ module Teabag
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive] == "true")
     end
-    %w(DRIVER SERVER SERVER_TIMEOUT SERVER_PORT FORMATTERS COVERAGE_REPORTS).each do |directive|
+    %w(DRIVER DRIVER_CLI_OPTIONS SERVER SERVER_TIMEOUT SERVER_PORT FORMATTERS COVERAGE_REPORTS).each do |directive|
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive])
     end
