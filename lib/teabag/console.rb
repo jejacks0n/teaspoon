@@ -32,7 +32,7 @@ module Teabag
       true
     end
 
-    def run_specs(suite, driver_cli_options = "")
+    def run_specs(suite, driver_cli_options = nil)
       url = url(suite)
       url += url.include?("?") ? "&" : "?"
       url += "reporter=Console"

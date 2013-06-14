@@ -7,7 +7,7 @@ module Teabag
     class PhantomjsDriver < BaseDriver
       include Teabag::Utility
 
-      def run_specs(suite, url, driver_cli_options)
+      def run_specs(suite, url, driver_cli_options = nil)
         runner = Teabag::Runner.new(suite)
 
         Phantomjs.instance_variable_set(:@path, executable)
