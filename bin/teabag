@@ -1,6 +1,0 @@
-#!/usr/bin/env ruby
-root = File.expand_path('../lib', __FILE__)
-$:.unshift(root) unless $:.include?(root)
-
-require "teabag/command_line"
-Teabag::CommandLine.new
