@@ -23,13 +23,13 @@ namespace :spec do
   end
 end
 
-# Teabag
+# Teaspoon
 # -----------------------------------------------------------------------------
 desc "Run the javascript specs"
-task :teabag => "app:teabag"
+task :teaspoon => "app:teaspoon"
 
-namespace :teabag do
-  desc "Builds Teabag into the distribution ready bundle"
+namespace :teaspoon do
+  desc "Builds Teaspoon into the distribution ready bundle"
   task :build => "build:javascripts"
 
   namespace :build do
@@ -38,9 +38,9 @@ namespace :teabag do
     task :javascripts => :environment do
       env = Rails.application.assets
 
-      %w(teabag/jasmine.js teabag/mocha.js teabag/qunit.js teabag/angular.js teabag/teabag.js).each do |path|
+      %w(teaspoon/jasmine.js teaspoon/mocha.js teaspoon/qunit.js teaspoon/angular.js teaspoon/teaspoon.js).each do |path|
         asset = env.find_asset(path)
-        asset.write_to(Teabag::Engine.root.join("app/assets/javascripts/#{path.gsub(/\//, "-")}"))
+        asset.write_to(Teaspoon::Engine.root.join("app/assets/javascripts/#{path.gsub(/\//, "-")}"))
       end
     end
   end
@@ -51,4 +51,4 @@ end
 Rake::Task["default"].prerequisites.clear
 Rake::Task["default"].clear
 
-task :default => [:spec, :teabag]
+task :default => [:spec, :teaspoon]
