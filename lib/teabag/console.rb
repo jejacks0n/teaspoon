@@ -23,7 +23,7 @@ module Teabag
       failure_count = 0
       suites.each do |suite|
         STDOUT.print "Teabag running #{suite} suite at #{url(suite)}\n" unless Teabag.configuration.suppress_log
-        failure_count += run_specs(suite)
+        failure_count += run_specs(suite, @options[:driver_cli_options] || Teabag.configuration.driver_cli_options)
       end
       failure_count > 0
     rescue Teabag::Failure
@@ -32,11 +32,11 @@ module Teabag
       true
     end
 
-    def run_specs(suite)
+    def run_specs(suite, driver_cli_options = nil)
       url = url(suite)
       url += url.include?("?") ? "&" : "?"
       url += "reporter=Console"
-      driver.run_specs(suite, url)
+      driver.run_specs(suite, url, driver_cli_options)
     end
 
     protected

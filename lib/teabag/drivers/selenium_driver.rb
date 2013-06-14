@@ -5,7 +5,11 @@ module Teabag
   module Drivers
     class SeleniumDriver < BaseDriver
 
-      def run_specs(suite, url)
+      # note: driver_cli_options which is meant to be used for CLI options to pass into the driver is 
+      #       currently ignored. We use the Selenium Ruby binding, so the Selenium command-line options
+      #       aren't used. There are a variety of Selenium options and browser-specific options
+      #       supported by the binding that will take more thought and design to configure cleanly.
+      def run_specs(suite, url, driver_cli_options)
         runner = Teabag::Runner.new(suite)
 
         driver = Selenium::WebDriver.for(:firefox)
@@ -21,7 +25,7 @@ module Teabag
 
         runner.failure_count
       ensure
-        driver.quit
+        driver.quit if driver
       end
     end
   end

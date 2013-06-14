@@ -402,6 +402,19 @@ These configuration directives are applicable only when running via the rake tas
   </ul>
 </dd>
 
+<dt> driver_cli_options </dt><dd>
+  An experimental feature to allow you to specify additional CLI options/switches. Currently this is only supported if using the 'phantomjs' driver.<br/><br/>
+
+  Check this wiki article for information about <a href="https://github.com/ariya/phantomjs/wiki/API-Reference#command-line-options">PhantomJS Command-line Options</a>. Some options may cause Teabag to fail to function as expected/may not produce the expected result or may conflict with other options.<br/><br/>
+
+  <b>default:</b> <code>nil</code>
+
+  <ul>
+    <li>CLI: -o, --driver-cli-options OPTIONS_STRING</li>
+    <li>ENV: DRIVER_CLI_OPTIONS="--ssl-protocol=any --ssl-certificates-path=/path/to/certs"</li>
+  </ul>
+</dd>
+
 <dt> server </dt><dd>
   Specify a server to use with Rack (eg. thin, mongrel). If nil is provided Rack::Server is used.<br/><br/>
 
