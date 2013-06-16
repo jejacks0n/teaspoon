@@ -218,7 +218,7 @@
      * Chai version
      */
 
-    exports.version = '1.6.0';
+    exports.version = '1.6.1';
 
     /*!
      * Primary `Assertion` prototype
@@ -2063,7 +2063,7 @@
        *     var tea = 'cup of chai';
        *     assert.isDefined(tea, 'tea has been defined');
        *
-       * @name isUndefined
+       * @name isDefined
        * @param {Mixed} value
        * @param {String} message
        * @api public
@@ -3136,6 +3136,9 @@
         // equivalence is determined by ==.
       } else if (typeof actual != 'object' && typeof expected != 'object') {
         return actual === expected;
+
+      } else if (actual instanceof RegExp && expected instanceof RegExp){
+        return actual.toString() === expected.toString();
 
         // 7.4. For all other Object pairs, including Array objects, equivalence is
         // determined by having the same number of owned properties (as verified
