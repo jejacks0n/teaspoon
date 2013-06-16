@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-# gems that teabag can utilize
+# gems that teaspoon can utilize
 gem "selenium-webdriver"
 gem "tapout"
 gem "thin"
