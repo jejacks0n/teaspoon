@@ -13,6 +13,13 @@ Feedback, ideas and pull requests are always welcome, or you can hit us up on Tw
 
 If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), check out the [guard-teaspoon](https://github.com/modeset/guard-teaspoon) project.
 
+### Developer Notice:
+
+Teabag has been renamed to Teaspoon, thanks to (bigtunacan)[https://github.com/bigtunacan].
+
+This means you should change your gemspec to point to "teaspoon". A deprecation notice was provided with the last release of the gem under the teabag name, and versions will continue to move forward from 0.7.3.
+
+
 ## Screenshots
 
 ### Running in the console
