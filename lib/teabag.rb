@@ -7,3 +7,5 @@ require "teabag/coverage"
 require "teabag/instrumentation"
 
 require "teabag/engine"
+
+puts "Deprecation Warning: Teabag has been renamed to Teaspoon -- you should update your gem."
