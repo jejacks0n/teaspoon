@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,lib,vendor,bin}/**/*"] + ["MIT.LICENSE", "README.md"]
   s.test_files = Dir["{spec,test}/**/*"]
-  s.executables = "teaspoon"
+  s.executables = ["teaspoon", "teabag"]
 
   s.add_dependency "railties", [">= 3.2.5","< 5"]
   s.add_dependency "phantomjs", ">= 1.8.1.1"
