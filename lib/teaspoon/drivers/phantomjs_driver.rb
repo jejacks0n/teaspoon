@@ -7,11 +7,12 @@ module Teaspoon
     class PhantomjsDriver < BaseDriver
       include Teaspoon::Utility
 
-      def run_specs(suite, url)
+      def run_specs(suite, url, driver_cli_options = nil)
         runner = Teaspoon::Runner.new(suite)
 
         Phantomjs.instance_variable_set(:@path, executable)
-        Phantomjs.run(script, url) do |line|
+        # Phantomjs.run takes the command-line args as an array, so if we need to pass in switches/flags, need to split on space
+        Phantomjs.run(*([driver_cli_options && driver_cli_options.split(" "), script, url].flatten.compact)) do |line|
           runner.process(line)
         end
 

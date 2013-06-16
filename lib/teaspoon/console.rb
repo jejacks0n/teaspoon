@@ -23,7 +23,7 @@ module Teaspoon
       failure_count = 0
       suites.each do |suite|
         STDOUT.print "Teaspoon running #{suite} suite at #{url(suite)}\n" unless Teaspoon.configuration.suppress_log
-        failure_count += run_specs(suite)
+        failure_count += run_specs(suite, @options[:driver_cli_options] || Teaspoon.configuration.driver_cli_options)
       end
       failure_count > 0
     rescue Teaspoon::Failure
@@ -32,11 +32,11 @@ module Teaspoon
       true
     end
 
-    def run_specs(suite)
+    def run_specs(suite, driver_cli_options = nil)
       url = url(suite)
       url += url.include?("?") ? "&" : "?"
       url += "reporter=Console"
-      driver.run_specs(suite, url)
+      driver.run_specs(suite, url, driver_cli_options)
     end
 
     protected
