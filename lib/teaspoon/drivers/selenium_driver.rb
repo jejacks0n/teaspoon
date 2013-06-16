@@ -9,7 +9,7 @@ module Teaspoon
       #       currently ignored. We use the Selenium Ruby binding, so the Selenium command-line options
       #       aren't used. There are a variety of Selenium options and browser-specific options
       #       supported by the binding that will take more thought and design to configure cleanly.
-      def run_specs(suite, url, driver_cli_options)
+      def run_specs(suite, url, driver_cli_options = nil)
         runner = Teaspoon::Runner.new(suite)
 
         driver = Selenium::WebDriver.for(:firefox)
