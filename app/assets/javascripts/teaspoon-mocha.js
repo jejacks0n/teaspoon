@@ -6610,11 +6610,13 @@
 
   Teaspoon.Suite = (function() {
     function Suite(suite) {
+      var _ref;
+
       this.suite = suite;
       this.fullDescription = this.suite.fullTitle();
       this.description = this.suite.title;
       this.link = "?grep=" + (encodeURIComponent(this.fullDescription));
-      this.parent = this.suite.parent.root ? null : this.suite.parent;
+      this.parent = ((_ref = this.suite.parent) != null ? _ref.root : void 0) ? null : this.suite.parent;
       this.viewId = this.suite.viewId;
     }
 
