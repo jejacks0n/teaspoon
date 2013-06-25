@@ -1,5 +1,5 @@
 Teaspoon
-======
+========
 [![Build Status](https://travis-ci.org/modeset/teaspoon.png)](https://travis-ci.org/modeset/teaspoon)
 [![Code Climate](https://codeclimate.com/github/modeset/teaspoon.png)](https://codeclimate.com/github/modeset/teaspoon)
 
