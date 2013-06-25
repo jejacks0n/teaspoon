@@ -8,11 +8,14 @@ gem "tapout"
 gem "thin"
 
 # used by the dummy application
-gem "rails", ">= 3.2.9"
+gem "rails", ">= 4.0.0"
 gem "coffee-rails"
 gem "sass-rails"
 gem "jquery-rails"
 gem "haml-rails"
+gem "turbolinks", require: false
+gem "jbuilder", require: false
+gem 'sdoc', require: false
 
 # used by test rails apps
 gem "sqlite3"

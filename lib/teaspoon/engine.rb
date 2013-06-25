@@ -14,7 +14,7 @@ module Teaspoon
     end
 
     config.after_initialize do |app|
-      # inject our sprockets hack for instrumenting javacsripts
+      # inject our sprockets hack for instrumenting javascripts
       Sprockets::Environment.send(:include, Teaspoon::SprocketsInstrumentation)
 
       # prepend routes so a catchall doesn't get in the way
