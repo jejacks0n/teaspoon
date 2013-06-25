@@ -66,7 +66,7 @@ describe Teaspoon::Console do
 
       suites = subject.send(:suites)
       expect(suites).to eq(["foo"])
-      expect(subject.send(:filter, "foo")).to eq("?file[]=file2")
+      expect(subject.send(:filter, "foo")).to eq("file[]=file2")
     end
 
     it "runs the tests" do
