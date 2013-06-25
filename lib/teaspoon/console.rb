@@ -72,11 +72,12 @@ module Teaspoon
       parts = []
       parts << "grep=#{URI::encode(@options[:filter])}" if @options[:filter].present?
       (@suites[suite] || @files).each { |file| parts << "file[]=#{URI::encode(file)}" }
-      "?#{parts.join('&')}" if parts.present?
+      "#{parts.join('&')}" if parts.present?
     end
 
     def url(suite)
-      ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite, filter(suite)].compact.join("/")
+      base_url = ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite].join('/')
+      [base_url, filter(suite)].compact.join('?')
     end
   end
 end
