@@ -16,7 +16,7 @@
     <%= javascript_include_tag_for_teaspoon *@suite.helper, @javascript_options %>
     <script type="text/javascript">
       // When the DOM is loaded, we then use require to include currently selected file/suite, then once those are all loaded, we run Teaspoon
-      // @suite.spec_javascripts_for_require strips off the .js and adds the Teaspoon prefix
+      // @suite.spec_javascripts_for_require strips off the .js file extension
       Teaspoon.onWindowLoad(function () {
         //setup the Teaspoon path prefix to load /assets
         require.config(
