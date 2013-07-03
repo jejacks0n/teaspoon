@@ -50,10 +50,10 @@ Updating requires that you rename your `teabag.rb` initializer to `teaspoon.rb`,
 
 ## Installation
 
-Add it to your Gemfile. In most cases you'll want to restrict it to the `:asset`, or `:development, :test` groups.
+Add it to your Gemfile. In most cases you'll want to restrict it to the `:development, :test` or `:asset` groups.
 
 ```ruby
-group :assets do
+group :development, :test do
   gem "teaspoon"
 end
 ```
