@@ -10,7 +10,7 @@ describe Teaspoon::Drivers::PhantomjsDriver do
     end
 
     it "instantiates the formatter" do
-      runner = mock(failure_count: nil)
+      runner = double(failure_count: nil)
       Teaspoon::Runner.should_receive(:new).and_return(runner)
       subject.run_specs(:default, "_url_")
     end

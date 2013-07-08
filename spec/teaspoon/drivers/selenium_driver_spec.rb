@@ -6,21 +6,21 @@ describe Teaspoon::Drivers::SeleniumDriver do
   describe "#run_specs" do
 
     before do
-      @navigate = mock(to: nil)
-      @driver = mock(quit: nil, navigate: @navigate, execute_script: nil)
+      @navigate = double(to: nil)
+      @driver = double(quit: nil, navigate: @navigate, execute_script: nil)
       Selenium::WebDriver.stub(:for).and_return(@driver)
-      @wait = mock(until: nil)
+      @wait = double(until: nil)
       Selenium::WebDriver::Wait.stub(:new).and_return(@wait)
     end
 
     it "instantiates the formatter" do
-      runner = mock(failure_count: nil)
+      runner = double(failure_count: nil)
       Teaspoon::Runner.should_receive(:new).and_return(runner)
       subject.run_specs(:default, "_url_")
     end
 
     it "returns the number of failures from the runner" do
-      runner = mock(failure_count: 42)
+      runner = double(failure_count: 42)
       Teaspoon::Runner.should_receive(:new).and_return(runner)
       expect(subject.run_specs(:default, "_url_")).to be(42)
     end

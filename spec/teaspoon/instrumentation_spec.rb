@@ -7,7 +7,7 @@ describe Teaspoon::Instrumentation do
 
   subject { Teaspoon::Instrumentation }
 
-  let(:asset) { mock(source: nil) }
+  let(:asset) { double(source: nil) }
   let(:response) { [200, {"Content-Type" => "application/javascript"}, asset] }
   let(:env) { {"QUERY_STRING" => "instrument=true"} }
 
@@ -66,7 +66,7 @@ describe Teaspoon::Instrumentation do
 
   describe ".add_to" do
 
-    let(:asset) { mock(source: source, pathname: 'path/to/instrument.js') }
+    let(:asset) { double(source: source, pathname: 'path/to/instrument.js') }
     let(:source) { "function add(a, b) { return a + b } // ☃ " }
 
     before do
@@ -82,7 +82,7 @@ describe Teaspoon::Instrumentation do
     end
 
     it "writes the file to a tmp path" do
-      file = mock('file')
+      file = double('file')
       File.should_receive(:open).with(@output, "w").and_yield(file)
       file.should_receive(:write).with("function add(a, b) { return a + b } // ☃ ")
       subject.add_to(response, env)

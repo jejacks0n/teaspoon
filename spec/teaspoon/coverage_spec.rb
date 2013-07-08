@@ -19,7 +19,7 @@ describe Teaspoon::Coverage do
     end
 
     it "writes the data to a file" do
-      file = mock('file')
+      file = double('file')
       File.should_receive(:open).with(@output, "w").and_yield(file)
       file.should_receive(:write).with('{"foo":"bar"}')
       subject.reports

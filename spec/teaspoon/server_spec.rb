@@ -24,7 +24,7 @@ describe Teaspoon::Server do
 
     it "starts a rack server" do
       STDOUT.should_receive(:print).with("Starting the Teaspoon server...\n")
-      server = mock(start: nil)
+      server = double(start: nil)
       Thread.stub(:new) { |&b| @block = b }
 
       Rack::Server.should_receive(:new).and_return(server)
@@ -53,7 +53,7 @@ describe Teaspoon::Server do
 
         Rack::Server.should_receive(:new) do |options|
           options.should include(:server => :cgi)
-        end.and_return(mock(start: nil))
+        end.and_return(double(start: nil))
 
         subject.start
         @block.call
@@ -78,11 +78,11 @@ describe Teaspoon::Server do
   describe "#responsive?" do
 
     before do
-      subject.instance_variable_set(:@thread, mock(join: nil))
+      subject.instance_variable_set(:@thread, double(join: nil))
     end
 
     it "checks a local port to see if a server is running" do
-      socket = mock(close: nil)
+      socket = double(close: nil)
       TCPSocket.should_receive(:new).with("127.0.0.1", 31337).and_return(socket)
       socket.should_receive(:close)
       subject.wait_until_started

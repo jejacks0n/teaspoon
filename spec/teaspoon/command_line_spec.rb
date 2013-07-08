@@ -6,8 +6,8 @@ describe Teaspoon::CommandLine do
 
   describe "#initialize" do
 
-    let(:console) { mock(execute: false) }
-    let(:parser) { mock(parse!: ["file1", "file2"]) }
+    let(:console) { double(execute: false) }
+    let(:parser) { double(parse!: ["file1", "file2"]) }
 
     before do
       Teaspoon::CommandLine.any_instance.stub(:abort)

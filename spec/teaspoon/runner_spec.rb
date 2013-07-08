@@ -31,7 +31,7 @@ describe Teaspoon::Runner do
 
     it "asks each formatter if it needs to suppress logs" do
       Teaspoon.configuration.should_receive(:suppress_log).and_return(false)
-      subject.formatters = [mock(suppress_logs?: true)]
+      subject.formatters = [double(suppress_logs?: true)]
       expect(subject.suppress_logs?).to be(true)
     end
 

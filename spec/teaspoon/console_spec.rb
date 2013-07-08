@@ -3,7 +3,7 @@ require "teaspoon/console"
 
 describe Teaspoon::Console do
 
-  let(:server) { mock(start: nil, url: "http://url.com") }
+  let(:server) { double(start: nil, url: "http://url.com") }
   subject {
     Teaspoon::Console.any_instance.stub(:start_server)
     instance = Teaspoon::Console.new
@@ -90,7 +90,7 @@ describe Teaspoon::Console do
   describe "#run_specs" do
 
     it "calls run_specs on the driver" do
-      driver = mock(run_specs: nil)
+      driver = double(run_specs: nil)
       subject.should_receive(:driver).and_return(driver)
       driver.should_receive(:run_specs).with(:suite_name, "http://url.com/teaspoon/suite_name?reporter=Console", nil)
       subject.run_specs(:suite_name)

@@ -21,9 +21,9 @@ describe Teaspoon::Formatters::BaseFormatter do
   describe "#log_coverage" do
 
     it "logs the coverage information" do
-      mock = mock(reports: nil)
-      Teaspoon::Coverage.should_receive(:new).with("_data_").and_return(mock)
-      mock.should_receive(:reports).and_return("_reports_")
+      double = double(reports: nil)
+      Teaspoon::Coverage.should_receive(:new).with("_data_").and_return(double)
+      double.should_receive(:reports).and_return("_reports_")
       STDOUT.should_receive(:print).with("_reports_")
       subject.send(:log_coverage, "_data_")
     end
