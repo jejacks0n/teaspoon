@@ -7,7 +7,7 @@ describe Teaspoon::Instrumentation do
 
   subject { Teaspoon::Instrumentation }
 
-  let(:asset) { double(source: nil) }
+  let(:asset) { double(source: nil, pathname: 'path/to/instrument.js') }
   let(:response) { [200, {"Content-Type" => "application/javascript"}, asset] }
   let(:env) { {"QUERY_STRING" => "instrument=true"} }
 
