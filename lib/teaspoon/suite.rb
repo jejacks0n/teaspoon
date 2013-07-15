@@ -22,10 +22,6 @@ module Teaspoon
       @config = suite_configuration
     end
 
-    def use_require
-      config.use_require
-    end
-
     def stylesheets
       config.stylesheets
     end
@@ -40,6 +36,14 @@ module Teaspoon
 
     def core_javascripts
       config.javascripts
+    end
+
+    def js_config
+      config.js_config
+    end
+
+    def boot_partial
+      config.boot_partial
     end
 
     def spec_javascripts

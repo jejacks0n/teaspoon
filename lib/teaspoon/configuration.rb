@@ -5,40 +5,46 @@ module Teaspoon
     include Singleton
 
     cattr_accessor :mount_at, :root, :asset_paths, :fixture_path, :suites, :driver_cli_options
-    @@mount_at         = "/teaspoon"
-    @@root             = nil # will default to Rails.root if left unset
-    @@asset_paths      = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
-    @@fixture_path     = "spec/javascripts/fixtures"
-    @@suites           = {"default" => proc{}}
+    @@mount_at           = "/teaspoon"
+    @@root               = nil # will default to Rails.root if left unset
+    @@asset_paths        = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
+    @@fixture_path       = "spec/javascripts/fixtures"
+    @@suites             = {"default" => proc{}}
     @@driver_cli_options = nil
 
     # console runner specific
     cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :formatters, :suppress_log, :color, :coverage, :coverage_reports, :server
-    @@driver           = "phantomjs"
-    @@server           = nil
-    @@server_port      = nil
-    @@server_timeout   = 20
-    @@fail_fast        = true
-    @@formatters       = "dot"
-    @@suppress_log     = false
-    @@color            = true
-    @@coverage         = false
-    @@coverage_reports = nil
+    @@driver             = "phantomjs"
+    @@server             = nil
+    @@server_port        = nil
+    @@server_timeout     = 20
+    @@fail_fast          = true
+    @@formatters         = "dot"
+    @@suppress_log       = false
+    @@color              = true
+    @@coverage           = false
+    @@coverage_reports   = nil
 
     class Suite
-      attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :use_require
+      attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :boot_partial, :js_config
 
       def initialize
-        @matcher     = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
-        @helper      = "spec_helper"
-        @javascripts = ["teaspoon-jasmine"]
-        @stylesheets = ["teaspoon"]
-        @no_coverage = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
-        @use_require = false
+        @matcher         = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
+        @helper          = "spec_helper"
+        @javascripts     = ["teaspoon-jasmine"]
+        @stylesheets     = ["teaspoon"]
+        @no_coverage     = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
+        @boot_partial    = nil
+        @js_config       = {}
 
         default = Teaspoon.configuration.suites["default"]
         self.instance_eval(&default) if default
         yield self if block_given?
+      end
+
+      def use_require=(val) # todo: deprecated in version 0.7.4
+        puts "Deprecation Notice: use_require will be removed, specify 'require_js' for config.boot_partial instead."
+        self.boot_partial = 'require_js' if val
       end
     end
 

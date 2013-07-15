@@ -51,12 +51,6 @@ describe Teaspoon::Suite do
 
   end
 
-  describe "#use_require" do
-    it "returns an boolean" do
-      expect(subject.use_require).to eq(false)
-    end
-  end
-
   describe "#stylesheets" do
 
     it "returns an array of stylesheets" do
@@ -109,21 +103,17 @@ describe Teaspoon::Suite do
   end
 
   describe "#spec_javascripts_for_require" do
+
+    let(:files) { ['/path/file1.js.coffee', 'path/file2.coffee', 'file3.coffee.erb', 'file4.js.erb' ] }
+
     before do
-      subject.should_receive(:specs).and_return(%w(
-                                                    test/js_ext.js.coffee
-                                                    test/coffee_ext.coffee
-                                                    test/coffee_and_erb_ext.coffee.erb
-                                                    test/js_and_erb_ext.js.erb
-      ))
+      subject.should_receive(:specs).and_return(files)
     end
+
     it 'returns an array of spec javascripts without .js and Teaspoon prefix' do
-      result = subject.spec_javascripts_for_require
-      expect(result[0]).to eq 'test/js_ext'
-      expect(result[1]).to eq 'test/coffee_ext'
-      expect(result[2]).to eq 'test/coffee_and_erb_ext'
-      expect(result[3]).to eq 'test/js_and_erb_ext'
+      expect( subject.spec_javascripts_for_require ).to eq(['/path/file1', 'path/file2', 'file3', 'file4'])
     end
+
   end
 
   describe "#suites" do

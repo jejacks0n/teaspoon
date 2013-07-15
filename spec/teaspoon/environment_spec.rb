@@ -54,7 +54,7 @@ describe Teaspoon::Environment do
     end
 
     it "raises if no env file was found" do
-      File.should_receive(:exists?).any_number_of_times.and_return(false)
+      File.stub(:exists?)
       expect{ subject.require_environment }.to raise_error(Teaspoon::EnvironmentNotFound)
     end
   end

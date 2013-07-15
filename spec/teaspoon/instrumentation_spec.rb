@@ -7,7 +7,7 @@ describe Teaspoon::Instrumentation do
 
   subject { Teaspoon::Instrumentation }
 
-  let(:asset) { double(source: nil, pathname: 'path/to/instrument.js') }
+  let(:asset) { double('asset', source: nil, pathname: 'path/to/instrument.js') }
   let(:response) { [200, {"Content-Type" => "application/javascript"}, asset] }
   let(:env) { {"QUERY_STRING" => "instrument=true"} }
 
@@ -71,6 +71,7 @@ describe Teaspoon::Instrumentation do
 
     before do
       Teaspoon::Instrumentation.stub(:add?).and_return(true)
+      asset.should_receive(:clone).and_return(asset)
 
       File.stub(:open)
       subject.any_instance.stub(:instrument).and_return(source + " // instrumented")

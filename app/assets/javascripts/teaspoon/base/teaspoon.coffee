@@ -22,13 +22,14 @@ class @Teaspoon
     @started = true
     new Teaspoon.Runner()
 
+
   @onWindowLoad: (method) ->
     originalOnload = window.onload
     window.onload = ->
       originalOnload() if originalOnload && originalOnload.call
       method()
 
-  # provides interface for AMD usage -- pass all dependencies in as an array, and params will be checked for matches
+
   @resolveDependenciesFromParams: (all = []) ->
     deps = []
     return all if (paths = @location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) == null
@@ -41,7 +42,6 @@ class @Teaspoon
     deps
 
 
-  # logging methods -- used by selenium / phantomJS to get information back to ruby
   @log: ->
     @messages.push(arguments[0])
     try console.log(arguments...)
