@@ -2184,7 +2184,6 @@
 
     Teaspoon.onWindowLoad = function(method) {
       var originalOnload;
-
       originalOnload = window.onload;
       return window.onload = function() {
         if (originalOnload && originalOnload.call) {
@@ -2196,7 +2195,6 @@
 
     Teaspoon.resolveDependenciesFromParams = function(all) {
       var dep, deps, file, parts, path, paths, _i, _j, _len, _len1;
-
       if (all == null) {
         all = [];
       }
@@ -2223,7 +2221,6 @@
 
     Teaspoon.log = function() {
       var e;
-
       this.messages.push(arguments[0]);
       try {
         return console.log.apply(console, arguments);
@@ -2235,7 +2232,6 @@
 
     Teaspoon.getMessages = function() {
       var messages;
-
       messages = this.messages;
       this.messages = [];
       return messages;
@@ -3436,7 +3432,6 @@
 
     Spec.prototype.errors = function() {
       var item, _i, _len, _ref, _results;
-
       if (!this.spec.failed) {
         return [];
       }
@@ -3464,7 +3459,6 @@
 
     Spec.prototype.result = function() {
       var status;
-
       status = "failed";
       if (!this.spec.failed) {
         status = "passed";

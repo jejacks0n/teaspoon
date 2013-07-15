@@ -2633,7 +2633,6 @@ jasmine.version_= {
 
     Teaspoon.onWindowLoad = function(method) {
       var originalOnload;
-
       originalOnload = window.onload;
       return window.onload = function() {
         if (originalOnload && originalOnload.call) {
@@ -2645,7 +2644,6 @@ jasmine.version_= {
 
     Teaspoon.resolveDependenciesFromParams = function(all) {
       var dep, deps, file, parts, path, paths, _i, _j, _len, _len1;
-
       if (all == null) {
         all = [];
       }
@@ -2672,7 +2670,6 @@ jasmine.version_= {
 
     Teaspoon.log = function() {
       var e;
-
       this.messages.push(arguments[0]);
       try {
         return console.log.apply(console, arguments);
@@ -2684,7 +2681,6 @@ jasmine.version_= {
 
     Teaspoon.getMessages = function() {
       var messages;
-
       messages = this.messages;
       this.messages = [];
       return messages;
@@ -3719,7 +3715,6 @@ jasmine.version_= {
 
     Runner.prototype.setup = function() {
       var grep, reporter;
-
       env.updateInterval = 1000;
       if (grep = this.params["grep"]) {
         env.specFilter = function(spec) {
@@ -3759,7 +3754,6 @@ jasmine.version_= {
 
     Spec.prototype.errors = function() {
       var item, _i, _len, _ref, _results;
-
       if (!this.spec.results) {
         return [];
       }
@@ -3780,7 +3774,6 @@ jasmine.version_= {
 
     Spec.prototype.getParents = function() {
       var parent;
-
       if (this.parents) {
         return this.parents;
       }
@@ -3796,7 +3789,6 @@ jasmine.version_= {
 
     Spec.prototype.result = function() {
       var results, status;
-
       results = this.spec.results();
       status = "failed";
       if (results.passed()) {
@@ -3842,7 +3834,6 @@ jasmine.version_= {
     fixture.load = function() {
       var args,
         _this = this;
-
       args = arguments;
       if (!(env.currentSuite || env.currentSpec)) {
         throw "Teaspoon can't load fixtures outside of describe.";
@@ -3866,7 +3857,6 @@ jasmine.version_= {
     fixture.set = function() {
       var args,
         _this = this;
-
       args = arguments;
       if (!(env.currentSuite || env.currentSpec)) {
         throw "Teaspoon can't load fixtures outside of describe.";

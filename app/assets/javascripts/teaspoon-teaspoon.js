@@ -4,7 +4,8 @@
 
   TeaspoonInterface = (function() {
     function TeaspoonInterface() {
-      this.filter = __bind(this.filter, this);      this.files = $u("#teaspoon-suite-list .file a");
+      this.filter = __bind(this.filter, this);
+      this.files = $u("#teaspoon-suite-list .file a");
       this.input = $u("#teaspoon-filter-input")[0];
       this.input.value = "";
       this.input.onkeyup = this.filter;
@@ -13,7 +14,6 @@
 
     TeaspoonInterface.prototype.filter = function() {
       var file, _i, _len, _ref, _results;
-
       _ref = this.files;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {

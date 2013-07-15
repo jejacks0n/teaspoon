@@ -26227,7 +26227,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Teaspoon.onWindowLoad = function(method) {
       var originalOnload;
-
       originalOnload = window.onload;
       return window.onload = function() {
         if (originalOnload && originalOnload.call) {
@@ -26239,7 +26238,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Teaspoon.resolveDependenciesFromParams = function(all) {
       var dep, deps, file, parts, path, paths, _i, _j, _len, _len1;
-
       if (all == null) {
         all = [];
       }
@@ -26266,7 +26264,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Teaspoon.log = function() {
       var e;
-
       this.messages.push(arguments[0]);
       try {
         return console.log.apply(console, arguments);
@@ -26278,7 +26275,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Teaspoon.getMessages = function() {
       var messages;
-
       messages = this.messages;
       this.messages = [];
       return messages;
@@ -27391,7 +27387,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Spec.prototype.errors = function() {
       var step, _i, _len, _ref1, _results;
-
       if (!this.spec.steps) {
         return [];
       }
@@ -27412,7 +27407,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Spec.prototype.result = function() {
       var status;
-
       status = "failed";
       if (this.spec.status === "success") {
         status = "passed";

@@ -5404,7 +5404,6 @@
 
     Teaspoon.onWindowLoad = function(method) {
       var originalOnload;
-
       originalOnload = window.onload;
       return window.onload = function() {
         if (originalOnload && originalOnload.call) {
@@ -5416,7 +5415,6 @@
 
     Teaspoon.resolveDependenciesFromParams = function(all) {
       var dep, deps, file, parts, path, paths, _i, _j, _len, _len1;
-
       if (all == null) {
         all = [];
       }
@@ -5443,7 +5441,6 @@
 
     Teaspoon.log = function() {
       var e;
-
       this.messages.push(arguments[0]);
       try {
         return console.log.apply(console, arguments);
@@ -5455,7 +5452,6 @@
 
     Teaspoon.getMessages = function() {
       var messages;
-
       messages = this.messages;
       this.messages = [];
       return messages;
@@ -6549,7 +6545,6 @@
 
     Runner.prototype.setup = function() {
       var reporter;
-
       reporter = this.getReporter();
       return env.setup({
         reporter: reporter
@@ -6581,7 +6576,6 @@
 
     Spec.prototype.getParents = function() {
       var parent;
-
       if (this.parents) {
         return this.parents;
       }
@@ -6597,7 +6591,6 @@
 
     Spec.prototype.result = function() {
       var status;
-
       status = "failed";
       if (this.spec.state === "passed" || this.spec.state === "skipped") {
         status = "passed";
@@ -6642,7 +6635,6 @@
     fixture.load = function() {
       var args,
         _this = this;
-
       args = arguments;
       if (env.started) {
         return fixture.__super__.constructor.load.apply(this, arguments);
@@ -6656,7 +6648,6 @@
     fixture.set = function() {
       var args,
         _this = this;
-
       args = arguments;
       if (env.started) {
         return fixture.__super__.constructor.set.apply(this, arguments);
