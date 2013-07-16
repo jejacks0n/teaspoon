@@ -36,7 +36,7 @@ module Teaspoon
 
     def output_from(line)
       json = JSON.parse(line)
-      return false unless json["_teaspoon"] && json["type"]
+      return false unless json && json["_teaspoon"] && json["type"]
       result = Teaspoon::Result.build_from_json(json)
       notify_formatters result
       @failure_count += 1 if result.failing?
