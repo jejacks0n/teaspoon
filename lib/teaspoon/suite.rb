@@ -88,9 +88,8 @@ module Teaspoon
 
     def include_spec_for?(file)
       return file if glob.include?(file)
-      glob.each do |spec|
-        return spec if spec.include?(file)
-      end
+      paths = glob.select { |path| path.include?(file)  }
+      return paths unless paths.empty?
       false
     end
 

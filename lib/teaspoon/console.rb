@@ -71,7 +71,7 @@ module Teaspoon
     def filter(suite)
       parts = []
       parts << "grep=#{URI::encode(@options[:filter])}" if @options[:filter].present?
-      (@suites[suite] || @files).each { |file| parts << "file[]=#{URI::encode(file)}" }
+      (@suites[suite] || @files).flatten.each { |file| parts << "file[]=#{URI::encode(file)}" }
       "#{parts.join('&')}" if parts.present?
     end
 

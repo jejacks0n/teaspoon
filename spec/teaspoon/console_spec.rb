@@ -69,6 +69,18 @@ describe Teaspoon::Console do
       expect(subject.send(:filter, "foo")).to eq("file[]=file2")
     end
 
+    it "resolves the files if a directory was given" do
+      directory = [ "test/javascripts" ]
+      resolve_spec_for_output = ['test/javascripts/foo.coffee', 'test/javascripts/bar.coffee']
+      Teaspoon::Suite.should_receive(:resolve_spec_for).with("test/javascripts").and_return(suite: "foo", path: resolve_spec_for_output)
+      subject.execute(nil, directory)
+      expect(subject.instance_variable_get(:@files)).to eq(directory)
+
+      suites = subject.send(:suites)
+      expect(suites).to eq(["foo"])
+      expect(subject.send(:filter, "foo")).to eq("file[]=#{resolve_spec_for_output.join('&file[]=')}")
+    end
+
     it "runs the tests" do
       subject.should_receive(:suites).and_return([:default, :foo])
       STDOUT.should_receive(:print).with("Teaspoon running default suite at http://url.com/teaspoon/default\n")
