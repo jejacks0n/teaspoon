@@ -89,8 +89,14 @@ You can focus tests in various ways, and Teaspoon provides an interface to run f
 
 ### Rake
 
+The rake task provides several ways of foucusing tests. You can specify the suite to run, the files to run, and/or directories to run.
+
 ```
 rake teaspoon suite=my_fantastic_suite
+rake teaspoon files=test/javascripts/controllers/my_controller_test.js
+rake teaspoon files=test/javascripts/integration,test/javascripts/models
+rake teaspoon files=test/javascripts/integration,test/javascripts/models,test/javascripts/controllers/my_controller_test.js
+rake teaspoon suite=my_fantastic_suite files=test/javascripts/integration,test/javascripts/models,test/javascripts/controllers/my_controller_test.js
 ```
 
 ### Command Line Interface
@@ -101,11 +107,12 @@ The command line interface requires a `teaspoon_env.rb` file that you can get by
 bundle exec teaspoon
 ```
 
-The CLI provides several ways of focusing tests. You can specify the suite to run, the files to run, and a filter.
+The CLI provides several ways of focusing tests. You can specify the suite to run, the files to run, directories to run, and a filter.
 
 ```
 bundle exec teaspoon --suite=my_fantastic_suite
 bundle exec teaspoon spec/javascripts/calculator_spec.js
+bundle exec teaspoon spec/javascripts/integration
 bundle exec teaspoon --filter="Calculator should add two digits"
 ```
 
