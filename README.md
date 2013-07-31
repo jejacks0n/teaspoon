@@ -5,7 +5,7 @@ Teaspoon
 
 Teaspoon is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS or with Selenium WebDriver.
 
-Its objective is to be the simplest, while also being the most complete Javascript testing solution for Rails. It takes full advantage of the asset pipeline and ships with support for Jasmine, Mocha, QUnit, and (experiementally) Angular.
+Its objective is to be the simplest, while also being the most complete Javascript testing solution for Rails. It takes full advantage of the asset pipeline and ships with support for Jasmine, Mocha, QUnit, and (experimentally) Angular.
 
 Ok, another Javascript test runner, right? Really? Yeah, that's tough, but we're pretty confident Teaspoon is one of the nicest and most full featured you'll find at the moment. And if you disagree, let us know and we'll probably fix whatever it is that you didn't like.
 
