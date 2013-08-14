@@ -1,2 +1,0 @@
-puts "Deprecation Notice: Please use the 'teaspoon' command instead of 'teabag'"
-load File.expand_path('../teaspoon', __FILE__)

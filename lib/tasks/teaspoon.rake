@@ -4,7 +4,3 @@ task :teaspoon => :environment do |t, args|
   files = ENV['files'].nil? ? [] : ENV['files'].split(',')
   fail if Teaspoon::Console.new({suite: ENV["suite"], driver_cli_options: ENV["driver_cli_options"]}, files ).execute
 end
-
-task :teabag => :teaspoon do
-  puts "Deprecation Notice: Please update your rake tasks to use 'teaspoon' instead of 'teabag'"
-end
