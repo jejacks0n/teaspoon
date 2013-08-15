@@ -13,7 +13,7 @@ gem "coffee-rails"
 gem "sass-rails"
 gem "jquery-rails"
 gem "haml-rails"
-gem "turbolinks", require: false
+gem "turbolinks"
 gem "jbuilder", require: false
 gem 'sdoc', require: false
 
