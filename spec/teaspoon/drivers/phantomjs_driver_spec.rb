@@ -16,7 +16,7 @@ describe Teaspoon::Drivers::PhantomjsDriver do
     end
 
     it "calls phantomjs.run and logs the results of each line using the formatter" do
-      args = [Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.coffee").to_s, "_url_"]
+      args = [Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.coffee").to_s, "_url_", 180.to_s]
       Teaspoon::Runner.any_instance.should_receive(:process).with("_line_")
       @block = nil
       Phantomjs.should_receive(:run).with(*args) { |&b| @block = b }
