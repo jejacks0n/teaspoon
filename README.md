@@ -15,7 +15,7 @@ If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), chec
 
 ### Developer Notice:
 
-Teabag has been renamed to Teaspoon, thanks to [bigtunacan](https://github.com/bigtunacan).
+Teabag has been renamed to Teaspoon.
 
 This means you should change your gemspec to point to "teaspoon". A deprecation notice was provided with the last release of the gem under the teabag name, and versions will continue to move forward from 0.7.3.
 
