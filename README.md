@@ -1,7 +1,8 @@
-![Logo by Morgan Keys](https://raw.github.com/modeset/teaspoon/master/screenshots/logo.png)
-<small>Logo by [Morgan Keys](http://www.morganrkeys.com/)</small>
+### ![Logo by Morgan Keys](https://raw.github.com/modeset/teaspoon/master/screenshots/logo.png)
 
 [![Build Status](https://travis-ci.org/modeset/teaspoon.png)](https://travis-ci.org/modeset/teaspoon) [![Code Climate](https://codeclimate.com/github/modeset/teaspoon.png)](https://codeclimate.com/github/modeset/teaspoon)
+
+<sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
 
 Teaspoon is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS or with Selenium WebDriver.
 
