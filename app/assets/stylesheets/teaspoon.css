@@ -217,6 +217,7 @@ html[xmlns] #teaspoon-interface .teaspoon-clearfix {
   border-radius: 0.4em;
   background-color: #fff;
   width: 100%;
+  box-sizing: border-box;
 }
 
 #teaspoon-controls #teaspoon-toggles {
