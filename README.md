@@ -156,7 +156,7 @@ Check out examples of a [Mocha Spec](https://github.com/modeset/teaspoon/wiki/Us
 
 ### Pending Specs
 
-We've normalized declaring that a spec is pending between Mocha and Jasmine. Since Jasmine lacks the concept we've added it in, and since Mocha has several ways to accomplish it we thought it would be worth mentioning what we consider the standard between the two to be. QUnit doesn't support specifying a test as pending.
+We've normalized declaring that a spec is pending between Mocha and Jasmine. Since Mocha has several ways to accomplish it we thought it would be worth mentioning what we consider the standard between the two to be. QUnit doesn't support specifying a test as pending.
 
 To mark a spec as pending you can either not provide a function as the second argument to `it`, or you can use `xit` and `xdescribe`. Mocha provides some additional ways to accomplish this, but to keep it consistent we've normalized on what they both support.
 
