@@ -20,6 +20,7 @@ Teaspoon.setup do |config|
   #config.server_timeout   = 20 # timeout for starting the server
   #config.server_port      = nil # defaults to any open port unless specified
   #config.fail_fast        = true # abort after the first failing suite
+  #config.spec_timeout     = 180 # timeout for finishing the specs
 
   # Output
   #config.formatters       = "dot" # available: dot, tap_y, swayze_or_oprah

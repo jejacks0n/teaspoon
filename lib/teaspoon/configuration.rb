@@ -13,12 +13,13 @@ module Teaspoon
     @@driver_cli_options = nil
 
     # console runner specific
-    cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :formatters, :suppress_log, :color, :coverage, :coverage_reports, :server
+    cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :spec_timeout, :formatters, :suppress_log, :color, :coverage, :coverage_reports, :server
     @@driver             = "phantomjs"
     @@server             = nil
     @@server_port        = nil
     @@server_timeout     = 20
     @@fail_fast          = true
+    @@spec_timeout       = 180
     @@formatters         = "dot"
     @@suppress_log       = false
     @@color              = true
@@ -87,7 +88,7 @@ module Teaspoon
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive] == "true")
     end
-    %w(DRIVER DRIVER_CLI_OPTIONS SERVER SERVER_TIMEOUT SERVER_PORT FORMATTERS COVERAGE_REPORTS).each do |directive|
+    %w(DRIVER DRIVER_CLI_OPTIONS SERVER SERVER_TIMEOUT SERVER_PORT SPEC_TIMEOUT FORMATTERS COVERAGE_REPORTS).each do |directive|
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive])
     end

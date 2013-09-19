@@ -56,6 +56,7 @@ describe Teaspoon::Configuration do
     expect(subject.fixture_path).to eq("spec/javascripts/fixtures")
     expect(subject.formatters).to eq(['dot'])
     expect(subject.server_timeout).to eq(20)
+    expect(subject.spec_timeout).to eq(180)
     expect(subject.fail_fast).to eq(true)
     expect(subject.suppress_log).to eq(false)
     expect(subject.suites).to be_a(Hash)
