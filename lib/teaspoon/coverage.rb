@@ -22,7 +22,7 @@ module Teaspoon
     private
 
     def generate_report(input, format)
-      result = %x{#{executable} report #{format} #{input.shellescape}}
+      result = %x{#{executable} report #{format} #{input.shellescape} --dir #{Teaspoon.configuration.coverage_output_dir}}
       raise "Could not generate coverage report for #{format}" unless $?.exitstatus == 0
       result.gsub("Done", "").gsub("Using reporter [#{format}]", "").strip
     end
