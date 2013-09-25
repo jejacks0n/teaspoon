@@ -102,6 +102,10 @@ module Teaspoon
           @options[:coverage_reports] = reports
         end
 
+        parser.on("-O", "--coverage-output-dir DIR", "Specify directory where coverage reports should be generated.") do |dir|
+          @options[:coverage_output_dir] = dir
+        end
+
         parser.separator("\n  **** Utility ****\n\n")
 
         parser.on("-v", "--version", "Display the version.") do

@@ -13,17 +13,18 @@ module Teaspoon
     @@driver_cli_options = nil
 
     # console runner specific
-    cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :formatters, :suppress_log, :color, :coverage, :coverage_reports, :server
-    @@driver             = "phantomjs"
-    @@server             = nil
-    @@server_port        = nil
-    @@server_timeout     = 20
-    @@fail_fast          = true
-    @@formatters         = "dot"
-    @@suppress_log       = false
-    @@color              = true
-    @@coverage           = false
-    @@coverage_reports   = nil
+    cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :formatters, :suppress_log, :color, :coverage, :coverage_reports, :coverage_output_dir, :server
+    @@driver              = "phantomjs"
+    @@server              = nil
+    @@server_port         = nil
+    @@server_timeout      = 20
+    @@fail_fast           = true
+    @@formatters          = "dot"
+    @@suppress_log        = false
+    @@color               = true
+    @@coverage            = false
+    @@coverage_reports    = nil
+    @@coverage_output_dir = "coverage"
 
     class Suite
       attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :boot_partial, :js_config
@@ -87,7 +88,7 @@ module Teaspoon
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive] == "true")
     end
-    %w(DRIVER DRIVER_CLI_OPTIONS SERVER SERVER_TIMEOUT SERVER_PORT FORMATTERS COVERAGE_REPORTS).each do |directive|
+    %w(DRIVER DRIVER_CLI_OPTIONS SERVER SERVER_TIMEOUT SERVER_PORT FORMATTERS COVERAGE_REPORTS COVERAGE_OUTPUT_DIR).each do |directive|
       next unless ENV[directive].present?
       @@configuration.send("#{directive.downcase}=", ENV[directive])
     end
