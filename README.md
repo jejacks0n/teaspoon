@@ -534,8 +534,18 @@ These configuration directives are applicable only when running via the rake tas
   </ul>
 </dd>
 
-</dl>
+<dt> coverage_output_dir </dt><dd>
+  Specify directory where coverage reports should be generated.<br/><br/>
 
+  <b>default:</b> <code>"coverage"</code>
+
+  <ul>
+    <li>CLI: -O, --coverage-output-dir DIR</li>
+    <li>ENV: COVERAGE_OUTPUT_DIR=coverage</li>
+  </ul>
+</dd>
+
+</dl>
 
 ## Test Frameworks
 

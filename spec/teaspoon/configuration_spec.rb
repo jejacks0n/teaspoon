@@ -61,6 +61,7 @@ describe Teaspoon::Configuration do
     expect(subject.suites).to be_a(Hash)
     expect(subject.coverage).to eq(false)
     expect(subject.coverage_reports).to eq(["text-summary"])
+    expect(subject.coverage_output_dir).to eq("coverage")
     expect(subject.server).to be_nil
   end
 
