@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = "Run Javascript tests using Jasmine, Mocha or QUnit in the browser or headlessly using PhantomJS or with Selenium Webdriver"
 
   s.files = Dir["{app,config,lib,vendor,bin}/**/*"] + ["MIT.LICENSE", "README.md"]
-  s.license = "MIT.LICENSE"
+  s.license = "MIT"
   s.test_files = Dir["{spec,test}/**/*"]
   s.executables = ["teaspoon"]
 
