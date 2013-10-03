@@ -8,7 +8,7 @@
       <% if Rails.application.config.respond_to?(:requirejs) %>
         <%=raw Rails.application.config.requirejs.user_config.merge({baseUrl: '/assets'}).to_json %>
       <% else %>
-        {baseUrl: '/assets'}
+        {baseUrl: Teaspoon.config.baseUrl || '/assets'}
       <% end %>
     );
 
