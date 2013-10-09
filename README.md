@@ -1,6 +1,8 @@
 ### ![Logo by Morgan Keys](https://raw.github.com/modeset/teaspoon/master/screenshots/logo.png)
 
-[![Build Status](https://travis-ci.org/modeset/teaspoon.png)](https://travis-ci.org/modeset/teaspoon) [![Code Climate](https://codeclimate.com/github/modeset/teaspoon.png)](https://codeclimate.com/github/modeset/teaspoon)
+[![Gem Version](https://badge.fury.io/rb/teaspoon.png)](http://badge.fury.io/rb/teaspoon)
+[![Build Status](https://travis-ci.org/modeset/teaspoon.png)](https://travis-ci.org/modeset/teaspoon)
+[![Code Climate](https://codeclimate.com/github/modeset/teaspoon.png)](https://codeclimate.com/github/modeset/teaspoon)
 
 <sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
 
