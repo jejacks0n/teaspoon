@@ -248,7 +248,7 @@ html[xmlns] #teaspoon-interface .teaspoon-clearfix {
   display: block;
 }
 #teaspoon-filter h1 {
-  float: right;
+  float: left;
   height: 15px;
   margin: -11px 15px 0 0;
   padding: 0 4px;

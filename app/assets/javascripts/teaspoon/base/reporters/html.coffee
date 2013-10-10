@@ -136,8 +136,8 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
 
   setFilters: ->
     link = [Teaspoon.root, Teaspoon.suites.active].join('/')
-    @filters.push("<a href='#{link}'>remove</a> by file: #{Teaspoon.params["file"]}") if Teaspoon.params["file"]
-    @filters.push("<a href='#{link}'>remove</a> by match: #{Teaspoon.params["grep"]}") if Teaspoon.params["grep"]
+    @filters.push("by file: #{Teaspoon.params["file"]} <a href='#{link}'>remove</a>") if Teaspoon.params["file"]
+    @filters.push("by match: #{Teaspoon.params["grep"]} <a href='#{link}'>remove</a>") if Teaspoon.params["grep"]
 
 
   readConfig: ->
