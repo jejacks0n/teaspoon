@@ -34,7 +34,7 @@ describe "Teaspoon.Reporters.HTML", ->
       expect(@reporter.config).toEqual("use-catch": true, "build-full-report": false, "display-progress": true)
       expect(@reporter.total).toEqual({exist: 0, run: 0, passes: 0, failures: 0, skipped: 0})
       expect(@reporter.views).toEqual({specs: {}, suites: {}})
-      expect(@reporter.filters).toEqual(["<a href='/teaspoon/default'>remove</a> by match: foo"])
+      expect(@reporter.filters).toEqual(["by match: foo <a href='/teaspoon/default'>remove</a>"])
 
     it "calls readConfig", ->
       expect(@readConfigSpy).toHaveBeenCalled()
@@ -339,8 +339,8 @@ describe "Teaspoon.Reporters.HTML", ->
 
     it "sets a class and the html for the filter display", ->
       expect(@reporter.filters.length).toBe(2)
-      expect(@reporter.filters[0]).toBe("<a href='/teaspoon/default'>remove</a> by file: _file_")
-      expect(@reporter.filters[1]).toBe("<a href='/teaspoon/default'>remove</a> by match: _grep_")
+      expect(@reporter.filters[0]).toBe("by file: _file_ <a href='/teaspoon/default'>remove</a>")
+      expect(@reporter.filters[1]).toBe("by match: _grep_ <a href='/teaspoon/default'>remove</a>")
 
 
   describe "#readConfig", ->

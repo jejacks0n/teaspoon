@@ -26790,10 +26790,10 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
       link = [Teaspoon.root, Teaspoon.suites.active].join('/');
       if (Teaspoon.params["file"]) {
-        this.filters.push("<a href='" + link + "'>remove</a> by file: " + Teaspoon.params["file"]);
+        this.filters.push("by file: " + Teaspoon.params["file"] + " <a href='" + link + "'>remove</a>");
       }
       if (Teaspoon.params["grep"]) {
-        return this.filters.push("<a href='" + link + "'>remove</a> by match: " + Teaspoon.params["grep"]);
+        return this.filters.push("by match: " + Teaspoon.params["grep"] + " <a href='" + link + "'>remove</a>");
       }
     };
 
