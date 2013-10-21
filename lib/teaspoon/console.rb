@@ -10,7 +10,6 @@ module Teaspoon
       @files = []
 
       Teaspoon::Environment.load(@options)
-      Rails.application.config.assets.debug = false if Teaspoon.configuration.driver == "phantomjs"
 
       start_server
       resolve(files)

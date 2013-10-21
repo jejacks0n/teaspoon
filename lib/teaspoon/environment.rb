@@ -12,6 +12,7 @@ module Teaspoon
       require "teaspoon"
       require "teaspoon/suite"
       require "teaspoon/server"
+      require "teaspoon/exception_handling"
 
       configure_from_options(options)
     end

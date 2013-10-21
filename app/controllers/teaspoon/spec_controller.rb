@@ -25,7 +25,7 @@ class Teaspoon::SpecController < ActionController::Base
   private
 
   def javascript_exception(exception)
-    err  = "#{exception.class.name}: #{exception.message}"
+    err = "#{exception.class.name}: #{exception.message}"
     render text: "<script>throw Error(#{err.inspect})</script>"
   end
 end
