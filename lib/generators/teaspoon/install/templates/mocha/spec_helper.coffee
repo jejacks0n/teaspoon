@@ -1,6 +1,7 @@
 # Teaspoon includes some support files, but you can use anything from your own support path too.
 # require support/expect
 # require support/sinon
+# require support/chai
 # require support/your-support-file
 #
 # Deferring execution
@@ -18,6 +19,15 @@
 # Manifest
 # If you'd rather require your spec files manually (to control order for instance) you can disable the suite matcher in
 # the configuration and use this file as a manifest.
+#
+# Chai
+# If you're using Chai, you probably want to initialize your preferred assertion style here.
+# For more information see: http://chaijs.com/guide/styles
+# Examples:
+#
+#   window.assert = chai.assert()
+#   window.expect = chai.expect()
+#   window.should = chai.should()
 #
 # For more information: http://github.com/modeset/teaspoon
 #
