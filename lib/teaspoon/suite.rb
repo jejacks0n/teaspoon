@@ -120,7 +120,7 @@ module Teaspoon
     def asset_from_file(original)
       filename = original
       Rails.application.config.assets.paths.each do |path|
-        filename = filename.gsub(%r(^#{path}[\/|\\]), "")
+        filename = filename.gsub(%r(^#{Regexp.escape(path)}[\/|\\]), "")
       end
       raise Teaspoon::AssetNotServable, "#{filename} is not within an asset path" if filename == original
       filename.gsub(/(\.js\.coffee|\.coffee)$/, ".js")

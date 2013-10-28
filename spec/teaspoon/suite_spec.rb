@@ -216,4 +216,31 @@ describe Teaspoon::Suite do
 
   end
 
+  describe "#asset_from_file" do
+    before do
+      Rails.application.config.assets.stub(paths: ["/Users/person/workspace/spec/javascripts"])
+    end
+
+    it "converts a file name into a usable asset url" do
+      file = '/Users/person/workspace/spec/javascripts/support/support.js'
+      expect(subject.send(:asset_from_file, file)).to eq('support/support.js')
+    end
+
+    context "when the file name has .js.coffee or .coffee extensions" do
+      it "returns an asset url with a .js suffix" do
+        coffee_file = '/Users/person/workspace/spec/javascripts/support/support.coffee'
+        expect(subject.send(:asset_from_file, coffee_file)).to eq('support/support.js')
+        jscoffee_file = '/Users/person/workspace/spec/javascripts/support/support.js.coffee'
+        expect(subject.send(:asset_from_file, jscoffee_file)).to eq('support/support.js')
+      end
+    end
+
+    context "when the file name contains regex special characters" do
+      it "converts a file name into a usable asset url" do
+        regex_file = '/Users/person/.$*?{}/spec/javascripts/support/support.js'
+        Rails.application.config.assets.stub(paths: ["/Users/person/.$*?{}/spec/javascripts"])
+        expect(subject.send(:asset_from_file, regex_file)).to eq('support/support.js')
+      end
+    end
+  end
 end
