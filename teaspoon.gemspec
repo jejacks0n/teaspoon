@@ -12,9 +12,9 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/modeset/teaspoon"
   s.summary     = "Teaspoon: A Javascript test runner built on top of Rails"
   s.description = "Run Javascript tests using Jasmine, Mocha or QUnit in the browser or headlessly using PhantomJS or with Selenium Webdriver"
+  s.license     = "MIT"
 
   s.files = Dir["{app,config,lib,vendor,bin}/**/*"] + ["MIT.LICENSE", "README.md"]
-  s.license = "MIT"
   s.test_files = Dir["{spec,test}/**/*"]
   s.executables = ["teaspoon"]
 
