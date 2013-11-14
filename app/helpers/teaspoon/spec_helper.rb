@@ -30,6 +30,7 @@ module Teaspoon::SpecHelper
   def asset_src(dep, instrument = false)
     params = "?body=1"
     params << "&instrument=1" if instrument && @suite && @suite.instrument_file?(dep.pathname.to_s)
-    "#{Rails.application.config.assets.prefix}/#{dep.logical_path}#{params}"
+
+    "#{Teaspoon.configuration.context}#{Rails.application.config.assets.prefix}/#{dep.logical_path}#{params}"
   end
 end

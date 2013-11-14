@@ -66,8 +66,8 @@ module Teaspoon
     end
 
     def link(params = {})
-      query = "?#{params.to_query}" if params.present?
-      [Teaspoon.configuration.mount_at, name, query].compact.join('/')
+      query = "/?#{params.to_query}" if params.present?
+      "#{Teaspoon.configuration.context}#{Teaspoon.configuration.mount_at}/#{name}#{query}"
     end
 
     def instrument_file?(file)

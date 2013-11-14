@@ -151,6 +151,11 @@ describe Teaspoon::Suite do
       expect(subject.link(file: ["file1", "file2"], grep: "foo")).to eql("/teaspoon/default/?file%5B%5D=file1&file%5B%5D=file2&grep=foo")
     end
 
+    it "returns a link prefixed by app context if given" do
+      Teaspoon.configuration.stub(:context).and_return('/foo')
+      expect(subject.link).to eql("/foo/teaspoon/default")
+    end
+
   end
 
   describe "#instrument_file?" do
