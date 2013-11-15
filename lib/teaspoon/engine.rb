@@ -8,7 +8,7 @@ module Teaspoon
       Teaspoon.configuration.root ||= app.root
 
       # set proper root url
-      Teaspoon.configuration.context = app.config.relative_url_root
+      Teaspoon.configuration.context ||= app.config.relative_url_root
 
       # append the asset paths from the configuration
       Teaspoon.configuration.asset_paths.each do |path|

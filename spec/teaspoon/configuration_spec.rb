@@ -51,6 +51,7 @@ describe Teaspoon::Configuration do
 
   it "has the default configuration" do
     expect(subject.mount_at).to eq("/teaspoon")
+    expect(subject.context).to eq(nil)
     expect(subject.asset_paths).to include("spec/javascripts")
     expect(subject.asset_paths).to include("spec/javascripts/stylesheets")
     expect(subject.fixture_path).to eq("spec/javascripts/fixtures")
