@@ -5478,7 +5478,6 @@
 
     Runner.prototype.getParams = function() {
       var name, param, params, value, _i, _len, _ref, _ref1;
-
       params = {};
       _ref = Teaspoon.location.search.substring(1).split("&");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -5525,7 +5524,6 @@
 
     fixture.preload = function() {
       var url, urls, _i, _len, _results;
-
       urls = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _results = [];
       for (_i = 0, _len = urls.length; _i < _len; _i++) {
@@ -5537,7 +5535,6 @@
 
     fixture.load = function() {
       var append, index, url, urls, _i, _j, _len, _results;
-
       urls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -5556,7 +5553,6 @@
 
     fixture.set = function() {
       var append, html, htmls, index, _i, _j, _len, _results;
-
       htmls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -5589,7 +5585,6 @@
 
     load = function(url, append, preload) {
       var cached, value;
-
       if (preload == null) {
         preload = false;
       }
@@ -5651,7 +5646,6 @@
 
     create = function() {
       var _ref;
-
       Teaspoon.fixture.el = document.createElement("div");
       if (typeof window.$ === 'function') {
         Teaspoon.fixture.$el = $(Teaspoon.fixture.el);
@@ -5662,7 +5656,6 @@
 
     cleanup = function() {
       var _base, _ref, _ref1;
-
       (_base = Teaspoon.fixture).el || (_base.el = document.getElementById("teaspoon-fixtures"));
       if ((_ref = Teaspoon.fixture.el) != null) {
         if ((_ref1 = _ref.parentNode) != null) {
@@ -5674,7 +5667,6 @@
 
     xhrRequest = function(url, callback) {
       var e;
-
       if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest();
       } else if (window.ActiveXObject) {
@@ -5723,7 +5715,6 @@
 
     BaseView.prototype.createEl = function(type, className) {
       var el;
-
       if (className == null) {
         className = "";
       }
@@ -5734,21 +5725,18 @@
 
     BaseView.prototype.findEl = function(id) {
       var _base;
-
       this.elements || (this.elements = {});
       return (_base = this.elements)[id] || (_base[id] = document.getElementById("teaspoon-" + id));
     };
 
     BaseView.prototype.setText = function(id, value) {
       var el;
-
       el = this.findEl(id);
       return el.innerHTML = value;
     };
 
     BaseView.prototype.setHtml = function(id, value, add) {
       var el;
-
       if (add == null) {
         add = false;
       }
@@ -5762,14 +5750,12 @@
 
     BaseView.prototype.setClass = function(id, value) {
       var el;
-
       el = this.findEl(id);
       return el.className = value;
     };
 
     BaseView.prototype.htmlSafe = function(str) {
       var el;
-
       el = document.createElement("div");
       el.appendChild(document.createTextNode(str));
       return el.innerHTML;
@@ -5790,7 +5776,8 @@
 
     function HTML() {
       this.toggleConfig = __bind(this.toggleConfig, this);
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teaspoon.Date().getTime();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
+      this.start = new Teaspoon.Date().getTime();
       this.config = {
         "use-catch": true,
         "build-full-report": false,
@@ -5815,7 +5802,6 @@
 
     HTML.prototype.build = function() {
       var _ref;
-
       this.buildLayout();
       this.setText("env-info", this.envInfo());
       this.setText("version", Teaspoon.version);
@@ -5833,7 +5819,6 @@
 
     HTML.prototype.buildLayout = function() {
       var el;
-
       el = this.createEl("div");
       el.id = "teaspoon-interface";
       el.innerHTML = Teaspoon.Reporters.HTML.template;
@@ -5842,7 +5827,6 @@
 
     HTML.prototype.buildSuiteSelect = function() {
       var options, suite, _i, _len, _ref;
-
       if (Teaspoon.suites.all.length === 1) {
         return "";
       }
@@ -5919,7 +5903,6 @@
 
     HTML.prototype.updateStatus = function(spec) {
       var elapsed, result, _ref, _ref1;
-
       spec = new Teaspoon.Spec(spec);
       result = spec.result();
       if (result.skipped || result.status === "pending") {
@@ -5948,7 +5931,6 @@
 
     HTML.prototype.showConfiguration = function() {
       var key, value, _ref, _results;
-
       _ref = this.config;
       _results = [];
       for (key in _ref) {
@@ -5964,7 +5946,6 @@
 
     HTML.prototype.setFilters = function() {
       var link;
-
       link = [Teaspoon.root, Teaspoon.suites.active].join('/');
       if (Teaspoon.params["file"]) {
         this.filters.push("by file: " + Teaspoon.params["file"] + " <a href='" + link + "'>remove</a>");
@@ -5976,7 +5957,6 @@
 
     HTML.prototype.readConfig = function() {
       var config;
-
       if (config = this.cookie("teaspoon")) {
         return this.config = config;
       }
@@ -5984,7 +5964,6 @@
 
     HTML.prototype.toggleConfig = function(e) {
       var button, name;
-
       button = e.target;
       if (button.tagName.toLowerCase() !== "button") {
         return;
@@ -6005,7 +5984,6 @@
 
     HTML.prototype.cookie = function(name, value) {
       var date, match;
-
       if (value == null) {
         value = void 0;
       }
@@ -6077,7 +6055,6 @@
 
     SimpleProgressView.prototype.update = function(total, run) {
       var percent;
-
       percent = total ? Math.ceil((run * 100) / total) : 0;
       return this.setHtml("progress-percent", "" + percent + "%");
     };
@@ -6103,7 +6080,6 @@
 
     RadialProgressView.prototype.appendTo = function() {
       var canvas, e;
-
       RadialProgressView.__super__.appendTo.apply(this, arguments);
       this.size = 80;
       try {
@@ -6119,7 +6095,6 @@
 
     RadialProgressView.prototype.update = function(total, run) {
       var half, percent;
-
       percent = total ? Math.ceil((run * 100) / total) : 0;
       this.setHtml("progress-percent", "" + percent + "%");
       if (!this.ctx) {
@@ -6159,7 +6134,6 @@
 
     SpecView.prototype.build = function() {
       var classes;
-
       classes = ["spec"];
       if (this.spec.pending) {
         classes.push("state-pending");
@@ -6172,7 +6146,6 @@
 
     SpecView.prototype.buildParent = function() {
       var parent, view;
-
       parent = this.spec.parent;
       if (parent.viewId) {
         return this.views.suites[parent.viewId];
@@ -6184,7 +6157,6 @@
 
     SpecView.prototype.buildErrors = function() {
       var div, error, html, _i, _len, _ref;
-
       div = this.createEl("div");
       html = "";
       _ref = this.spec.errors();
@@ -6198,7 +6170,6 @@
 
     SpecView.prototype.updateState = function(state, elapsed) {
       var classes, result, _base;
-
       result = this.spec.result();
       classes = ["state-" + state];
       if (elapsed > Teaspoon.slow) {
@@ -6233,7 +6204,6 @@
 
     FailureView.prototype.build = function() {
       var error, html, _i, _len, _ref;
-
       FailureView.__super__.build.call(this, "spec");
       html = "<h1 class=\"teaspoon-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
       _ref = this.spec.errors();
@@ -6279,7 +6249,6 @@
 
     SuiteView.prototype.buildParent = function() {
       var parent, view;
-
       parent = this.suite.parent;
       if (!parent) {
         return this.reporter;
@@ -6301,7 +6270,6 @@
 
     SuiteView.prototype.updateState = function(state) {
       var _base;
-
       if (this.state === "failed") {
         return;
       }
@@ -6326,7 +6294,8 @@
 
   Teaspoon.Reporters.Console = (function() {
     function Console() {
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teaspoon.Date();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
+      this.start = new Teaspoon.Date();
       this.suites = {};
     }
 
@@ -6340,7 +6309,6 @@
 
     Console.prototype.reportSuites = function() {
       var index, suite, _i, _len, _ref, _results;
-
       _ref = this.spec.getParents();
       _results = [];
       for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
@@ -6360,7 +6328,6 @@
 
     Console.prototype.reportSpecResults = function(spec) {
       var result;
-
       this.spec = new Teaspoon.Spec(spec);
       result = this.spec.result();
       if (result.skipped) {
@@ -6385,7 +6352,6 @@
 
     Console.prototype.trackPending = function() {
       var result;
-
       result = this.spec.result();
       return this.log({
         type: "spec",
@@ -6398,7 +6364,6 @@
 
     Console.prototype.trackFailure = function() {
       var error, result, _i, _len, _ref, _results;
-
       result = this.spec.result();
       _ref = this.spec.errors();
       _results = [];
@@ -6449,7 +6414,8 @@
     __extends(Console, _super);
 
     function Console(runner) {
-      this.reportSpecResults = __bind(this.reportSpecResults, this);      Console.__super__.constructor.apply(this, arguments);
+      this.reportSpecResults = __bind(this.reportSpecResults, this);
+      Console.__super__.constructor.apply(this, arguments);
       this.reportRunnerStarting(runner);
       runner.on("fail", this.reportSpecResults);
       runner.on("test end", this.reportSpecResults);
@@ -6482,7 +6448,8 @@
     __extends(HTML, _super);
 
     function HTML(runner) {
-      this.reportSpecResults = __bind(this.reportSpecResults, this);      HTML.__super__.constructor.apply(this, arguments);
+      this.reportSpecResults = __bind(this.reportSpecResults, this);
+      HTML.__super__.constructor.apply(this, arguments);
       this.reportRunnerStarting(runner);
       runner.on("fail", this.reportSpecResults);
       runner.on("test end", this.reportSpecResults);
@@ -6611,7 +6578,6 @@
   Teaspoon.Suite = (function() {
     function Suite(suite) {
       var _ref;
-
       this.suite = suite;
       this.fullDescription = this.suite.fullTitle();
       this.description = this.suite.title;

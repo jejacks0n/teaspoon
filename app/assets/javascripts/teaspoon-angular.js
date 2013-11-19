@@ -26301,7 +26301,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Runner.prototype.getParams = function() {
       var name, param, params, value, _i, _len, _ref, _ref1;
-
       params = {};
       _ref = Teaspoon.location.search.substring(1).split("&");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -26348,7 +26347,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     fixture.preload = function() {
       var url, urls, _i, _len, _results;
-
       urls = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _results = [];
       for (_i = 0, _len = urls.length; _i < _len; _i++) {
@@ -26360,7 +26358,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     fixture.load = function() {
       var append, index, url, urls, _i, _j, _len, _results;
-
       urls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -26379,7 +26376,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     fixture.set = function() {
       var append, html, htmls, index, _i, _j, _len, _results;
-
       htmls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -26412,7 +26408,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     load = function(url, append, preload) {
       var cached, value;
-
       if (preload == null) {
         preload = false;
       }
@@ -26474,7 +26469,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     create = function() {
       var _ref;
-
       Teaspoon.fixture.el = document.createElement("div");
       if (typeof window.$ === 'function') {
         Teaspoon.fixture.$el = $(Teaspoon.fixture.el);
@@ -26485,7 +26479,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     cleanup = function() {
       var _base, _ref, _ref1;
-
       (_base = Teaspoon.fixture).el || (_base.el = document.getElementById("teaspoon-fixtures"));
       if ((_ref = Teaspoon.fixture.el) != null) {
         if ((_ref1 = _ref.parentNode) != null) {
@@ -26497,7 +26490,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     xhrRequest = function(url, callback) {
       var e;
-
       if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest();
       } else if (window.ActiveXObject) {
@@ -26546,7 +26538,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     BaseView.prototype.createEl = function(type, className) {
       var el;
-
       if (className == null) {
         className = "";
       }
@@ -26557,21 +26548,18 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     BaseView.prototype.findEl = function(id) {
       var _base;
-
       this.elements || (this.elements = {});
       return (_base = this.elements)[id] || (_base[id] = document.getElementById("teaspoon-" + id));
     };
 
     BaseView.prototype.setText = function(id, value) {
       var el;
-
       el = this.findEl(id);
       return el.innerHTML = value;
     };
 
     BaseView.prototype.setHtml = function(id, value, add) {
       var el;
-
       if (add == null) {
         add = false;
       }
@@ -26585,14 +26573,12 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     BaseView.prototype.setClass = function(id, value) {
       var el;
-
       el = this.findEl(id);
       return el.className = value;
     };
 
     BaseView.prototype.htmlSafe = function(str) {
       var el;
-
       el = document.createElement("div");
       el.appendChild(document.createTextNode(str));
       return el.innerHTML;
@@ -26613,7 +26599,8 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     function HTML() {
       this.toggleConfig = __bind(this.toggleConfig, this);
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teaspoon.Date().getTime();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
+      this.start = new Teaspoon.Date().getTime();
       this.config = {
         "use-catch": true,
         "build-full-report": false,
@@ -26638,7 +26625,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     HTML.prototype.build = function() {
       var _ref;
-
       this.buildLayout();
       this.setText("env-info", this.envInfo());
       this.setText("version", Teaspoon.version);
@@ -26656,7 +26642,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     HTML.prototype.buildLayout = function() {
       var el;
-
       el = this.createEl("div");
       el.id = "teaspoon-interface";
       el.innerHTML = Teaspoon.Reporters.HTML.template;
@@ -26665,7 +26650,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     HTML.prototype.buildSuiteSelect = function() {
       var options, suite, _i, _len, _ref;
-
       if (Teaspoon.suites.all.length === 1) {
         return "";
       }
@@ -26742,7 +26726,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     HTML.prototype.updateStatus = function(spec) {
       var elapsed, result, _ref, _ref1;
-
       spec = new Teaspoon.Spec(spec);
       result = spec.result();
       if (result.skipped || result.status === "pending") {
@@ -26771,7 +26754,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     HTML.prototype.showConfiguration = function() {
       var key, value, _ref, _results;
-
       _ref = this.config;
       _results = [];
       for (key in _ref) {
@@ -26787,7 +26769,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     HTML.prototype.setFilters = function() {
       var link;
-
       link = [Teaspoon.root, Teaspoon.suites.active].join('/');
       if (Teaspoon.params["file"]) {
         this.filters.push("by file: " + Teaspoon.params["file"] + " <a href='" + link + "'>remove</a>");
@@ -26799,7 +26780,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     HTML.prototype.readConfig = function() {
       var config;
-
       if (config = this.cookie("teaspoon")) {
         return this.config = config;
       }
@@ -26807,7 +26787,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     HTML.prototype.toggleConfig = function(e) {
       var button, name;
-
       button = e.target;
       if (button.tagName.toLowerCase() !== "button") {
         return;
@@ -26828,7 +26807,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     HTML.prototype.cookie = function(name, value) {
       var date, match;
-
       if (value == null) {
         value = void 0;
       }
@@ -26900,7 +26878,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     SimpleProgressView.prototype.update = function(total, run) {
       var percent;
-
       percent = total ? Math.ceil((run * 100) / total) : 0;
       return this.setHtml("progress-percent", "" + percent + "%");
     };
@@ -26926,7 +26903,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     RadialProgressView.prototype.appendTo = function() {
       var canvas, e;
-
       RadialProgressView.__super__.appendTo.apply(this, arguments);
       this.size = 80;
       try {
@@ -26942,7 +26918,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     RadialProgressView.prototype.update = function(total, run) {
       var half, percent;
-
       percent = total ? Math.ceil((run * 100) / total) : 0;
       this.setHtml("progress-percent", "" + percent + "%");
       if (!this.ctx) {
@@ -26982,7 +26957,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     SpecView.prototype.build = function() {
       var classes;
-
       classes = ["spec"];
       if (this.spec.pending) {
         classes.push("state-pending");
@@ -26995,7 +26969,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     SpecView.prototype.buildParent = function() {
       var parent, view;
-
       parent = this.spec.parent;
       if (parent.viewId) {
         return this.views.suites[parent.viewId];
@@ -27007,7 +26980,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     SpecView.prototype.buildErrors = function() {
       var div, error, html, _i, _len, _ref;
-
       div = this.createEl("div");
       html = "";
       _ref = this.spec.errors();
@@ -27021,7 +26993,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     SpecView.prototype.updateState = function(state, elapsed) {
       var classes, result, _base;
-
       result = this.spec.result();
       classes = ["state-" + state];
       if (elapsed > Teaspoon.slow) {
@@ -27056,7 +27027,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     FailureView.prototype.build = function() {
       var error, html, _i, _len, _ref;
-
       FailureView.__super__.build.call(this, "spec");
       html = "<h1 class=\"teaspoon-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
       _ref = this.spec.errors();
@@ -27102,7 +27072,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     SuiteView.prototype.buildParent = function() {
       var parent, view;
-
       parent = this.suite.parent;
       if (!parent) {
         return this.reporter;
@@ -27124,7 +27093,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     SuiteView.prototype.updateState = function(state) {
       var _base;
-
       if (this.state === "failed") {
         return;
       }
@@ -27149,7 +27117,8 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
   Teaspoon.Reporters.Console = (function() {
     function Console() {
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teaspoon.Date();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
+      this.start = new Teaspoon.Date();
       this.suites = {};
     }
 
@@ -27163,7 +27132,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Console.prototype.reportSuites = function() {
       var index, suite, _i, _len, _ref, _results;
-
       _ref = this.spec.getParents();
       _results = [];
       for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
@@ -27183,7 +27151,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Console.prototype.reportSpecResults = function(spec) {
       var result;
-
       this.spec = new Teaspoon.Spec(spec);
       result = this.spec.result();
       if (result.skipped) {
@@ -27208,7 +27175,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Console.prototype.trackPending = function() {
       var result;
-
       result = this.spec.result();
       return this.log({
         type: "spec",
@@ -27221,7 +27187,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
 
     Console.prototype.trackFailure = function() {
       var error, result, _i, _len, _ref, _results;
-
       result = this.spec.result();
       _ref = this.spec.errors();
       _results = [];
@@ -27272,13 +27237,13 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
     __extends(Console, _super);
 
     function Console() {
-      this.bindScenarioOutput = __bind(this.bindScenarioOutput, this);      Console.__super__.constructor.apply(this, arguments);
+      this.bindScenarioOutput = __bind(this.bindScenarioOutput, this);
+      Console.__super__.constructor.apply(this, arguments);
       angular.scenario.output("teaspoon", this.bindScenarioOutput);
     }
 
     Console.prototype.bindScenarioOutput = function(context, runner, model) {
       var _this = this;
-
       model.on("runnerBegin", function() {
         return _this.reportRunnerStarting({
           total: angular.scenario.Describe.specId
@@ -27306,13 +27271,13 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
     __extends(HTML, _super);
 
     function HTML() {
-      this.bindScenarioOutput = __bind(this.bindScenarioOutput, this);      HTML.__super__.constructor.apply(this, arguments);
+      this.bindScenarioOutput = __bind(this.bindScenarioOutput, this);
+      HTML.__super__.constructor.apply(this, arguments);
       angular.scenario.output("teaspoon", this.bindScenarioOutput);
     }
 
     HTML.prototype.bindScenarioOutput = function(context, runner, model) {
       var _this = this;
-
       model.on("specEnd", function(spec) {
         return _this.reportSpecResults(spec);
       });
@@ -27321,7 +27286,6 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
       });
       return model.on("runnerBegin", function() {
         var header, specs;
-
         _this.reportRunnerStarting({
           total: angular.scenario.Describe.specId
         });
