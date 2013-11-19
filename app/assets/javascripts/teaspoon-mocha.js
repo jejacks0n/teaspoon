@@ -5964,7 +5964,7 @@
 
     HTML.prototype.readConfig = function() {
       var config;
-      if (config = this.cookie("teaspoon")) {
+      if (config = this.store("teaspoon")) {
         return this.config = config;
       }
     };
@@ -5977,7 +5977,7 @@
       }
       name = button.getAttribute("id").replace(/^teaspoon-/, "");
       this.config[name] = !this.config[name];
-      this.cookie("teaspoon", this.config);
+      this.store("teaspoon", this.config);
       return this.refresh();
     };
 
@@ -5987,6 +5987,15 @@
 
     HTML.prototype.refresh = function() {
       return window.location.href = window.location.href;
+    };
+
+    HTML.prototype.store = function(name, value) {
+      var _ref;
+      if (((_ref = window.localStorage) != null ? _ref.setItem : void 0) != null) {
+        return this.localstore(name, value);
+      } else {
+        return this.cookie(name, value);
+      }
     };
 
     HTML.prototype.cookie = function(name, value) {
@@ -6002,6 +6011,17 @@
         date = new Teaspoon.Date();
         date.setDate(date.getDate() + 365);
         return document.cookie = "" + name + "=" + (escape(JSON.stringify(value))) + "; expires=" + (date.toUTCString()) + "; path=/;";
+      }
+    };
+
+    HTML.prototype.localstore = function(name, value) {
+      if (value == null) {
+        value = void 0;
+      }
+      if (value === void 0) {
+        return JSON.parse(unescape(localStorage.getItem(name)));
+      } else {
+        return localStorage.setItem(name, escape(JSON.stringify(value)));
       }
     };
 
