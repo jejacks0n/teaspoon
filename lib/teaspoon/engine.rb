@@ -14,6 +14,8 @@ module Teaspoon
     end
 
     config.after_initialize do |app|
+      require 'teaspoon/../../app/controllers/teaspoon/spec_controller'
+
       # inject our sprockets hack for instrumenting javascripts
       Sprockets::Environment.send(:include, Teaspoon::SprocketsInstrumentation)
 
