@@ -97,6 +97,15 @@ describe Teaspoon::Console do
       expect(result).to be(false)
     end
 
+    it "exports the tests when the :export option is given" do
+      subject.stub(:suites => [:default])
+      subject.instance_variable_set(:@options, {:export => true})
+      export = double(:export, :output_path => '/output/path')
+      Teaspoon::Export.stub(:new => export)
+      expect(export).to receive(:execute)
+      subject.execute
+    end
+
   end
 
   describe "#run_specs" do

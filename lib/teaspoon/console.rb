@@ -1,5 +1,6 @@
 require 'open-uri'
 require 'teaspoon/environment'
+require 'teaspoon/export'
 
 module Teaspoon
   class Console
@@ -21,6 +22,7 @@ module Teaspoon
 
       failure_count = 0
       suites.each do |suite|
+        export(suite) if @options.include?(:export)
         STDOUT.print "Teaspoon running #{suite} suite at #{url(suite)}\n" unless Teaspoon.configuration.suppress_log
         failure_count += run_specs(suite, @options[:driver_cli_options] || Teaspoon.configuration.driver_cli_options)
       end
@@ -36,6 +38,14 @@ module Teaspoon
       url += url.include?("?") ? "&" : "?"
       url += "reporter=Console"
       driver.run_specs(suite, url, driver_cli_options)
+    end
+
+    def export(suite)
+      suite_url = url(suite)
+      export_path = @options[:export] if String === @options[:export]
+      exporter = Export.new(:suite => suite, :url => url(suite), :output_path => export_path)
+      STDOUT.print "Teaspoon exporting #{suite} suite at #{suite_url} to #{exporter.output_path}\n" unless Teaspoon.configuration.suppress_log
+      exporter.execute
     end
 
     protected

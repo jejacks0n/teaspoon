@@ -77,6 +77,10 @@ module Teaspoon
           @options[:formatters] = formatters
         end
 
+        parser.on("-e", "--export [OUTPUT_PATH]", "Download the test suite using wget.") do |output_path|
+          @options[:export] = output_path
+        end
+
         parser.on("-q", "--[no-]suppress-log", "Suppress logs coming from console[log/debug/error].") do |bool|
           @options[:suppress_log] = bool
         end
