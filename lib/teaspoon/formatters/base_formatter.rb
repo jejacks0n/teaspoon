@@ -7,6 +7,7 @@ module Teaspoon
     autoload :TapFormatter,           'teaspoon/formatters/tap_formatter'
     autoload :SwayzeOrOprahFormatter, 'teaspoon/formatters/swayze_or_oprah_formatter'
     autoload :TeamcityFormatter,      'teaspoon/formatters/teamcity_formatter'
+    autoload :JunitFormatter,         'teaspoon/formatters/junit_formatter'
 
     class BaseFormatter
 
