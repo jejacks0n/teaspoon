@@ -243,4 +243,23 @@ describe Teaspoon::Suite do
       end
     end
   end
+
+  describe "#run_hooks" do
+    it "runs blocks added with hook" do
+      first_value = nil; second_value = nil
+
+      default_suite_config = proc do |suite|
+        suite.hook(:before) { first_value = true }
+        suite.hook(:before) { second_value = true }
+      end
+
+      Teaspoon.configuration.stub(:suites).and_return "default" => default_suite_config
+
+      suite = Teaspoon::Suite.new({suite: :default})
+      suite.run_hooks :before
+
+      expect(first_value).to eql(true)
+      expect(second_value).to eql(true)
+    end
+  end
 end

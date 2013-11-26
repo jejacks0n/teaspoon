@@ -76,7 +76,6 @@ describe Teaspoon::Configuration do
     subject.suite(:test_suite) { }
     expect(subject.suites["test_suite"]).to be_a(Proc)
   end
-
 end
 
 
@@ -95,4 +94,12 @@ describe Teaspoon::Configuration::Suite do
     expect(subject.helper).to eq("helper_file")
   end
 
+
+  it "allows creating hooks" do
+    expect(subject.hooks).to eq({})
+
+    subject.hook {}
+
+    expect(subject.hooks['default'].length).to eq(1)
+  end
 end

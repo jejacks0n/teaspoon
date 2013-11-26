@@ -17,6 +17,13 @@ class Teaspoon::SpecController < ActionController::Base
     @suite = Teaspoon::Suite.new(params)
   end
 
+  def hooks
+    @suite = Teaspoon::Suite.new(params)
+    @suite.run_hooks(params[:group])
+
+    render nothing: true
+  end
+
   def fixtures
     prepend_view_path Teaspoon.configuration.root.join(Teaspoon.configuration.fixture_path)
     render "/#{params[:filename]}"
