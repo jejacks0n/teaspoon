@@ -27,7 +27,7 @@ module Teaspoon
     @@coverage_output_dir = "coverage"
 
     class Suite
-      attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :boot_partial, :js_config
+      attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :boot_partial, :js_config, :hooks
 
       def initialize
         @matcher         = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
@@ -38,6 +38,8 @@ module Teaspoon
         @boot_partial    = nil
         @js_config       = {}
 
+        @hooks = Hash.new {|h, k| h[k] = [] }
+
         default = Teaspoon.configuration.suites["default"]
         self.instance_eval(&default) if default
         yield self if block_given?
@@ -46,6 +48,10 @@ module Teaspoon
       def use_require=(val) # todo: deprecated in version 0.7.4
         puts "Deprecation Notice: use_require will be removed, specify 'require_js' for config.boot_partial instead."
         self.boot_partial = 'require_js' if val
+      end
+
+      def hook(group = :default, &block)
+        @hooks[group.to_s] << block
       end
     end
 

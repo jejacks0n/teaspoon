@@ -93,6 +93,12 @@ module Teaspoon
       false
     end
 
+    def run_hooks(group = :default)
+      config.hooks[group.to_s].each do |hook|
+        hook.call
+      end
+    end
+
     protected
 
     def specs
