@@ -6,9 +6,11 @@
     // setup the Teaspoon path prefix to load /assets
     require.config(
       <% if Rails.application.config.respond_to?(:requirejs) %>
-        <%=raw Rails.application.config.requirejs.user_config.merge({baseUrl: '/assets'}).to_json %>
+        <%=raw Rails.application.config.requirejs.user_config.merge({baseUrl: Rails.application.config.assets.prefix}).to_json %>
       <% else %>
-        {baseUrl: Teaspoon.config.baseUrl || '/assets'}
+        {
+          baseUrl: Teaspoon.config.baseUrl || <%= Rails.application.config.assets.prefix.to_json.html_safe %>
+        }
       <% end %>
     );
 
