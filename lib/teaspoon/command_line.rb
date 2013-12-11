@@ -58,6 +58,10 @@ module Teaspoon
           @options[:fail_fast] = bool
         end
 
+        parser.on("--timeout SECONDS", "Sets the timeout for the test suite to run.") do |seconds|
+          @options[:timeout] = seconds
+        end
+
         parser.separator("\n  **** Filtering ****\n\n")
 
         parser.on("-s", "--suite SUITE", "Focus to a specific suite.") do |suite|
