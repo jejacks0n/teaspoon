@@ -13,18 +13,22 @@ module Teaspoon
     @@driver_cli_options = nil
 
     # console runner specific
-    cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :formatters, :suppress_log, :color, :coverage, :coverage_reports, :coverage_output_dir, :server
-    @@driver              = "phantomjs"
-    @@server              = nil
-    @@server_port         = nil
-    @@server_timeout      = 20
-    @@fail_fast           = true
-    @@formatters          = "dot"
-    @@suppress_log        = false
-    @@color               = true
-    @@coverage            = false
-    @@coverage_reports    = nil
-    @@coverage_output_dir = "coverage"
+    cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :formatters, :suppress_log, :color, :coverage, :coverage_reports, :coverage_output_dir, :server, :statements_coverage_threshold, :functions_coverage_threshold, :branches_coverage_threshold, :lines_coverage_threshold
+    @@driver                        = "phantomjs"
+    @@server                        = nil
+    @@server_port                   = nil
+    @@server_timeout                = 20
+    @@fail_fast                     = true
+    @@formatters                    = "dot"
+    @@suppress_log                  = false
+    @@color                         = true
+    @@coverage                      = false
+    @@coverage_reports              = nil
+    @@coverage_output_dir           = "coverage"
+    @@statements_coverage_threshold = nil
+    @@functions_coverage_threshold  = nil
+    @@branches_coverage_threshold   = nil
+    @@lines_coverage_threshold      = nil
 
     class Suite
       attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :boot_partial, :js_config, :hooks

@@ -63,6 +63,10 @@ describe Teaspoon::Configuration do
     expect(subject.coverage_reports).to eq(["text-summary"])
     expect(subject.coverage_output_dir).to eq("coverage")
     expect(subject.server).to be_nil
+    expect(subject.statements_coverage_threshold).to be_nil
+    expect(subject.functions_coverage_threshold).to be_nil
+    expect(subject.branches_coverage_threshold).to be_nil
+    expect(subject.lines_coverage_threshold).to be_nil
   end
 
   it "allows setting various configuration options" do
