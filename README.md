@@ -286,6 +286,16 @@ All files           |     93.75 |        75 |     94.12 |     93.65 |
 --------------------+-----------+-----------+-----------+-----------+
 ```
 
+Teaspoon can have thresholds to fail the build (i.e. return an exit code not equal to zero). These are the same as istanbul: statement, function, branch and line coverage thresholds. They can be set in your environment file:
+
+```Teaspoon.setup do |config|
+  config.statements_coverage_threshold = 50
+  config.functions_coverage_threshold  = 50
+  config.branches_coverage_threshold   = 50
+  config.lines_coverage_threshold      = 50
+end
+```
+
 
 ## Suites
 
