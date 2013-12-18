@@ -48,7 +48,10 @@ test "#result", 3, ->
   result = new Teaspoon.Spec(@mockSpec).result()
   ok(result.status == "failed", "sets the status to failed")
 
+test "#indexedDB", ->
+  indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB
 
+  ok indexedDB, "No instance of indexedDB"
 
 module "QUnit Teaspoon.Suite",
   setup: ->

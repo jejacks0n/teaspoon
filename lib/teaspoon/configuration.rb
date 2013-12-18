@@ -25,6 +25,7 @@ module Teaspoon
     @@coverage            = false
     @@coverage_reports    = nil
     @@coverage_output_dir = "coverage"
+    @@html5Storage        = false
 
     class Suite
       attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :boot_partial, :js_config, :hooks

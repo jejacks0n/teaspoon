@@ -58,11 +58,13 @@ class @Runner
       return if @start
       @start = new Date().getTime()
       defined = @page.evaluate(-> window.Teaspoon)
-      unless status == "success" && defined
-        @fail("Failed to load: #{@url}")
-        return
-
+      @page.injectJs('./IndexedDBShim.min.js', () =>
+        unless status == "success" && defined
+          @fail("Failed to load: #{@url}")
+          return
+      )
       @waitForResults()
+
 
 
 new Runner().run()
