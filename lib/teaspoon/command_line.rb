@@ -106,6 +106,16 @@ module Teaspoon
           @options[:coverage_output_dir] = dir
         end
 
+        parser.separator("\n  **** Coverage Thresholds ****\n\n")
+
+        %w{statements functions branches lines}.each do |threshold_type|
+          parser.on("-S", "--#{threshold_type}-coverage-threshold THRESHOLD", "Specify the #{threshold_type} coverage threshold.",
+                    " If this is a positive number, it is the minimum percentage required for coverage to not fail.",
+                    " If it is a negative number, it is the maximum number of uncovered #{threshold_type} allowed to not fail.") do |threshold|
+            @options[:"#{threshold_type}_coverage_threshold"] = threshold
+          end
+        end
+
         parser.separator("\n  **** Utility ****\n\n")
 
         parser.on("-v", "--version", "Display the version.") do
