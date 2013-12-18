@@ -296,6 +296,12 @@ Teaspoon can have thresholds to fail the build (i.e. return an exit code not equ
 end
 ```
 
+or on the command line:
+
+```shell
+bundle exec teaspoon --coverage true --statements-coverage-threshold 50 --functions-coverage-threshold 50 --branches-coverage-threshold 50 --lines-coverage-threshold 50
+```
+
 
 ## Suites
 
