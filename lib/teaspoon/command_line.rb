@@ -106,6 +106,32 @@ module Teaspoon
           @options[:coverage_output_dir] = dir
         end
 
+        parser.separator("\n  **** Coverage Thresholds ****\n\n")
+
+        parser.on("-S", "--statements-coverage-threshold THRESHOLD", "Specify the statements coverage threshold.",
+                  " If this is a positive number, it is the minimum percentage required for coverage to not fail.",
+                  " If it is a negative number, it is the maximum number of uncovered statements allowed to not fail.") do |threshold|
+          @options[:statements_coverage_threshold] = threshold
+        end
+
+        parser.on("-F", "--functions-coverage-threshold THRESHOLD", "Specify the functions coverage threshold.",
+                  " If this is a positive number, it is the minimum percentage required for coverage to not fail.",
+                  " If it is a negative number, it is the maximum number of uncovered functions allowed to not fail.") do |threshold|
+          @options[:functions_coverage_threshold] = threshold
+        end
+
+        parser.on("-B", "--branches-coverage-threshold THRESHOLD", "Specify the branches coverage threshold.",
+                  " If this is a positive number, it is the minimum percentage required for coverage to not fail.",
+                  " If it is a negative number, it is the maximum number of uncovered branches allowed to not fail.") do |threshold|
+          @options[:branches_coverage_threshold] = threshold
+        end
+
+        parser.on("-L", "--lines-coverage-threshold THRESHOLD", "Specify the lines coverage threshold.",
+                  " If this is a positive number, it is the minimum percentage required for coverage to not fail.",
+                  " If it is a negative number, it is the maximum number of uncovered lines allowed to not fail.") do |threshold|
+          @options[:lines_coverage_threshold] = threshold
+        end
+
         parser.separator("\n  **** Utility ****\n\n")
 
         parser.on("-v", "--version", "Display the version.") do
