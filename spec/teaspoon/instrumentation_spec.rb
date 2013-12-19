@@ -12,7 +12,7 @@ describe Teaspoon::Instrumentation do
   let(:env) { {"QUERY_STRING" => "instrument=true"} }
 
   before do
-    Teaspoon::Instrumentation.stub(:which).and_return("/path/to/istanbul")
+    Teaspoon::Instrumentation.stub(:istanbul).and_return("/path/to/istanbul")
     Teaspoon::Instrumentation.instance_variable_set(:@executable, nil)
   end
 

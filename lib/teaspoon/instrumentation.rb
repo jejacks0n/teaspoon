@@ -5,7 +5,7 @@ module Teaspoon
     extend Teaspoon::Utility
 
     def self.executable
-      @executable ||= which("istanbul")
+      @executable ||= istanbul()
     end
 
     def self.add?(response, env)

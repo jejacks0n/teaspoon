@@ -28,7 +28,7 @@ module Teaspoon
     end
 
     def executable
-      @executable ||= which("istanbul")
+      @executable ||= istanbul()
     end
   end
 end

@@ -22,5 +22,10 @@ module Teaspoon
 
       nil
     end
+
+    def istanbul()
+      # find istanbul in path or local npm install
+      which("istanbul") || (File.executable?("./node_modules/.bin/istanbul") ? "./node_modules/.bin/istanbul" : nil)
+    end
   end
 end
