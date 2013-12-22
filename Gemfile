@@ -14,7 +14,7 @@ gem "sass-rails"
 gem "jquery-rails"
 gem "haml-rails"
 gem "turbolinks"
-gem "jbuilder", require: false
+gem "jbuilder", "~> 1.2", require: false
 gem 'sdoc', require: false
 
 # used by test rails apps
