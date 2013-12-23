@@ -88,7 +88,7 @@ describe Teaspoon::Configuration::Suite do
 
   it "has the default configuration" do
     subject = Teaspoon::Configuration::Suite.new
-    expect(subject.matcher).to eq("{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee}")
+    expect(subject.matcher).to eq("{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}")
     expect(subject.helper).to eq("spec_helper")
     expect(subject.javascripts).to eq(["teaspoon/jasmine"])
     expect(subject.stylesheets).to eq(["teaspoon"])

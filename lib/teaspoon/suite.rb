@@ -130,7 +130,7 @@ module Teaspoon
         filename = filename.gsub(%r(^#{Regexp.escape(path)}[\/|\\]), "")
       end
       raise Teaspoon::AssetNotServable, "#{filename} is not within an asset path" if filename == original
-      filename.gsub(/(\.js\.coffee|\.coffee)$/, ".js")
+      filename.gsub('.erb', '').gsub(/(\.js\.coffee|\.coffee)$/, ".js")
     end
   end
 end
