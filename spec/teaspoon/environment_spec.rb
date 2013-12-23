@@ -7,16 +7,15 @@ describe Teaspoon::Environment do
 
   describe ".load" do
 
-    it "calls require_environment if Rails isn't available" do
-      subject.should_receive(:rails_loaded?).and_return(false)
+    it "calls require_environment" do
       subject.should_receive(:require_environment)
       subject.should_receive(:rails_loaded?).and_return(true)
       Teaspoon::Environment.load
     end
 
     it "raises if Rails can't be found" do
-      subject.should_receive(:rails_loaded?).twice.and_return(false)
       subject.should_receive(:require_environment)
+      subject.should_receive(:rails_loaded?).and_return(false)
       expect{ Teaspoon::Environment.load }.to raise_error("Rails environment not found.")
     end
 
