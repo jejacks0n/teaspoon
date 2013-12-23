@@ -598,7 +598,16 @@ You can require these files in your spec helper by using:
 
 ## CI Support
 
-Teaspoon works great on CI setups. If you're using TravisCI it just works, but if you're using something else all you should need is to ensure phantomjs is installed.
+Teaspoon works great on CI setups. Add a line to execute Teaspoon (e.g. `bundle exec teaspoon`) in your CI config file. If you're using TravisCI or CircleCI it just works, but if you're using something else all you should need is to ensure phantomjs is installed.
+
+You can add teaspoon to the default rake tasks by clearing out the defaults (this is sometimes not required), and then adding teaspoon in the chain where you want. So with rspec and cucumber, you get the rspec specs running first, then the javascript specs, and then cucumber (or whatever integration specs you have). This is what I do personally, and then I don't have to do any CI setup.
+
+```ruby
+Rake::Task['default'].prerequisites.clear
+Rake::Task['default'].clear
+
+task default: [:spec, :teaspoon, :cucumber]
+```
 
 If you want to generate reports that CI can use you can install istanbul for coverage reports -- and output the report using the cobertura format, which Hudson can read.
 
