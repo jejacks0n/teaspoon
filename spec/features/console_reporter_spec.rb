@@ -25,7 +25,7 @@ Failures:
 
   scenario "displays coverage information" do
     pending "broken with rails 4"
-    pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.which('istanbul')
+    pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.istanbul()
     run_simple("bundle exec teaspoon -r ../../spec/teaspoon_env --suite=default app/assets/javascripts/integration/integration_spec.coffee --coverage-reports=text", false)
 
     assert_partial_output("|   % Stmts |% Branches |   % Funcs |   % Lines |", all_output)
