@@ -18,11 +18,9 @@ If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), chec
 
 ### Developer Notice:
 
-Teabag has been renamed to Teaspoon.
+Teabag has been renamed to Teaspoon. A deprecation notice was provided with the last release of the gem under the teabag name, and versions will continue to move forward from 0.7.3.
 
-This means you should change your gemspec to point to "teaspoon". A deprecation notice was provided with the last release of the gem under the teabag name, and versions will continue to move forward from 0.7.3.
-
-Updating requires that you rename your `teabag.rb` initializer to `teaspoon.rb`, and `teabag_env.rb` to `teaspoon_env.rb`. Replacing any references to teabag to teaspoon with them. Or if you've not made any changes just clean these files up and run the install generator again.
+Updating requires that you rename your `teabag.rb` initializer to `teaspoon.rb`, and `teabag_env.rb` to `teaspoon_env.rb`. Replacing any references to teabag to teaspoon within them. Or if you've not made any changes just clean these files up and run the install generator again.
 
 
 ## Screenshots
