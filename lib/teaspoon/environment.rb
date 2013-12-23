@@ -4,10 +4,8 @@ module Teaspoon
   module Environment
 
     def self.load(options = {})
-      unless rails_loaded?
-        require_environment(options[:environment])
-        raise "Rails environment not found." unless rails_loaded?
-      end
+      require_environment(options[:environment])
+      raise "Rails environment not found." unless rails_loaded?
 
       require "teaspoon"
       require "teaspoon/suite"
