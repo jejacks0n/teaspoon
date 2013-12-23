@@ -7,6 +7,9 @@ module Teaspoon
       # default the root if it's not set
       Teaspoon.configuration.root ||= app.root
 
+      # set proper root url
+      Teaspoon.configuration.context ||= app.config.relative_url_root
+
       # append the asset paths from the configuration
       Teaspoon.configuration.asset_paths.each do |path|
         app.config.assets.paths << Teaspoon.configuration.root.join(path).to_s

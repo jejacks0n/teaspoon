@@ -4,9 +4,10 @@ module Teaspoon
   class Configuration
     include Singleton
 
-    cattr_accessor :mount_at, :root, :asset_paths, :fixture_path, :suites, :driver_cli_options
+    cattr_accessor :mount_at, :context, :root, :asset_paths, :fixture_path, :suites, :driver_cli_options
     @@mount_at           = "/teaspoon"
-    @@root               = nil # will default to Rails.root if left unset
+    @@context            = nil # will default to Rails #relative_url_root
+    @@root               = nil # will default to Rails.root
     @@asset_paths        = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
     @@fixture_path       = "spec/javascripts/fixtures"
     @@suites             = {"default" => proc{}}
