@@ -1,3 +1,5 @@
+require File.expand_path(__FILE__, '../../../app/controllers/teaspoon/spec_controller')
+
 module Teaspoon
   class Engine < ::Rails::Engine
 
