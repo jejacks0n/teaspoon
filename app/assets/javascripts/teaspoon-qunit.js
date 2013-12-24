@@ -2239,10 +2239,14 @@ if ( typeof exports !== "undefined" ) {
         return;
       }
       if (Teaspoon.started) {
-        window.location.reload();
+        Teaspoon.reload();
       }
       Teaspoon.started = true;
       return new Teaspoon.Runner();
+    };
+
+    Teaspoon.reload = function() {
+      return window.location.reload();
     };
 
     Teaspoon.onWindowLoad = function(method) {

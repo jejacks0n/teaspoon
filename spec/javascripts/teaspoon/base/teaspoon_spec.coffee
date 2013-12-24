@@ -21,14 +21,14 @@ describe "Teaspoon", ->
 
     beforeEach ->
       Teaspoon.defer = false
+      spyOn(Teaspoon, 'reload')
+      @spy = spyOn(Teaspoon, "Runner")
 
     it "allows defering (thus not instantiating the runner)", ->
       Teaspoon.defer = true
-      spy = spyOn(Teaspoon, "Runner")
       Teaspoon.execute()
-      expect(spy).wasNotCalled()
+      expect(@spy).wasNotCalled()
 
     it "will execute if it should", ->
-      spy = spyOn(Teaspoon, "Runner")
       Teaspoon.execute()
-      expect(spy).toHaveBeenCalled()
+      expect(@spy).toHaveBeenCalled()

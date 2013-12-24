@@ -19,10 +19,13 @@ class @Teaspoon
     if Teaspoon.defer
       Teaspoon.defer = false
       return
-    if Teaspoon.started
-      window.location.reload()
+    Teaspoon.reload() if Teaspoon.started
     Teaspoon.started = true
     new Teaspoon.Runner()
+
+
+  @reload: ->
+    window.location.reload()
 
 
   @onWindowLoad: (method) ->
