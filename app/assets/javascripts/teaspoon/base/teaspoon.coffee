@@ -16,10 +16,12 @@ class @Teaspoon
   @messages:  []
 
   @execute: ->
-    if @defer
-      @defer = false
+    if Teaspoon.defer
+      Teaspoon.defer = false
       return
-    @started = true
+    if Teaspoon.started
+      window.location.reload()
+    Teaspoon.started = true
     new Teaspoon.Runner()
 
 
@@ -32,7 +34,7 @@ class @Teaspoon
 
   @resolveDependenciesFromParams: (all = []) ->
     deps = []
-    return all if (paths = @location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) == null
+    return all if (paths = Teaspoon.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) == null
 
     for path in paths
       parts = decodeURIComponent(path.replace(/\+/g, " ")).match(/\/(.+)\.(js|js.coffee|coffee)$/i)
@@ -43,13 +45,13 @@ class @Teaspoon
 
 
   @log: ->
-    @messages.push(arguments[0])
+    Teaspoon.messages.push(arguments[0])
     try console.log(arguments...)
     catch e
       throw new Error("Unable to use console.log for logging")
 
 
   @getMessages: ->
-    messages = @messages
-    @messages = []
+    messages = Teaspoon.messages
+    Teaspoon.messages = []
     messages

@@ -2234,11 +2234,14 @@ if ( typeof exports !== "undefined" ) {
     Teaspoon.messages = [];
 
     Teaspoon.execute = function() {
-      if (this.defer) {
-        this.defer = false;
+      if (Teaspoon.defer) {
+        Teaspoon.defer = false;
         return;
       }
-      this.started = true;
+      if (Teaspoon.started) {
+        window.location.reload();
+      }
+      Teaspoon.started = true;
       return new Teaspoon.Runner();
     };
 
@@ -2259,7 +2262,7 @@ if ( typeof exports !== "undefined" ) {
         all = [];
       }
       deps = [];
-      if ((paths = this.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) === null) {
+      if ((paths = Teaspoon.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) === null) {
         return all;
       }
       for (_i = 0, _len = paths.length; _i < _len; _i++) {
@@ -2281,7 +2284,7 @@ if ( typeof exports !== "undefined" ) {
 
     Teaspoon.log = function() {
       var e;
-      this.messages.push(arguments[0]);
+      Teaspoon.messages.push(arguments[0]);
       try {
         return console.log.apply(console, arguments);
       } catch (_error) {
@@ -2292,8 +2295,8 @@ if ( typeof exports !== "undefined" ) {
 
     Teaspoon.getMessages = function() {
       var messages;
-      messages = this.messages;
-      this.messages = [];
+      messages = Teaspoon.messages;
+      Teaspoon.messages = [];
       return messages;
     };
 
@@ -2318,6 +2321,7 @@ if ( typeof exports !== "undefined" ) {
 
     Runner.prototype.getParams = function() {
       var name, param, params, value, _i, _len, _ref, _ref1;
+
       params = {};
       _ref = Teaspoon.location.search.substring(1).split("&");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -2364,6 +2368,7 @@ if ( typeof exports !== "undefined" ) {
 
     fixture.preload = function() {
       var url, urls, _i, _len, _results;
+
       urls = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _results = [];
       for (_i = 0, _len = urls.length; _i < _len; _i++) {
@@ -2375,6 +2380,7 @@ if ( typeof exports !== "undefined" ) {
 
     fixture.load = function() {
       var append, index, url, urls, _i, _j, _len, _results;
+
       urls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -2393,6 +2399,7 @@ if ( typeof exports !== "undefined" ) {
 
     fixture.set = function() {
       var append, html, htmls, index, _i, _j, _len, _results;
+
       htmls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -2425,6 +2432,7 @@ if ( typeof exports !== "undefined" ) {
 
     load = function(url, append, preload) {
       var cached, value;
+
       if (preload == null) {
         preload = false;
       }
@@ -2486,6 +2494,7 @@ if ( typeof exports !== "undefined" ) {
 
     create = function() {
       var _ref;
+
       Teaspoon.fixture.el = document.createElement("div");
       if (typeof window.$ === 'function') {
         Teaspoon.fixture.$el = $(Teaspoon.fixture.el);
@@ -2496,6 +2505,7 @@ if ( typeof exports !== "undefined" ) {
 
     cleanup = function() {
       var _base, _ref, _ref1;
+
       (_base = Teaspoon.fixture).el || (_base.el = document.getElementById("teaspoon-fixtures"));
       if ((_ref = Teaspoon.fixture.el) != null) {
         if ((_ref1 = _ref.parentNode) != null) {
@@ -2507,6 +2517,7 @@ if ( typeof exports !== "undefined" ) {
 
     xhrRequest = function(url, callback) {
       var e;
+
       if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest();
       } else if (window.ActiveXObject) {
@@ -2555,6 +2566,7 @@ if ( typeof exports !== "undefined" ) {
 
     BaseView.prototype.createEl = function(type, className) {
       var el;
+
       if (className == null) {
         className = "";
       }
@@ -2565,18 +2577,21 @@ if ( typeof exports !== "undefined" ) {
 
     BaseView.prototype.findEl = function(id) {
       var _base;
+
       this.elements || (this.elements = {});
       return (_base = this.elements)[id] || (_base[id] = document.getElementById("teaspoon-" + id));
     };
 
     BaseView.prototype.setText = function(id, value) {
       var el;
+
       el = this.findEl(id);
       return el.innerHTML = value;
     };
 
     BaseView.prototype.setHtml = function(id, value, add) {
       var el;
+
       if (add == null) {
         add = false;
       }
@@ -2590,12 +2605,14 @@ if ( typeof exports !== "undefined" ) {
 
     BaseView.prototype.setClass = function(id, value) {
       var el;
+
       el = this.findEl(id);
       return el.className = value;
     };
 
     BaseView.prototype.htmlSafe = function(str) {
       var el;
+
       el = document.createElement("div");
       el.appendChild(document.createTextNode(str));
       return el.innerHTML;
@@ -2895,6 +2912,7 @@ if ( typeof exports !== "undefined" ) {
 
     SimpleProgressView.prototype.update = function(total, run) {
       var percent;
+
       percent = total ? Math.ceil((run * 100) / total) : 0;
       return this.setHtml("progress-percent", "" + percent + "%");
     };
@@ -2920,6 +2938,7 @@ if ( typeof exports !== "undefined" ) {
 
     RadialProgressView.prototype.appendTo = function() {
       var canvas, e;
+
       RadialProgressView.__super__.appendTo.apply(this, arguments);
       this.size = 80;
       try {
@@ -2935,6 +2954,7 @@ if ( typeof exports !== "undefined" ) {
 
     RadialProgressView.prototype.update = function(total, run) {
       var half, percent;
+
       percent = total ? Math.ceil((run * 100) / total) : 0;
       this.setHtml("progress-percent", "" + percent + "%");
       if (!this.ctx) {
@@ -2974,6 +2994,7 @@ if ( typeof exports !== "undefined" ) {
 
     SpecView.prototype.build = function() {
       var classes;
+
       classes = ["spec"];
       if (this.spec.pending) {
         classes.push("state-pending");
@@ -2986,6 +3007,7 @@ if ( typeof exports !== "undefined" ) {
 
     SpecView.prototype.buildParent = function() {
       var parent, view;
+
       parent = this.spec.parent;
       if (parent.viewId) {
         return this.views.suites[parent.viewId];
@@ -2997,6 +3019,7 @@ if ( typeof exports !== "undefined" ) {
 
     SpecView.prototype.buildErrors = function() {
       var div, error, html, _i, _len, _ref;
+
       div = this.createEl("div");
       html = "";
       _ref = this.spec.errors();
@@ -3010,6 +3033,7 @@ if ( typeof exports !== "undefined" ) {
 
     SpecView.prototype.updateState = function(state, elapsed) {
       var classes, result, _base;
+
       result = this.spec.result();
       classes = ["state-" + state];
       if (elapsed > Teaspoon.slow) {
@@ -3044,6 +3068,7 @@ if ( typeof exports !== "undefined" ) {
 
     FailureView.prototype.build = function() {
       var error, html, _i, _len, _ref;
+
       FailureView.__super__.build.call(this, "spec");
       html = "<h1 class=\"teaspoon-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
       _ref = this.spec.errors();
@@ -3089,6 +3114,7 @@ if ( typeof exports !== "undefined" ) {
 
     SuiteView.prototype.buildParent = function() {
       var parent, view;
+
       parent = this.suite.parent;
       if (!parent) {
         return this.reporter;
@@ -3110,6 +3136,7 @@ if ( typeof exports !== "undefined" ) {
 
     SuiteView.prototype.updateState = function(state) {
       var _base;
+
       if (this.state === "failed") {
         return;
       }
@@ -3134,8 +3161,7 @@ if ( typeof exports !== "undefined" ) {
 
   Teaspoon.Reporters.Console = (function() {
     function Console() {
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.start = new Teaspoon.Date();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teaspoon.Date();
       this.suites = {};
     }
 
@@ -3149,6 +3175,7 @@ if ( typeof exports !== "undefined" ) {
 
     Console.prototype.reportSuites = function() {
       var index, suite, _i, _len, _ref, _results;
+
       _ref = this.spec.getParents();
       _results = [];
       for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
@@ -3168,6 +3195,7 @@ if ( typeof exports !== "undefined" ) {
 
     Console.prototype.reportSpecResults = function(spec) {
       var result;
+
       this.spec = new Teaspoon.Spec(spec);
       result = this.spec.result();
       if (result.skipped) {
@@ -3192,6 +3220,7 @@ if ( typeof exports !== "undefined" ) {
 
     Console.prototype.trackPending = function() {
       var result;
+
       result = this.spec.result();
       return this.log({
         type: "spec",
@@ -3204,6 +3233,7 @@ if ( typeof exports !== "undefined" ) {
 
     Console.prototype.trackFailure = function() {
       var error, result, _i, _len, _ref, _results;
+
       result = this.spec.result();
       _ref = this.spec.errors();
       _results = [];
@@ -3254,8 +3284,7 @@ if ( typeof exports !== "undefined" ) {
     __extends(Console, _super);
 
     function Console(env) {
-      this.reportSpecResults = __bind(this.reportSpecResults, this);
-      Console.__super__.constructor.apply(this, arguments);
+      this.reportSpecResults = __bind(this.reportSpecResults, this);      Console.__super__.constructor.apply(this, arguments);
       env.log(this.reportSpecResults);
       env.testDone(this.reportSpecResults);
       env.done(this.reportRunnerResults);
@@ -3297,8 +3326,7 @@ if ( typeof exports !== "undefined" ) {
 
     function HTML(env) {
       this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.reportSpecResults = __bind(this.reportSpecResults, this);
-      HTML.__super__.constructor.apply(this, arguments);
+      this.reportSpecResults = __bind(this.reportSpecResults, this);      HTML.__super__.constructor.apply(this, arguments);
       env.log(this.reportSpecResults);
       env.testDone(this.reportSpecResults);
       env.done(this.reportRunnerResults);
@@ -3350,6 +3378,7 @@ if ( typeof exports !== "undefined" ) {
 
     SpecView.prototype.buildErrors = function() {
       var div, error, html, _i, _len, _ref1;
+
       div = this.createEl("div");
       html = "";
       _ref1 = this.spec.errors();
@@ -3363,6 +3392,7 @@ if ( typeof exports !== "undefined" ) {
 
     SpecView.prototype.buildParent = function() {
       var parent, view;
+
       parent = this.spec.parent;
       if (!parent) {
         return this.reporter;
@@ -3389,6 +3419,7 @@ if ( typeof exports !== "undefined" ) {
 
     FailureView.prototype.build = function() {
       var error, html, _i, _len, _ref2;
+
       FailureView.__super__.build.call(this, "spec");
       html = "<h1 class=\"teaspoon-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
       _ref2 = this.spec.errors();

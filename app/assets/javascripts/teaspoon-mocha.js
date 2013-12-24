@@ -5394,11 +5394,14 @@
     Teaspoon.messages = [];
 
     Teaspoon.execute = function() {
-      if (this.defer) {
-        this.defer = false;
+      if (Teaspoon.defer) {
+        Teaspoon.defer = false;
         return;
       }
-      this.started = true;
+      if (Teaspoon.started) {
+        window.location.reload();
+      }
+      Teaspoon.started = true;
       return new Teaspoon.Runner();
     };
 
@@ -5419,7 +5422,7 @@
         all = [];
       }
       deps = [];
-      if ((paths = this.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) === null) {
+      if ((paths = Teaspoon.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) === null) {
         return all;
       }
       for (_i = 0, _len = paths.length; _i < _len; _i++) {
@@ -5441,7 +5444,7 @@
 
     Teaspoon.log = function() {
       var e;
-      this.messages.push(arguments[0]);
+      Teaspoon.messages.push(arguments[0]);
       try {
         return console.log.apply(console, arguments);
       } catch (_error) {
@@ -5452,8 +5455,8 @@
 
     Teaspoon.getMessages = function() {
       var messages;
-      messages = this.messages;
-      this.messages = [];
+      messages = Teaspoon.messages;
+      Teaspoon.messages = [];
       return messages;
     };
 
@@ -5790,7 +5793,8 @@
 
     function HTML() {
       this.toggleConfig = __bind(this.toggleConfig, this);
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teaspoon.Date().getTime();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
+      this.start = new Teaspoon.Date().getTime();
       this.config = {
         "use-catch": true,
         "build-full-report": false,
@@ -5815,7 +5819,6 @@
 
     HTML.prototype.build = function() {
       var _ref;
-
       this.buildLayout();
       this.setText("env-info", this.envInfo());
       this.setText("version", Teaspoon.version);
@@ -5833,7 +5836,6 @@
 
     HTML.prototype.buildLayout = function() {
       var el;
-
       el = this.createEl("div");
       el.id = "teaspoon-interface";
       el.innerHTML = Teaspoon.Reporters.HTML.template;
@@ -5842,7 +5844,6 @@
 
     HTML.prototype.buildSuiteSelect = function() {
       var options, suite, _i, _len, _ref;
-
       if (Teaspoon.suites.all.length === 1) {
         return "";
       }
@@ -5919,7 +5920,6 @@
 
     HTML.prototype.updateStatus = function(spec) {
       var elapsed, result, _ref, _ref1;
-
       spec = new Teaspoon.Spec(spec);
       result = spec.result();
       if (result.skipped || result.status === "pending") {
@@ -5948,7 +5948,6 @@
 
     HTML.prototype.showConfiguration = function() {
       var key, value, _ref, _results;
-
       _ref = this.config;
       _results = [];
       for (key in _ref) {
@@ -5964,7 +5963,6 @@
 
     HTML.prototype.setFilters = function() {
       var link;
-
       link = [Teaspoon.root, Teaspoon.suites.active].join('/');
       if (Teaspoon.params["file"]) {
         this.filters.push("by file: " + Teaspoon.params["file"] + " <a href='" + link + "'>remove</a>");
@@ -5976,7 +5974,6 @@
 
     HTML.prototype.readConfig = function() {
       var config;
-
       if (config = this.cookie("teaspoon")) {
         return this.config = config;
       }
@@ -5984,7 +5981,6 @@
 
     HTML.prototype.toggleConfig = function(e) {
       var button, name;
-
       button = e.target;
       if (button.tagName.toLowerCase() !== "button") {
         return;
@@ -6005,7 +6001,6 @@
 
     HTML.prototype.cookie = function(name, value) {
       var date, match;
-
       if (value == null) {
         value = void 0;
       }
@@ -6611,7 +6606,6 @@
   Teaspoon.Suite = (function() {
     function Suite(suite) {
       var _ref;
-
       this.suite = suite;
       this.fullDescription = this.suite.fullTitle();
       this.description = this.suite.title;
