@@ -2994,20 +2994,18 @@ if ( typeof exports !== "undefined" ) {
 
     SpecView.prototype.build = function() {
       var classes;
-
       classes = ["spec"];
       if (this.spec.pending) {
         classes.push("state-pending");
       }
       SpecView.__super__.build.call(this, classes.join(" "));
-      this.el.innerHTML = "<a href=\"" + this.spec.link + "\">" + this.spec.description + "</a>";
+      this.el.innerHTML = "<a href=\"" + this.spec.link + "\">" + (this.htmlSafe(this.spec.description)) + "</a>";
       this.parentView = this.buildParent();
       return this.parentView.append(this.el);
     };
 
     SpecView.prototype.buildParent = function() {
       var parent, view;
-
       parent = this.spec.parent;
       if (parent.viewId) {
         return this.views.suites[parent.viewId];
@@ -3019,7 +3017,6 @@ if ( typeof exports !== "undefined" ) {
 
     SpecView.prototype.buildErrors = function() {
       var div, error, html, _i, _len, _ref;
-
       div = this.createEl("div");
       html = "";
       _ref = this.spec.errors();
@@ -3033,7 +3030,6 @@ if ( typeof exports !== "undefined" ) {
 
     SpecView.prototype.updateState = function(state, elapsed) {
       var classes, result, _base;
-
       result = this.spec.result();
       classes = ["state-" + state];
       if (elapsed > Teaspoon.slow) {
@@ -3068,9 +3064,8 @@ if ( typeof exports !== "undefined" ) {
 
     FailureView.prototype.build = function() {
       var error, html, _i, _len, _ref;
-
       FailureView.__super__.build.call(this, "spec");
-      html = "<h1 class=\"teaspoon-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
+      html = "<h1 class=\"teaspoon-clearfix\"><a href=\"" + this.spec.link + "\">" + (this.htmlSafe(this.spec.fullDescription)) + "</a></h1>";
       _ref = this.spec.errors();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         error = _ref[_i];
@@ -3107,14 +3102,13 @@ if ( typeof exports !== "undefined" ) {
 
     SuiteView.prototype.build = function() {
       SuiteView.__super__.build.call(this, "suite");
-      this.el.innerHTML = "<h1><a href=\"" + this.suite.link + "\">" + this.suite.description + "</a></h1>";
+      this.el.innerHTML = "<h1><a href=\"" + this.suite.link + "\">" + (this.htmlSafe(this.suite.description)) + "</a></h1>";
       this.parentView = this.buildParent();
       return this.parentView.append(this.el);
     };
 
     SuiteView.prototype.buildParent = function() {
       var parent, view;
-
       parent = this.suite.parent;
       if (!parent) {
         return this.reporter;
@@ -3136,7 +3130,6 @@ if ( typeof exports !== "undefined" ) {
 
     SuiteView.prototype.updateState = function(state) {
       var _base;
-
       if (this.state === "failed") {
         return;
       }
@@ -3326,7 +3319,8 @@ if ( typeof exports !== "undefined" ) {
 
     function HTML(env) {
       this.reportRunnerResults = __bind(this.reportRunnerResults, this);
-      this.reportSpecResults = __bind(this.reportSpecResults, this);      HTML.__super__.constructor.apply(this, arguments);
+      this.reportSpecResults = __bind(this.reportSpecResults, this);
+      HTML.__super__.constructor.apply(this, arguments);
       env.log(this.reportSpecResults);
       env.testDone(this.reportSpecResults);
       env.done(this.reportRunnerResults);
@@ -3378,7 +3372,6 @@ if ( typeof exports !== "undefined" ) {
 
     SpecView.prototype.buildErrors = function() {
       var div, error, html, _i, _len, _ref1;
-
       div = this.createEl("div");
       html = "";
       _ref1 = this.spec.errors();
@@ -3392,7 +3385,6 @@ if ( typeof exports !== "undefined" ) {
 
     SpecView.prototype.buildParent = function() {
       var parent, view;
-
       parent = this.spec.parent;
       if (!parent) {
         return this.reporter;
@@ -3419,9 +3411,8 @@ if ( typeof exports !== "undefined" ) {
 
     FailureView.prototype.build = function() {
       var error, html, _i, _len, _ref2;
-
       FailureView.__super__.build.call(this, "spec");
-      html = "<h1 class=\"teaspoon-clearfix\"><a href=\"" + this.spec.link + "\">" + this.spec.fullDescription + "</a></h1>";
+      html = "<h1 class=\"teaspoon-clearfix\"><a href=\"" + this.spec.link + "\">" + (this.htmlSafe(this.spec.fullDescription)) + "</a></h1>";
       _ref2 = this.spec.errors();
       for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
         error = _ref2[_i];

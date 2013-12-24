@@ -12,7 +12,7 @@ class Teaspoon.Reporters.HTML.SuiteView extends Teaspoon.Reporters.BaseView
 
   build: ->
     super("suite")
-    @el.innerHTML = """<h1><a href="#{@suite.link}">#{@suite.description}</a></h1>"""
+    @el.innerHTML = """<h1><a href="#{@suite.link}">#{@htmlSafe(@suite.description)}</a></h1>"""
     @parentView = @buildParent()
     @parentView.append(@el)
 

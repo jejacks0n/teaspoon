@@ -6,7 +6,7 @@ class Teaspoon.Reporters.HTML.FailureView extends Teaspoon.Reporters.BaseView
 
   build: ->
     super("spec")
-    html = """<h1 class="teaspoon-clearfix"><a href="#{@spec.link}">#{@spec.fullDescription}</a></h1>"""
+    html = """<h1 class="teaspoon-clearfix"><a href="#{@spec.link}">#{@htmlSafe(@spec.fullDescription)}</a></h1>"""
     for error in @spec.errors()
       html += """<div><strong>#{@htmlSafe(error.message)}</strong><br/>#{@htmlSafe(error.stack || "Stack trace unavailable")}</div>"""
     @el.innerHTML = html

@@ -13,7 +13,7 @@ class Teaspoon.Reporters.HTML.SpecView extends Teaspoon.Reporters.BaseView
     classes = ["spec"]
     classes.push("state-pending") if @spec.pending
     super(classes.join(" "))
-    @el.innerHTML = """<a href="#{@spec.link}">#{@spec.description}</a>"""
+    @el.innerHTML = """<a href="#{@spec.link}">#{@htmlSafe(@spec.description)}</a>"""
     @parentView = @buildParent()
     @parentView.append(@el)
 
