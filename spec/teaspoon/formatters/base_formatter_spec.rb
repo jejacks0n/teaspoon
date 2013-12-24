@@ -22,7 +22,7 @@ describe Teaspoon::Formatters::BaseFormatter do
 
     it "logs the coverage information" do
       double = double(reports: nil)
-      Teaspoon::Coverage.should_receive(:new).with("_data_").and_return(double)
+      Teaspoon::Coverage.should_receive(:new).with("_data_", "default").and_return(double)
       double.should_receive(:reports).and_return("_reports_")
       STDOUT.should_receive(:print).with("_reports_")
       subject.send(:log_coverage, "_data_")
@@ -35,7 +35,8 @@ describe Teaspoon::Formatters::BaseFormatter do
 
     it "doesn't log when suppressing logs" do
       subject.should_receive(:suppress_logs?).and_return(true)
-      Teaspoon::Coverage.should_not_receive(:new)
+      Teaspoon::Coverage.should_receive(:new).and_return(double(reports: nil))
+      STDOUT.should_not_receive(:print)
       subject.send(:log_coverage, "_data_")
     end
 

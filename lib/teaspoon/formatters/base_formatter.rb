@@ -52,8 +52,9 @@ module Teaspoon
       private
 
       def log_coverage(data)
-        return if data.blank? || suppress_logs?
-        STDOUT.print(Teaspoon::Coverage.new(data).reports)
+        return if data.blank?
+        report_output = Teaspoon::Coverage.new(data, @suite_name).reports
+        STDOUT.print(report_output) unless suppress_logs?
       end
     end
   end

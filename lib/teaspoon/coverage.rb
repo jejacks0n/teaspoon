@@ -2,8 +2,9 @@ module Teaspoon
   class Coverage
     include Teaspoon::Utility
 
-    def initialize(data)
+    def initialize(data, suite_name)
       @data = data
+      @suite_name = suite_name
     end
 
     def reports
@@ -23,7 +24,7 @@ module Teaspoon
     private
 
     def generate_report(input, format)
-      result = %x{#{executable} report #{format} #{input.shellescape} --dir #{Teaspoon.configuration.coverage_output_dir}}
+      result = %x{#{executable} report #{format} #{input.shellescape} --dir #{File.join(Teaspoon.configuration.coverage_output_dir, @suite_name)}}
       raise "Could not generate coverage report for #{format}" unless $?.exitstatus == 0
       result.gsub("Done", "").gsub("Using reporter [#{format}]", "").strip
     end

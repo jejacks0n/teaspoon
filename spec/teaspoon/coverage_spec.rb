@@ -3,7 +3,7 @@ require "teaspoon/coverage"
 
 describe Teaspoon::Coverage do
 
-  subject { Teaspoon::Coverage.new({"foo" => "bar"}) }
+  subject { Teaspoon::Coverage.new({"foo" => "bar"}, "default") }
 
   describe "#reports" do
 
