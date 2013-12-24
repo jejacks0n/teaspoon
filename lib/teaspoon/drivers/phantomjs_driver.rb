@@ -1,18 +1,20 @@
-require "phantomjs"
 require "teaspoon/runner"
 require 'teaspoon/utility'
+
+begin
+  require "phantomjs"
+rescue LoadError
+end
 
 module Teaspoon
   module Drivers
     class PhantomjsDriver < BaseDriver
       include Teaspoon::Utility
 
-      def run_specs(suite, url, driver_cli_options = nil)
+      def run_specs(suite, url, cli_options = nil)
         runner = Teaspoon::Runner.new(suite)
 
-        Phantomjs.instance_variable_set(:@path, executable)
-        # Phantomjs.run takes the command-line args as an array, so if we need to pass in switches/flags, need to split on space
-        Phantomjs.run(*([driver_cli_options && driver_cli_options.split(" "), script, url].flatten.compact)) do |line|
+        run(*cli_arguments(url, cli_options)) do |line|
           runner.process(line) if line && line.strip != ""
         end
 
@@ -21,8 +23,24 @@ module Teaspoon
 
       protected
 
+      def run(*args, &block)
+        IO.popen([executable, *args]) { |io|
+          io.each(&block)
+        }
+      end
+
+      def cli_arguments(url, cli_options)
+        [cli_options.to_s.split(" "), script, url].flatten.compact
+      end
+
       def executable
-        @executable ||= which('phantomjs')
+        executable ||= which('phantomjs')
+        executable = Phantomjs.path if executable.blank? && defined?(::Phantomjs)
+        if executable.blank?
+          STDOUT.print("Could not find PhantomJS. Install phantomjs or try the phantomjs gem.")
+          exit(1)
+        end
+        executable
       end
 
       def script

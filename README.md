@@ -53,9 +53,11 @@ Updating requires that you rename your `teabag.rb` initializer to `teaspoon.rb`,
 
 Add it to your Gemfile. In most cases you'll want to restrict it to the `:development, :test` or `:asset` groups.
 
+You should [install phantomjs](http://phantomjs.org/download.html).  If phantomjs is found it will be used, otherwise you can use the gem as a fallback -- which might not be optimal.
+
 ```ruby
 group :development, :test do
-  gem "phantomjs", ">= 1.8.1.1" # this is optional if you install phantomjs manually -- as of teaspoon 0.7.9.
+  gem "phantomjs", ">= 1.8.1.1" # this is optional if you install phantomjs manually (as of teaspoon 0.7.9)
   gem "teaspoon"
 end
 ```
@@ -71,9 +73,6 @@ You can tell the generator which framework you want to use, if you want coffeesc
 ```
 rails generate teaspoon:install --framework=mocha --coffee
 ```
-
-You should probably [install phantomjs](http://phantomjs.org/download.html).  If phantomjs is found it will be used, otherwise you can use the gem as a fallback -- which might not be optimal.
-
 
 ## Usage
 
