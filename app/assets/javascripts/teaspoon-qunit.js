@@ -2325,7 +2325,6 @@ if ( typeof exports !== "undefined" ) {
 
     Runner.prototype.getParams = function() {
       var name, param, params, value, _i, _len, _ref, _ref1;
-
       params = {};
       _ref = Teaspoon.location.search.substring(1).split("&");
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -2372,7 +2371,6 @@ if ( typeof exports !== "undefined" ) {
 
     fixture.preload = function() {
       var url, urls, _i, _len, _results;
-
       urls = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _results = [];
       for (_i = 0, _len = urls.length; _i < _len; _i++) {
@@ -2384,7 +2382,6 @@ if ( typeof exports !== "undefined" ) {
 
     fixture.load = function() {
       var append, index, url, urls, _i, _j, _len, _results;
-
       urls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -2403,7 +2400,6 @@ if ( typeof exports !== "undefined" ) {
 
     fixture.set = function() {
       var append, html, htmls, index, _i, _j, _len, _results;
-
       htmls = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), append = arguments[_i++];
       if (append == null) {
         append = false;
@@ -2436,7 +2432,6 @@ if ( typeof exports !== "undefined" ) {
 
     load = function(url, append, preload) {
       var cached, value;
-
       if (preload == null) {
         preload = false;
       }
@@ -2498,7 +2493,6 @@ if ( typeof exports !== "undefined" ) {
 
     create = function() {
       var _ref;
-
       Teaspoon.fixture.el = document.createElement("div");
       if (typeof window.$ === 'function') {
         Teaspoon.fixture.$el = $(Teaspoon.fixture.el);
@@ -2509,7 +2503,6 @@ if ( typeof exports !== "undefined" ) {
 
     cleanup = function() {
       var _base, _ref, _ref1;
-
       (_base = Teaspoon.fixture).el || (_base.el = document.getElementById("teaspoon-fixtures"));
       if ((_ref = Teaspoon.fixture.el) != null) {
         if ((_ref1 = _ref.parentNode) != null) {
@@ -2521,7 +2514,6 @@ if ( typeof exports !== "undefined" ) {
 
     xhrRequest = function(url, callback) {
       var e;
-
       if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest();
       } else if (window.ActiveXObject) {
@@ -2570,7 +2562,6 @@ if ( typeof exports !== "undefined" ) {
 
     BaseView.prototype.createEl = function(type, className) {
       var el;
-
       if (className == null) {
         className = "";
       }
@@ -2581,21 +2572,18 @@ if ( typeof exports !== "undefined" ) {
 
     BaseView.prototype.findEl = function(id) {
       var _base;
-
       this.elements || (this.elements = {});
       return (_base = this.elements)[id] || (_base[id] = document.getElementById("teaspoon-" + id));
     };
 
     BaseView.prototype.setText = function(id, value) {
       var el;
-
       el = this.findEl(id);
       return el.innerHTML = value;
     };
 
     BaseView.prototype.setHtml = function(id, value, add) {
       var el;
-
       if (add == null) {
         add = false;
       }
@@ -2609,14 +2597,12 @@ if ( typeof exports !== "undefined" ) {
 
     BaseView.prototype.setClass = function(id, value) {
       var el;
-
       el = this.findEl(id);
       return el.className = value;
     };
 
     BaseView.prototype.htmlSafe = function(str) {
       var el;
-
       el = document.createElement("div");
       el.appendChild(document.createTextNode(str));
       return el.innerHTML;
@@ -2936,7 +2922,6 @@ if ( typeof exports !== "undefined" ) {
 
     SimpleProgressView.prototype.update = function(total, run) {
       var percent;
-
       percent = total ? Math.ceil((run * 100) / total) : 0;
       return this.setHtml("progress-percent", "" + percent + "%");
     };
@@ -2962,7 +2947,6 @@ if ( typeof exports !== "undefined" ) {
 
     RadialProgressView.prototype.appendTo = function() {
       var canvas, e;
-
       RadialProgressView.__super__.appendTo.apply(this, arguments);
       this.size = 80;
       try {
@@ -2978,7 +2962,6 @@ if ( typeof exports !== "undefined" ) {
 
     RadialProgressView.prototype.update = function(total, run) {
       var half, percent;
-
       percent = total ? Math.ceil((run * 100) / total) : 0;
       this.setHtml("progress-percent", "" + percent + "%");
       if (!this.ctx) {
@@ -3178,7 +3161,8 @@ if ( typeof exports !== "undefined" ) {
 
   Teaspoon.Reporters.Console = (function() {
     function Console() {
-      this.reportRunnerResults = __bind(this.reportRunnerResults, this);      this.start = new Teaspoon.Date();
+      this.reportRunnerResults = __bind(this.reportRunnerResults, this);
+      this.start = new Teaspoon.Date();
       this.suites = {};
     }
 
@@ -3192,7 +3176,6 @@ if ( typeof exports !== "undefined" ) {
 
     Console.prototype.reportSuites = function() {
       var index, suite, _i, _len, _ref, _results;
-
       _ref = this.spec.getParents();
       _results = [];
       for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
@@ -3212,7 +3195,6 @@ if ( typeof exports !== "undefined" ) {
 
     Console.prototype.reportSpecResults = function(spec) {
       var result;
-
       this.spec = new Teaspoon.Spec(spec);
       result = this.spec.result();
       if (result.skipped) {
@@ -3237,7 +3219,6 @@ if ( typeof exports !== "undefined" ) {
 
     Console.prototype.trackPending = function() {
       var result;
-
       result = this.spec.result();
       return this.log({
         type: "spec",
@@ -3250,7 +3231,6 @@ if ( typeof exports !== "undefined" ) {
 
     Console.prototype.trackFailure = function() {
       var error, result, _i, _len, _ref, _results;
-
       result = this.spec.result();
       _ref = this.spec.errors();
       _results = [];
@@ -3301,7 +3281,8 @@ if ( typeof exports !== "undefined" ) {
     __extends(Console, _super);
 
     function Console(env) {
-      this.reportSpecResults = __bind(this.reportSpecResults, this);      Console.__super__.constructor.apply(this, arguments);
+      this.reportSpecResults = __bind(this.reportSpecResults, this);
+      Console.__super__.constructor.apply(this, arguments);
       env.log(this.reportSpecResults);
       env.testDone(this.reportSpecResults);
       env.done(this.reportRunnerResults);
@@ -3379,7 +3360,7 @@ if ( typeof exports !== "undefined" ) {
     };
 
     HTML.prototype.envInfo = function() {
-      return "qunit 1.11.0";
+      return "qunit 1.12.0";
     };
 
     return HTML;
