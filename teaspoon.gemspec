@@ -19,5 +19,4 @@ Gem::Specification.new do |s|
   s.executables = ["teaspoon"]
 
   s.add_dependency "railties", [">= 3.2.5","< 5"]
-  s.add_dependency "phantomjs", ">= 1.8.1.1"
 end
