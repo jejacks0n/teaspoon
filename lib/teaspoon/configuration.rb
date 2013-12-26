@@ -51,7 +51,7 @@ module Teaspoon
       end
 
       def use_require=(val) # todo: deprecated in version 0.7.4
-        puts "Deprecation Notice: use_require will be removed, specify 'require_js' for config.boot_partial instead."
+        puts "Deprecation Notice: use_require will be removed, set config.boot_partial to 'require_js' instead."
         self.boot_partial = 'require_js' if val
       end
 
