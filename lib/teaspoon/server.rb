@@ -28,7 +28,7 @@ module Teaspoon
     end
 
     def wait_until_started
-      Timeout.timeout(Teaspoon.configuration.server_timeout) { @thread.join(0.1) until responsive? }
+      Timeout.timeout(Teaspoon.configuration.server_timeout.to_i) { @thread.join(0.1) until responsive? }
     rescue Timeout::Error
       raise "Server failed to start. You may need to increase the timeout configuration."
     end
