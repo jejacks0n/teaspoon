@@ -7,7 +7,13 @@ module Teaspoon
 
     def initialize
       @port = find_available_port
-      Thin::Logging.silent = true if defined?(Thin)
+      if defined?(Thin)
+        if Teaspoon.configuration.suppress_log
+          Thin::Logging.silent = true
+        else
+          Thin::Logging.trace = false
+        end
+      end
     end
 
     def start
@@ -51,7 +57,7 @@ module Teaspoon
         Port: port,
         environment: "test",
         AccessLog: [],
-        Logger: WEBrick::Log::new(nil, 0),
+        Logger: Rails.logger,
         server: Teaspoon.configuration.server
       }
     end
