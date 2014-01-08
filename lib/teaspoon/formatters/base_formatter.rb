@@ -5,6 +5,7 @@ module Teaspoon
     autoload :DotFormatter,           'teaspoon/formatters/dot_formatter'
     autoload :JunitFormatter,         'teaspoon/formatters/junit_formatter'
     autoload :PrideFormatter,         'teaspoon/formatters/pride_formatter'
+    autoload :SnowdayFormatter,       'teaspoon/formatters/snowday_formatter'
     autoload :SwayzeOrOprahFormatter, 'teaspoon/formatters/swayze_or_oprah_formatter'
     autoload :TapFormatter,           'teaspoon/formatters/tap_formatter'
     autoload :TapYFormatter,          'teaspoon/formatters/tap_y_formatter'
