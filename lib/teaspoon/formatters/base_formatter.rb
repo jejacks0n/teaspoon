@@ -1,13 +1,14 @@
 module Teaspoon
   module Formatters
 
-    autoload :DotFormatter,           'teaspoon/formatters/dot_formatter'
     autoload :CleanFormatter,         'teaspoon/formatters/clean_formatter'
-    autoload :TapYFormatter,          'teaspoon/formatters/tap_y_formatter'
-    autoload :TapFormatter,           'teaspoon/formatters/tap_formatter'
-    autoload :SwayzeOrOprahFormatter, 'teaspoon/formatters/swayze_or_oprah_formatter'
-    autoload :TeamcityFormatter,      'teaspoon/formatters/teamcity_formatter'
+    autoload :DotFormatter,           'teaspoon/formatters/dot_formatter'
     autoload :JunitFormatter,         'teaspoon/formatters/junit_formatter'
+    autoload :PrideFormatter,         'teaspoon/formatters/pride_formatter'
+    autoload :SwayzeOrOprahFormatter, 'teaspoon/formatters/swayze_or_oprah_formatter'
+    autoload :TapFormatter,           'teaspoon/formatters/tap_formatter'
+    autoload :TapYFormatter,          'teaspoon/formatters/tap_y_formatter'
+    autoload :TeamcityFormatter,      'teaspoon/formatters/teamcity_formatter'
 
     class BaseFormatter
 

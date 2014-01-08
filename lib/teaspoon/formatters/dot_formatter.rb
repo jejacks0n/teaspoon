@@ -9,8 +9,9 @@ module Teaspoon
       YELLOW = 33
       CYAN = 36
 
-      def spec(result)
-        super
+      def spec(result, logged = false)
+        super(result)
+        return if logged
         if result.passing?
           log ".", GREEN
         elsif result.pending?
