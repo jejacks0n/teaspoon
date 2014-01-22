@@ -22,7 +22,7 @@ module Teaspoon
       def spec(result)
         super(result, true)
         if result.passing?
-          log ".", next_color
+          log_pride ".", next_color
         elsif result.pending?
           log "*", YELLOW
         else
@@ -38,9 +38,9 @@ module Teaspoon
         c
       end
 
-      def colorize(str, color_code = nil)
-        return str unless Teaspoon.configuration.color
-        "\e[38;5;#{color_code}m#{str}\e[0m"
+
+      def log_pride(str, color_code)
+        STDOUT.print("\e[38;5;#{color_code}m#{str}\e[0m")
       end
 
     end
