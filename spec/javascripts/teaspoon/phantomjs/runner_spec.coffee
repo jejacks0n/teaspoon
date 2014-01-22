@@ -5,7 +5,7 @@
 window.phantom = {exit: ->}
 window.require = (file) ->
   switch file
-    when "system" then {args: ["runner.coffee", "http://host:port/path", "200"]}
+    when "system" then {args: ["runner.js", "http://host:port/path", "200"]}
     when "webpage" then create: -> {
       open: -> {}
       evaluate: -> {}
