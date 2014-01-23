@@ -63,7 +63,7 @@ html[xmlns] #teaspoon-interface .teaspoon-clearfix {
   color: #000;
 }
 #teaspoon-title a:hover {
-  text-decoration: underline;
+  border-bottom: 1px solid #000;
 }
 
 /* Progress indicator
