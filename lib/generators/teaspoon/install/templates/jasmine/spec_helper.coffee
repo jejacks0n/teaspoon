@@ -3,6 +3,10 @@
 # require support/sinon
 # require support/your-support-file
 #
+# PhantomJS (Teaspoons default driver) doesn't have support for Function.prototype.bind, which has caused confusion. Use
+# this polyfill to avoid the confusion.
+#= require support/bind-poly
+#
 # Deferring execution
 # If you're using CommonJS, RequireJS or some other asynchronous library you can defer execution. Call Teaspoon.execute()
 # after everything has been loaded. Simple example of a timeout:
