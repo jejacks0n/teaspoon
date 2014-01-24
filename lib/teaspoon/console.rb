@@ -35,7 +35,7 @@ module Teaspoon
       url = url(suite)
       url += url.include?("?") ? "&" : "?"
       url += "reporter=Console"
-      driver.run_specs(suite, url, driver_cli_options)
+      driver.run_specs(suite, url, driver_cli_options, @options)
     end
 
     protected
