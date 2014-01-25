@@ -123,6 +123,13 @@ Teaspoon also has support for [tapout](https://github.com/rubyworks/tapout). Use
 bundle exec teaspoon -q --format=tap_y | tapout progress
 ```
 
+The Teaspoon suite can be downloaded as a static HTML page. This requires that `wget` is installed.
+
+```
+bundle exec teaspoon --export="output_directory"
+bundle exec teaspoon --export # output directory defaults to './teaspoon-export'.
+```
+
 Get full command line help:
 
 ```
