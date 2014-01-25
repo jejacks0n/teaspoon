@@ -1,5 +1,4 @@
 require 'fileutils'
-require 'open3'
 require 'pathname'
 
 module Teaspoon
@@ -28,15 +27,20 @@ module Teaspoon
     ExportFailure = Class.new(RuntimeError)
 
     def self.run_silently(*args)
-      Open3.popen2e(*args) { |_, out| out.read }
+      out, err = $stdout.clone, $stderr.clone
+      [$stdout, $stderr].each { |file| file.reopen('/dev/null') }
+      success = system(*args)
+      $stdout.reopen out
+      $stderr.reopen err
+
+      success
     end
 
     private
 
     def ensure_wget_installed
-      Open3.popen2e('wget') {}
-    rescue Errno::ENOENT
-      raise ExportFailure, 'wget must be installed to export'
+      success = self.class.run_silently 'wget', '--help'
+      raise ExportFailure, "wget must be installed to export" unless success
     end
 
     def suite_output_path
