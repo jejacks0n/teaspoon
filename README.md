@@ -379,6 +379,13 @@ end
   <b>default:</b> <code>`[%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]`</code>
 </dd>
 
+<dt> normalize_asset_path </dt><dd>
+  When using custom file-extensions you might need to supply a custom asset path normalization. If you need to match a
+  custom extension, simply supply a custom lambda/proc that returns the desired filename.<br/><br/>
+
+  <b>default:</b> <code>`filename.gsub('.erb', '').gsub(/(\.js\.coffee|\.coffee)$/, ".js")`</code>
+</dd>
+
 </dl>
 
 
