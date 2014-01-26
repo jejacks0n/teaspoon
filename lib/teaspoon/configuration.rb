@@ -32,7 +32,7 @@ module Teaspoon
     @@lines_coverage_threshold      = nil
 
     class Suite
-      attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :boot_partial, :js_config, :hooks
+      attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :boot_partial, :js_config, :hooks, :normalize_asset_path
 
       def initialize
         @matcher         = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
@@ -42,6 +42,9 @@ module Teaspoon
         @no_coverage     = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
         @boot_partial    = nil
         @js_config       = {}
+        @normalize_asset_path = lambda do |filename|
+          filename.gsub('.erb', '').gsub(/(\.js\.coffee|\.coffee)$/, ".js")
+        end
 
         @hooks = Hash.new {|h, k| h[k] = [] }
 
@@ -57,6 +60,10 @@ module Teaspoon
 
       def hook(group = :default, &block)
         @hooks[group.to_s] << block
+      end
+
+      def normalize_asset_path(filename)
+        @normalize_asset_path.call(filename)
       end
     end
 

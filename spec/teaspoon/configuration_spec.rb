@@ -107,4 +107,20 @@ describe Teaspoon::Configuration::Suite do
 
     expect(subject.hooks['default'].length).to eq(1)
   end
+
+  describe "#normalize_asset_path" do
+    it "has the same current default" do
+      suite = Teaspoon::Configuration::Suite.new
+      expect(suite.normalize_asset_path('blah/something.js.erb')).to eq('blah/something.js')
+      expect(suite.normalize_asset_path('blah/something.js.coffee.erb')).to eq('blah/something.js')
+      expect(suite.normalize_asset_path('blah/something.js.coffee')).to eq('blah/something.js')
+    end
+
+    it "can accept a custom configuration" do
+      suite = Teaspoon::Configuration::Suite.new
+      suite.normalize_asset_path = lambda {|filename| filename.gsub('.erb', '').gsub(/(\.es6)$/, ".js") }
+
+      expect(suite.normalize_asset_path('blah/something.es6')).to eq('blah/something.js')
+    end
+  end
 end

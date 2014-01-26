@@ -131,6 +131,8 @@ module Teaspoon
       end
       raise Teaspoon::AssetNotServable, "#{filename} is not within an asset path" if filename == original
       filename.gsub('.erb', '').gsub(/(\.js\.coffee|\.coffee)$/, ".js")
+      @config.normalize_asset_path(filename)
     end
+
   end
 end
