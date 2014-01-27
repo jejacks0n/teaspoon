@@ -8,7 +8,7 @@
   <%= javascript_include_tag_for_teaspoon *@suite.core_javascripts %>
   <script type="text/javascript">
     Teaspoon.version = <%=raw Teaspoon::VERSION.inspect %>;
-    Teaspoon.root = <%=raw Teaspoon.configuration.mount_at.inspect %>;
+    Teaspoon.root = <%=raw [Teaspoon.configuration.context, Teaspoon.configuration.mount_at].join.inspect %>;
     Teaspoon.suites = <%=raw @suite.suites.to_json %>;
     Teaspoon.config = <%=raw @suite.js_config.to_json %>;
   </script>
