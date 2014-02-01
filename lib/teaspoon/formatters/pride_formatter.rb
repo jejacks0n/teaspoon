@@ -8,7 +8,6 @@ module Teaspoon
       def initialize(*args)
         @size = colors.size
         @index = 0
-
         super
       end
 
@@ -26,13 +25,14 @@ module Teaspoon
       private
 
       def colors
-        @colors ||= 0...42.map { |n|
-          n *= 1.0 / 6
-          r  = (3 * Math.sin(n           ) + 3).to_i
-          g  = (3 * Math.sin(n + 2 * PI_3) + 3).to_i
-          b  = (3 * Math.sin(n + 4 * PI_3) + 3).to_i
-          36 * r + 6 * g + b + 16
-        }
+        @colors ||= 0...42.map do |i|
+          i *= 1.0 / 6
+          36 * calc_color(i) + 6 * calc_color(i + 2 * PI_3) + calc_color(i + 4 * PI_3) + 16
+        end
+      end
+
+      def calc_color(val)
+        (3 * Math.sin(val) + 3).to_i
       end
 
       def next_color
