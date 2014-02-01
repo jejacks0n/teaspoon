@@ -6,14 +6,7 @@ module Teaspoon
       PI_3 = Math::PI / 3
 
       def initialize(*args)
-        @colors = (0...(6 * 7)).map { |n|
-          n *= 1.0 / 6
-          r  = (3 * Math.sin(n           ) + 3).to_i
-          g  = (3 * Math.sin(n + 2 * PI_3) + 3).to_i
-          b  = (3 * Math.sin(n + 4 * PI_3) + 3).to_i
-          36 * r + 6 * g + b + 16
-        }
-        @size = @colors.size
+        @size = colors.size
         @index = 0
 
         super
@@ -32,8 +25,18 @@ module Teaspoon
 
       private
 
+      def colors
+        @colors ||= 0...42.map { |n|
+          n *= 1.0 / 6
+          r  = (3 * Math.sin(n           ) + 3).to_i
+          g  = (3 * Math.sin(n + 2 * PI_3) + 3).to_i
+          b  = (3 * Math.sin(n + 4 * PI_3) + 3).to_i
+          36 * r + 6 * g + b + 16
+        }
+      end
+
       def next_color
-        c = @colors[@index % @size]
+        c = colors[@index % @size]
         @index += 1
         c
       end
