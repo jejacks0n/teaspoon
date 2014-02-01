@@ -4,20 +4,21 @@ require 'teaspoon/environment'
 module Teaspoon
   class Console
 
-    def initialize(options = nil, files = [])
-      @options = options || {}
+    def initialize(options = {}, files = [])
+      @options = @default_options = options || {}
       @suites = {}
-      @files = []
+      @files = @default_files = files || []
 
-      Teaspoon::Environment.load(@options)
+      Teaspoon::Environment.load(options)
 
       start_server
       resolve(files)
     end
 
     def execute(options = {}, files = [])
-      @options = @options.merge(options) if options.present?
-      resolve(files)
+      @options = @default_options.merge(options || {})
+      @files = @default_files + (files || [])
+      resolve(@files)
 
       failure_count = 0
       suites.each do |suite|
@@ -41,9 +42,8 @@ module Teaspoon
     protected
 
     def resolve(files)
-      return if files.length == 0
       @suites = {}
-      @files = files
+      return if files.length == 0
       files.uniq.each do |path|
         if result = Teaspoon::Suite.resolve_spec_for(path)
           suite = @suites[result[:suite]] ||= []
