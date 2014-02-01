@@ -5,9 +5,9 @@ module Teaspoon
       def result(results)
         if failures.size == 0
           quote = QUOTES[Random.rand(QUOTES.size)]
-          STDOUT.print("\n#{quote.inspect} -- Oprah Winfrey or Patrick Swayze?\n")
+          log "\n#{quote.inspect} -- Oprah Winfrey or Patrick Swayze?"
         else
-          STDOUT.print("\nNo quote for you.\n")
+          log "\nNo quote for you."
         end
         super
       end

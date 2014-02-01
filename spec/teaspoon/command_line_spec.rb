@@ -17,12 +17,7 @@ describe Teaspoon::CommandLine do
 
     it "assigns @options" do
       instance = Teaspoon::CommandLine.new
-      expect(instance.instance_variable_get(:@options)).to eq({})
-    end
-
-    it "assigns @files" do
-      instance = Teaspoon::CommandLine.new
-      expect(instance.instance_variable_get(:@files)).to eq(["file1", "file2"])
+      expect(instance.instance_variable_get(:@options)).to eq(files: ["file1", "file2"])
     end
 
     it "aborts with a message on Teaspoon::EnvironmentNotFound" do
@@ -34,7 +29,7 @@ describe Teaspoon::CommandLine do
     end
 
     it "executes using Teaspoon::Console" do
-      Teaspoon::Console.should_receive(:new).with({}, ["file1", "file2"])
+      Teaspoon::Console.should_receive(:new).with(files: ["file1", "file2"])
       console.should_receive(:execute)
       Teaspoon::CommandLine.new
     end

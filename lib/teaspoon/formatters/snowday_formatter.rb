@@ -14,7 +14,6 @@ module Teaspoon
           log "☠", RED
         end
       end
-
     end
   end
 end

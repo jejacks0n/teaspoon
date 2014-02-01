@@ -6,14 +6,15 @@ module Teaspoon
 
     def initialize
       @options = {}
-      @files = opt_parser.parse!
+      @options[:files] = opt_parser.parse!
 
       begin
         require_console
-        abort if Teaspoon::Console.new(@options, @files).execute
+        results = Teaspoon::Console.new(@options).execute
+        abort if results
       rescue Teaspoon::EnvironmentNotFound => e
-        STDOUT.print "Unable to load Teaspoon environment in {#{Teaspoon::Environment.standard_environments.join(', ')}}.\n"
-        STDOUT.print "Consider using -r path/to/teaspoon_env\n"
+        STDOUT.print("Unable to load Teaspoon environment in {#{Teaspoon::Environment.standard_environments.join(', ')}}.\n")
+        STDOUT.print("Consider using -r path/to/teaspoon_env\n")
         abort
       end
     end
@@ -21,134 +22,95 @@ module Teaspoon
     def opt_parser
       OptionParser.new do |parser|
         parser.banner = "Usage: teaspoon [options] [files]\n\n"
+        @parser = parser
 
-        parser.on("-r", "--require FILE", "Require Teaspoon environment file.") do |file|
-          @options[:environment] = file
-        end
+        opt :environment,
+            "-r", "--require FILE",
+            "Require Teaspoon environment file."
 
-        #parser.on("-O", "--options PATH", "Specify the path to a custom options file.") do |path|
-        #  @options[:custom_options_file] = path
-        #end
+        #opt :custom_options_file,
+        #    "-O", "--options PATH",
+        #    "Specify the path to a custom options file."
 
-        parser.on("-d", "--driver DRIVER", "Specify driver:",
-                  "  phantomjs (default)",
-                  "  selenium") do |driver|
-          @options[:driver] = driver
-        end
+        opt :driver, "-d", "--driver DRIVER",
+            "Specify driver:",
+            "  phantomjs (default)",
+            "  selenium"
 
-        parser.on("-o", "--driver-cli-options OPTIONS", "Specify driver-specific options string to pass into the driver, e.g.",
-                        "  '--ssl-protocol=any --ssl-certificates-path=/path/to/certs' could be used for phantomjs",
-                        "  Currently driver CLI options are only supported for phantomjs. It will be ignored if using the selenium driver.") do |driver_cli_options|
-          @options[:driver_cli_options] = driver_cli_options
-        end
+        opt :driver_options, "--driver-options OPTIONS",
+            "Specify driver-specific options to pass into the driver.",
+            "  e.g. \"--ssl-protocol=any --ssl-certificates-path=/path/to/certs\".",
+            "  Driver options are only supported with phantomjs."
 
-        parser.on("--server SERVER", "Sets server to use with Rack.") do |server|
-          @options[:server] = server
-        end
+        opt :driver_timeout, "--driver-timeout SECONDS",
+            "Sets the timeout for the driver to wait before exiting."
 
-        parser.on("--server-timeout SECONDS", "Sets the timeout for the server to start.") do |seconds|
-          @options[:server_timeout] = seconds
-        end
+        opt :server, "--server SERVER",
+            "Sets server to use with Rack.",
+            "  e.g. webrick, thin"
 
-        parser.on("--server-port PORT", "Sets the server to use a specific port.") do |port|
-          @options[:server_port] = port
-        end
+        opt :server_port, "--server-port PORT",
+            "Sets the server to use a specific port."
 
-        parser.on("--[no-]fail-fast", "Abort after the first failing suite.") do |bool|
-          @options[:fail_fast] = bool
-        end
+        opt :server_timeout, "--server-timeout SECONDS",
+            "Sets the timeout that the server must start within."
 
-        parser.separator("\n  **** Filtering ****\n\n")
+        opt :fail_fast, "-F", "--[no-]fail-fast",
+            "Abort after the first failing suite."
 
-        parser.on("-s", "--suite SUITE", "Focus to a specific suite.") do |suite|
-          @options[:suite] = suite
-        end
+        separator("Filtering")
 
-        parser.on("-g", "--filter FILTER", "Filter tests matching a specific filter.") do |filter|
-          @options[:filter] = filter
-        end
+        opt :suite, "-s", "--suite SUITE",
+            "Focus to a specific suite."
 
-        parser.separator("\n  **** Output ****\n\n")
+        opt :filter, "-g", "--filter FILTER",
+            "Filter tests matching a specific filter."
 
-        parser.on("-f", "--format FORMATTERS", "Specify formatters (comma separated)",
-                  "  dot (default) - dots",
-                  "  tap_y - format used by tapout",
-                  "  swayze_or_oprah - random quote from Patrick Swayze or Oprah Winfrey") do |formatters|
-          @options[:formatters] = formatters
-        end
+        separator("Output")
 
-        parser.on("-e", "--export [OUTPUT_PATH]", "Download the test suite using wget.") do |output_path|
-          @options[:export] = output_path
-        end
+        opt :suppress_log, "-q", "--[no-]suppress-log",
+            "Suppress logs coming from console[log/debug/error]."
 
-        parser.on("-q", "--[no-]suppress-log", "Suppress logs coming from console[log/debug/error].") do |bool|
-          @options[:suppress_log] = bool
-        end
+        opt :color, "-c", "--[no-]color",
+            "Enable/Disable color output."
 
-        parser.on("-c", "--[no-]colour", "Enable/Disable color output.") do |bool|
-          @options[:color] = bool
-        end
+        opt :formatters, "-f", "--format FORMATTERS",
+            "Specify formatters (comma separated)",
+            "  dot (default) - dots",
+            "  clean - like dots but doesn't log re-run commands",
+            "  junit - junit compatible formatter",
+            "  pride - 256 color rainbows where supported",
+            "  snowday - makes you feel warm inside",
+            "  swayze_or_oprah - random quote from Patrick Swayze or Oprah Winfrey",
+            "  tap - test anything protocol formatter",
+            "  tap_y - tap_yaml, format used by tapout",
+            "  teamcity - teamcity compatible formatter"
 
-        parser.separator("\n  **** Coverage ****\n\n")
+        opt :export, "-e", "--export [OUTPUT_PATH]",
+            "Exports the test suite as the full HTML (requires wget)."
 
-        parser.on("-C", "--coverage", "Generate coverage report (requires Istanbul).") do |bool|
-          @options[:coverage] = bool
-        end
+        opt :coverage_config, "-C", "--coverage CONFIG_NAME",
+            "Generate coverage reports using a pre-defined coverage configuration."
 
-        parser.on("-R", "--coverage-reports FORMATS", "Specify which coverage reports to generate (comma separated)",
-                  "  text-summary (default) - compact text summary in results",
-                  "  text - text table with coverage for all files in results",
-                  "  html - HTML files with annotated source code",
-                  "  lcov - html + lcov files",
-                  "  lcovonly - an lcov.info file",
-                  "  cobertura - cobertura-coverage.xml used by Hudson") do |reports|
-          @options[:coverage] = true
-          @options[:coverage_reports] = reports
-        end
+        separator("Utility")
 
-        parser.on("-O", "--coverage-output-dir DIR", "Specify directory where coverage reports should be generated.") do |dir|
-          @options[:coverage_output_dir] = dir
-        end
-
-        parser.separator("\n  **** Coverage Thresholds ****\n\n")
-
-        parser.on("-S", "--statements-coverage-threshold THRESHOLD", "Specify the statements coverage threshold.",
-                  " If this is a positive number, it is the minimum percentage required for coverage to not fail.",
-                  " If it is a negative number, it is the maximum number of uncovered statements allowed to not fail.") do |threshold|
-          @options[:statements_coverage_threshold] = threshold
-        end
-
-        parser.on("-F", "--functions-coverage-threshold THRESHOLD", "Specify the functions coverage threshold.",
-                  " If this is a positive number, it is the minimum percentage required for coverage to not fail.",
-                  " If it is a negative number, it is the maximum number of uncovered functions allowed to not fail.") do |threshold|
-          @options[:functions_coverage_threshold] = threshold
-        end
-
-        parser.on("-B", "--branches-coverage-threshold THRESHOLD", "Specify the branches coverage threshold.",
-                  " If this is a positive number, it is the minimum percentage required for coverage to not fail.",
-                  " If it is a negative number, it is the maximum number of uncovered branches allowed to not fail.") do |threshold|
-          @options[:branches_coverage_threshold] = threshold
-        end
-
-        parser.on("-L", "--lines-coverage-threshold THRESHOLD", "Specify the lines coverage threshold.",
-                  " If this is a positive number, it is the minimum percentage required for coverage to not fail.",
-                  " If it is a negative number, it is the maximum number of uncovered lines allowed to not fail.") do |threshold|
-          @options[:lines_coverage_threshold] = threshold
-        end
-
-        parser.separator("\n  **** Utility ****\n\n")
-
-        parser.on("-v", "--version", "Display the version.") do
-          puts Teaspoon::VERSION
-          exit
-        end
-
-        parser.on("-h", "--help", "You're looking at it.") do
-          puts parser
-          exit
-        end
+        parser.on "-v", "--version", "Display the version.", proc{ puts Teaspoon::VERSION; exit }
+        parser.on "-h", "--help", "You're looking at it.", proc { puts parser; exit }
+>>>>>>> major adjustments to configuration, and how options are passes into drivers, etc.
       end
     end
+
+    protected
+
+    def separator(message)
+      @parser.separator("\n  **** #{message} ****\n\n")
+    end
+
+    def opt(config, *args)
+      @parser.on(*args, proc{ |value| @options[config] = value})
+    end
+
+    private
 
     def require_console
       require "teaspoon/console"

@@ -37,11 +37,6 @@ module Teaspoon
       def failing_spec
         log "not ok #{@total} - #{@result.description}\n  # FAIL #{@result.message}"
       end
-
-      def log(str)
-        STDOUT.print("#{str}\n")
-      end
-
     end
   end
 end

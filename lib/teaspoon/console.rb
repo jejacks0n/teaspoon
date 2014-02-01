@@ -5,26 +5,24 @@ require 'teaspoon/export'
 module Teaspoon
   class Console
 
-    def initialize(options = nil, files = [])
-      @options = options || {}
+    def initialize(options = {})
+      @options = options
       @suites = {}
-      @files = []
-
       Teaspoon::Environment.load(@options)
 
       start_server
-      resolve(files)
     end
 
-    def execute(options = {}, files = [])
-      @options = @options.merge(options) if options.present?
-      resolve(files)
+    def execute(options = {})
+      @options.merge!(options)
+      @suites = {}
+      resolve(@options[:files])
 
       failure_count = 0
       suites.each do |suite|
         export(suite) if @options.include?(:export)
-        STDOUT.print "Teaspoon running #{suite} suite at #{url(suite)}\n" unless Teaspoon.configuration.suppress_log
-        failure_count += run_specs(suite, @options[:driver_cli_options] || Teaspoon.configuration.driver_cli_options)
+        STDOUT.print("Teaspoon running #{suite} suite at #{url(suite)}\n") unless Teaspoon.configuration.suppress_log
+        failure_count += run_specs(suite)
       end
       failure_count > 0
     rescue Teaspoon::Failure
@@ -33,11 +31,11 @@ module Teaspoon
       true
     end
 
-    def run_specs(suite, driver_cli_options = nil)
+    def run_specs(suite)
       url = url(suite)
       url += url.include?("?") ? "&" : "?"
       url += "reporter=Console"
-      driver.run_specs(suite, url, driver_cli_options)
+      driver.run_specs(suite, url)
     end
 
     def export(suite)
@@ -50,10 +48,8 @@ module Teaspoon
 
     protected
 
-    def resolve(files)
+    def resolve(files = [])
       return if files.length == 0
-      @suites = {}
-      @files = files
       files.uniq.each do |path|
         if result = Teaspoon::Suite.resolve_spec_for(path)
           suite = @suites[result[:suite]] ||= []
@@ -70,17 +66,19 @@ module Teaspoon
     def suites
       return [@options[:suite]] if @options[:suite].present?
       return @suites.keys if @suites.present?
-      Teaspoon.configuration.suites.keys
+      Teaspoon.configuration.suite_configs.keys
     end
 
     def driver
-      @driver ||= Teaspoon::Drivers.const_get("#{Teaspoon.configuration.driver.to_s.camelize}Driver").new
+      return @driver if @driver
+      klass = "#{Teaspoon.configuration.driver.to_s.camelize}Driver"
+      @driver = Teaspoon::Drivers.const_get(klass).new(Teaspoon.configuration.driver_options)
     end
 
     def filter(suite)
       parts = []
       parts << "grep=#{URI::encode(@options[:filter])}" if @options[:filter].present?
-      (@suites[suite] || @files).flatten.each { |file| parts << "file[]=#{URI::encode(file)}" }
+      (@suites[suite] || @options[:files] || []).flatten.each { |file| parts << "file[]=#{URI::encode(file)}" }
       "#{parts.join('&')}" if parts.present?
     end
 

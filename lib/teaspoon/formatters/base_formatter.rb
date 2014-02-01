@@ -38,11 +38,11 @@ module Teaspoon
       def result(results)
         log_coverage(results["coverage"])
         return if failures.size == 0
-        STDOUT.print("\n")
+        log('')
         raise Teaspoon::Failure if Teaspoon.configuration.fail_fast
       end
 
-      # Exceptions come from startup errors in the server
+      # exception came from startup errors in the server
       def exception(exception = {})
         raise Teaspoon::RunnerException
       end
@@ -52,6 +52,10 @@ module Teaspoon
       end
 
       private
+
+      def log(str)
+        STDOUT.print("#{str}\n")
+      end
 
       def log_coverage(data)
         return if data.blank?

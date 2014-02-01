@@ -4,7 +4,7 @@ module Teaspoon
     attr_accessor :config, :name
 
     def self.all
-      Teaspoon.configuration.suites.keys.map { |suite| Teaspoon::Suite.new(suite: suite) }
+      Teaspoon.configuration.suite_configs.keys.map { |suite| Teaspoon::Suite.new(suite: suite) }
     end
 
     def self.resolve_spec_for(file)
@@ -58,7 +58,7 @@ module Teaspoon
     end
 
     def suites
-      {all: Teaspoon.configuration.suites.keys, active: name}
+      {all: Teaspoon.configuration.suite_configs.keys, active: name}
     end
 
     def spec_files
@@ -66,19 +66,19 @@ module Teaspoon
     end
 
     def link(params = {})
-      query = "/?#{params.to_query}" if params.present?
+      query = "?#{params.to_query}" if params.present?
       "#{Teaspoon.configuration.context}#{Teaspoon.configuration.mount_at}/#{name}#{query}"
     end
 
     def instrument_file?(file)
       return false if include_spec?(file)
-      for ignored in @config.no_coverage
-        if ignored.is_a?(String)
-          return false if File.basename(file) == ignored
-        elsif ignored.is_a?(Regexp)
-          return false if file =~ ignored
-        end
-      end
+      #for ignored in @config.no_coverage
+      #  if ignored.is_a?(String)
+      #    return false if File.basename(file) == ignored
+      #  elsif ignored.is_a?(Regexp)
+      #    return false if file =~ ignored
+      #  end
+      #end
       true
     end
 
@@ -112,7 +112,7 @@ module Teaspoon
     end
 
     def suite_configuration
-      config = Teaspoon.configuration.suites[name]
+      config = Teaspoon.configuration.suite_configs[name]
       raise Teaspoon::UnknownSuite unless config.present?
       Teaspoon::Configuration::Suite.new(&config)
     end
@@ -129,6 +129,7 @@ module Teaspoon
         path = path.to_s
         filename = filename.gsub(%r(^#{Regexp.escape(path)}[\/|\\]), "")
       end
+
       raise Teaspoon::AssetNotServable, "#{filename} is not within an asset path" if filename == original
       filename.gsub('.erb', '').gsub(/(\.js\.coffee|\.coffee)$/, ".js")
       @config.normalize_asset_path(filename)

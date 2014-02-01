@@ -1,3 +1,4 @@
+# require the controller, because it fails to load under some circumstances (unknown why)
 require File.expand_path(__FILE__, '../../../app/controllers/teaspoon/spec_controller')
 
 module Teaspoon
@@ -8,9 +9,6 @@ module Teaspoon
     initializer :assets, :group => :all do |app|
       # default the root if it's not set
       Teaspoon.configuration.root ||= app.root
-
-      # set proper root url
-      Teaspoon.configuration.context ||= app.config.relative_url_root
 
       # append the asset paths from the configuration
       Teaspoon.configuration.asset_paths.each do |path|

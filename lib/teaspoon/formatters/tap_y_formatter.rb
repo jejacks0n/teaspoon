@@ -45,7 +45,7 @@ module Teaspoon
         @errors << error
       end
 
-      private
+      protected
 
       def passing_spec
         log "type"   => "test",
@@ -58,7 +58,7 @@ module Teaspoon
             "status" => "pending",
             "label"  => @result.label,
             "exception" => {
-              "message"   => @result.message
+              "message" => @result.message
             }
       end
 
@@ -77,10 +77,11 @@ module Teaspoon
             }
       end
 
+      private
+
       def log(hash)
         STDOUT.print(hash.to_yaml)
       end
-
     end
   end
 end

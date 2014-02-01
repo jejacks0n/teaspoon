@@ -4,18 +4,12 @@ module Teaspoon
   class Instrumentation
     extend Teaspoon::Utility
 
-    def self.executable
-      @executable ||= istanbul()
-    end
-
     def self.add?(response, env)
-      (
-        executable.present? &&                                          # we have an executable
-        env["QUERY_STRING"].to_s =~ /instrument=(1|true)/ &&            # the instrument param was provided
-        response[0] == 200 &&                                           # the status is 200
-        response[1]["Content-Type"].to_s == "application/javascript" && # the format is something that we care about
-        response[2].respond_to?(:source)                                # it looks like an asset
-      )
+      executable.present? &&                                          # we have an executable
+      env["QUERY_STRING"].to_s =~ /instrument=(1|true)/ &&            # the instrument param was provided
+      response[0] == 200 &&                                           # the status is 200
+      response[1]["Content-Type"].to_s == "application/javascript" && # the format is something that we care about
+      response[2].respond_to?(:source)                                # it looks like an asset
     end
 
     def self.add_to(response, env)
@@ -38,6 +32,10 @@ module Teaspoon
     end
 
     private
+
+    def self.executable
+      @executable ||= which("istanbul")
+    end
 
     def process_and_instrument
       file = @asset.pathname.to_s

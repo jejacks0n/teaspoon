@@ -13,7 +13,7 @@ class Teaspoon::SpecController < ActionController::Base
 
   def runner
     @javascript_options = {}
-    @javascript_options[:instrument] = Teaspoon.configuration.coverage || params[:coverage] == "true"
+    #@javascript_options[:instrument] = Teaspoon.configuration.coverage || params[:coverage] == "true"
     @suite = Teaspoon::Suite.new(params)
   end
 

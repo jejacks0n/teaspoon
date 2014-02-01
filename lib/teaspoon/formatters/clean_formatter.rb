@@ -7,7 +7,6 @@ module Teaspoon
       def log_failed_examples
         log "\n" if failures.size > 0
       end
-
     end
   end
 end

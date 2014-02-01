@@ -5,10 +5,13 @@ module Teaspoon
     class JunitFormatter < BaseFormatter
 
       def runner(result)
-        @count = result.total;
+        @count = result.total
 
-        log "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-        log "<testsuites name=\"jasmine\"><testsuite name=\"#{result.suite}\" tests=\"#{@count}\">"
+        log <<-XML.strip_heredoc.gsub(/\n$/, '')
+          <?xml version="1.0" encoding="UTF-8"?>
+          <testsuites name="Teaspoon">
+            <testsuite name="#{@suite_name}" tests="#{@count}">
+        XML
       end
 
       def spec(result)
@@ -24,7 +27,10 @@ module Teaspoon
       end
 
       def result(result)
-        log "</testsuite></testsuites>"
+        log <<-XML.strip_heredoc
+            </testsuite>
+          </testsuites>
+        XML
       end
 
       def suppress_logs?
@@ -34,26 +40,20 @@ module Teaspoon
       private
 
       def passing_spec
-        log %Q[<testcase classname="#{@result.suite}" name="#{@result.label}"></testcase>\n]
+        log %Q{    <testcase classname="#{@result.suite}" name="#{@result.label}"></testcase>}
       end
 
       def pending_spec
-        log %Q[<testcase classname="#{@result.suite}" name="#{@result.label}"><skipped /></testcase>\n]
+        log %Q{    <testcase classname="#{@result.suite}" name="#{@result.label}"><skipped /></testcase>}
       end
 
       def failing_spec
-        str = <<EOL;
-<testcase classname="#{@result.suite}" name="#{@result.label}">
-<failure type="AssertionFailed">#{@result.message}</failure>
-</testcase>\n
-EOL
-        log str
+        log <<-XML.strip_heredoc.gsub(/\n$/, '')
+              <testcase classname="#{@result.suite}" name="#{@result.label}">
+                <failure type="AssertionFailed">#{@result.message}</failure>
+              </testcase>
+        XML
       end
-
-      def log(str)
-        STDOUT.print("#{str}\n")
-      end
-
     end
   end
 end

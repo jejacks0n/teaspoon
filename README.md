@@ -8,19 +8,13 @@
 
 Teaspoon is a Javascript test runner built on top of Rails. It can run tests in the browser, or headlessly using PhantomJS or with Selenium WebDriver.
 
-Its objective is to be the simplest, while also being the most complete Javascript testing solution for Rails. It takes full advantage of the asset pipeline and ships with support for Jasmine, Mocha, QUnit, and (experimentally) Angular.
+Its objective is to be the simplest, but also the most complete Javascript testing solution for Rails. It takes full advantage of the asset pipeline and ships with support for Jasmine, Jasmine2, Mocha, QUnit, and (experimentally) Angular.
 
 Ok, another Javascript test runner, right? Really? Yeah, that's tough, but we're pretty confident Teaspoon is one of the nicest and most full featured you'll find at the moment. And if you disagree, let us know and we'll probably fix whatever it is that you didn't like.
 
 Feedback, ideas and pull requests are always welcome, or you can hit us up on Twitter [@modeset_](https://twitter.com/modeset_).
 
 If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), check out the [guard-teaspoon](https://github.com/modeset/guard-teaspoon) project.
-
-### Developer Notice:
-
-Teabag has been renamed to Teaspoon. A deprecation notice was provided with the last release of the gem under the teabag name, and versions will continue to move forward from 0.7.3.
-
-Updating requires that you rename your `teabag.rb` initializer to `teaspoon.rb`, and `teabag_env.rb` to `teaspoon_env.rb`. Replacing any references to teabag to teaspoon within them. Or if you've not made any changes just clean these files up and run the install generator again.
 
 
 ## Screenshots
@@ -51,9 +45,35 @@ Updating requires that you rename your `teabag.rb` initializer to `teaspoon.rb`,
 
 ## Installation
 
-Add it to your Gemfile. In most cases you'll want to restrict it to the `:development, :test` or `:asset` groups.
+Add it to your Gemfile. In most cases you'll want to restrict it to the `:development, :test` groups.
 
-You should [install phantomjs](http://phantomjs.org/download.html).  If phantomjs is found it will be used, otherwise you can use the gem as a fallback -- which might not be optimal.
+```ruby
+group :development, :test do
+  gem "teaspoon"
+end
+```
+
+Run the install generator to get the initializer and a basic spec_helper.
+
+```
+rails generate teaspoon:install
+```
+
+You can tell the generator which framework you want to use, if you want coffeescript spec helper files, etc.
+
+```
+rails generate teaspoon:install --framework=mocha --coffee
+```
+
+To run Teaspoon headlessly you'll need Selenium Webdriver or PhantomJS. We recommend PhantomJS, and it can be installed with homebrew, npm or [downloaded manually](http://phantomjs.org/download.html).
+
+```
+brew install phantomjs
+- OR -
+npm install -g phantomjs
+```
+
+If phantomjs is found it will be used, otherwise you can use the gem as a fallback -- which might not be optimal.
 
 ```ruby
 group :development, :test do
@@ -62,17 +82,6 @@ group :development, :test do
 end
 ```
 
-Optionally run the install generator to get the initializer and a basic spec helper.
-
-```
-rails generate teaspoon:install
-```
-
-You can tell the generator which framework you want to use, if you want coffeescript spec helper files, and if you want the env file created (used by the command line interface).
-
-```
-rails generate teaspoon:install --framework=mocha --coffee
-```
 
 ## Usage
 
@@ -184,6 +193,7 @@ describe "My great feature", ->
 If you're using a specific framework and you want to take advantage of the things that framework provides you're free to do so. This is provided as the standard as the Teaspoon reporters understand the techniques above and have specs for them.
 
 ### Using Require.js
+
 If you are using require.js to get your files you can set a configuration option for your suite of "use_require".
 ```ruby
 Teaspoon.setup do |config|

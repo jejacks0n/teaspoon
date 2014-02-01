@@ -11,10 +11,14 @@ module Teaspoon
     class PhantomjsDriver < BaseDriver
       include Teaspoon::Utility
 
-      def run_specs(suite, url, cli_options = nil)
+      def initialize(options = "")
+        @options = options
+      end
+
+      def run_specs(suite, url)
         runner = Teaspoon::Runner.new(suite)
 
-        run(*cli_arguments(url, cli_options)) do |line|
+        run(*cli_arguments(url)) do |line|
           runner.process(line) if line && line.strip != ""
         end
 
@@ -29,8 +33,8 @@ module Teaspoon
         }
       end
 
-      def cli_arguments(url, cli_options)
-        [cli_options.to_s.split(" "), script, url].flatten.compact
+      def cli_arguments(url)
+        [@options.to_s.split(" "), script, url].flatten.compact
       end
 
       def executable

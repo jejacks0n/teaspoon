@@ -10,9 +10,9 @@ module Teaspoon
       require "teaspoon"
       require "teaspoon/suite"
       require "teaspoon/server"
-      require "teaspoon/exception_handling"
 
-      configure_from_options(options)
+      Teaspoon.configuration.override_from_options(options)
+      Teaspoon::ExceptionHandling.add_rails_handling
     end
 
     def self.require_environment(override = nil)
@@ -30,12 +30,6 @@ module Teaspoon
       ["spec/teaspoon_env.rb", "test/teaspoon_env.rb", "teaspoon_env.rb"]
     end
 
-    def self.configure_from_options(options)
-      options.each do |key, value|
-        Teaspoon.configuration.send("#{key.downcase}=", value) if Teaspoon.configuration.respond_to?("#{key.downcase}=")
-      end
-    end
-
     def self.require_env(file)
       require(file)
     end
@@ -43,6 +37,5 @@ module Teaspoon
     def self.rails_loaded?
       defined?(Rails)
     end
-
   end
 end

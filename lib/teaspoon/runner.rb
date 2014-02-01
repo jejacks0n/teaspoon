@@ -53,7 +53,7 @@ module Teaspoon
     end
 
     def log(msg)
-      STDOUT.print msg
+      STDOUT.print(msg)
     end
   end
 end

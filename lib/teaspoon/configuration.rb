@@ -1,63 +1,76 @@
 require "singleton"
 
 module Teaspoon
+
+  autoload :Formatters, "teaspoon/formatters/base_formatter"
+  autoload :Drivers,    "teaspoon/drivers/base_driver"
+
   class Configuration
     include Singleton
 
-    cattr_accessor :mount_at, :context, :root, :asset_paths, :fixture_path, :suites, :driver_cli_options
-    @@mount_at           = "/teaspoon"
-    @@context            = nil # will default to Rails #relative_url_root
-    @@root               = nil # will default to Rails.root
-    @@asset_paths        = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
-    @@fixture_path       = "spec/javascripts/fixtures"
-    @@suites             = {"default" => proc{}}
-    @@driver_cli_options = nil
+    # CONTRIBUTORS:
+    # If you add a configuration option you should do the following before it will be considered for merging.
+    # - think about if it should be a suite, coverage, or global configuration
+    # - write specs for it, and add it to existing specs in spec/teaspoon/configuration_spec.rb
+    # - add it to the readme so it's documented
+    # - add it to the command_line.rb if appropriate (_only_ if it's appropriate)
+    # - add it to ENV_OVERRIDES if it can be overridden from ENV
+
+    cattr_accessor :mount_at, :context, :root, :asset_paths, :fixture_path
+    @@mount_at       = "/teaspoon"
+    @@root           = nil # will default to Rails.root
+    @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
+    @@fixture_path   = "spec/javascripts/fixtures"
 
     # console runner specific
-    cattr_accessor :driver, :server_timeout, :server_port, :fail_fast, :formatters, :suppress_log, :color, :coverage, :coverage_reports, :coverage_output_dir, :server, :statements_coverage_threshold, :functions_coverage_threshold, :branches_coverage_threshold, :lines_coverage_threshold
-    @@driver                        = "phantomjs"
-    @@server                        = nil
-    @@server_port                   = nil
-    @@server_timeout                = 20
-    @@fail_fast                     = true
-    @@formatters                    = "dot"
-    @@suppress_log                  = false
-    @@color                         = true
-    @@coverage                      = false
-    @@coverage_reports              = nil
-    @@coverage_output_dir           = "coverage"
-    @@statements_coverage_threshold = nil
-    @@functions_coverage_threshold  = nil
-    @@branches_coverage_threshold   = nil
-    @@lines_coverage_threshold      = nil
+    cattr_accessor :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :formatters, :fail_fast, :suppress_log, :color
+    @@driver         = "phantomjs"
+    @@driver_options = nil
+    @@driver_timeout = 180
+    @@server         = nil
+    @@server_port    = nil
+    @@server_timeout = 20
+    @@formatters     = "dot"
+    @@fail_fast      = true
+    @@suppress_log   = false
+    @@color          = true
+
+    # options that can be specified in the ENV
+    ENV_OVERRIDES = {
+      boolean: %w(FAIL_FAST SUPPRESS_LOG COLOR),
+      integer: %w(DRIVER_TIMEOUT SERVER_TIMEOUT),
+      string: %w(DRIVER DRIVER_OPTIONS SERVER SERVER_PORT FORMATTERS)
+    }
+
+    # suite configurations
+
+    cattr_accessor :suite_configs
+    @@suite_configs = {"default" => proc{}}
+
+    def self.suite(name = :default, &block)
+      @@suite_configs[name.to_s] = block
+    end
 
     class Suite
       attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :boot_partial, :js_config, :hooks, :normalize_asset_path
 
       def initialize
-        @matcher         = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
-        @helper          = "spec_helper"
-        @javascripts     = ["teaspoon-jasmine"]
-        @stylesheets     = ["teaspoon"]
-        @no_coverage     = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
-        @boot_partial    = nil
-        @js_config       = {}
-        @normalize_asset_path = lambda do |filename|
-          filename.gsub('.erb', '').gsub(/(\.js\.coffee|\.coffee)$/, ".js")
-        end
+        @matcher      = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
+        @helper       = "spec_helper"
+        @javascripts  = ["teaspoon-jasmine"]
+        @stylesheets  = ["teaspoon"]
 
-        @hooks = Hash.new {|h, k| h[k] = [] }
+        # todo: cleanup
+        @boot_partial = nil
+        @js_config    = {}
+        @hooks        = Hash.new {|h, k| h[k] = [] }
 
-        default = Teaspoon.configuration.suites["default"]
+        default = Teaspoon.configuration.suite_configs["default"]
         self.instance_eval(&default) if default
         yield self if block_given?
       end
 
-      def use_require=(val) # todo: deprecated in version 0.7.4
-        puts "Deprecation Notice: use_require will be removed, set config.boot_partial to 'require_js' instead."
-        self.boot_partial = 'require_js' if val
-      end
-
+      # todo: document this.
       def hook(group = :default, &block)
         @hooks[group.to_s] << block
       end
@@ -67,18 +80,37 @@ module Teaspoon
       end
     end
 
+    # coverage configurations
+
+    cattr_accessor :coverage_configs
+    @@coverage_configs = {"default" => proc{}}
+
+    def self.coverage(name = :default, &block)
+      @@coverage_configs[name.to_s] = block
+    end
+
+    class Coverage
+      attr_accessor :reports, :ignored, :output_path, :statement_threshold, :function_threshold, :branch_threshold, :line_threshold
+
+      def initialize
+        @reports             = ["text-summary"]
+        @ignored             = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
+        @output_path         = "coverage"
+        @statement_threshold = nil
+        @function_threshold  = nil
+        @branch_threshold    = nil
+        @line_threshold      = nil
+
+        default = Teaspoon.configuration.coverage_configs["default"]
+        self.instance_eval(&default) if default
+        yield self if block_given?
+      end
+    end
+
+    # custom getters / setters
+
     def self.root=(path)
       @@root = Pathname.new(path.to_s) if path.present?
-    end
-
-    def self.suite(name = :default, &block)
-      @@suites[name.to_s] = block
-    end
-
-    def self.coverage_reports
-      return ["text-summary"] if @@coverage_reports.blank?
-      return @@coverage_reports if @@coverage_reports.is_a?(Array)
-      @@coverage_reports.to_s.split(/,\s?/)
     end
 
     def self.formatters
@@ -86,29 +118,30 @@ module Teaspoon
       return @@formatters if @@formatters.is_a?(Array)
       @@formatters.to_s.split(/,\s?/)
     end
-  end
 
-  autoload :Formatters, "teaspoon/formatters/base_formatter"
-  autoload :Drivers,    "teaspoon/drivers/base_driver"
+    # override from env or options
+
+    def self.override_from_options(options)
+      options.each { |k, v| override(k, v) }
+    end
+
+    def self.override_from_env(env)
+      ENV_OVERRIDES[:boolean].each { |o| override(o, env[o] == "true") if env[o].present? }
+      ENV_OVERRIDES[:integer].each { |o| override(o, env[o].to_i) if env[o].present? }
+      ENV_OVERRIDES[:string].each  { |o| override(o, env[o]) if env[o].present? }
+    end
+
+    def self.override(config, value)
+      setter = "#{config.to_s.downcase}="
+      send(setter, value) if respond_to?(setter)
+    end
+  end
 
   mattr_accessor :configuration
   @@configuration = Configuration
 
   def self.setup
     yield @@configuration
-    override_from_env
-  end
-
-  private
-
-  def self.override_from_env
-    %w(FAIL_FAST SUPPRESS_LOG COLOR COVERAGE).each do |directive|
-      next unless ENV[directive].present?
-      @@configuration.send("#{directive.downcase}=", ENV[directive] == "true")
-    end
-    %w(DRIVER DRIVER_CLI_OPTIONS SERVER SERVER_TIMEOUT SERVER_PORT FORMATTERS COVERAGE_REPORTS COVERAGE_OUTPUT_DIR).each do |directive|
-      next unless ENV[directive].present?
-      @@configuration.send("#{directive.downcase}=", ENV[directive])
-    end
+    @@configuration.override_from_env(ENV)
   end
 end

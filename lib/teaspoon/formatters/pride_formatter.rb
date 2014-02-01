@@ -38,11 +38,9 @@ module Teaspoon
         c
       end
 
-
       def log_pride(str, color_code)
         STDOUT.print("\e[38;5;#{color_code}m#{str}\e[0m")
       end
-
     end
   end
 end

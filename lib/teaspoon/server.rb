@@ -17,7 +17,7 @@ module Teaspoon
     end
 
     def start
-      STDOUT.print "Starting the Teaspoon server...\n" unless Teaspoon.configuration.suppress_log
+      STDOUT.print("Starting the Teaspoon server...\n") unless Teaspoon.configuration.suppress_log
       @thread = Thread.new do
         server = Rack::Server.new(rack_options)
         server.start

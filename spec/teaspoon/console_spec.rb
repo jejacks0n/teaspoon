@@ -4,12 +4,12 @@ require "teaspoon/console"
 describe Teaspoon::Console do
 
   let(:server) { double(start: nil, url: "http://url.com") }
-  subject {
+  subject do
     Teaspoon::Console.any_instance.stub(:start_server)
     instance = Teaspoon::Console.new
     instance.instance_variable_set(:@server, server)
     instance
-  }
+  end
 
   before do
     subject.instance_variable_set(:@server, server)
@@ -37,12 +37,6 @@ describe Teaspoon::Console do
       Teaspoon::Console.new()
     end
 
-    it "resolves the files" do
-      files = ["file1"]
-      Teaspoon::Console.any_instance.should_receive(:resolve).with(files)
-      Teaspoon::Console.new(nil, files)
-    end
-
   end
 
   describe "#execute" do
@@ -61,7 +55,7 @@ describe Teaspoon::Console do
     it "resolves the files" do
       files = ["file2"]
       Teaspoon::Suite.should_receive(:resolve_spec_for).with("file2").and_return(suite: "foo", path: "file2")
-      subject.execute(nil, files)
+      subject.execute(files: files)
       expect(subject.instance_variable_get(:@files)).to eq(files)
 
       suites = subject.send(:suites)
@@ -73,7 +67,7 @@ describe Teaspoon::Console do
       directory = [ "test/javascripts" ]
       resolve_spec_for_output = ['test/javascripts/foo.coffee', 'test/javascripts/bar.coffee']
       Teaspoon::Suite.should_receive(:resolve_spec_for).with("test/javascripts").and_return(suite: "foo", path: resolve_spec_for_output)
-      subject.execute(nil, directory)
+      subject.execute(files: directory)
       expect(subject.instance_variable_get(:@files)).to eq(directory)
 
       suites = subject.send(:suites)
