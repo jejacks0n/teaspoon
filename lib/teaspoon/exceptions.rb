@@ -1,9 +1,12 @@
+# todo: test
 module Teaspoon
-  class Failure < Exception; end
+  class EnvironmentNotFound < Exception; end
+  class UnknownDriver < Exception; end
+  class UnknownFormatter < Exception; end
   class UnknownSuite < Exception; end
   class RunnerException < Exception; end
   class AssetNotServable < Exception; end
-  class EnvironmentNotFound < Exception; end
+  class Failure < Exception; end
 
   module ExceptionHandling
 

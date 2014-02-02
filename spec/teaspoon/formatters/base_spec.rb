@@ -144,11 +144,12 @@ describe Teaspoon::Formatters::Base do
 
   describe "#exception" do
 
-    let(:result) { double }
+    let(:result) { double(message: "_message_") }
 
     it "calls #log_exception when appropriate and raises a Teaspoon::RunnerException" do
       subject.should_receive(:log_exception).with(result)
       expect { subject.exception(result) }.to raise_error Teaspoon::RunnerException
+
       subject.should_not_receive(:log_exception)
       expect { subject.exception(result, false) }.to raise_error Teaspoon::RunnerException
     end

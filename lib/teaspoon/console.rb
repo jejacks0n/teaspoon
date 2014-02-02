@@ -10,14 +10,22 @@ module Teaspoon
       @suites = {}
       Teaspoon::Environment.load(@options)
 
-      start_server
+      @server = start_server
     end
 
     def failures?
-      execute
+      !execute
     end
 
     def execute(options = {})
+      execute_without_handling(options)
+    rescue Teaspoon::UnknownDriver, Teaspoon::UnknownFormatter, Teaspoon::RunnerException => e
+      abort(e.message)
+    rescue Teaspoon::Failure
+      false
+    end
+
+    def execute_without_handling(options = {})
       @options.merge!(options)
       @suites = {}
       resolve(@options[:files])
@@ -25,14 +33,10 @@ module Teaspoon
       failure_count = 0
       suites.each do |suite|
         export(suite) if @options.include?(:export)
-        STDOUT.print("Teaspoon running #{suite} suite at #{url(suite)}\n") unless Teaspoon.configuration.suppress_log
+        log("Teaspoon running #{suite} suite at #{url(suite)}")
         failure_count += run_specs(suite)
       end
-      failure_count > 0
-    rescue Teaspoon::Failure
-      true
-    rescue Teaspoon::RunnerException
-      true
+      failure_count == 0
     end
 
     def run_specs(suite)
@@ -53,7 +57,7 @@ module Teaspoon
     protected
 
     def resolve(files = [])
-      return if files.length == 0
+      return if files.blank?
       files.uniq.each do |path|
         if result = Teaspoon::Suite.resolve_spec_for(path)
           suite = @suites[result[:suite]] ||= []
@@ -63,8 +67,8 @@ module Teaspoon
     end
 
     def start_server
-      @server = Teaspoon::Server.new
-      @server.start
+      server = Teaspoon::Server.new
+      server.start
     end
 
     def suites
@@ -77,6 +81,8 @@ module Teaspoon
       return @driver if @driver
       klass = "#{Teaspoon.configuration.driver.to_s.camelize}Driver"
       @driver = Teaspoon::Drivers.const_get(klass).new(Teaspoon.configuration.driver_options)
+    rescue NameError
+      raise Teaspoon::UnknownDriver, "Unknown driver: \"#{Teaspoon.configuration.driver}\"\n"
     end
 
     def filter(suite)
@@ -89,6 +95,15 @@ module Teaspoon
     def url(suite)
       base_url = ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite].join('/')
       [base_url, filter(suite)].compact.join('?')
+    end
+
+    def log(str, force = false)
+      STDOUT.print("#{str}\n") if force || !Teaspoon.configuration.suppress_log
+    end
+
+    def abort(message = nil)
+      log(message, true) if message
+      exit(1)
     end
   end
 end

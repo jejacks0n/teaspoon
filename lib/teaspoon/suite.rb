@@ -113,7 +113,7 @@ module Teaspoon
 
     def suite_configuration
       config = Teaspoon.configuration.suite_configs[name]
-      raise Teaspoon::UnknownSuite unless config.present?
+      raise Teaspoon::UnknownSuite, "Unknown suite \"name\"" unless config.present?
       Teaspoon::Configuration::Suite.new(&config)
     end
 

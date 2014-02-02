@@ -74,7 +74,7 @@ module Teaspoon
       # exception came from startup errors in the server
       def exception(result = {}, log = true)
         log_exception(result) if log
-        raise Teaspoon::RunnerException, result.inspect # todo: determine what this looks like
+        raise Teaspoon::RunnerException, result.message
       end
 
       # consoles can come from console.log/debug/error and can be sent to STDOUT

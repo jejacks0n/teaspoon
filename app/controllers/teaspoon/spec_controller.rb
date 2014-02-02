@@ -3,10 +3,6 @@ class Teaspoon::SpecController < ActionController::Base
 
   layout false
 
-  unless Rails.application.config.assets.debug
-    rescue_from Exception, with: :javascript_exception
-  end
-
   def suites
     @suites = Teaspoon::Suite.all
   end
@@ -27,12 +23,5 @@ class Teaspoon::SpecController < ActionController::Base
   def fixtures
     prepend_view_path Teaspoon.configuration.root.join(Teaspoon.configuration.fixture_path)
     render "/#{params[:filename]}"
-  end
-
-  private
-
-  def javascript_exception(exception)
-    err = "#{exception.class.name}: #{exception.message}"
-    render text: "<script>throw Error(#{err.inspect})</script>"
   end
 end

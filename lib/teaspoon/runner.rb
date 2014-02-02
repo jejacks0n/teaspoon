@@ -4,13 +4,12 @@ require "teaspoon/result"
 module Teaspoon
   class Runner
 
-    attr_accessor :formatters
-    attr_reader   :failure_count
+    attr_reader :failure_count
 
     def initialize(suite_name = :default)
       @suite_name = suite_name
-      @formatters = Teaspoon.configuration.formatters.map{ |f| resolve_formatter(f).new(suite_name) }
       @failure_count = 0
+      @formatters = Teaspoon.configuration.formatters.map{ |f| resolve_formatter(f).new(suite_name) }
     end
 
     def process(line)
@@ -25,8 +24,7 @@ module Teaspoon
     def resolve_formatter(formatter)
       Teaspoon::Formatters.const_get("#{formatter.to_s.camelize}Formatter")
     rescue NameError
-      log("Unknown formatter: \"#{formatter}\"\n")
-      exit(1)
+      raise Teaspoon::UnknownFormatter, "Unknown formatter: \"#{formatter}\"\n"
     end
 
     def notify_formatters(event, result)

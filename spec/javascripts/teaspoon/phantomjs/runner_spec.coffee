@@ -93,8 +93,7 @@ describe "PhantomJS Runner", ->
 
     it "logs the error message", ->
       @runner.fail("_message_")
-      expect(@logSpy).toHaveBeenCalledWith("Error: _message_")
-      expect(@logSpy).toHaveBeenCalledWith('{"_teaspoon":true,"type":"exception"}')
+      expect(@logSpy).toHaveBeenCalledWith('{"_teaspoon":true,"type":"exception","message":"_message_"}')
 
     it "exits with the error code", ->
       spy = spyOn(phantom, "exit")

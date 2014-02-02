@@ -108,8 +108,12 @@ describe Teaspoon::Server do
 
   describe "integration" do
 
+    before do
+      Teaspoon.configuration.stub(:suite_configs).and_return("foo" => proc{})
+      Teaspoon.configuration.stub(:suppress_log).and_return(true)
+    end
+
     it "really starts a server" do
-      Teaspoon.configuration.stub(:suites).and_return "foo" => proc{ |suite| }
       subject.start
       response = Net::HTTP.get_response(URI.parse("#{subject.url}/teaspoon/foo"))
       expect(response.code).to eq("200")
