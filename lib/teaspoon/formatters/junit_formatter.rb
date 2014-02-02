@@ -55,11 +55,6 @@ module Teaspoon
         CGI::escapeHTML(str)
       end
 
-      def escape_trace(trace)
-        lines = trace.map { |t| ["#{t["file"]}:#{t["line"]}", t["function"]].compact.join(" ") }
-        escape(lines.join("\n"))
-      end
-
       def cdata(str)
         "\n<![CDATA[\n#{str.gsub(/\n$/, "")}\n]]>\n"
       end
