@@ -1,12 +1,12 @@
 # require the controller, because it fails to load under some circumstances (unknown why)
-require File.expand_path(__FILE__, '../../../app/controllers/teaspoon/spec_controller')
+require File.expand_path(__FILE__, "../../../app/controllers/teaspoon/spec_controller")
 
 module Teaspoon
   class Engine < ::Rails::Engine
 
     isolate_namespace Teaspoon
 
-    initializer :assets, :group => :all do |app|
+    initializer :assets, group: :all do |app|
       # default the root if it's not set
       Teaspoon.configuration.root ||= app.root
 

@@ -15,6 +15,7 @@ module Teaspoon
     # - add it to the readme so it's documented
     # - add it to the command_line.rb if appropriate (_only_ if it's appropriate)
     # - add it to ENV_OVERRIDES if it can be overridden from ENV
+    # - add it to the initializers in /lib/generators/install/templates so it's documented there as well
 
     cattr_accessor :mount_at, :context, :root, :asset_paths, :fixture_path
     @@mount_at       = "/teaspoon"
@@ -39,7 +40,7 @@ module Teaspoon
     ENV_OVERRIDES = {
       boolean: %w(FAIL_FAST SUPPRESS_LOG COLOR),
       integer: %w(DRIVER_TIMEOUT SERVER_TIMEOUT),
-      string: %w(DRIVER DRIVER_OPTIONS SERVER SERVER_PORT FORMATTERS)
+      string:  %w(DRIVER DRIVER_OPTIONS SERVER SERVER_PORT FORMATTERS)
     }
 
     # suite configurations
