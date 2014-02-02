@@ -7,21 +7,33 @@ module Teaspoon
     isolate_namespace Teaspoon
 
     initializer :assets, group: :all do |app|
-      # default the root if it's not set
-      Teaspoon.configuration.root ||= app.root
-
-      # append the asset paths from the configuration
-      Teaspoon.configuration.asset_paths.each do |path|
-        app.config.assets.paths << Teaspoon.configuration.root.join(path).to_s
-      end
+      default_root_path(app.root)                 # default the root if it's not set
+      append_asset_paths(app.config.assets.paths) # append the asset paths from the configuration
     end
 
     config.after_initialize do |app|
-      # inject our sprockets hack for instrumenting javascripts
-      Sprockets::Environment.send(:include, Teaspoon::SprocketsInstrumentation)
+      inject_instrumentation                      # inject our sprockets hack for instrumenting javascripts
+      prepend_routes(app)                         # prepend routes so a catchall doesn't get in the way
+    end
 
-      # prepend routes so a catchall doesn't get in the way
-      app.routes.prepend do
+    private
+
+    def default_root_path(root)
+      Teaspoon.configuration.root ||= root
+    end
+
+    def append_asset_paths(paths)
+      Teaspoon.configuration.asset_paths.each do |path|
+        paths << Teaspoon.configuration.root.join(path).to_s
+      end
+    end
+
+    def inject_instrumentation
+      Sprockets::Environment.send(:include, Teaspoon::SprocketsInstrumentation)
+    end
+
+    def prepend_routes(app)
+      app.routes do
         mount Teaspoon::Engine => Teaspoon.configuration.mount_at
       end
     end

@@ -2,21 +2,23 @@ require "spec_helper"
 
 describe Teaspoon do
 
+  subject { Teaspoon }
+
   it "has a configuration property" do
-    expect(Teaspoon.configuration).to be(Teaspoon::Configuration)
+    expect(subject.configuration).to be(Teaspoon::Configuration)
   end
 
   describe ".setup" do
 
     it "yields configuration" do
       config = nil
-      Teaspoon.setup { |c| config = c }
+      subject.setup { |c| config = c }
       expect(config).to be(Teaspoon::Configuration)
     end
 
     it "overrides configuration from ENV" do
-      Teaspoon.configuration.should_receive(:override_from_env).with(ENV)
-      Teaspoon.setup { }
+      subject.configuration.should_receive(:override_from_env).with(ENV)
+      subject.setup { }
     end
 
   end
@@ -29,9 +31,9 @@ describe Teaspoon::Configuration do
   subject { Teaspoon::Configuration }
 
   after do
-    Teaspoon::Configuration.mount_at = "/teaspoon"
-    Teaspoon::Configuration.suite_configs.delete("test_suite")
-    Teaspoon::Configuration.server = nil
+    subject.mount_at = "/teaspoon"
+    subject.suite_configs.delete("test_suite")
+    subject.server = nil
   end
 
   it "has the default configuration" do
@@ -59,9 +61,9 @@ describe Teaspoon::Configuration do
   end
 
   it "allows setting various configuration options" do
-    Teaspoon.configuration.mount_at = "/teaspoons_are_awesome"
+    subject.mount_at = "/teaspoons_are_awesome"
     expect(subject.mount_at).to eq("/teaspoons_are_awesome")
-    Teaspoon.configuration.server = :webrick
+    subject.server = :webrick
     expect(subject.server).to eq(:webrick)
   end
 
@@ -73,6 +75,28 @@ describe Teaspoon::Configuration do
   it "allows defining coverage configurations" do
     subject.coverage(:test_coverage) { }
     expect(subject.coverage_configs["test_coverage"]).to be_a(Proc)
+  end
+
+  describe ".root=" do
+
+    it "forces the path provided into a Pathname" do
+      subject.root = "/path"
+      expect(subject.root).to be_a(Pathname)
+    end
+
+  end
+
+  describe ".formatters" do
+
+    it "returns the default dot formatter if nothing was set" do
+      expect(subject.formatters).to eq(["dot"])
+    end
+
+    it "returns an array of formatters if they were comma separated" do
+      subject.formatters = "dot,swayze_or_oprah"
+      expect(subject.formatters).to eq(["dot", "swayze_or_oprah"])
+    end
+
   end
 
   describe ".override_from_options" do
@@ -104,17 +128,17 @@ end
 
 describe Teaspoon::Configuration::Suite do
 
+  subject { Teaspoon::Configuration::Suite.new &(@suite || proc{}) }
+
   it "has the default configuration" do
-    subject = Teaspoon::Configuration::Suite.new
     expect(subject.matcher).to eq("{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}")
     expect(subject.helper).to eq("spec_helper")
     expect(subject.javascripts).to eq(["teaspoon/jasmine"])
     expect(subject.stylesheets).to eq(["teaspoon"])
-
   end
 
   it "accepts a block that can override defaults" do
-    subject = Teaspoon::Configuration::Suite.new { |s| s.helper = "helper_file" }
+    @suite = proc{ |s| s.helper = "helper_file" }
     expect(subject.helper).to eq("helper_file")
   end
 
@@ -147,8 +171,9 @@ end
 
 describe Teaspoon::Configuration::Coverage do
 
+  subject { Teaspoon::Configuration::Coverage.new &(@coverage || proc{}) }
+
   it "has the default configuration" do
-    subject = Teaspoon::Configuration::Coverage.new
     expect(subject.reports).to eq(["text-summary"])
     expect(subject.ignored).to eq([%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}])
     expect(subject.output_path).to eq("coverage")
@@ -159,7 +184,7 @@ describe Teaspoon::Configuration::Coverage do
   end
 
   it "accepts a block that can override defaults" do
-    subject = Teaspoon::Configuration::Coverage.new { |s| s.reports = "report_format" }
+    @coverage = proc{ |s| s.reports = "report_format" }
     expect(subject.reports).to eq("report_format")
   end
 

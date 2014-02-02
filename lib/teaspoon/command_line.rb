@@ -8,21 +8,16 @@ module Teaspoon
       @options = {}
       @options[:files] = opt_parser.parse!
 
-      begin
-        require_console
-        results = Teaspoon::Console.new(@options).execute
-        abort if results
-      rescue Teaspoon::EnvironmentNotFound => e
-        STDOUT.print("Unable to load Teaspoon environment in {#{Teaspoon::Environment.standard_environments.join(', ')}}.\n")
-        STDOUT.print("Consider using -r path/to/teaspoon_env\n")
-        abort
-      end
+      require_console
+      abort if Teaspoon::Console.new(@options).failures?
+    rescue Teaspoon::EnvironmentNotFound => e
+      abort("#{e.message}\nConsider using -r path/to/teaspoon_env\n")
     end
 
     def opt_parser
       OptionParser.new do |parser|
-        parser.banner = "Usage: teaspoon [options] [files]\n\n"
         @parser = parser
+        @parser.banner = "Usage: teaspoon [options] [files]\n\n"
 
         opts_for_general
         opts_for_filtering
@@ -134,7 +129,8 @@ module Teaspoon
       require "teaspoon/console"
     end
 
-    def abort
+    def abort(message = nil)
+      STDOUT.print(message) if message
       exit(1)
     end
   end

@@ -9,6 +9,5 @@ task :teaspoon => :environment do |t, args|
     driver_options: ENV["driver_options"],
   }
 
-  results = Teaspoon::Console.new(options).execute
-  fail if results
+  fail if Teaspoon::Console.new(options).failures?
 end

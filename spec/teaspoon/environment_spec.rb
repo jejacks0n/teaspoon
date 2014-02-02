@@ -19,23 +19,27 @@ describe Teaspoon::Environment do
       expect{ Teaspoon::Environment.load }.to raise_error("Rails environment not found.")
     end
 
-    it "calls configure_from_options if the environment is ready" do
+    it "configures teaspoon from options if the environment is ready" do
       subject.should_receive(:rails_loaded?).and_return(true)
-      subject.should_receive(:configure_from_options)
-      Teaspoon::Environment.load
+      Teaspoon.configuration.should_receive(:override_from_options).with(foo: "bar")
+      Teaspoon::Environment.load(foo: "bar")
     end
 
   end
 
   describe ".require_environment" do
 
+    before do
+      File.stub(:exists?)
+      subject.stub(:require_env)
+    end
+
     it "allows passing an override" do
-      subject.should_receive(:require_env).with(File.expand_path("override", Dir.pwd))
-      subject.require_environment("override")
+      subject.should_receive(:require_env).with(File.expand_path("_override_", Dir.pwd))
+      subject.require_environment("_override_")
     end
 
     it "looks for the standard files" do
-      subject.stub(:require_env)
       File.should_receive(:exists?).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd)).and_return(true)
       subject.should_receive(:require_env).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd))
       subject.require_environment
@@ -53,24 +57,15 @@ describe Teaspoon::Environment do
     end
 
     it "raises if no env file was found" do
-      File.stub(:exists?)
       expect{ subject.require_environment }.to raise_error(Teaspoon::EnvironmentNotFound)
     end
+
   end
 
   describe ".standard_environments" do
 
     it "returns an array" do
       expect(subject.standard_environments).to eql(["spec/teaspoon_env.rb", "test/teaspoon_env.rb", "teaspoon_env.rb"])
-    end
-
-  end
-
-  describe ".configure_from_options" do
-
-    it "allows overriding configuration directives from options" do
-      Teaspoon.configuration.should_receive(:color=).with(false)
-      Teaspoon::Environment.configure_from_options(color: false)
     end
 
   end

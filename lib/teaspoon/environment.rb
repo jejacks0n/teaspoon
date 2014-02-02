@@ -23,12 +23,14 @@ module Teaspoon
         return require_env(file) if File.exists?(file)
       end
 
-      raise Teaspoon::EnvironmentNotFound
+      raise Teaspoon::EnvironmentNotFound, "Unable to load Teaspoon environment in {#{standard_environments.join(', ')}}."
     end
 
     def self.standard_environments
       ["spec/teaspoon_env.rb", "test/teaspoon_env.rb", "teaspoon_env.rb"]
     end
+
+    private
 
     def self.require_env(file)
       require(file)

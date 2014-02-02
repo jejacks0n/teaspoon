@@ -62,9 +62,9 @@ module Teaspoon
         @stylesheets  = ["teaspoon"]
 
         # todo: cleanup
-        @boot_partial = nil
-        @js_config    = {}
-        @hooks        = Hash.new {|h, k| h[k] = [] }
+        #@boot_partial = nil
+        #@js_config    = {}
+        #@hooks        = Hash.new {|h, k| h[k] = [] }
 
         default = Teaspoon.configuration.suite_configs["default"]
         self.instance_eval(&default) if default
