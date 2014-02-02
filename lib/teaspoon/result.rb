@@ -13,7 +13,8 @@ module Teaspoon
     :total,
     :start,
     :level,
-    :coverage
+    :coverage,
+    :original_json,
   ]
 
   class Result < Struct.new(*RESULT_ATTRS)

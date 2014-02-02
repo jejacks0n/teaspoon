@@ -1,11 +1,12 @@
-require 'teaspoon/formatters/base_formatter'
-require 'yaml'
+require "yaml"
 
 module Teaspoon
   module Formatters
-    class TapYFormatter < BaseFormatter
+    class TapYFormatter < Base
 
-      def runner(result)
+      protected
+
+      def log_runner(result)
         log "type"  => "suite",
             "start" => result.start,
             "count" => result.total,
@@ -13,74 +14,62 @@ module Teaspoon
             "rev"   => 4
       end
 
-      def suite(result)
+      def log_suite(result)
         log "type"  => "case",
             "label" => result.label,
             "level" => result.level
       end
 
-      def spec(result)
-        super
-        @result = result
-        return passing_spec if result.passing?
-        return pending_spec if result.pending?
-        failing_spec
+      def log_passing_spec(result)
+        log "type"   => "test",
+            "status" => "pass",
+            "label"  => result.label,
+            "stdout" => @stdout
       end
 
-      def result(result)
+      def log_pending_spec(result)
+        log "type"   => "test",
+            "status" => "pending",
+            "label"  => result.label,
+            "stdout" => @stdout,
+            "exception" => {
+              "message" => result.message
+            }
+      end
+
+      def log_failing_spec(result)
+        log "type"   => "test",
+            "status" => "fail",
+            "label"  => result.label,
+            "stdout" => @stdout,
+            "exception" => {
+              "message"   => result.message,
+              "backtrace" => ["#{result.link}#:0"],
+              "file"      => "unknown",
+              "line"      => "unknown",
+              "source"    => "unknown",
+              "snippet"   => {"0" => result.link},
+              "class"     => "Unknown"
+            }
+      end
+
+      def log_result(result)
         log "type" => "final",
             "time" => result.elapsed,
             "counts" => {
-              "total" => @total,
+              "total" => @run_count,
               "pass"  => @passes.size,
               "fail"  => @failures.size,
               "error" => @errors.size,
               "omit"  => 0,
               "todo"  => @pendings.size
             }
-        super
-      end
-
-      def error(error)
-        @errors << error
-      end
-
-      protected
-
-      def passing_spec
-        log "type"   => "test",
-            "status" => "pass",
-            "label"  => @result.label
-      end
-
-      def pending_spec
-        log "type"   => "test",
-            "status" => "pending",
-            "label"  => @result.label,
-            "exception" => {
-              "message" => @result.message
-            }
-      end
-
-      def failing_spec
-        log "type"   => "test",
-            "status" => "fail",
-            "label"  => @result.label,
-            "exception" => {
-              "message"   => @result.message,
-              "backtrace" => ["#{@result.link}#:0"],
-              "file"      => "unknown",
-              "line"      => "unknown",
-              "source"    => "unknown",
-              "snippet"   => {"0" => @result.link},
-              "class"     => "Unknown"
-            }
       end
 
       private
 
       def log(hash)
-        STDOUT.print(hash.to_yaml)
+        log_str(hash.to_yaml)
       end
     end
   end

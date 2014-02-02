@@ -1,18 +1,13 @@
-require 'teaspoon/formatters/dot_formatter'
-
 module Teaspoon
   module Formatters
     class SnowdayFormatter < DotFormatter
 
-      def spec(result)
-        super(result, true)
-        if result.passing?
-          log "☃", GREEN
-        elsif result.pending?
-          log "☹", YELLOW
-        else
-          log "☠", RED
-        end
+      protected
+
+      def log_spec(result)
+        return log_str("☃", CYAN) if result.passing?
+        return log_str("☹", YELLOW) if result.pending?
+        log_str("☠", RED)
       end
     end
   end

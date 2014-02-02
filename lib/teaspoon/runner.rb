@@ -13,47 +13,35 @@ module Teaspoon
       @failure_count = 0
     end
 
-    def suppress_logs?
-      return @suppress_logs unless @suppress_logs.nil?
-      @suppress_logs = Teaspoon.configuration.suppress_log
-      return true if @suppress_logs
-      for formatter in @formatters
-        return @suppress_logs = true if formatter.suppress_logs?
-      end
-      @suppress_logs = false
-    end
-
     def process(line)
-      return if output_from(line)
-      log line unless suppress_logs?
+      if result = result_from(line)
+        return notify_formatters(result.type, result)
+      end
+      notify_formatters("console", line) unless Teaspoon.configuration.suppress_log
     end
 
     private
 
     def resolve_formatter(formatter)
       Teaspoon::Formatters.const_get("#{formatter.to_s.camelize}Formatter")
+    rescue NameError
+      log("Unknown formatter: \"#{formatter}\"\n")
+      exit(1)
     end
 
-    def output_from(line)
+    def notify_formatters(event, result)
+      @formatters.each { |f| f.send(event, result) if f.respond_to?(event) }
+    end
+
+    def result_from(line)
       json = JSON.parse(line)
       return false unless json && json["_teaspoon"] && json["type"]
+      json["original_json"] = line
       result = Teaspoon::Result.build_from_json(json)
-      notify_formatters result
       @failure_count += 1 if result.failing?
-      return true
+      return result
     rescue JSON::ParserError
       false
-    end
-
-    def notify_formatters(result)
-      @formatters.each do |formatter|
-        event = result.type
-        formatter.send(event, result) if formatter.respond_to?(event)
-      end
-    end
-
-    def log(msg)
-      STDOUT.print(msg)
     end
   end
 end

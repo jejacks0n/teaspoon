@@ -2,7 +2,7 @@ require "singleton"
 
 module Teaspoon
 
-  autoload :Formatters, "teaspoon/formatters/base_formatter"
+  autoload :Formatters, "teaspoon/formatters/base"
   autoload :Drivers,    "teaspoon/drivers/base"
 
   class Configuration

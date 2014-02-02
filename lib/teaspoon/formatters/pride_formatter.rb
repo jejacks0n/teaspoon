@@ -1,31 +1,25 @@
-require 'teaspoon/formatters/dot_formatter'
-
 module Teaspoon
   module Formatters
     class PrideFormatter < DotFormatter
+
       PI_3 = Math::PI / 3
 
       def initialize(*args)
-        @size = colors.size
-        @index = 0
+        @color_index = 0
         super
       end
 
-      def spec(result)
-        super(result, true)
-        if result.passing?
-          log_pride ".", next_color
-        elsif result.pending?
-          log "*", YELLOW
-        else
-          log "F", RED
-        end
+      protected
+
+      def log_spec(result)
+        return log_str("\e[38;5;#{next_color}m.\e[0m") if result.passing?
+        super
       end
 
       private
 
       def colors
-        @colors ||= 0...42.map do |i|
+        @colors ||= (0...42).map do |i|
           i *= 1.0 / 6
           36 * calc_color(i) + 6 * calc_color(i + 2 * PI_3) + calc_color(i + 4 * PI_3) + 16
         end
@@ -36,13 +30,9 @@ module Teaspoon
       end
 
       def next_color
-        c = colors[@index % @size]
-        @index += 1
+        c = colors[@color_index % colors.size]
+        @color_index += 1
         c
-      end
-
-      def log_pride(str, color_code)
-        STDOUT.print("\e[38;5;#{color_code}m#{str}\e[0m")
       end
     end
   end

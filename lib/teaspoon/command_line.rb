@@ -96,10 +96,11 @@ module Teaspoon
         "Specify formatters (comma separated)",
         "  dot (default) - dots",
         "  clean - like dots but doesn't log re-run commands",
+        "  json - json formatter (raw teaspoon)",
         "  junit - junit compatible formatter",
-        "  pride - 256 color rainbows where supported",
+        "  pride - yay rainbows!",
         "  snowday - makes you feel warm inside",
-        "  swayze_or_oprah - random quote from Patrick Swayze or Oprah Winfrey",
+        "  swayze_or_oprah - quote from either Patrick Swayze or Oprah Winfrey",
         "  tap - test anything protocol formatter",
         "  tap_y - tap_yaml, format used by tapout",
         "  teamcity - teamcity compatible formatter"
