@@ -1,3 +1,4 @@
+# todo: can we get rid of this already?
 module Teaspoon::SpecHelper
 
   def stylesheet_link_tag_for_teaspoon(*sources)

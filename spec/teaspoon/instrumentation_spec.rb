@@ -12,28 +12,10 @@ describe Teaspoon::Instrumentation do
   let(:env) { {"QUERY_STRING" => "instrument=true"} }
 
   before do
-    Teaspoon::Instrumentation.stub(:istanbul).and_return("/path/to/istanbul")
-    Teaspoon::Instrumentation.instance_variable_set(:@executable, nil)
-  end
-
-  after do
-    Teaspoon::Instrumentation.instance_variable_set(:@executable, nil)
-  end
-
-  describe ".executable" do
-
-    it "returns the executable" do
-      expect(subject.executable).to eq("/path/to/istanbul")
-      expect(subject.instance_variable_get(:@executable)).to eq("/path/to/istanbul")
-    end
-
+    Teaspoon::Instrumentation.stub(:executable).and_return("/path/to/istanbul")
   end
 
   describe ".add?" do
-
-    before do
-      subject.stub(:executable).and_return("/path/to/istanbul")
-    end
 
     it "returns true when everything is good" do
       expect(subject.add?(response, {"QUERY_STRING" => "instrument=true"})).to be(true)

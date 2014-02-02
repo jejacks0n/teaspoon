@@ -69,6 +69,7 @@ module Teaspoon
     def start_server
       server = Teaspoon::Server.new
       server.start
+      server
     end
 
     def suites

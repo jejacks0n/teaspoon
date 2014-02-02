@@ -24,8 +24,8 @@ Failures:
   end
 
   scenario "displays coverage information" do
-    pending "broken with rails 4"
-    pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.istanbul()
+    pending("needs to be fixed (bad cli args)")
+    pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.send(:executable)
     run_simple("bundle exec teaspoon -r ../../spec/teaspoon_env --suite=default app/assets/javascripts/integration/integration_spec.coffee --coverage-reports=text", false)
 
     assert_partial_output("|   % Stmts |% Branches |   % Funcs |   % Lines |", all_output)

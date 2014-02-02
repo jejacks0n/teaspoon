@@ -30,10 +30,19 @@ describe Teaspoon::Configuration do
 
   subject { Teaspoon::Configuration }
 
+  before do
+    @orig_root = subject.root
+    @orig_asset_paths = subject.asset_paths
+    @orig_formatters = subject.formatters
+  end
+
   after do
     subject.mount_at = "/teaspoon"
     subject.suite_configs.delete("test_suite")
     subject.server = nil
+    subject.root = @orig_root
+    subject.asset_paths = @orig_asset_paths
+    subject.formatters = @orig_formatters
   end
 
   it "has the default configuration" do

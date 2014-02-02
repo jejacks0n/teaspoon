@@ -1,5 +1,6 @@
 require "optparse"
 require "teaspoon/version"
+require "teaspoon/exceptions"
 
 module Teaspoon
   class CommandLine

@@ -1,3 +1,4 @@
+# todo: improve & improve specs
 require "sprockets/environment"
 
 module Teaspoon

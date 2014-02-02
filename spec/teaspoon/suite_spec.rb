@@ -3,13 +3,14 @@ require "spec_helper"
 describe Teaspoon::Suite do
 
   before do
-    Teaspoon.configuration.stub(:suites).and_return "default" => proc{}
+    pending
+    Teaspoon.configuration.stub(:suite_configs).and_return("default" => proc{})
   end
 
   describe ".all" do
 
     it "returns all the suites" do
-      Teaspoon.configuration.stub(:suites).and_return "default" => proc{}, "foo" => proc{}
+      Teaspoon.configuration.stub(:suite_configs).and_return("default" => proc{}, "foo" => proc{})
       results = Teaspoon::Suite.all
       expect(results.first).to be_a(Teaspoon::Suite)
       expect(results.length).to be(2)
@@ -43,7 +44,7 @@ describe Teaspoon::Suite do
     end
 
     it "accepts a suite configuration name" do
-      Teaspoon.configuration.should_receive(:suites).and_return "test" => proc{ |s| s.helper = "helper_file" }
+      Teaspoon.configuration.should_receive(:suite_configs).and_return("test" => proc{ |s| s.helper = "helper_file" })
       subject = Teaspoon::Suite.new({suite: :test})
       expect(subject.config.helper).to eq("helper_file")
     end
