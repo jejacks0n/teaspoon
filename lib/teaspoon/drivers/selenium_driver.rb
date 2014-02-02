@@ -1,9 +1,14 @@
-require "selenium-webdriver"
-require "teaspoon/runner"
+begin
+  require "selenium-webdriver"
+rescue LoadError
+  STDOUT.print("Could not find Selenium Webdriver. Install selenium-webdriver gem.")
+  exit(1)
+end
+
 
 module Teaspoon
   module Drivers
-    class SeleniumDriver < BaseDriver
+    class SeleniumDriver < Base
 
       def initialize(options = nil)
       end
@@ -22,7 +27,7 @@ module Teaspoon
           done
         end
 
-        runner.failure_count
+        return runner.failure_count
       ensure
         driver.quit if driver
       end

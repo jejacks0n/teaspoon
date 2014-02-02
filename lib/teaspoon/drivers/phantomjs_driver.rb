@@ -1,14 +1,12 @@
-require "teaspoon/runner"
-require 'teaspoon/utility'
-
 begin
   require "phantomjs"
 rescue LoadError
+  # if we can't load phantomjs, assume the cli is installed and in the path
 end
 
 module Teaspoon
   module Drivers
-    class PhantomjsDriver < BaseDriver
+    class PhantomjsDriver < Base
       include Teaspoon::Utility
 
       def initialize(options = "")
@@ -28,9 +26,7 @@ module Teaspoon
       protected
 
       def run(*args, &block)
-        IO.popen([executable, *args]) { |io|
-          io.each(&block)
-        }
+        IO.popen([executable, *args]) { |io| io.each(&block) }
       end
 
       def cli_arguments(url)
@@ -38,7 +34,7 @@ module Teaspoon
       end
 
       def executable
-        executable ||= which('phantomjs')
+        executable ||= which("phantomjs")
         executable = Phantomjs.path if executable.blank? && defined?(::Phantomjs)
         if executable.blank?
           STDOUT.print("Could not find PhantomJS. Install phantomjs or try the phantomjs gem.")

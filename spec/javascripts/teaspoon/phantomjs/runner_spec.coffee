@@ -104,10 +104,6 @@ describe "PhantomJS Runner", ->
 
   describe "#finish", ->
 
-    it "logs an empty string (to fix line feeds in the console)", ->
-      @runner.finish()
-      expect(@logSpy).toHaveBeenCalledWith(" ")
-
     it "calls exit with a success code", ->
       spy = spyOn(phantom, "exit")
       @runner.finish()

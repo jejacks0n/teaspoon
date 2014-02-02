@@ -1,7 +1,15 @@
 require "spec_helper"
-require "teaspoon/drivers/phantomjs_driver"
 
 describe Teaspoon::Drivers::PhantomjsDriver do
+
+  describe "#initialize" do
+
+    it "assigns @options" do
+      subject = Teaspoon::Drivers::PhantomjsDriver.new(foo: "bar")
+      expect(subject.instance_variable_get(:@options)).to eq(foo: "bar")
+    end
+
+  end
 
   describe "#run_specs" do
 

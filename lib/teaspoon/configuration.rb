@@ -3,7 +3,7 @@ require "singleton"
 module Teaspoon
 
   autoload :Formatters, "teaspoon/formatters/base_formatter"
-  autoload :Drivers,    "teaspoon/drivers/base_driver"
+  autoload :Drivers,    "teaspoon/drivers/base"
 
   class Configuration
     include Singleton
