@@ -13,14 +13,10 @@ module Teaspoon
         @options = options
       end
 
-      def run_specs(suite, url)
-        runner = Teaspoon::Runner.new(suite)
-
+      def run_specs(runner, url)
         run(*cli_arguments(url)) do |line|
           runner.process(line) if line && line.strip != ""
         end
-
-        runner.failure_count
       end
 
       protected

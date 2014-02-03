@@ -44,7 +44,7 @@ describe Teaspoon::Runner do
 
     it "notifies formatters of console output when it doesn't understand the log" do
       formatter.should_receive(:console).with("_line_")
-      subject.should_receive(:result_from).and_return(false)
+      subject.should_receive(:result_from_line).and_return(false)
       subject.process("_line_")
     end
 

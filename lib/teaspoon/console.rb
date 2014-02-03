@@ -40,10 +40,10 @@ module Teaspoon
     end
 
     def run_specs(suite)
-      url = url(suite)
-      url += url.include?("?") ? "&" : "?"
-      url += "reporter=Console"
-      driver.run_specs(suite, url)
+      log("Teaspoon running #{suite} suite at #{url_for(suite)}")
+      runner = Teaspoon::Runner.new(suite)
+      driver.run_specs(runner, url_for(suite))
+      runner.failure_count
     end
 
     def export(suite)
@@ -86,16 +86,17 @@ module Teaspoon
       raise Teaspoon::UnknownDriver, "Unknown driver: \"#{Teaspoon.configuration.driver}\"\n"
     end
 
+    def url_for(suite)
+      url = ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite].join('/')
+      [url, filter(suite)].compact.join('?')
+      "#{url}#{(url.include?("?") ? "&" : "?")}reporter=Console"
+    end
+
     def filter(suite)
       parts = []
       parts << "grep=#{URI::encode(@options[:filter])}" if @options[:filter].present?
       (@suites[suite] || @options[:files] || []).flatten.each { |file| parts << "file[]=#{URI::encode(file)}" }
       "#{parts.join('&')}" if parts.present?
-    end
-
-    def url(suite)
-      base_url = ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite].join('/')
-      [base_url, filter(suite)].compact.join('?')
     end
 
     def log(str, force = false)

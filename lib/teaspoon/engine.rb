@@ -1,4 +1,7 @@
-# require the controller, because it fails to load under some circumstances (unknown why)
+require "teaspoon/suite"
+require "teaspoon/instrumentation"
+
+# require the controller, because it fails to load under some circumstances (unknown as to why)
 require File.expand_path(__FILE__, "../../../app/controllers/teaspoon/spec_controller")
 
 module Teaspoon

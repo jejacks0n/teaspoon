@@ -13,9 +13,7 @@ module Teaspoon
       def initialize(options = nil)
       end
 
-      def run_specs(suite, url)
-        runner = Teaspoon::Runner.new(suite)
-
+      def run_specs(runner, url)
         driver = Selenium::WebDriver.for(:firefox)
         driver.navigate.to(url)
 
@@ -26,8 +24,6 @@ module Teaspoon
           end
           done
         end
-
-        return runner.failure_count
       ensure
         driver.quit if driver
       end

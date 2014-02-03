@@ -13,7 +13,7 @@ module Teaspoon
     end
 
     def process(line)
-      if result = result_from(line)
+      if result = result_from_line(line)
         return notify_formatters(result.type, result)
       end
       notify_formatters("console", line) unless Teaspoon.configuration.suppress_log
@@ -31,15 +31,19 @@ module Teaspoon
       @formatters.each { |f| f.send(event, result) if f.respond_to?(event) }
     end
 
-    def result_from(line)
+    def result_from_line(line)
       json = JSON.parse(line)
       return false unless json && json["_teaspoon"] && json["type"]
       json["original_json"] = line
-      result = Teaspoon::Result.build_from_json(json)
-      @failure_count += 1 if result.failing?
-      return result
+      return result_from_json(json)
     rescue JSON::ParserError
       false
+    end
+
+    def result_from_json(json)
+      result = Teaspoon::Result.build_from_json(json)
+      @failure_count += 1 if result.failing?
+      result
     end
   end
 end

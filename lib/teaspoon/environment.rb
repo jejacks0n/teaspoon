@@ -8,8 +8,8 @@ module Teaspoon
       raise "Rails environment not found." unless rails_loaded?
 
       require "teaspoon"
-      require "teaspoon/suite"
       require "teaspoon/server"
+      require "teaspoon/runner"
 
       Teaspoon.configuration.override_from_options(options)
       Teaspoon::ExceptionHandling.add_rails_handling

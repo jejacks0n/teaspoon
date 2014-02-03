@@ -1,5 +1,3 @@
-require "teaspoon/runner"
-
 module Teaspoon
   module Drivers
 
