@@ -34,7 +34,6 @@ module Teaspoon
     end
 
     def responsive?
-      return false if @thread && @thread.join(0)
       TCPSocket.new("127.0.0.1", port).close
       return true
     rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
