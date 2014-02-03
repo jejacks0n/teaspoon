@@ -3,9 +3,8 @@
   <head>
     <title>Teaspoon :: Suites</title>
     <meta name="viewport" content="width=device-width, user-scalable=no">
-    <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag_for_teaspoon *(@suites.first.present? ? @suites.first.stylesheets : "teaspoon") %>
-    <%= javascript_include_tag_for_teaspoon "teaspoon-teaspoon" %>
+    <%= stylesheet_link_tag *(@suites.first.present? ? @suites.first.stylesheets : "teaspoon") %>
+    <%= javascript_include_tag "teaspoon-teaspoon" %>
   </head>
   <body>
     <div id="teaspoon-interface">
@@ -17,10 +16,10 @@
             <li><a href="http://github.com/modeset/teaspoon" target="blank">http://github.com/modeset/teaspoon</a></li>
           </ul>
         </div>
-        <div id="teaspoon-progress"><div class="teaspoon-indicator modeset-logo"></div></div>
+        <div id="teaspoon-progress"><div class="teaspoon-indicator teaspoon-logo"></div></div>
       </div>
       <div id="teaspoon-controls" class="teaspoon-clearfix">
-        <input type="text" id="teaspoon-filter-input" placeholder="filter files"/>
+        <input type="text" id="teaspoon-filter-input" placeholder="filter list" autofocus/>
       </div>
       <hr/>
       <ul id="teaspoon-suite-list">
@@ -29,7 +28,7 @@
             <h1><%= link_to suite.name, suite.link %></h1>
             <ul class="file">
               <% for file in suite.spec_files %>
-                <h4><%= link_to file[:name], suite.link(file: file[:path]) %></h4>
+                <li><%= link_to file[:name], suite.link(file: file[:path]) %></li>
               <% end %>
             </ul>
           </li>
