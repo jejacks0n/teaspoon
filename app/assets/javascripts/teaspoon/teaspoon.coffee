@@ -5,7 +5,6 @@ class TeaspoonInterface
     @input = $u("#teaspoon-filter-input")[0]
     @input.value = ""
     @input.onkeyup = @filter
-    @input.focus()
 
 
   filter: =>
