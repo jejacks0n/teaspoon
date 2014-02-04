@@ -79,6 +79,7 @@ module Teaspoon
       def normalize_asset_path(filename)
         @normalize_asset_path.call(filename)
       end
+
     end
 
     # coverage configurations

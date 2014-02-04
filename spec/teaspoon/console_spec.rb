@@ -1,16 +1,21 @@
 require "spec_helper"
 require "teaspoon/console"
 require "teaspoon/server"
+require "teaspoon/runner"
 
 describe Teaspoon::Console do
 
   let(:driver) { double(run_specs: 0) }
   let(:server) { double(start: nil, url: "http://url.com") }
+  let(:runner) { double(failure_count: 2) }
 
   before do
-    Teaspoon::Console.any_instance.stub(:driver).and_return(driver)
-    Teaspoon::Console.any_instance.stub(:start_server).and_return(server)
     Teaspoon::Environment.stub(:load)
+    Teaspoon::Server.stub(:new).and_return(server)
+    Teaspoon::Runner.stub(:new).and_return(runner)
+
+    Teaspoon::Console.any_instance.stub(:driver).and_return(driver)
+    Teaspoon::Console.any_instance.stub(:log)
   end
 
   describe "#initialize" do
@@ -26,6 +31,7 @@ describe Teaspoon::Console do
     end
 
     it "starts the server" do
+      Teaspoon::Console.any_instance.should_receive(:log).with("Starting the Teaspoon server...")
       Teaspoon::Console.any_instance.should_receive(:start_server).and_call_original
       Teaspoon::Server.should_receive(:new).and_return(server)
       server.should_receive(:start)
@@ -65,6 +71,10 @@ describe Teaspoon::Console do
       subject.should_receive(:abort).with("_runner_exception_")
       subject.should_receive(:execute_without_handling).and_raise(Teaspoon::RunnerException, "_runner_exception_")
       subject.execute
+
+      subject.should_receive(:abort).with("_missing_dependency_")
+      subject.should_receive(:execute_without_handling).and_raise(Teaspoon::MissingDependency, "_missing_dependency_")
+      subject.execute
     end
 
     it "returns false on Teaspoon::Failure" do
@@ -75,10 +85,6 @@ describe Teaspoon::Console do
   end
 
   describe "#execute_without_handling" do
-
-    before do
-      subject.stub(:log)
-    end
 
     it "merges @options" do
       subject.instance_variable_set(:@options, foo: "bar")
@@ -110,8 +116,6 @@ describe Teaspoon::Console do
 
     it "runs the tests" do
       subject.should_receive(:suites).and_return([:default, :foo])
-      subject.should_receive(:log).with("Teaspoon running default suite at http://url.com/teaspoon/default")
-      subject.should_receive(:log).with("Teaspoon running foo suite at http://url.com/teaspoon/foo")
       subject.should_receive(:run_specs).twice.and_return(2)
       expect(subject.execute_without_handling).to be_false
     end
@@ -123,8 +127,8 @@ describe Teaspoon::Console do
     end
 
     it "returns true if there were failures" do
-      subject.should_receive(:suites).and_return([:default, :foo])
-      subject.should_receive(:run_specs).twice.and_return(1)
+      subject.should_receive(:suites).and_return([:default])
+      subject.should_receive(:run_specs).once.and_return(1)
       expect(subject.execute_without_handling).to be_false
     end
 
@@ -141,10 +145,15 @@ describe Teaspoon::Console do
 
   describe "#run_specs" do
 
+    it "logs that the suite is being run" do
+      subject.should_receive(:log).with("Teaspoon running _suite_ suite at http://url.com/teaspoon/_suite_")
+      subject.run_specs("_suite_")
+    end
+
     it "calls #run_specs on the driver" do
       subject.should_receive(:driver).and_return(driver)
-      driver.should_receive(:run_specs).with(:suite_name, "http://url.com/teaspoon/suite_name?reporter=Console")
-      subject.run_specs(:suite_name)
+      driver.should_receive(:run_specs).with(runner, "http://url.com/teaspoon/suite_name?reporter=Console")
+      expect(subject.run_specs(:suite_name)).to eq(2)
     end
 
   end

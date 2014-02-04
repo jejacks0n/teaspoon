@@ -1,6 +1,6 @@
-# todo: test
 module Teaspoon
   class EnvironmentNotFound < Exception; end
+  class MissingDependency < Exception; end
   class ServerException < Exception; end
   class RunnerException < Exception; end
   class UnknownDriver < Exception; end

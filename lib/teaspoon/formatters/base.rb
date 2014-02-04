@@ -1,3 +1,5 @@
+require "teaspoon/coverage"
+
 module Teaspoon
   module Formatters
 
@@ -26,6 +28,7 @@ module Teaspoon
 
       def initialize(suite_name = :default)
         @suite_name  = suite_name.to_s
+        @coverage    = Teaspoon::Coverage.new(@suite_name)
         @stdout      = ""
         @suite       = nil
         @last_suite  = nil
@@ -119,9 +122,9 @@ module Teaspoon
       def log_result(result); end
 
       def log_coverage(data)
-        return if data.blank?
-        report_output = Teaspoon::Coverage.new(data, @suite_name).reports
-        log_str(report_output) unless Teaspoon.configuration.suppress_log
+        #return if data.blank?
+        #report_output = Teaspoon::Coverage.new(data, @suite_name).reports
+        #log_str(report_output) unless Teaspoon.configuration.suppress_log
       end
 
       private

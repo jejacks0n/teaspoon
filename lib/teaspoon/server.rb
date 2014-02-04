@@ -12,19 +12,14 @@ module Teaspoon
     end
 
     def start
-      wait_until_started Teaspoon.configuration.server_timeout, Thread.new do
+      thread = Thread.new do
         disable_logging
         server = Rack::Server.new(rack_options)
         server.start
       end
+      wait_until_started(thread)
     rescue => e
       raise Teaspoon::ServerException, "Cannot start server: #{e.message}"
-    end
-
-    def wait_until_started(timeout, thread)
-      Timeout.timeout(timeout.to_i) { thread.join(0.1) until responsive? }
-    rescue Timeout::Error
-      raise Teaspoon::ServerException, "Server failed to start. You may need to increase the timeout configuration."
     end
 
     def responsive?
@@ -39,6 +34,12 @@ module Teaspoon
     end
 
     protected
+
+    def wait_until_started(thread)
+      Timeout.timeout(Teaspoon.configuration.server_timeout.to_i) { thread.join(0.1) until responsive? }
+    rescue Timeout::Error
+      raise Teaspoon::ServerException, "Server failed to start. You may need to increase the timeout configuration."
+    end
 
     def disable_logging
       return unless defined?(Thin)

@@ -3,10 +3,14 @@ module Teaspoon
   class Coverage
     include Teaspoon::Utility
 
-    def initialize(data, suite_name)
-      @data = data
-      @suite_name = suite_name
+    def initialize(suite_name)
+
     end
+
+    #def initialize(data, suite_name)
+    #  @data = data
+    #  @suite_name = suite_name
+    #end
 
     def reports
       Dir.mktmpdir do |path|

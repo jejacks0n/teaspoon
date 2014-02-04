@@ -21,7 +21,7 @@ module Teaspoon
 
     def execute(options = {})
       execute_without_handling(options)
-    rescue Teaspoon::UnknownDriver, Teaspoon::UnknownFormatter, Teaspoon::RunnerException => e
+    rescue Teaspoon::UnknownDriver, Teaspoon::UnknownFormatter, Teaspoon::RunnerException, Teaspoon::MissingDependency => e
       abort(e.message)
     rescue Teaspoon::Failure
       false
@@ -42,7 +42,7 @@ module Teaspoon
     end
 
     def run_specs(suite)
-      log("Teaspoon running #{suite} suite at #{url_for(suite)}")
+      log("Teaspoon running #{suite} suite at #{base_url_for(suite)}")
       runner = Teaspoon::Runner.new(suite)
       driver.run_specs(runner, url_for(suite))
       runner.failure_count
@@ -89,9 +89,12 @@ module Teaspoon
       raise Teaspoon::UnknownDriver, "Unknown driver: \"#{Teaspoon.configuration.driver}\"\n"
     end
 
+    def base_url_for(suite)
+      ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite].join('/')
+    end
+
     def url_for(suite)
-      url = ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite].join('/')
-      [url, filter(suite)].compact.join('?')
+      url = [base_url_for(suite), filter(suite)].compact.join('?')
       "#{url}#{(url.include?("?") ? "&" : "?")}reporter=Console"
     end
 
