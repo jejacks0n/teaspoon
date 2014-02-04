@@ -12,11 +12,16 @@ module Teaspoon
       protected
 
       def log_spec(result)
-        return log_str("\e[38;5;#{next_color}m.\e[0m") if result.passing?
+        return log_pride if result.passing?
         super
       end
 
       private
+
+      def log_pride
+        return log_str(".") unless Teaspoon.configuration.color
+        log_str("\e[38;5;#{next_color}m.\e[0m")
+      end
 
       def colors
         @colors ||= (0...42).map do |i|
