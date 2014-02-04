@@ -33,7 +33,7 @@ module Teaspoon
     private
 
     def self.require_env(file)
-      require(file)
+      ::Kernel.load(file)
     end
 
     def self.rails_loaded?

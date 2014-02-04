@@ -1,8 +1,8 @@
-require "teaspoon/suite"
-require "teaspoon/instrumentation"
-
 # require the controller, because it fails to load under some circumstances (unknown as to why)
 require File.expand_path(__FILE__, "../../../app/controllers/teaspoon/spec_controller")
+require "teaspoon/environment"
+require "teaspoon/suite"
+require "teaspoon/instrumentation"
 
 module Teaspoon
   class Engine < ::Rails::Engine
@@ -10,6 +10,7 @@ module Teaspoon
     isolate_namespace Teaspoon
 
     initializer :assets, group: :all do |app|
+      Teaspoon::Environment.require_environment
       default_root_path(app.root)                 # default the root if it's not set
       append_asset_paths(app.config.assets.paths) # append the asset paths from the configuration
     end

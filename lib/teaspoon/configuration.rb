@@ -20,14 +20,14 @@ module Teaspoon
     cattr_accessor :mount_at, :context, :root, :asset_paths, :fixture_path
     @@mount_at       = "/teaspoon"
     @@root           = nil # will default to Rails.root
-    @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
+    @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets"]
     @@fixture_path   = "spec/javascripts/fixtures"
 
     # console runner specific
     cattr_accessor :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :formatters, :fail_fast, :suppress_log, :color
     @@driver         = "phantomjs"
     @@driver_options = nil
-    @@driver_timeout = 180
+    @@driver_timeout = 180 # todo: use this!
     @@server         = nil
     @@server_port    = nil
     @@server_timeout = 20
@@ -63,7 +63,6 @@ module Teaspoon
 
         # todo: cleanup
         #@boot_partial = nil
-        #@js_config    = {}
         #@hooks        = Hash.new {|h, k| h[k] = [] }
 
         default = Teaspoon.configuration.suite_configs["default"]

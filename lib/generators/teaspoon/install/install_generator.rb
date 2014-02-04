@@ -1,6 +1,7 @@
 module Teaspoon
   module Generators
     class InstallGenerator < Rails::Generators::Base
+
       source_root File.expand_path("../", __FILE__)
 
       desc "Installs the Teaspoon initializer into your application."
@@ -15,11 +16,6 @@ module Teaspoon
                    default: false,
                    desc:    "Generate a CoffeeScript spec helper (instead of Javascript)"
 
-      class_option :env, type: :boolean,
-                   aliases: "-e",
-                   default: true,
-                   desc:    "Create the teaspoon_env.rb file used by the command line interface"
-
       def validate_framework
         return if frameworks.include?(options[:framework])
         puts "Unknown framework -- Known: #{frameworks.join(', ')}"
@@ -27,8 +23,7 @@ module Teaspoon
       end
 
       def copy_initializers
-        copy_file "templates/#{framework}/initializer.rb", "config/initializers/teaspoon.rb"
-        copy_file "templates/env.rb", "#{framework_type}/teaspoon_env.rb" if options[:env]
+        copy_file "templates/#{framework}/env.rb", "#{framework_type}/teaspoon_env.rb" if options[:env]
       end
 
       def create_structure
@@ -61,7 +56,6 @@ module Teaspoon
       def framework_type
         (options[:framework] == "qunit") ? "test" : "spec"
       end
-
     end
   end
 end
