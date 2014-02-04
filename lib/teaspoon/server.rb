@@ -5,50 +5,49 @@ require "webrick"
 module Teaspoon
   class Server
 
+    attr_accessor :port
+
     def initialize
-      @port = find_available_port
-      if defined?(Thin)
-        if Teaspoon.configuration.suppress_log
-          Thin::Logging.silent = true
-        else
-          Thin::Logging.trace = false
-        end
-      end
+      @port = Teaspoon.configuration.server_port || find_available_port
     end
 
     def start
-      STDOUT.print("Starting the Teaspoon server...\n") unless Teaspoon.configuration.suppress_log
-      @thread = Thread.new do
+      wait_until_started Teaspoon.configuration.server_timeout, Thread.new do
+        disable_logging
         server = Rack::Server.new(rack_options)
         server.start
       end
-      wait_until_started
     rescue => e
-      raise "Cannot start server: #{e.message}"
+      raise Teaspoon::ServerException, "Cannot start server: #{e.message}"
     end
 
-    def wait_until_started
-      Timeout.timeout(Teaspoon.configuration.server_timeout.to_i) { @thread.join(0.1) until responsive? }
+    def wait_until_started(timeout, thread)
+      Timeout.timeout(timeout.to_i) { thread.join(0.1) until responsive? }
     rescue Timeout::Error
-      raise "Server failed to start. You may need to increase the timeout configuration."
+      raise Teaspoon::ServerException, "Server failed to start. You may need to increase the timeout configuration."
     end
 
     def responsive?
       TCPSocket.new("127.0.0.1", port).close
-      return true
+      true
     rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
-      return false
+      false
     end
 
     def url
       "http://127.0.0.1:#{port}"
     end
 
-    def port
-      @port
-    end
-
     protected
+
+    def disable_logging
+      return unless defined?(Thin)
+      if Teaspoon.configuration.suppress_log
+        Thin::Logging.silent = true
+      else
+        Thin::Logging.trace = false
+      end
+    end
 
     def rack_options
       {
@@ -62,7 +61,6 @@ module Teaspoon
     end
 
     def find_available_port
-      return Teaspoon.configuration.server_port if Teaspoon.configuration.server_port
       server = TCPServer.new("127.0.0.1", 0)
       server.addr[1]
     ensure

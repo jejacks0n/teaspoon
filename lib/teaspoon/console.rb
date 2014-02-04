@@ -11,6 +11,8 @@ module Teaspoon
       Teaspoon::Environment.load(@options)
 
       @server = start_server
+    rescue Teaspoon::ServerException => e
+      abort(e.message)
     end
 
     def failures?
@@ -67,6 +69,7 @@ module Teaspoon
     end
 
     def start_server
+      log("Starting the Teaspoon server...")
       server = Teaspoon::Server.new
       server.start
       server
