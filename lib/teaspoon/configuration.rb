@@ -138,11 +138,13 @@ module Teaspoon
     end
   end
 
-  mattr_accessor :configuration
+  mattr_accessor :configured, :configuration
+  @@configured    = false
   @@configuration = Configuration
 
   def self.setup
     yield @@configuration
+    @@configured = true
     @@configuration.override_from_env(ENV)
   end
 end

@@ -16,6 +16,7 @@ module Teaspoon
     end
 
     def self.require_environment(override = nil)
+      return if Teaspoon.configured
       return require_env(File.expand_path(override, Dir.pwd)) if override
 
       standard_environments.each do |filename|
