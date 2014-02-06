@@ -35,7 +35,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.HTML
 
 
   envInfo: ->
-    "qunit 1.11.0"
+    "qunit 1.12.0"
 
 
 
