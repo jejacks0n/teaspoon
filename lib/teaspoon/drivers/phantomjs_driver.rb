@@ -30,9 +30,10 @@ module Teaspoon
       end
 
       def executable
-        executable ||= which("phantomjs")
-        executable = Phantomjs.path if executable.blank? && defined?(::Phantomjs)
-        return executable unless executable.blank?
+        return @executable if @executable
+        @executable = which("phantomjs")
+        @executable = Phantomjs.path if @executable.blank? && defined?(::Phantomjs)
+        return @executable unless @executable.blank?
         raise Teaspoon::MissingDependency, "Could not find PhantomJS. Install phantomjs or try the phantomjs gem."
       end
 
