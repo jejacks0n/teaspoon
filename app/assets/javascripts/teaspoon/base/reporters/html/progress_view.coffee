@@ -9,7 +9,7 @@ class Teaspoon.Reporters.HTML.ProgressView extends Teaspoon.Reporters.BaseView
 
 
   build: ->
-    @el = @createEl("div", "teaspoon-indicator modeset-logo")
+    @el = @createEl("div", "teaspoon-indicator teaspoon-logo")
 
 
   update: ->

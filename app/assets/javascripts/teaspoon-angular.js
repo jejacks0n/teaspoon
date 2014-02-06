@@ -26881,7 +26881,7 @@ angular.element(document).find('head').append('<style type="text/css">@charset "
     };
 
     ProgressView.prototype.build = function() {
-      return this.el = this.createEl("div", "teaspoon-indicator modeset-logo");
+      return this.el = this.createEl("div", "teaspoon-indicator teaspoon-logo");
     };
 
     ProgressView.prototype.update = function() {};
