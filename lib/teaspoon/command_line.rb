@@ -105,7 +105,7 @@ module Teaspoon
     def opts_for_coverage
       separator("Coverage")
 
-      opt :coverage_config, "-C", "--coverage CONFIG_NAME",
+      opt :use_coverage, "-C", "--coverage CONFIG_NAME",
         "Generate coverage reports using a pre-defined coverage configuration."
     end
 

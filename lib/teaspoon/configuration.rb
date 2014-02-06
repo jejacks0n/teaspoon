@@ -17,14 +17,15 @@ module Teaspoon
     # - add it to ENV_OVERRIDES if it can be overridden from ENV
     # - add it to the initializers in /lib/generators/install/templates so it's documented there as well
 
-    cattr_accessor :mount_at, :context, :root, :asset_paths, :fixture_path
+    cattr_accessor   :mount_at, :root, :asset_paths, :fixture_path
     @@mount_at       = "/teaspoon"
     @@root           = nil # will default to Rails.root
     @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets"]
     @@fixture_path   = "spec/javascripts/fixtures"
 
     # console runner specific
-    cattr_accessor :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :formatters, :fail_fast, :suppress_log, :color
+    cattr_accessor   :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout,
+                     :formatters, :use_coverage, :fail_fast, :suppress_log, :color
     @@driver         = "phantomjs"
     @@driver_options = nil
     @@driver_timeout = 180 # todo: use this!
@@ -32,6 +33,7 @@ module Teaspoon
     @@server_port    = nil
     @@server_timeout = 20
     @@formatters     = "dot"
+    @@use_coverage   = nil
     @@fail_fast      = true
     @@suppress_log   = false
     @@color          = true
@@ -40,7 +42,7 @@ module Teaspoon
     ENV_OVERRIDES = {
       boolean: %w(FAIL_FAST SUPPRESS_LOG COLOR),
       integer: %w(DRIVER_TIMEOUT SERVER_TIMEOUT),
-      string:  %w(DRIVER DRIVER_OPTIONS SERVER SERVER_PORT FORMATTERS)
+      string:  %w(DRIVER DRIVER_OPTIONS SERVER SERVER_PORT FORMATTERS USE_COVERAGE)
     }
 
     # suite configurations
@@ -53,13 +55,15 @@ module Teaspoon
     end
 
     class Suite
-      attr_accessor :matcher, :helper, :stylesheets, :javascripts, :no_coverage, :boot_partial, :js_config, :hooks, :normalize_asset_path
+      attr_accessor  :matcher, :helper, :javascripts, :stylesheets, :no_coverage, :normalize_asset_path
 
       def initialize
-        @matcher      = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
-        @helper       = "spec_helper"
-        @javascripts  = ["teaspoon-jasmine"]
-        @stylesheets  = ["teaspoon"]
+        @matcher     = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
+        @helper      = "spec_helper"
+        @javascripts = ["teaspoon-jasmine"]
+        @stylesheets = ["teaspoon"]
+
+        @no_coverage = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
 
         # todo: cleanup
         #@boot_partial = nil
@@ -91,16 +95,15 @@ module Teaspoon
     end
 
     class Coverage
-      attr_accessor :reports, :ignored, :output_path, :statement_threshold, :function_threshold, :branch_threshold, :line_threshold
+      attr_accessor  :reports, :output_path, :statements, :functions, :branches, :lines
 
       def initialize
-        @reports             = ["text-summary"]
-        @ignored             = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
-        @output_path         = "coverage"
-        @statement_threshold = nil
-        @function_threshold  = nil
-        @branch_threshold    = nil
-        @line_threshold      = nil
+        @reports     = ["text-summary"]
+        @output_path = "coverage"
+        @statements  = nil
+        @functions   = nil
+        @branches    = nil
+        @lines       = nil
 
         default = Teaspoon.configuration.coverage_configs["default"]
         self.instance_eval(&default) if default
@@ -139,7 +142,7 @@ module Teaspoon
   end
 
   mattr_accessor :configured, :configuration
-  @@configured    = false
+  @@configured = false
   @@configuration = Configuration
 
   def self.setup

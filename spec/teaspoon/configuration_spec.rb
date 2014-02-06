@@ -16,6 +16,12 @@ describe Teaspoon do
       expect(config).to be(Teaspoon::Configuration)
     end
 
+    it "sets configured to true" do
+      subject.configured = false
+      subject.setup { }
+      expect(subject.configured).to be_true
+    end
+
     it "overrides configuration from ENV" do
       subject.configuration.should_receive(:override_from_env).with(ENV)
       subject.setup { }
@@ -50,20 +56,19 @@ describe Teaspoon::Configuration do
     expect(subject.root).to eq(Rails.root.join('..', '..'))
     expect(subject.asset_paths).to include("spec/javascripts")
     expect(subject.asset_paths).to include("spec/javascripts/stylesheets")
-    expect(subject.asset_paths).to include("test/javascripts")
-    expect(subject.asset_paths).to include("test/javascripts/stylesheets")
     expect(subject.fixture_path).to eq("spec/javascripts/fixtures")
 
     expect(subject.driver).to eq("phantomjs")
-    expect(subject.driver_options).to eq(nil)
+    expect(subject.driver_options).to be_nil
     expect(subject.driver_timeout).to eq(180)
     expect(subject.server).to be_nil
     expect(subject.server_port).to be_nil
     expect(subject.server_timeout).to eq(20)
     expect(subject.formatters).to eq(['dot'])
-    expect(subject.fail_fast).to eq(true)
-    expect(subject.suppress_log).to eq(false)
-    expect(subject.color).to eq(true)
+    expect(subject.use_coverage).to be_nil
+    expect(subject.fail_fast).to be_true
+    expect(subject.suppress_log).to be_false
+    expect(subject.color).to be_true
 
     expect(subject.suite_configs).to be_a(Hash)
     expect(subject.coverage_configs).to be_a(Hash)
@@ -144,6 +149,7 @@ describe Teaspoon::Configuration::Suite do
     expect(subject.helper).to eq("spec_helper")
     expect(subject.javascripts).to eq(["teaspoon/jasmine"])
     expect(subject.stylesheets).to eq(["teaspoon"])
+    expect(subject.no_coverage).to eq([%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}])
   end
 
   it "accepts a block that can override defaults" do
@@ -184,12 +190,11 @@ describe Teaspoon::Configuration::Coverage do
 
   it "has the default configuration" do
     expect(subject.reports).to eq(["text-summary"])
-    expect(subject.ignored).to eq([%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}])
     expect(subject.output_path).to eq("coverage")
-    expect(subject.statement_threshold).to be_nil
-    expect(subject.function_threshold).to be_nil
-    expect(subject.branch_threshold).to be_nil
-    expect(subject.line_threshold).to be_nil
+    expect(subject.statements).to be_nil
+    expect(subject.functions).to be_nil
+    expect(subject.branches).to be_nil
+    expect(subject.lines).to be_nil
   end
 
   it "accepts a block that can override defaults" do
