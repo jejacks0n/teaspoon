@@ -5,6 +5,8 @@ require "sprockets/railtie"
 
 Bundler.require
 
+require File.expand_path("../../../teaspoon_env.rb", __FILE__)
+
 module Dummy
   class Application < Rails::Application
     # Configure the default encoding used in templates for Ruby 1.9.
