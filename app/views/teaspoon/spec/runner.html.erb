@@ -4,15 +4,15 @@
   <title>Teaspoon :: Javascript Test Runner</title>
   <meta name="viewport" content="width=device-width, user-scalable=no">
   <%= csrf_meta_tags %>
-  <%= stylesheet_link_tag_for_teaspoon *@suite.stylesheets %>
-  <%= javascript_include_tag_for_teaspoon *@suite.core_javascripts %>
+  <%= stylesheet_link_tag *@suite.stylesheets %>
+  <%= javascript_include_tag *@suite.core_javascripts %>
   <script type="text/javascript">
     Teaspoon.version = <%=raw Teaspoon::VERSION.inspect %>;
     Teaspoon.root = <%=raw Teaspoon.configuration.mount_at.inspect %>;
     Teaspoon.suites = <%=raw @suite.suites.to_json %>;
-    Teaspoon.config = <%=raw @suite.js_config.to_json %>;
+//    Teaspoon.config = raw @suite.js_config.to_json
   </script>
-  <%= render @suite.boot_partial || 'standard' %>
+  <%= render 'standard' %>
 </head>
 <body data-no-turbolink>
 </body>

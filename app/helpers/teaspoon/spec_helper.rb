@@ -1,19 +1,6 @@
 # todo: can we get rid of this already?
 module Teaspoon::SpecHelper
 
-  def stylesheet_link_tag_for_teaspoon(*sources)
-    sources.collect do |source|
-      asset = defined?(lookup_asset_for_path) ? lookup_asset_for_path(source, type: :stylesheet) : asset_paths.asset_for(source, "css")
-      if asset.respond_to?(:logical_path)
-        asset.to_a.map do |dep|
-          stylesheet_link_tag(dep.pathname.to_s, href: asset_src(dep, source), type: "text/css").split("\n")
-        end
-      else
-        stylesheet_link_tag(source) unless source.blank?
-      end
-    end.flatten.uniq.join("\n").html_safe
-  end
-
   def javascript_include_tag_for_teaspoon(*sources)
     options = sources.extract_options!
     sources.collect do |source|
@@ -32,6 +19,7 @@ module Teaspoon::SpecHelper
     params = "?body=1"
     params << "&instrument=1" if instrument && @suite && @suite.instrument_file?(dep.pathname.to_s)
 
-    "#{Teaspoon.configuration.context}#{Rails.application.config.assets.prefix}/#{dep.logical_path}#{params}"
+    "#{Rails.application.config.assets.prefix}/#{dep.logical_path}#{params}"
+    #"#{Teaspoon.configuration.context}#{Rails.application.config.assets.prefix}/#{dep.logical_path}#{params}"
   end
 end
