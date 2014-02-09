@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module Teaspoon
   module Formatters
     class SnowdayFormatter < DotFormatter
