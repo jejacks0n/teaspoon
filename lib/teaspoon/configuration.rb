@@ -145,9 +145,13 @@ module Teaspoon
   @@configured = false
   @@configuration = Configuration
 
-  def self.setup
+  def self.configure
     yield @@configuration
     @@configured = true
     @@configuration.override_from_env(ENV)
+  end
+
+  def self.setup(&block)
+    configure(&block)
   end
 end

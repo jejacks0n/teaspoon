@@ -8,23 +8,32 @@ describe Teaspoon do
     expect(subject.configuration).to be(Teaspoon::Configuration)
   end
 
-  describe ".setup" do
+  describe ".configure" do
 
     it "yields configuration" do
       config = nil
-      subject.setup { |c| config = c }
+      subject.configure { |c| config = c }
       expect(config).to be(Teaspoon::Configuration)
     end
 
     it "sets configured to true" do
       subject.configured = false
-      subject.setup { }
+      subject.configure { }
       expect(subject.configured).to be_true
     end
 
     it "overrides configuration from ENV" do
       subject.configuration.should_receive(:override_from_env).with(ENV)
-      subject.setup { }
+      subject.configure { }
+    end
+
+  end
+
+  describe ".setup" do
+
+    it "calls configure" do
+      subject.should_receive(:configure).with(&block = proc{})
+      subject.setup(&block)
     end
 
   end
