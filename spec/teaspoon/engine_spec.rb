@@ -19,13 +19,4 @@ describe Teaspoon::Engine do
     expect(Rails.application.config.assets.paths).to include(Teaspoon.configuration.root.join("spec/javascripts/stylesheets").to_s)
   end
 
-  it "injects our instrumentation into sprockets" do
-    pending "not sure how to test"
-    #expect(Sprockets::Environment.methods).to include("add?")
-  end
-
-  it "adds the teaspoon routes" do
-    pending "not sure how to test"
-  end
-
 end

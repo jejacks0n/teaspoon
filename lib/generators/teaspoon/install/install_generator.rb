@@ -23,7 +23,7 @@ module Teaspoon
       end
 
       def copy_initializers
-        copy_file "templates/#{framework}/env.rb", "#{framework_type}/teaspoon_env.rb" if options[:env]
+        copy_file "templates/#{framework}/env.rb", "#{framework_type}/teaspoon_env.rb"
       end
 
       def create_structure

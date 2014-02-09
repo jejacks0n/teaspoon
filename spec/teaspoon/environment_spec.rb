@@ -32,32 +32,60 @@ describe Teaspoon::Environment do
     before do
       File.stub(:exists?)
       subject.stub(:require_env)
+      Teaspoon.configured = false
+      @orig_teaspoon_env = ENV['TEASPOON_ENV']
+      ENV['TEASPOON_ENV'] = nil
     end
 
-    it "allows passing an override" do
-      subject.should_receive(:require_env).with(File.expand_path("_override_", Dir.pwd))
-      subject.require_environment("_override_")
+    after do
+      Teaspoon.configured = true
+      ENV['TEASPOON_ENV'] = @orig_teaspoon_env
     end
 
-    it "looks for the standard files" do
-      File.should_receive(:exists?).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd)).and_return(true)
-      subject.should_receive(:require_env).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd))
-      subject.require_environment
+    describe "when loading with an override" do
 
-      File.should_receive(:exists?).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd)).and_return(false)
-      File.should_receive(:exists?).with(File.expand_path("test/teaspoon_env.rb", Dir.pwd)).and_return(true)
-      subject.should_receive(:require_env).with(File.expand_path("test/teaspoon_env.rb", Dir.pwd))
-      subject.require_environment
+      before do
+        subject.should_receive(:require_env).and_call_original
+      end
 
-      File.should_receive(:exists?).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd)).and_return(false)
-      File.should_receive(:exists?).with(File.expand_path("test/teaspoon_env.rb", Dir.pwd)).and_return(false)
-      File.should_receive(:exists?).with(File.expand_path("teaspoon_env.rb", Dir.pwd)).and_return(true)
-      subject.should_receive(:require_env).with(File.expand_path("teaspoon_env.rb", Dir.pwd))
-      subject.require_environment
+      it "allows passing an override" do
+        expanded = File.expand_path("_override_", Dir.pwd)
+        ::Kernel.should_receive(:load).with(expanded)
+        subject.require_environment("_override_")
+      end
+
+      it "sets the TEASPOON_ENV" do
+        expanded = File.expand_path("../../_override_file_", Dir.pwd)
+        ::Kernel.should_receive(:load).with(expanded)
+        subject.require_environment("../../_override_file_")
+        expect(ENV["TEASPOON_ENV"]).to eq(expanded)
+      end
+
     end
 
-    it "raises if no env file was found" do
-      expect{ subject.require_environment }.to raise_error(Teaspoon::EnvironmentNotFound)
+    describe "when loading from defaults" do
+
+      it "looks for the standard files" do
+        File.should_receive(:exists?).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd)).and_return(true)
+        subject.should_receive(:require_env).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd))
+        subject.require_environment
+
+        File.should_receive(:exists?).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd)).and_return(false)
+        File.should_receive(:exists?).with(File.expand_path("test/teaspoon_env.rb", Dir.pwd)).and_return(true)
+        subject.should_receive(:require_env).with(File.expand_path("test/teaspoon_env.rb", Dir.pwd))
+        subject.require_environment
+
+        File.should_receive(:exists?).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd)).and_return(false)
+        File.should_receive(:exists?).with(File.expand_path("test/teaspoon_env.rb", Dir.pwd)).and_return(false)
+        File.should_receive(:exists?).with(File.expand_path("teaspoon_env.rb", Dir.pwd)).and_return(true)
+        subject.should_receive(:require_env).with(File.expand_path("teaspoon_env.rb", Dir.pwd))
+        subject.require_environment
+      end
+
+      it "raises if no env file was found" do
+        expect{ subject.require_environment }.to raise_error(Teaspoon::EnvironmentNotFound)
+      end
+
     end
 
   end

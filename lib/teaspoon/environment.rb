@@ -16,12 +16,18 @@ module Teaspoon
     end
 
     def self.require_environment(override = nil)
-      return if Teaspoon.respond_to?(:configured) && Teaspoon.configured
-      return require_env(File.expand_path(override, Dir.pwd)) if override
+      override ||= ENV["TEASPOON_ENV"]
+      if override
+        override = File.expand_path(override, Dir.pwd)
+        ENV["TEASPOON_ENV"] = override
+        return require_env(override)
+      end
 
       standard_environments.each do |filename|
         file = File.expand_path(filename, Dir.pwd)
         return require_env(file) if File.exists?(file)
+        #file = File.expand_path(filename, File.join(Dir.pwd, '../..'))
+        #return require_env(file) if File.exists?(file)
       end
 
       raise Teaspoon::EnvironmentNotFound, "Unable to load Teaspoon environment in {#{standard_environments.join(', ')}}"
