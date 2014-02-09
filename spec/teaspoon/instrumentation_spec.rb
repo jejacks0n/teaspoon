@@ -100,7 +100,7 @@ describe Teaspoon::Instrumentation do
       subject.add_to(response, {"QUERY_STRING" => "instrument=true"})
       status, headers, asset = response
       expect(status).to eq(200)
-      expect(headers).to eq("Content-Type" => "application/javascript", "Content-Length" => "1571")
+      expect(headers).to include("Content-Type" => "application/javascript")
       expect(asset.source).to include("if (typeof __coverage__ === 'undefined') { __coverage__ = {}; }")
     end
 
