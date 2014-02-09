@@ -20,11 +20,11 @@ module Teaspoon
       false
     end
 
-    def self.executable
+    def self.executable(raise = true)
       return @executable if @executable
       @executable = which("istanbul")
       return @executable unless @executable.blank?
-      raise Teaspoon::MissingDependency, "Could not find Istanbul. Install istanbul via npm."
+      raise Teaspoon::MissingDependency, "Could not find Istanbul. Install istanbul via npm." if raise
     end
 
     def initialize(executable, response)

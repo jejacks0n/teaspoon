@@ -3,7 +3,7 @@ require "spec_helper"
 feature "instrumenting javascript" do
 
   before do
-    pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable
+    pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable(false)
   end
 
   scenario "requesting with instrument=true adds istanbul instrumentation" do

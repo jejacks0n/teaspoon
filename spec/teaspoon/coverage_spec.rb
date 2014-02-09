@@ -8,16 +8,13 @@ describe Teaspoon::Coverage do
   let(:config) { double }
 
   before do
+    Teaspoon::Instrumentation.stub(:executable).and_return("/path/to/executable")
     subject.stub(:`).and_return("")
     subject.stub(:input_path).and_yield("/temp_path/coverage.json")
     subject.instance_variable_set(:@config, config)
   end
 
   describe "#initialize" do
-
-    before do
-      subject.instance_variable_set(:@executable, "/path/to/executable")
-    end
 
     it "sets @suite_name" do
       expect(subject.instance_variable_get(:@suite_name)).to eq("_suite_")
@@ -36,10 +33,6 @@ describe Teaspoon::Coverage do
 
   describe "#generate_reports" do
 
-    before do
-      subject.instance_variable_set(:@executable, "/path/to/executable")
-    end
-
     let(:config) { double(reports: ["html", "text", "text-summary"], output_path: "output/path") }
 
     it "generates reports using istanbul and passes them to the block provided" do
@@ -56,10 +49,6 @@ describe Teaspoon::Coverage do
   end
 
   describe "#check_thresholds" do
-
-    before do
-      subject.instance_variable_set(:@executable, "/path/to/executable")
-    end
 
     let(:config) { double(statements: 42, functions: 66.6, branches: 0, lines: 100) }
 
@@ -91,8 +80,13 @@ describe Teaspoon::Coverage do
     let(:config) { double(reports: ["text", "text-summary"], output_path: "output/path") }
 
     before do
+      Teaspoon::Instrumentation.should_receive(:executable).and_call_original
       subject.should_receive(:input_path).and_call_original
       subject.should_receive(:`).and_call_original
+
+      executable = Teaspoon::Instrumentation.executable(false)
+      pending('needs istanbul to be installed') unless executable
+      subject.instance_variable_set(:@executable, executable)
       subject.instance_variable_set(:@data, JSON.parse(IO.read(Teaspoon::Engine.root.join('spec/fixtures/coverage.json'))))
     end
 

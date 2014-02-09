@@ -93,7 +93,7 @@ describe Teaspoon::Instrumentation do
     let(:asset) { Rails.application.assets.find_asset('instrumented1.coffee') }
 
     before do
-      pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable
+      pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable(false)
     end
 
     it "instruments a file" do
