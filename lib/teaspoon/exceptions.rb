@@ -5,6 +5,7 @@ module Teaspoon
   class ServerException < Teaspoon::Error; end
   class RunnerException < Teaspoon::Error; end
   class UnknownDriver < Teaspoon::Error; end
+  class UnknownDriverOptions < Teaspoon::Error; end
   class UnknownFormatter < Teaspoon::Error; end
   class UnknownSuite < Teaspoon::Error; end
   class AssetNotServable < Teaspoon::Error; end

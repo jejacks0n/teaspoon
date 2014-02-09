@@ -4,6 +4,24 @@ describe Teaspoon::Drivers::SeleniumDriver do
 
   describe "#initialize" do
 
+    it "assigns @options" do
+      subject = Teaspoon::Drivers::SeleniumDriver.new(foo: "bar")
+      expect(subject.instance_variable_get(:@options)).to eq(foo: "bar")
+    end
+
+    it "accepts a string for options" do
+      subject = Teaspoon::Drivers::SeleniumDriver.new('{"foo":"bar"}')
+      expect(subject.instance_variable_get(:@options)).to eq("foo" => "bar")
+    end
+
+    it "raises a Teaspoon::UnknownDriverOptions exception if the options aren't understood" do
+      expect { Teaspoon::Drivers::SeleniumDriver.new(true) }.to raise_error(Teaspoon::UnknownDriverOptions)
+    end
+
+    it "raises a Teaspoon::UnknownDriverOptions exception if the options aren't parseable" do
+      expect { Teaspoon::Drivers::SeleniumDriver.new("{foo:bar}") }.to raise_error(Teaspoon::UnknownDriverOptions)
+    end
+
   end
 
   describe "#run_specs" do
@@ -32,7 +50,7 @@ describe Teaspoon::Drivers::SeleniumDriver do
     end
 
     it "waits for the specs to complete, setting the interval, timeout and message" do
-      Selenium::WebDriver::Wait.should_receive(:new).with(timeout: 180, interval: 0.01, message: "Timed out")
+      Selenium::WebDriver::Wait.should_receive(:new).with(HashWithIndifferentAccess.new(client_driver: :firefox, timeout: 180, interval: 0.01, message: "Timed out"))
       subject.run_specs(runner, "_url_")
     end
 

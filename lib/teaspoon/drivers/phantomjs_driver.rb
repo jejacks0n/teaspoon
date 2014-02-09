@@ -9,12 +9,18 @@ module Teaspoon
     class PhantomjsDriver < Base
       include Teaspoon::Utility
 
-      def initialize(options = "")
-        @options = options
+      def initialize(options = nil)
+        options ||= []
+        case options
+        when Array  then @options = options
+        when String then @options = options.split(" ")
+        when Hash   then @options = options.map { |k, v| "--#{k}=#{v}" }
+        else raise Teaspoon::UnknownDriverOptions, "Unknown driver options -- supply a string, array or hash"
+        end
       end
 
       def run_specs(runner, url)
-        run(*cli_arguments(url)) do |line|
+        run(*driver_options(url)) do |line|
           runner.process(line) if line && line.strip != ""
         end
       end
@@ -22,11 +28,11 @@ module Teaspoon
       protected
 
       def run(*args, &block)
-        IO.popen([executable, *args]) { |io| io.each(&block) }
+        IO.popen([executable, *args].join(' ')) { |io| io.each(&block) }
       end
 
-      def cli_arguments(url)
-        [@options.to_s.split(" "), script, url].flatten.compact
+      def driver_options(url)
+        [@options, script, url, Teaspoon.configuration.driver_timeout].flatten.compact
       end
 
       def executable

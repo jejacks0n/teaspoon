@@ -6,7 +6,21 @@ describe Teaspoon::Drivers::PhantomjsDriver do
 
     it "assigns @options" do
       subject = Teaspoon::Drivers::PhantomjsDriver.new(foo: "bar")
-      expect(subject.instance_variable_get(:@options)).to eq(foo: "bar")
+      expect(subject.instance_variable_get(:@options)).to eq(["--foo=bar"])
+    end
+
+    it "accepts a string for options" do
+      subject = Teaspoon::Drivers::PhantomjsDriver.new("--foo=bar --bar=baz")
+      expect(subject.instance_variable_get(:@options)).to eq(["--foo=bar", "--bar=baz"])
+    end
+
+    it "accepts an array for options" do
+      subject = Teaspoon::Drivers::PhantomjsDriver.new(["--foo=bar", "--bar=baz"])
+      expect(subject.instance_variable_get(:@options)).to eq(["--foo=bar", "--bar=baz"])
+    end
+
+    it "raises a Teaspoon::UnknownDriverOptions exception if the options aren't understood" do
+      expect { Teaspoon::Drivers::PhantomjsDriver.new(true) }.to raise_error(Teaspoon::UnknownDriverOptions)
     end
 
   end
@@ -22,8 +36,8 @@ describe Teaspoon::Drivers::PhantomjsDriver do
       end
 
       it "calls #run and calls runner.process with each line of output" do
-        subject.instance_variable_set(:@options, "--foo --bar")
-        args = ["--foo", "--bar", Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.js").to_s, "_url_"]
+        subject.instance_variable_set(:@options, ["--foo", "--bar"])
+        args = ["--foo", "--bar", Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.js").to_s, "_url_", 180]
         runner.should_receive(:process).with("_line_")
         @block = nil
         subject.should_receive(:run).with(*args) { |&b| @block = b }

@@ -28,7 +28,7 @@ module Teaspoon
                      :formatters, :use_coverage, :fail_fast, :suppress_log, :color
     @@driver         = "phantomjs"
     @@driver_options = nil
-    @@driver_timeout = 180 # todo: use this!
+    @@driver_timeout = 180
     @@server         = nil
     @@server_port    = nil
     @@server_timeout = 20
