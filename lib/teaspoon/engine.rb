@@ -15,6 +15,7 @@ module Teaspoon
       rescue Teaspoon::EnvironmentNotFound
         # it's ok for this to fail sometimes, like before the initializer is run etc
       end
+
       default_root_path(app.root)                 # default the root if it's not set
       append_asset_paths(app.config.assets.paths) # append the asset paths from the configuration
     end

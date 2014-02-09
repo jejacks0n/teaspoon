@@ -84,7 +84,7 @@ describe Teaspoon::Coverage do
       subject.should_receive(:input_path).and_call_original
       subject.should_receive(:`).and_call_original
 
-      executable = Teaspoon::Instrumentation.executable(false)
+      executable = Teaspoon::Instrumentation.executable
       pending('needs istanbul to be installed') unless executable
       subject.instance_variable_set(:@executable, executable)
       subject.instance_variable_set(:@data, JSON.parse(IO.read(Teaspoon::Engine.root.join('spec/fixtures/coverage.json'))))

@@ -40,7 +40,7 @@ feature "testing with teaspoon in the console", aruba: true do
   end
 
   scenario "displays coverage information" do
-    pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable(false)
+    pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable
     pending("needs to be figured out")
     # for some reason when loaded in the specs the instrumentation isn't working, though it is working in practice
     #   confirmed that no data is coming through to Teaspoon::Coverage in the result reported by the console reporter

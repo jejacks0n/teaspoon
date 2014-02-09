@@ -92,12 +92,11 @@ describe Teaspoon::Instrumentation do
     let(:asset) { Rails.application.assets.find_asset('instrumented1.coffee') }
 
     before do
-      pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable(false)
+      pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable
     end
 
     it "instruments a file" do
-      subject.add_to(response, {"QUERY_STRING" => "instrument=true"})
-      status, headers, asset = response
+      status, headers, asset = subject.add_to(response, {"QUERY_STRING" => "instrument=true"})
       expect(status).to eq(200)
       expect(headers).to include("Content-Type" => "application/javascript")
       expect(asset.source).to match(/var __cov_.+ = \(Function\('return this'\)\)\(\);/)
