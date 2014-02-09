@@ -101,7 +101,7 @@ describe Teaspoon::Instrumentation do
       status, headers, asset = response
       expect(status).to eq(200)
       expect(headers).to include("Content-Type" => "application/javascript")
-      expect(asset.source).to include("if (typeof __coverage__ === 'undefined') { __coverage__ = {}; }")
+      expect(asset.source).to match(/var __cov_[\w]+ = \(Function\('return this'\)\)\(\);/)
     end
 
   end
