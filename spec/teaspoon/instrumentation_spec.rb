@@ -47,8 +47,7 @@ describe Teaspoon::Instrumentation do
       response = [666, {"Content-Type" => "application/javascript"}, asset]
       expected = [666, {"Content-Type" => "application/javascript", "Content-Length" => "59"}, asset]
 
-      subject.add_to(response, env)
-      expect(response).to eq(expected)
+      expect(subject.add_to(response, env)).to eq(expected)
     end
 
   end
