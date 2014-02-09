@@ -31,6 +31,7 @@ module Teaspoon
 
     def notify_formatters(event, result)
       @formatters.each { |f| f.send(event, result) if f.respond_to?(event) }
+      send(:"on_#{event}", result) if respond_to?(:"on_#{event}", true)
     end
 
     def result_from_line(line)
@@ -46,6 +47,25 @@ module Teaspoon
       result = Teaspoon::Result.build_from_json(json)
       @failure_count += 1 if result.failing?
       result
+    end
+
+    def on_exception(result)
+      raise Teaspoon::RunnerException, result.message
+    end
+
+    def on_result(result)
+      resolve_coverage(result.coverage)
+      notify_formatters("complete", @failure_count)
+    end
+
+    def resolve_coverage(data)
+      return unless Teaspoon.configuration.use_coverage && data.present?
+      coverage = Teaspoon::Coverage.new(@suite_name, Teaspoon.configuration.use_coverage, data)
+      coverage.generate_reports { |msg| notify_formatters("coverage", msg) }
+      coverage.check_thresholds do |msg|
+        notify_formatters("threshold_failure", msg)
+        @failure_count += 1
+      end
     end
   end
 end

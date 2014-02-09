@@ -5,6 +5,7 @@ describe Teaspoon::Formatters::TeamcityFormatter do
   let(:passing_spec) { double(passing?: true, description: "_passing_[desc]\rip|'o\n_") }
   let(:pending_spec) { double(passing?: false, pending?: true, description: "_pending_[desc]_") }
   let(:failing_spec) { double(passing?: false, pending?: false, description: "_failing_[desc]_", message: "_failure_[mess]age_") }
+  let(:result) { double }
 
   before do
     @log = ""
@@ -68,10 +69,50 @@ describe Teaspoon::Formatters::TeamcityFormatter do
 
   describe "#result" do
 
+    it "closes any open suites" do
+      subject.instance_variable_set(:@last_suite, double(label: "_last_suite_label_"))
+      subject.result(result)
+      expect(@log).to include(%Q{##teamcity[testSuiteFinished name='_last_suite_label_']})
+    end
+
+    it "assigns @result" do
+      subject.result(result)
+      expect(subject.instance_variable_get(:@result)).to eq(result)
+    end
+
+  end
+
+  describe "#coverage" do
+
+    it "logs the coverage" do
+      subject.coverage("_text_\n\n_text_summary_")
+      expect(@log).to include(%Q{##teamcity[testSuiteStarted name='Coverage summary']\n})
+      expect(@log).to include(%Q{_text_\n\n_text_summary_\n})
+      expect(@log).to include(%Q{##teamcity[testSuiteFinished name='Coverage summary']\n})
+    end
+
+  end
+
+  describe "#threshold_failure" do
+
+    it "logs the threshold failures" do
+      subject.threshold_failure("_was_not_met_\n_was_not_met_")
+      expect(@log).to include(%Q{##teamcity[testSuiteStarted name='Coverage thresholds']\n})
+      expect(@log).to include(%Q{##teamcity[testStarted name='Coverage thresholds' captureStandardOutput='true']\n})
+      expect(@log).to include(%Q{##teamcity[testFailed name='Coverage thresholds' message='were not met']\n})
+      expect(@log).to include(%Q{_was_not_met_\n_was_not_met_\n})
+      expect(@log).to include(%Q{##teamcity[testFinished name='Coverage thresholds']\n})
+      expect(@log).to include(%Q{##teamcity[testSuiteFinished name='Coverage thresholds']\n})
+    end
+
+  end
+
+  describe "#complete" do
+
     let(:result) { double(elapsed: 3.1337, coverage: nil) }
 
     before do
-      subject.instance_variable_set(:@last_suite, double(label: "_last_suite_label_"))
+      subject.instance_variable_set(:@result, result)
 
       subject.run_count = 6
       subject.passes = [1, 2]
@@ -81,8 +122,7 @@ describe Teaspoon::Formatters::TeamcityFormatter do
     end
 
     it "ends the suite" do
-      expect { subject.result(result) }.to raise_error Teaspoon::Failure
-      expect(@log).to include(%Q{##teamcity[testSuiteFinished name='_last_suite_label_']\n\n})
+      subject.complete(1)
       expect(@log).to include(%Q{Finished in 3.1337 seconds\n})
       expect(@log).to include(%Q{6 examples, 1 failure, 2 pending\n\n})
     end

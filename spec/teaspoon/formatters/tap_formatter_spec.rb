@@ -51,4 +51,22 @@ describe Teaspoon::Formatters::TapFormatter do
 
   end
 
+  describe "#coverage" do
+
+    it "logs the coverage" do
+      subject.coverage("_text_\n\n_text_summary_")
+      expect(@log).to eq("# _text_\n# \n# _text_summary_\n")
+    end
+
+  end
+
+  describe "#threshold_failure" do
+
+    it "logs the threshold failures" do
+      subject.threshold_failure("_was_not_met_\n_was_not_met_")
+      expect(@log).to eq("not ok 1 - Coverage threshold failed\n# _was_not_met_\n# _was_not_met_\n")
+    end
+
+  end
+
 end

@@ -34,6 +34,14 @@ module Teaspoon
         log_failed_examples
       end
 
+      def log_coverage(message)
+        log_line("\n#{message}")
+      end
+
+      def log_threshold_failure(message)
+        log_line("\n#{message}\n", RED)
+      end
+
       private
 
       def log_information

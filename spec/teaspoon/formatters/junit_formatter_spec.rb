@@ -73,9 +73,31 @@ describe Teaspoon::Formatters::JunitFormatter do
 
     let(:result) { double(coverage: nil) }
 
-    it "ends the suite" do
+    it "closes the last suite" do
+      subject.should_receive(:log_end_suite)
       subject.result(result)
-      expect(@log).to eq("</testsuite>\n</testsuites>\n")
+    end
+
+  end
+
+  describe "#coverage" do
+
+    it "logs the coverage" do
+      subject.coverage("_text_\n\n_text_summary_")
+      expect(@log).to eq(%Q{<testsuite name="Coverage summary" tests="0">\n<properties>\n<![CDATA[\n_text_\n_text_summary_\n]]>\n<properties>\n</testsuite>\n})
+    end
+
+  end
+
+  describe "#threshold_failure" do
+
+    it "logs the threshold failures" do
+      subject.threshold_failure("_was_not_met_\n_was_not_met_")
+      expect(@log).to include(%Q{<testsuite name="Coverage thresholds" tests="1">\n})
+      expect(@log).to include(%Q{<testcase classname="Coverage thresholds" name="were not met">\n})
+      expect(@log).to include(%Q{  <failure type="AssertionFailed">\n<![CDATA[\n_was_not_met_\n_was_not_met_\n]]>\n</failure>\n})
+      expect(@log).to include(%Q{</testcase>\n})
+      expect(@log).to include(%Q{</testsuite>\n})
     end
 
   end

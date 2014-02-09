@@ -26,9 +26,9 @@ module Teaspoon
 
       attr_accessor :total_count, :run_count, :passes, :pendings, :failures, :errors
 
-      def initialize(suite_name = :default)
+      def initialize(suite_name = :default, output_file = nil)
         @suite_name  = suite_name.to_s
-        @coverage    = Teaspoon::Coverage.new(@suite_name)
+        @output_file = output_file
         @stdout      = ""
         @suite       = nil
         @last_suite  = nil
@@ -74,25 +74,34 @@ module Teaspoon
         log_error(result) if log
       end
 
-      # exception came from startup errors in the server
+      # exception came from startup errors in the server (will exit after logging)
       def exception(result = {}, log = true)
         log_exception(result) if log
-        raise Teaspoon::RunnerException, result.message
       end
 
-      # consoles can come from console.log/debug/error and can be sent to STDOUT
+      # console message come from console.log/debug/error
       def console(message, log = true)
         @stdout << message
         log_console(message) if log
       end
 
-      # final report, which can include coverage
+      # final report
       def result(result, log = true)
         log_result(result) if log
-        log_coverage(result.coverage)
-        return if failures.size == 0
-        log_line
-        raise Teaspoon::Failure if Teaspoon.configuration.fail_fast
+      end
+
+      # called with the text versions of coverage if configured to do so
+      def coverage(message, log = true)
+        log_coverage(message) if log
+      end
+
+      # called with an array of strings which explain which coverage thresholds failed
+      def threshold_failure(message, log = true)
+        log_threshold_failure(message) if log
+      end
+
+      def complete(failure_count, log = true)
+        log_complete(failure_count) if log
       end
 
       protected
@@ -117,28 +126,36 @@ module Teaspoon
 
       def log_exception(result); end
 
-      def log_console(log); end
+      def log_console(message); end
 
       def log_result(result); end
 
-      def log_coverage(data)
-        #return if data.blank?
-        #report_output = Teaspoon::Coverage.new(data, @suite_name).reports
-        #log_str(report_output) unless Teaspoon.configuration.suppress_log
-      end
+      def log_coverage(message); end
+
+      def log_threshold_failure(message); end
+
+      def log_complete(failure_count); end
 
       private
 
       def log_str(str, color_code = nil)
+        return log_to_file(str, @output_file) if @output_file
         STDOUT.print(color_code ? colorize(str, color_code) : str)
       end
 
       def log_line(str = "", color_code = nil)
+        return log_to_file("#{str}\n", @output_file) if @output_file
         STDOUT.print("#{color_code ? colorize(str, color_code) : str}\n")
       end
 
+      def log_to_file(str, output_file)
+        File.open(output_file, "a") { |f| f.write(str) }
+      rescue IOError => e
+        raise Teaspoon::FileNotWritable, e.message
+      end
+
       def colorize(str, color_code)
-        return str unless Teaspoon.configuration.color
+        return str unless Teaspoon.configuration.color || @output_file
         "\e[#{color_code}m#{str}\e[0m"
       end
 

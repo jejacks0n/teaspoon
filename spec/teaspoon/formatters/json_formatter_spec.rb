@@ -49,7 +49,7 @@ describe Teaspoon::Formatters::JsonFormatter do
 
     it "logs the original json" do
       subject.should_receive(:log_result).with(result)
-      expect { subject.exception(result) }.to raise_error
+      subject.exception(result)
     end
 
   end

@@ -4,7 +4,7 @@ module Teaspoon
     attr_accessor :config, :name
 
     def self.all
-      Teaspoon.configuration.suite_configs.keys.map { |suite| Teaspoon::Suite.new(suite: suite) }
+      @all ||= Teaspoon.configuration.suite_configs.keys.map { |suite| Teaspoon::Suite.new(suite: suite) }
     end
 
     def self.resolve_spec_for(file)
@@ -67,7 +67,8 @@ module Teaspoon
 
     def link(params = {})
       query = "?#{params.to_query}" if params.present?
-      "#{Teaspoon.configuration.context}#{Teaspoon.configuration.mount_at}/#{name}#{query}"
+      "#{Teaspoon.configuration.mount_at}/#{name}#{query}"
+      #"#{Teaspoon.configuration.context}#{Teaspoon.configuration.mount_at}/#{name}#{query}"
     end
 
     def instrument_file?(file)
@@ -113,7 +114,7 @@ module Teaspoon
 
     def suite_configuration
       config = Teaspoon.configuration.suite_configs[name]
-      raise Teaspoon::UnknownSuite, "Unknown suite \"name\"" unless config.present?
+      raise Teaspoon::UnknownSuite, "Unknown suite \"#{name}\"" unless config.present?
       Teaspoon::Configuration::Suite.new(&config)
     end
 

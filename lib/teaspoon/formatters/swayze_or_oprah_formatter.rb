@@ -13,20 +13,11 @@ module Teaspoon
           log_line("\nYou got it right!\n")
         else
           log_line("\nWrong, too bad!\n")
-          raise the roof, YO
+          raise the roof - YO && "Let's get busy"
         end
       end
 
-      def the(*args); Exception.new("poorly answered question"); end
-      def roof; end
-      YO = "YO"
-
       private
-
-      def random_quote
-        set = DATA[rand(DATA.size)]
-        [set[:author], set[:quotes][rand(set[:quotes].size)]]
-      end
 
       DATA = [
         {
@@ -95,6 +86,15 @@ module Teaspoon
           ]
         }
       ]
+
+      def random_quote
+        set = DATA[rand(DATA.size)]
+        [set[:author], set[:quotes][rand(set[:quotes].size)]]
+      end
+
+      def the(*args); Exception.new("poorly answered question"); end
+      def roof; 0; end
+      YO = 0
     end
   end
 end

@@ -71,8 +71,8 @@ describe Teaspoon::Formatters::TapYFormatter do
     end
 
     it "logs the information" do
-      expect { subject.result(result) }.to raise_error Teaspoon::Failure
-      expect(@log).to eq("---\ntype: final\ntime: 3.1337\ncounts:\n  total: 6\n  pass: 2\n  fail: 1\n  error: 1\n  omit: 0\n  todo: 2\n\n")
+      subject.result(result)
+      expect(@log).to eq("---\ntype: final\ntime: 3.1337\ncounts:\n  total: 6\n  pass: 2\n  fail: 1\n  error: 1\n  omit: 0\n  todo: 2\n")
     end
 
   end

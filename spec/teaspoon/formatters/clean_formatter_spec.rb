@@ -26,8 +26,8 @@ describe Teaspoon::Formatters::CleanFormatter do
       end
 
       it "logs the failures but not the failure commands" do
-        expect { subject.result(result) }.to raise_error Teaspoon::Failure
-        expect(@log).to eq("\n\nFailures:\n\n  1) _description_\n\e[31m     Failure/Error: _message_\n\e[0m\nFinished in 3.1337 seconds\n\e[31m666 examples, 1 failure\e[0m\n\n")
+        subject.result(result)
+        expect(@log).to eq("\n\nFailures:\n\n  1) _description_\n\e[31m     Failure/Error: _message_\n\e[0m\nFinished in 3.1337 seconds\n\e[31m666 examples, 1 failure\e[0m\n")
       end
 
     end

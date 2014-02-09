@@ -38,10 +38,30 @@ module Teaspoon
 
       def log_result(result)
         log_end_suite
-        log_line("\nFinished in #{result.elapsed} seconds")
-        stats = "#{pluralize("example", run_count)}, #{pluralize("failure", failures.size)}"
+        @result = result
+      end
+
+      def log_coverage(message)
+        log("testSuiteStarted name='Coverage summary'")
+        log_line(message)
+        log("testSuiteFinished name='Coverage summary'")
+      end
+
+      def log_threshold_failure(message)
+        log("testSuiteStarted name='Coverage thresholds'")
+        log_teamcity_spec(type: "testStarted", desc: "Coverage thresholds") do
+          log("testFailed name='Coverage thresholds' message='were not met'")
+          log_line(message)
+        end
+        log("testSuiteFinished name='Coverage thresholds'")
+      end
+
+      def log_complete(failure_count)
+        log_line("\nFinished in #{@result.elapsed} seconds")
+        stats = "#{pluralize("example", run_count)}, #{pluralize("failure", failure_count)}"
         stats << ", #{pendings.size} pending" if pendings.size > 0
         log_line(stats)
+        log_line if failure_count > 0
       end
 
       private

@@ -24,6 +24,15 @@ module Teaspoon
       def log_console(message)
         log_line("# #{message.gsub(/\n$/, "")}")
       end
+
+      def log_coverage(message)
+        log_line("# #{message.gsub(/\n/, "\n# ")}")
+      end
+
+      def log_threshold_failure(message)
+        log_line("not ok #{@run_count + 1} - Coverage threshold failed")
+        log_line("# #{message.gsub(/\n/, "\n# ")}")
+      end
     end
   end
 end

@@ -5,6 +5,7 @@ describe Teaspoon::Formatters::Base do
   let(:passing_spec) { double(passing?: true) }
   let(:pending_spec) { double(passing?: false, pending?: true) }
   let(:failing_spec) { double(passing?: false, pending?: false) }
+  let(:result) { double }
 
   before do
     @log = ""
@@ -13,10 +14,11 @@ describe Teaspoon::Formatters::Base do
 
   describe "#initialize" do
 
-    subject { Teaspoon::Formatters::Base.new(:foo) }
+    subject { Teaspoon::Formatters::Base.new(:foo, "_output_file_") }
 
     it "assigns various instance vars" do
       expect(subject.instance_variable_get(:@suite_name)).to eq("foo")
+      expect(subject.instance_variable_get(:@output_file)).to eq("_output_file_")
       expect(subject.instance_variable_get(:@stdout)).to eq("")
       expect(subject.instance_variable_get(:@suite)).to eq(nil)
       expect(subject.instance_variable_get(:@last_suite)).to eq(nil)
@@ -42,12 +44,10 @@ describe Teaspoon::Formatters::Base do
       expect(subject.total_count).to eq(666)
     end
 
-    it "calls #log_runner" do
+    it "calls #log_runner when appropriate" do
       subject.should_receive(:log_runner).with(result)
       subject.runner(result)
-    end
 
-    it "doesn't call #log_runner if log is false" do
       subject.should_not_receive(:log_runner)
       subject.runner(result, false)
     end
@@ -56,20 +56,16 @@ describe Teaspoon::Formatters::Base do
 
   describe "#suite" do
 
-    let(:result) { double }
-
     it "sets @suite, and @last_suite to the result" do
       subject.suite(result)
       expect(subject.instance_variable_get(:@suite)).to eq(result)
       expect(subject.instance_variable_get(:@last_suite)).to eq(result)
     end
 
-    it "calls #log_suite" do
+    it "calls #log_suite when appropriate" do
       subject.should_receive(:log_suite).with(result)
       subject.suite(result)
-    end
 
-    it "doesn't call #log_suite if log is false" do
       subject.should_not_receive(:log_suite)
       subject.suite(result, false)
     end
@@ -103,12 +99,10 @@ describe Teaspoon::Formatters::Base do
       expect(subject.failures).to eq([failing_spec])
     end
 
-    it "calls #log_spec" do
+    it "calls #log_spec when appropriate" do
       subject.should_receive(:log_spec).with(failing_spec)
       subject.spec(failing_spec)
-    end
 
-    it "doesn't call #log_spec if log is false" do
       subject.should_not_receive(:log_spec)
       subject.spec(failing_spec, false)
     end
@@ -123,19 +117,15 @@ describe Teaspoon::Formatters::Base do
 
   describe "#error" do
 
-    let(:result) { double }
-
     it "tracks the error" do
       subject.error(result)
       expect(subject.errors).to eq([result])
     end
 
-    it "calls #log_error" do
+    it "calls #log_error when appropriate" do
       subject.should_receive(:log_error).with(result)
       subject.error(result)
-    end
 
-    it "doesn't call #log_error if log is false" do
       subject.should_not_receive(:log_error)
       subject.error(result, false)
     end
@@ -144,14 +134,12 @@ describe Teaspoon::Formatters::Base do
 
   describe "#exception" do
 
-    let(:result) { double(message: "_message_") }
-
-    it "calls #log_exception when appropriate and raises a Teaspoon::RunnerException" do
+    it "calls #log_exception when appropriate" do
       subject.should_receive(:log_exception).with(result)
-      expect { subject.exception(result) }.to raise_error Teaspoon::RunnerException
+      subject.exception(result)
 
       subject.should_not_receive(:log_exception)
-      expect { subject.exception(result, false) }.to raise_error Teaspoon::RunnerException
+      subject.exception(result, false)
     end
 
   end
@@ -164,12 +152,10 @@ describe Teaspoon::Formatters::Base do
       expect(subject.instance_variable_get(:@stdout)).to eq("_message1__message2_")
     end
 
-    it "calls #log_console" do
+    it "calls #log_console when appropriate" do
       subject.should_receive(:log_console).with("_message_")
       subject.console("_message_")
-    end
 
-    it "doesn't call #log_console if log is false" do
       subject.should_not_receive(:log_console)
       subject.console("_message_", false)
     end
@@ -179,23 +165,49 @@ describe Teaspoon::Formatters::Base do
   describe "#result" do
 
     let(:result) { double(coverage: nil) }
-    let(:result_with_coverage) { double(coverage: "_coverage_") }
 
-    it "calls #log_result" do
+    it "calls #log_result when appropriate" do
       subject.should_receive(:log_result).with(result)
       subject.result(result)
+
+      subject.should_not_receive(:log_result)
+      subject.result(result, false)
     end
 
-    it "calls #log_coverage" do
-      subject.should_receive(:log_coverage).with("_coverage_")
-      subject.result(result_with_coverage)
+  end
+
+  describe "#coverage" do
+
+    it "calls #log_coverage when appropriate" do
+      subject.should_receive(:log_coverage).with("_message_")
+      subject.coverage("_message_")
+
+      subject.should_receive(:log_coverage).with("_message_")
+      subject.coverage("_message_")
     end
 
-    it "raises a Teaspoon::Failure exception if failures and configured to fail fast" do
-      Teaspoon.configuration.should_receive(:fail_fast).and_return(true)
-      subject.failures = ['failure']
-      subject.should_receive(:log_line)
-      expect { subject.result(result) }.to raise_error Teaspoon::Failure
+  end
+
+  describe "#threshold_failure" do
+
+    it "calls #log_threshold_failure when appropriate" do
+      subject.should_receive(:log_threshold_failure).with("_message_")
+      subject.threshold_failure("_message_")
+
+      subject.should_receive(:log_threshold_failure).with("_message_")
+      subject.threshold_failure("_message_")
+    end
+
+  end
+
+  describe "#complete" do
+
+    it "calls #log_complete when appropriate" do
+      subject.should_receive(:log_complete).with(42)
+      subject.complete(42)
+
+      subject.should_receive(:log_complete).with(0)
+      subject.complete(0)
     end
 
   end
@@ -215,35 +227,6 @@ describe Teaspoon::Formatters::Base do
     it "calls #log_failing_spec on failing results" do
       subject.should_receive(:log_failing_spec).with(failing_spec)
       subject.send(:log_spec, failing_spec)
-    end
-
-  end
-
-  describe "#log_coverage" do
-
-    before do
-      pending "needs to be reworked"
-    end
-
-    let(:data) { double(reports: nil) }
-
-    it "logs the coverage information" do
-      Teaspoon::Coverage.should_receive(:new).with("_data_", "default").and_return(data)
-      data.should_receive(:reports).and_return("_reports_")
-      STDOUT.should_receive(:print).with("_reports_")
-      subject.send(:log_coverage, "_data_")
-    end
-
-    it "doesn't log if there's no data" do
-      Teaspoon::Coverage.should_not_receive(:new)
-      subject.send(:log_coverage, {})
-    end
-
-    it "doesn't log when suppressing logs" do
-      Teaspoon.configuration.should_receive(:suppress_log).and_return(true)
-      Teaspoon::Coverage.should_receive(:new).and_return(data)
-      STDOUT.should_not_receive(:print)
-      subject.send(:log_coverage, "_data_")
     end
 
   end
