@@ -13,6 +13,9 @@ describe "Integration tests", ->
   it "allows failing specs", ->
     expect(true).toBe(false)
 
+  it "allows erroring specs", ->
+    foo()
+
   describe "nesting", ->
 
     it "is allowed", ->

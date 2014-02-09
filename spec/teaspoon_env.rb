@@ -5,7 +5,6 @@ unless defined?(Rails)
 end
 
 Teaspoon.configure do |config|
-
   config.root = Teaspoon::Engine.root
   config.asset_paths << Teaspoon::Engine.root.join('lib/teaspoon')
   config.asset_paths += ["test/javascripts", "test/javascripts/stylesheets"]
@@ -17,7 +16,6 @@ Teaspoon.configure do |config|
 
   config.suite :jasmine do |suite|
     suite.matcher = "spec/javascripts/**/*_jspec.{js,js.coffee,coffee}"
-    suite.javascripts = ["teaspoon/jasmine"]
     suite.helper = "jasmine_helper"
   end
 
@@ -39,10 +37,8 @@ Teaspoon.configure do |config|
     suite.helper = "angular_helper"
   end
 
-  config.suite :integration do |suite|
-    suite.matcher = "spec/dummy/app/assets/javascripts/integration/*_spec.{js,js.coffee,coffee}"
-    suite.javascripts = ["teaspoon/jasmine"]
-    suite.helper = nil
-  end
-
+  #config.suite :integration do |suite|
+  #  suite.matcher = "spec/dummy/app/assets/javascripts/integration/*_spec.{js,js.coffee,coffee}"
+  #  suite.helper = nil
+  #end
 end
