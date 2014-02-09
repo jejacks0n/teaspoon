@@ -4,3 +4,5 @@ require "teaspoon/utility"
 require "teaspoon/configuration"
 
 require "teaspoon/engine"
+
+require "teaspoon/deprecated"

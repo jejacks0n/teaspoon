@@ -150,8 +150,4 @@ module Teaspoon
     @@configured = true
     @@configuration.override_from_env(ENV)
   end
-
-  def self.setup(&block)
-    configure(&block)
-  end
 end
