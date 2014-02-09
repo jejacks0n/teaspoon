@@ -63,7 +63,6 @@ describe Teaspoon::Runner do
       subject.process('{"_teaspoon":true,"type":"spec", "status": "passed"}')
       subject.process('{"_teaspoon":true,"type":"spec", "status": "pending"}')
       subject.process('{"_teaspoon":true,"type":"error"}')
-      subject.process('{"_teaspoon":true,"type":"exception"}')
       subject.process('{"_teaspoon":true,"type":"results"}')
       expect(subject.failure_count).to be(1)
     end

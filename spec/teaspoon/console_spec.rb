@@ -59,21 +59,9 @@ describe Teaspoon::Console do
       expect(subject.execute(foo: "bar")).to be_true
     end
 
-    it "handles exceptions for UnknownDriver, UnknownFormatter, and RunnerException by aborting" do
-      subject.should_receive(:abort).with("_unknown_driver_message_")
-      subject.should_receive(:execute_without_handling).and_raise(Teaspoon::UnknownDriver, "_unknown_driver_message_")
-      subject.execute
-
-      subject.should_receive(:abort).with("_unknown_formatter_message_")
-      subject.should_receive(:execute_without_handling).and_raise(Teaspoon::UnknownFormatter, "_unknown_formatter_message_")
-      subject.execute
-
-      subject.should_receive(:abort).with("_runner_exception_")
-      subject.should_receive(:execute_without_handling).and_raise(Teaspoon::RunnerException, "_runner_exception_")
-      subject.execute
-
-      subject.should_receive(:abort).with("_missing_dependency_")
-      subject.should_receive(:execute_without_handling).and_raise(Teaspoon::MissingDependency, "_missing_dependency_")
+    it "handles Teaspoon::Error exceptions" do
+      subject.should_receive(:abort).with("_unknown_error_")
+      subject.should_receive(:execute_without_handling).and_raise(Teaspoon::Error, "_unknown_error_")
       subject.execute
     end
 
@@ -85,6 +73,10 @@ describe Teaspoon::Console do
   end
 
   describe "#execute_without_handling" do
+
+    before do
+      subject.stub(:run_specs).and_return(0)
+    end
 
     it "merges @options" do
       subject.instance_variable_set(:@options, foo: "bar")
@@ -145,6 +137,15 @@ describe Teaspoon::Console do
 
   describe "#run_specs" do
 
+    before do
+      Teaspoon.configuration.stub(:fail_fast).and_return(false)
+      Teaspoon.configuration.should_receive(:suite_configs).and_return("_suite_" => proc{}, "suite_name" => proc{})
+    end
+
+    it "raises a Teaspoon::UnknownSuite exception when the suite isn't known" do
+      expect { subject.run_specs("_unknown_") }.to raise_error Teaspoon::UnknownSuite
+    end
+
     it "logs that the suite is being run" do
       subject.should_receive(:log).with("Teaspoon running _suite_ suite at http://url.com/teaspoon/_suite_")
       subject.run_specs("_suite_")
@@ -154,6 +155,11 @@ describe Teaspoon::Console do
       subject.should_receive(:driver).and_return(driver)
       driver.should_receive(:run_specs).with(runner, "http://url.com/teaspoon/suite_name?reporter=Console")
       expect(subject.run_specs(:suite_name)).to eq(2)
+    end
+
+    it "raises a Teaspoon::Failure exception on failures when set to fail_fast" do
+      Teaspoon.configuration.stub(:fail_fast).and_return(true)
+      expect { subject.run_specs(:suite_name) }.to raise_error Teaspoon::Failure
     end
 
   end

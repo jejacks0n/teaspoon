@@ -9,7 +9,7 @@ module Teaspoon
     def initialize(suite_name = :default)
       @suite_name = suite_name
       @failure_count = 0
-      @formatters = Teaspoon.configuration.formatters.map{ |f| resolve_formatter(f).new(suite_name) }
+      @formatters = Teaspoon.configuration.formatters.map{ |f| resolve_formatter(f) }
     end
 
     def process(line)
@@ -22,9 +22,11 @@ module Teaspoon
     private
 
     def resolve_formatter(formatter)
-      Teaspoon::Formatters.const_get("#{formatter.to_s.camelize}Formatter")
+      formatter, output = formatter.to_s.split(">")
+      formatter = Teaspoon::Formatters.const_get("#{formatter.camelize}Formatter")
+      formatter.new(@suite_name, output)
     rescue NameError
-      raise Teaspoon::UnknownFormatter, "Unknown formatter: \"#{formatter}\"\n"
+      raise Teaspoon::UnknownFormatter, "Unknown formatter: \"#{formatter}\""
     end
 
     def notify_formatters(event, result)

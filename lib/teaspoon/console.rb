@@ -21,10 +21,10 @@ module Teaspoon
 
     def execute(options = {})
       execute_without_handling(options)
-    rescue Teaspoon::UnknownDriver, Teaspoon::UnknownFormatter, Teaspoon::RunnerException, Teaspoon::MissingDependency => e
-      abort(e.message)
     rescue Teaspoon::Failure
       false
+    rescue Teaspoon::Error => e
+      abort(e.message)
     end
 
     def execute_without_handling(options = {})
@@ -33,18 +33,19 @@ module Teaspoon
       resolve(@options[:files])
 
       failure_count = 0
-      suites.each do |suite|
+      0 == suites.inject(0) do |failures, suite|
         export(suite) if @options.include?(:export)
         log("Teaspoon running #{suite} suite at #{url(suite)}")
         failure_count += run_specs(suite)
       end
-      failure_count == 0
     end
 
     def run_specs(suite)
+      raise Teaspoon::UnknownSuite, "Unknown suite: \"#{suite}\"" unless Teaspoon.configuration.suite_configs[suite.to_s]
       log("Teaspoon running #{suite} suite at #{base_url_for(suite)}")
       runner = Teaspoon::Runner.new(suite)
       driver.run_specs(runner, url_for(suite))
+      raise Teaspoon::Failure if Teaspoon.configuration.fail_fast && runner.failure_count > 0
       runner.failure_count
     end
 
@@ -86,7 +87,7 @@ module Teaspoon
       klass = "#{Teaspoon.configuration.driver.to_s.camelize}Driver"
       @driver = Teaspoon::Drivers.const_get(klass).new(Teaspoon.configuration.driver_options)
     rescue NameError
-      raise Teaspoon::UnknownDriver, "Unknown driver: \"#{Teaspoon.configuration.driver}\"\n"
+      raise Teaspoon::UnknownDriver, "Unknown driver: \"#{Teaspoon.configuration.driver}\""
     end
 
     def base_url_for(suite)
