@@ -14,16 +14,26 @@ module Teaspoon
       class_option :coffee, type: :boolean,
                    aliases: "-c",
                    default: false,
-                   desc:    "Generate a CoffeeScript spec helper (instead of Javascript)"
+                   desc:    "Generate a CoffeeScript spec helper instead of Javascript"
+
+      class_option :no_comments, type: :boolean,
+                   default: false,
+                   desc:    "Install the teaspoon_env.rb without comments"
+
+      class_option :partials, type: :boolean,
+                   aliases: "-p",
+                   default: false,
+                   desc:    "Copy the boot and body partials"
 
       def validate_framework
         return if frameworks.include?(options[:framework])
         puts "Unknown framework -- Known: #{frameworks.join(', ')}"
-        exit
+        exit(1)
       end
 
-      def copy_initializers
-        copy_file "templates/#{framework}/env.rb", "#{framework_type}/teaspoon_env.rb"
+      def copy_environment
+        source = options[:no_comments] ? "env.rb" : "env_comments.rb"
+        copy_file "templates/#{framework}/#{source}", "#{framework_type}/teaspoon_env.rb"
       end
 
       def create_structure
@@ -33,6 +43,12 @@ module Teaspoon
 
       def copy_spec_helper
         copy_file "templates/#{framework}/#{framework_type}_helper.#{helper_ext}", "#{framework_type}/javascripts/#{framework_type}_helper.#{helper_ext}"
+      end
+
+      def copy_partials
+        return unless options[:partials]
+        copy_file "templates/_boot.html.erb", "/#{framework_type}/javascripts/support/partials/_boot.html.erb"
+        copy_file "templates/_body.html.erb", "/#{framework_type}/javascripts/support/partials/_body.html.erb"
       end
 
       def display_readme

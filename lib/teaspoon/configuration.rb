@@ -24,19 +24,22 @@ module Teaspoon
     @@fixture_path   = "spec/javascripts/fixtures"
 
     # console runner specific
-    cattr_accessor   :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout,
-                     :formatters, :use_coverage, :fail_fast, :suppress_log, :color
+    cattr_accessor   :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :fail_fast,
+                     :formatters, :color, :suppress_log,
+                     :use_coverage
     @@driver         = "phantomjs"
     @@driver_options = nil
     @@driver_timeout = 180
     @@server         = nil
     @@server_port    = nil
     @@server_timeout = 20
-    @@formatters     = "dot"
-    @@use_coverage   = nil
     @@fail_fast      = true
-    @@suppress_log   = false
+
+    @@formatters     = ["dot"]
     @@color          = true
+    @@suppress_log   = false
+
+    @@use_coverage   = nil
 
     # options that can be specified in the ENV
     ENV_OVERRIDES = {
@@ -55,18 +58,23 @@ module Teaspoon
     end
 
     class Suite
-      attr_accessor  :matcher, :helper, :javascripts, :stylesheets, :no_coverage, :normalize_asset_path
+      attr_accessor   :matcher, :helper, :javascripts, :stylesheets,
+                      :boot_partial, :body_partial,
+                      :no_coverage,
+                      :normalize_asset_path
 
       def initialize
-        @matcher     = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
-        @helper      = "spec_helper"
-        @javascripts = ["teaspoon-jasmine"]
-        @stylesheets = ["teaspoon"]
+        @matcher      = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
+        @helper       = "spec_helper"
+        @javascripts  = ["teaspoon-jasmine"]
+        @stylesheets  = ["teaspoon"]
 
-        @no_coverage = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
+        @boot_partial = "boot"
+        @body_partial = "body"
+
+        @no_coverage  = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
 
         # todo: cleanup
-        #@boot_partial = nil
         #@hooks        = Hash.new {|h, k| h[k] = [] }
 
         default = Teaspoon.configuration.suite_configs["default"]
@@ -95,15 +103,17 @@ module Teaspoon
     end
 
     class Coverage
-      attr_accessor  :reports, :output_path, :statements, :functions, :branches, :lines
+      attr_accessor   :reports, :output_path,
+                      :statements, :functions, :branches, :lines
 
       def initialize
-        @reports     = ["text-summary"]
-        @output_path = "coverage"
-        @statements  = nil
-        @functions   = nil
-        @branches    = nil
-        @lines       = nil
+        @reports      = ["text-summary"]
+        @output_path  = "coverage"
+
+        @statements   = nil
+        @functions    = nil
+        @branches     = nil
+        @lines        = nil
 
         default = Teaspoon.configuration.coverage_configs["default"]
         self.instance_eval(&default) if default
