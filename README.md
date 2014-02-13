@@ -83,7 +83,7 @@ end
 We made some changes to how configuration and loading works for version 0.8.0, which might cause some confusion. For this we're sorry, but it'll be better in the long run -- and hey, we didn't write a javascript test runner and then abandon it.
 
 1. move your teaspoon_env.rb to a backup file.
-2. run the install generator to get the new teaspoon_env.rb
+2. run the install generator to get the new teaspoon_env.rb, and migrate your old settings into the new file.
 3. move all settings that you had in /initializers/teaspoon.rb into /spec/teaspoon_env.rb and delete the initializer.
 
 
@@ -255,15 +255,15 @@ describe("Using fixtures", function() {
   fixture.set("<h2>Another Title</h2>"); // create some markup manually (will be in a beforeEach)
 
   beforeEach(function() {
-    @fixtures = fixture.load("fixture.html", "fixture.json", true); // append these fixtures which were already cached
+    this.fixtures = fixture.load("fixture.html", "fixture.json", true); // append these fixtures which were already cached
   });
 
   it("loads fixtures", function() {
     expect($("h1", fixture.el).text()).toBe("Title") // using fixture.el as a jquery scope
     expect($("h2", fixture.el).text()).toBe("Another Title")
-    expect(@fixtures[0]).toBe(fixture.el) // the element is available as a return value and through fixture.el
-    expect(@fixtures[1]).toEqual(fixture.json[0]) // the json for json fixtures is returned, and available in fixture.json
-  })
+    expect(this.fixtures[0]).toBe(fixture.el) // the element is available as a return value and through fixture.el
+    expect(this.fixtures[1]).toEqual(fixture.json[0]) // the json for json fixtures is returned, and available in fixture.json
+  });
 });
 ```
 
@@ -376,7 +376,7 @@ When you install Teaspoon a `teaspoon_env.rb` file is generated that contains mo
 
 <dt> asset_paths </dt><dd>
   Paths that will be appended to the Rails assets paths.<br/>
-  <b>Note:</b> relative to <code>config.root</code>).<br/><br/>
+  <b>Note:</b> Relative to <code>config.root</code>.<br/><br/>
 
   <b>default:</b> <code>["spec/javascripts", "spec/javascripts/stylesheets"]</code>
 </dd>
@@ -548,7 +548,7 @@ These configuration directives are applicable only when running via the rake tas
 
 <dt> formatters </dt><dd>
   Specify the formatters to use when outputting the results.<br/>
-  <b>Note:</b> Output files can be specified by using <code>"junit>/path/to/output.xml"</code>.
+  <b>Note:</b> Output files can be specified by using <code>"junit>/path/to/output.xml"</code>.<br/><br/>
 
   <b>available:</b> dot, clean, json, junit, pride, snowday, swayze_or_oprah, tap, tap_y, teamcity<br/>
   <b>default:</b> <code>"dot"</code>
@@ -609,7 +609,7 @@ These configuration directives are applicable only when running via the rake tas
 
 <dt> output_dir </dt><dd>
   The path that the coverage should be written to - when there's an artifact to write to disk.<br/>
-  <b>Note:</b> relative to <code>config.root</code>).<br/><br/>
+  <b>Note:</b> Relative to <code>config.root</code>.<br/><br/>
 
   <b>default:</b> <code>"coverage"</code>
 </dd>
@@ -617,7 +617,7 @@ These configuration directives are applicable only when running via the rake tas
 <dl>
 
 <dt> statements </dt><dd>
-  Specify a statement threshold. If this coverage threshold isn't met the test run will fail. Can be a percent (0-100) or nil.<br/><br/>
+  Specify a statement threshold. If this coverage threshold isn't met the test run will fail. (0-100) or nil.<br/><br/>
 
   <b>default:</b> <code>nil</code>
 </dd>
@@ -625,25 +625,26 @@ These configuration directives are applicable only when running via the rake tas
 <dl>
 
 <dt> functions </dt><dd>
-  Specify a function threshold. If this coverage threshold isn't met the test run will fail. Can be a percent (0-100) or nil.<br/><br/>
+  Specify a function threshold. If this coverage threshold isn't met the test run will fail. (0-100) or nil.<br/><br/>
 
   <b>default:</b> <code>nil</code>
 </dd>
 
 <dl>
 
-<dt> branchs </dt><dd>
-  Specify a branch threshold. If this coverage threshold isn't met the test run will fail. Can be a percent (0-100) or nil.<br/><br/>
+<dt> branches </dt><dd>
+  Specify a branch threshold. If this coverage threshold isn't met the test run will fail. (0-100) or nil.<br/><br/>
 
   <b>default:</b> <code>nil</code>
 </dd>
 
 <dt> lines </dt><dd>
-  Specify a line threshold. If this coverage threshold isn't met the test run will fail. Can be a percent (0-100) or nil.<br/><br/>
+  Specify a line threshold. If this coverage threshold isn't met the test run will fail. (0-100) or nil.<br/><br/>
 
   <b>default:</b> <code>nil</code>
 </dd>
 
+</dl>
 
 ## Test Frameworks
 
