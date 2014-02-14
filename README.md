@@ -422,7 +422,7 @@ When you install Teaspoon a `teaspoon_env.rb` file is generated that contains mo
 </dd>
 
 <dt> boot_partial </dt><dd>
-  Partial to be rendered in the head tag of the runner. You can define your own, or use one of the provided ones. Overrides go in `support/partials/_boot.html.erb` for instance.<br/><br/>
+  Partial to be rendered in the head tag of the runner. You can use the provided ones or define your own by creating a `_boot.html.erb` in your fixtures path, and adjust the config to `"/boot"` for instance.<br/><br/>
 
   <b>available:</b> boot, boot_require_js<br/>
   <b>default:</b> <code>"boot"</code>

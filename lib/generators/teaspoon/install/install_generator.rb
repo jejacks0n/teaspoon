@@ -47,8 +47,8 @@ module Teaspoon
 
       def copy_partials
         return unless options[:partials]
-        copy_file "templates/_boot.html.erb", "/#{framework_type}/javascripts/support/partials/_boot.html.erb"
-        copy_file "templates/_body.html.erb", "/#{framework_type}/javascripts/support/partials/_body.html.erb"
+        copy_file "templates/_boot.html.erb", "/#{framework_type}/javascripts/fixtures/_boot.html.erb"
+        copy_file "templates/_body.html.erb", "/#{framework_type}/javascripts/fixtures/_body.html.erb"
       end
 
       def display_readme

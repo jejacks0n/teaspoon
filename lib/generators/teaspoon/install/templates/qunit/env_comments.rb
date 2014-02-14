@@ -55,8 +55,8 @@ Teaspoon.configure do |config|
     # Note: Spec related CSS can and should be loaded using fixtures.
     #suite.stylesheets = ["teaspoon"]
 
-    # Partial to be rendered in the head tag of the runner. You can define your own, or use one of the provided ones.
-    # Overrides go in `support/partials/_boot.html.erb` for instance.
+    # Partial to be rendered in the head tag of the runner. You can use the provided ones or define your own by creating
+    # a `_boot.html.erb` in your fixtures path, and adjust the config to `"/boot"` for instance.
     #
     # Available: boot, boot_require_js
     #suite.boot_partial = "boot"

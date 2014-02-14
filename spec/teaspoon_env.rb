@@ -17,6 +17,7 @@ Teaspoon.configure do |config|
   config.suite :jasmine do |suite|
     suite.matcher = "spec/javascripts/**/*_jspec.{js,js.coffee,coffee}"
     suite.helper = "jasmine_helper"
+    suite.body_partial = "/body"
   end
 
   config.suite :mocha do |suite|

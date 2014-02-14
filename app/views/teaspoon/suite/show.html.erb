@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Teaspoon :: Javascript Test Runner</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag *@suite.stylesheets %>
+    <%= javascript_include_tag *@suite.javascripts %>
+    <script type="text/javascript">
+      Teaspoon.version = <%= Teaspoon::VERSION.to_json.html_safe %>;
+      Teaspoon.root    = <%= Teaspoon.configuration.mount_at.to_json.html_safe %>;
+      Teaspoon.suites  = <%= {all: Teaspoon.configuration.suite_configs.keys, active: @suite.name}.to_json.html_safe %>;
+    </script>
+    <%= render @suite.boot_partial %>
+  </head>
+  <body data-no-turbolink>
+    <%= render @suite.body_partial %>
+  </body>
+</html>
