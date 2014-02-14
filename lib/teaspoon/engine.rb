@@ -47,7 +47,7 @@ module Teaspoon
     end
 
     def prepend_routes(app)
-      app.routes do
+      app.routes.prepend do
         mount Teaspoon::Engine => Teaspoon.configuration.mount_at
       end
     end
