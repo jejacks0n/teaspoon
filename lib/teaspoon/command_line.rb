@@ -42,6 +42,10 @@ module Teaspoon
           @options[:driver_cli_options] = driver_cli_options
         end
 
+        parser.on("-t", "--timeout SECONDS", "Sets the timeout for the suite to finish.") do |seconds|
+          @options[:timeout] = seconds
+        end
+
         parser.on("--server SERVER", "Sets server to use with Rack.") do |server|
           @options[:server] = server
         end

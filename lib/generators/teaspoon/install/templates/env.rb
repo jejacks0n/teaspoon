@@ -16,6 +16,7 @@ Teaspoon.setup do |config|
   # Driver / Server
   #config.driver              = "phantomjs" # available: phantomjs, selenium
   #config.server              = nil # defaults to Rack::Server
+  #config.timeout             = 180 # timeout for test suite to finish
 
   # Behaviors
   #config.server_timeout      = 20 # timeout for starting the server
