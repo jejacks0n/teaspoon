@@ -30,7 +30,7 @@ module Teaspoon
       end
 
       def cli_arguments(url, cli_options)
-        [cli_options.to_s.split(" "), script, url].flatten.compact
+        [cli_options.to_s.split(" "), script, url, Teaspoon.configuration.timeout.to_s].flatten.compact
       end
 
       def executable

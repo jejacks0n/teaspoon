@@ -68,6 +68,7 @@ describe Teaspoon::Configuration do
     expect(subject.functions_coverage_threshold).to be_nil
     expect(subject.branches_coverage_threshold).to be_nil
     expect(subject.lines_coverage_threshold).to be_nil
+    expect(subject.timeout).to eq(180)
   end
 
   it "allows setting various configuration options" do
