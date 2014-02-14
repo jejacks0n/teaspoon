@@ -59,9 +59,14 @@ describe Teaspoon::Suite do
   describe "#spec_files" do
 
     it "returns an array of hashes with the filename and the asset name" do
-      result = subject.spec_files[0]
-      expect(result[:path]).to match(%r{spec/javascripts/teaspoon/base/fixture_spec.coffee})
-      expect(result[:name]).to match(%r{teaspoon/base/fixture_spec.js})
+      file = Teaspoon::Engine.root.join("spec/javascripts/teaspoon/base/reporters/console_spec.js").to_s
+      subject.should_receive(:glob).and_return([file])
+      expect(subject.spec_files[0]).to eql(path: file, name: "teaspoon/base/reporters/console_spec.js")
+    end
+
+    it "raises an exception if the file isn't servable (in an asset path)" do
+      subject.should_receive(:glob).and_return(["/foo"])
+      expect { subject.spec_files[0] }.to raise_error Teaspoon::AssetNotServable
     end
 
   end
