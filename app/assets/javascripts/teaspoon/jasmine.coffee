@@ -1,4 +1,4 @@
-#= require jasmine-1.3.1
+#= require jasmine/jasmine-1.3.1
 #= require teaspoon/base/teaspoon
 #= require teaspoon/jasmine/reporters/html
 

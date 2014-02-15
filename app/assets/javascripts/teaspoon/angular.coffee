@@ -1,4 +1,4 @@
-#= require angular-scenario-1.0.5
+#= require angular/angular-scenario-1.0.5
 #= require teaspoon/base/teaspoon
 #= require teaspoon/angular/reporters/console
 #= require teaspoon/angular/reporters/html
