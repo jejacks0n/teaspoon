@@ -32,7 +32,7 @@ module Teaspoon
       ActionDispatch::DebugExceptions.class_eval do
         def render_exception(env, exception)
           message = "#{exception.class.name}: #{exception.message}"
-          body = "<script>throw Error(#{message.inspect})</script>"
+          body = "<script>throw Error(#{[message, exception.backtrace].join("\n").inspect})</script>"
           [200, {'Content-Type' => "text/html;", 'Content-Length' => body.bytesize.to_s}, [body]]
         end
       end
