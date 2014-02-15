@@ -23,9 +23,6 @@ module Teaspoon
     config.after_initialize do |app|
       inject_instrumentation                      # inject our sprockets hack for instrumenting javascripts
       prepend_routes(app)                         # prepend routes so a catchall doesn't get in the way
-
-      # require the controller, because it fails to load under some circumstances (unknown as to why)
-      require_dependency(Teaspoon::Engine.config.root.join("app/controllers/teaspoon/suite_controller").to_s)
     end
 
     private
