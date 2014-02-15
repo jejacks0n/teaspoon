@@ -2,7 +2,6 @@ require "teaspoon/environment"
 require "teaspoon/suite"
 require "teaspoon/instrumentation"
 
-load File.expand_path(__FILE__, "../../../app/controllers/teaspoon/suite_controller")
 require File.expand_path(__FILE__, "../../../app/controllers/teaspoon/suite_controller")
 
 module Teaspoon
@@ -26,8 +25,7 @@ module Teaspoon
       prepend_routes(app)                         # prepend routes so a catchall doesn't get in the way
 
       # require the controller, because it fails to load under some circumstances (unknown as to why)
-      suite_controller = Teaspoon::Engine.config.root.join("app/controllers/teaspoon/suite_controller").to_s
-      require_dependency(suite_controller)
+      require_dependency(Teaspoon::Engine.config.root.join("app/controllers/teaspoon/suite_controller").to_s)
     end
 
     private
