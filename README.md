@@ -681,11 +681,12 @@ These configuration directives are applicable only when running via the rake tas
 
 We know that testing usually requires more than just the test framework, so we've included some of the libraries that we use on a regular basis.
 
-- [Sinon.JS](http://sinonjs.org) Standalone test spies, stubs and mocks for JavaScript. No dependencies, works with any unit testing framework. BSD Licence.
-- [ChaiJS](http://chaijs.com/) BDD / TDD assertion library for node and the browser that can be delightfully paired with any javascript testing framework. MIT License.
-- [Sinon-Chai](https://github.com/domenic/sinon-chai) Extends Chai with assertions for the Sinon.JS mocking framework. MIT-ish License.
-- [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit based on should.js. MIT License.
-- [jasmine-jquery.js](https://github.com/velesin/jasmine-jquery) A set of custom matchers for jQuery, and an API for handling HTML fixtures in your specs. MIT License.
+- [Sinon.JS](http://sinonjs.org) (1.8.2) Standalone test spies, stubs and mocks for JavaScript. No dependencies, works with any unit testing framework. BSD Licence.
+- [ChaiJS](http://chaijs.com/) (1.8.1) BDD / TDD assertion library for node and the browser that can be delightfully paired with any javascript testing framework. MIT License.
+- [Sinon-Chai](https://github.com/domenic/sinon-chai) (1.0.0) Extends Chai with assertions for the Sinon.JS mocking framework. MIT-ish License.
+- [expect.js](https://github.com/LearnBoost/expect.js) (0.1.2) Minimalistic BDD assertion toolkit based on should.js. MIT License.
+- [jasmine-jquery-1.7.0.js](https://github.com/velesin/jasmine-jquery) (1.7.0) For Jasmine v1, A set of custom matchers for jQuery, and an API for handling HTML fixtures in your specs. MIT License.
+- [jasmine-jquery-2.0.0.js](https://github.com/velesin/jasmine-jquery) (2.0.0) For Jasmine v2, A set of custom matchers for jQuery, and an API for handling HTML fixtures in your specs. MIT License.
 
 You can require these files in your spec helper by using:
 
@@ -693,7 +694,8 @@ You can require these files in your spec helper by using:
 //= require support/sinon
 //= require support/chai
 //= require support/expect
-//= require support/jasmine-jquery
+//= require support/jasmine-jquery-1.7.0
+//= require support/jasmine-jquery-2.0.0
 ```
 
 
