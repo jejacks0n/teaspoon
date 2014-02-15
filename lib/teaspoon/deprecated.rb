@@ -21,6 +21,11 @@ module Teaspoon
       Teaspoon.dep("the teaspoon context configuration is no longer used, remove it from your configuration.")
     end
 
+    def self.fixture_path=(*args)
+      Teaspoon.dep("the teaspoon fixture_path has been changed to fixture_paths and accepts an array, please update your configuration.")
+      self.fixture_paths = args
+    end
+
     def self.driver_cli_options=(val)
       Teaspoon.dep("the teaspoon driver_cli_options configuration is no longer used, use driver_options instead.")
       self.driver_options = val

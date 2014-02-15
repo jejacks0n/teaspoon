@@ -1,7 +1,7 @@
 class Teaspoon::SuiteController < ActionController::Base
   helper Teaspoon::SuiteHelper rescue nil
 
-  prepend_view_path Teaspoon.configuration.root.join(Teaspoon.configuration.fixture_path)
+  before_filter :prepend_fixture_paths
 
   layout false
 
@@ -20,5 +20,13 @@ class Teaspoon::SuiteController < ActionController::Base
 
   def fixtures
     render "/#{params[:filename]}"
+  end
+
+  private
+
+  def prepend_fixture_paths
+    Teaspoon.configuration.fixture_paths.each do |path|
+      prepend_view_path Teaspoon.configuration.root.join(path)
+    end
   end
 end

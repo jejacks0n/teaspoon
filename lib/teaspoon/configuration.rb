@@ -17,11 +17,11 @@ module Teaspoon
     # - add it to ENV_OVERRIDES if it can be overridden from ENV
     # - add it to the initializers in /lib/generators/install/templates so it's documented there as well
 
-    cattr_accessor   :mount_at, :root, :asset_paths, :fixture_path
+    cattr_accessor   :mount_at, :root, :asset_paths, :fixture_paths
     @@mount_at       = "/teaspoon"
     @@root           = nil # will default to Rails.root
-    @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets"]
-    @@fixture_path   = "spec/javascripts/fixtures"
+    @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
+    @@fixture_paths  = ["spec/javascripts/fixtures", "test/javascripts/fixtures"]
 
     # console runner specific
     cattr_accessor   :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :fail_fast,

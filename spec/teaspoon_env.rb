@@ -7,7 +7,6 @@ end
 Teaspoon.configure do |config|
   config.root = Teaspoon::Engine.root
   config.asset_paths << Teaspoon::Engine.root.join('lib/teaspoon')
-  config.asset_paths += ["test/javascripts", "test/javascripts/stylesheets"]
 
   config.suite do |suite|
     suite.matcher = "{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}"

@@ -19,9 +19,9 @@ Teaspoon.configure do |config|
   # Note: Relative to `config.root`.
   #config.asset_paths = ["spec/javascripts", "spec/javascripts/stylesheets"]
 
-  # Fixtures are rendered through a controller, which allows using HAML, RABL/JBuilder, etc. Files in this path will be
-  # rendered as fixtures.
-  #config.fixture_path = "spec/javascripts/fixtures"
+  # Fixtures are rendered through a controller, which allows using HAML, RABL/JBuilder, etc. Files in these paths will
+  # be rendered as fixtures.
+  #config.fixture_paths = ["spec/javascripts/fixtures"]
 
   # SUITES
   #

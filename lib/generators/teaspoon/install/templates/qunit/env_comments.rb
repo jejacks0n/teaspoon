@@ -17,11 +17,11 @@ Teaspoon.configure do |config|
 
   # Paths that will be appended to the Rails assets paths
   # Note: Relative to `config.root`.
-  config.asset_paths = ["test/javascripts", "test/javascripts/stylesheets"]
+  #config.asset_paths = ["test/javascripts", "test/javascripts/stylesheets"]
 
-  # Fixtures are rendered through a controller, which allows using HAML, RABL/JBuilder, etc. Files in this path will be
-  # rendered as fixtures.
-  config.fixture_path = "test/javascripts/fixtures"
+  # Fixtures are rendered through a controller, which allows using HAML, RABL/JBuilder, etc. Files in these paths will
+  # be rendered as fixtures.
+  #config.fixture_paths = ["test/javascripts/fixtures"]
 
   # SUITES
   #

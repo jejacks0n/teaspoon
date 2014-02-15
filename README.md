@@ -392,13 +392,13 @@ When you install Teaspoon a `teaspoon_env.rb` file is generated that contains mo
   Paths that will be appended to the Rails assets paths.<br/>
   <b>Note:</b> Relative to <code>config.root</code>.<br/><br/>
 
-  <b>default:</b> <code>["spec/javascripts", "spec/javascripts/stylesheets"]</code>
+  <b>default:</b> <code>["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]</code>
 </dd>
 
-<dt> fixture_path </dt><dd>
+<dt> fixture_paths </dt><dd>
   Fixtures are rendered through a controller, which allows using HAML, RABL/JBuilder, etc. Files in this path will be rendered as fixtures.<br/><br/>
 
-  <b>default:</b> <code>"spec/javascripts/fixtures"</code>
+  <b>default:</b> <code>["spec/javascripts/fixtures", "test/javascripts/fixtures"]</code>
 </dd>
 
 </dl>

@@ -65,7 +65,7 @@ describe Teaspoon::Configuration do
     expect(subject.root).to eq(Rails.root.join('..', '..'))
     expect(subject.asset_paths).to include("spec/javascripts")
     expect(subject.asset_paths).to include("spec/javascripts/stylesheets")
-    expect(subject.fixture_path).to eq("spec/javascripts/fixtures")
+    expect(subject.fixture_paths).to eq(["spec/javascripts/fixtures", "test/javascripts/fixtures"])
 
     expect(subject.driver).to eq("phantomjs")
     expect(subject.driver_options).to be_nil
