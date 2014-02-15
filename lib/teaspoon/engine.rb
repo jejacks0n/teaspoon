@@ -1,5 +1,5 @@
 # require the controller, because it fails to load under some circumstances (unknown as to why)
-require File.expand_path(__FILE__, "../../../app/controllers/teaspoon/spec_controller")
+require File.expand_path(__FILE__, "../../../app/controllers/teaspoon/suite_controller")
 require "teaspoon/environment"
 require "teaspoon/suite"
 require "teaspoon/instrumentation"
