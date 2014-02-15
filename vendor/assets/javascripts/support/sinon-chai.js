@@ -26,6 +26,13 @@
         typeof putativeSpy.calledWithExactly === "function";
   }
 
+  function timesInWords(count) {
+    return count === 1 ? "once" :
+        count === 2 ? "twice" :
+            count === 3 ? "thrice" :
+                (count || 0) + " times";
+  }
+
   function isCall(putativeCall) {
     return putativeCall && isSpy(putativeCall.proxy);
   }
@@ -62,6 +69,15 @@
     });
   }
 
+  function sinonPropertyAsBooleanMethod(name, action, nonNegatedSuffix) {
+    utils.addMethod(chai.Assertion.prototype, name, function (arg) {
+      assertCanWorkWith(this);
+
+      var messages = getMessages(this._obj, action, nonNegatedSuffix, false, [timesInWords(arg)]);
+      this.assert(this._obj[name] === arg, messages.affirmative, messages.negative);
+    });
+  }
+
   function createSinonMethodHandler(sinonName, action, nonNegatedSuffix) {
     return function () {
       assertCanWorkWith(this);
@@ -94,6 +110,7 @@
   });
 
   sinonProperty("called", "been called", " at least once, but it was never called");
+  sinonPropertyAsBooleanMethod("callCount", "been called exactly %1", ", but it was called %c%C");
   sinonProperty("calledOnce", "been called exactly once", ", but it was called %c%C");
   sinonProperty("calledTwice", "been called exactly twice", ", but it was called %c%C");
   sinonProperty("calledThrice", "been called exactly thrice", ", but it was called %c%C");
