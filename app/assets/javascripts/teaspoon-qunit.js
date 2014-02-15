@@ -2542,6 +2542,47 @@ if ( typeof exports !== "undefined" ) {
 
 }).call(this);
 (function() {
+  Teaspoon.hook = function(name, options) {
+    var xhr, xhrRequest;
+    if (options == null) {
+      options = {};
+    }
+    xhr = null;
+    xhrRequest = function(url, options, callback) {
+      var e;
+      if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+      } else if (window.ActiveXObject) {
+        try {
+          xhr = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (_error) {
+          e = _error;
+          try {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+          } catch (_error) {
+            e = _error;
+          }
+        }
+      }
+      if (!xhr) {
+        throw "Unable to make Ajax Request";
+      }
+      xhr.onreadystatechange = callback;
+      xhr.open(options['method'] || "GET", "" + Teaspoon.root + "/" + url, false);
+      return xhr.send(options['payload']);
+    };
+    return xhrRequest("" + Teaspoon.suites.active + "/" + name, options, function() {
+      if (xhr.readyState !== 4) {
+        return;
+      }
+      if (xhr.status !== 200) {
+        throw "Unable to call hook \"" + url + "\".";
+      }
+    });
+  };
+
+}).call(this);
+(function() {
   Teaspoon.Reporters.BaseView = (function() {
     function BaseView() {
       this.elements = {};

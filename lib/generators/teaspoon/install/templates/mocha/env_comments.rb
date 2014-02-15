@@ -68,6 +68,10 @@ Teaspoon.configure do |config|
     # default excludes assets from vendor, gems and support libraries.<br/><br/>
     #suite.no_coverage = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
 
+    # Hooks allow you to use `Teaspoon.hook("fixtures")` before, after, or during your spec run. This will make a
+    # synchronous Ajax request to the server that will call all of the blocks you've defined for that hook name.
+    #suite.hook :fixtures, proc{ }
+
   end
 
   # Example suite. Since we're just filtering to files already within the root test/javascripts, these files will also

@@ -61,6 +61,7 @@ module Teaspoon
       attr_accessor   :matcher, :helper, :javascripts, :stylesheets,
                       :boot_partial, :body_partial,
                       :no_coverage,
+                      :hooks,
                       :normalize_asset_path
 
       def initialize
@@ -74,23 +75,20 @@ module Teaspoon
 
         @no_coverage  = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
 
-        # todo: cleanup
-        #@hooks        = Hash.new {|h, k| h[k] = [] }
+        @hooks        = Hash.new{ |h, k| h[k] = [] }
 
         default = Teaspoon.configuration.suite_configs["default"]
         self.instance_eval(&default) if default
         yield self if block_given?
       end
 
-      # todo: document this.
-      def hook(group = :default, &block)
-        @hooks[group.to_s] << block
-      end
-
       def normalize_asset_path(filename)
         @normalize_asset_path.call(filename)
       end
 
+      def hook(group = :default, &block)
+        @hooks[group.to_s] << block
+      end
     end
 
     # coverage configurations

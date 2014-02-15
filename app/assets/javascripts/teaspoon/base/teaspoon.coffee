@@ -1,6 +1,7 @@
 #= require_self
 #= require teaspoon/base/runner
 #= require teaspoon/base/fixture
+#= require teaspoon/base/hook
 #= require teaspoon/base/reporters/html
 #= require teaspoon/base/reporters/console
 

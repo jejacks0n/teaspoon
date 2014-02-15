@@ -294,9 +294,23 @@ config.suite :my_suite do |suite|
 end
 ```
 
+### Hooks
+
+Hooks are designed to facilitate loading fixtures or other things that might be required on the back end before, after, or during running a suite or test. You can define hooks in your suite by specifying a name and a block. Hooks with the same name will be added to an array, and all will be called when the hook is requested. If you don't specify a name, :default will be assumed.
+
+```ruby
+config.suite :my_suite do |suite|
+  suite.hook :fixtures do
+    # some code that would load your fixtures
+  end
+end
+```
+
+You can then use the javascript `Teaspoon.hook("fixtures")` call at the beginning of a suite run or similar. All blocks that have been specified for a given hook will be called in the order they were defined.
+
 ### Manifest Style
 
-Teaspoon is happy to look for files for you, but you can disable this feature and maintain a manifest yourself. Configure the suite to not match any files, and then use your spec helper to create your manifest.
+Teaspoon is happy to look for files for you (and this is recommended), but you can disable this feature and maintain a manifest yourself. Configure the suite to not match any files, and then use your spec helper to create your manifest.
 
 ```ruby
 config.suite do |suite|
@@ -305,7 +319,7 @@ config.suite do |suite|
 end
 ```
 
-**Note:** This limits your ability to run specific files from the command line interface and so isn't recommended.
+**Note:** This limits your ability to run specific files from the command line interface and other benefits, and so isn't recommended.
 
 
 ## Coverage
@@ -452,6 +466,12 @@ The best way to read about the configuration options is to generate the initiali
   Assets to be ignored when generating coverage reports. Accepts an array of filenames or regular expressions. The default excludes assets from vendor, gems and support libraries.<br/><br/>
 
   <b>default:</b> <code>[%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]</code>
+</dd>
+
+<dt> hook(name, &block) </dt><dd>
+  Hooks allow you to use `Teaspoon.hook("fixtures")` before, after, or during your spec run. This will make a synchronous Ajax request to the server that will call all of the blocks you've defined for that hook name. (e.g. <code>suite.hook :fixtures, proc{ }</code>)
+
+  <b>default:</b> <code>Hash.new{ |h, k| h[k] = [] }</code>
 </dd>
 
 </dl>
