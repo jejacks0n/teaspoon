@@ -2,8 +2,6 @@ require "teaspoon/environment"
 require "teaspoon/suite"
 require "teaspoon/instrumentation"
 
-require File.expand_path("../../../app/controllers/teaspoon/suite_controller", __FILE__)
-
 module Teaspoon
   class Engine < ::Rails::Engine
 
@@ -43,7 +41,7 @@ module Teaspoon
 
     def prepend_routes(app)
       app.routes.prepend do
-        mount Teaspoon::Engine => Teaspoon.configuration.mount_at
+        mount Teaspoon::Engine => Teaspoon.configuration.mount_at, as: "teaspoon"
       end
     end
   end

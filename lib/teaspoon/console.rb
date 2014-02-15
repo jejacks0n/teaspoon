@@ -32,11 +32,11 @@ module Teaspoon
       @suites = {}
       resolve(@options[:files])
 
-      failure_count = 0
       0 == suites.inject(0) do |failures, suite|
         export(suite) if @options.include?(:export)
-        log("Teaspoon running #{suite} suite at #{url(suite)}")
-        failure_count += run_specs(suite)
+        failures += run_specs(suite)
+        log("") # empty line for space
+        failures
       end
     end
 
