@@ -80,6 +80,8 @@ describe Teaspoon::Coverage do
     let(:config) { double(reports: ["text", "text-summary"], output_path: "output/path") }
 
     before do
+      Teaspoon::Instrumentation.instance_variable_set(:@executable, nil)
+      Teaspoon::Instrumentation.instance_variable_set(:@executable_checked, nil)
       Teaspoon::Instrumentation.should_receive(:executable).and_call_original
       subject.should_receive(:input_path).and_call_original
       subject.should_receive(:`).and_call_original

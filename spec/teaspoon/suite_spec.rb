@@ -75,8 +75,8 @@ describe Teaspoon::Suite do
 
     it "returns an array of assets" do
       result = subject.spec_assets
-      expect(result).to include("spec_helper")
-      expect(result).to include("teaspoon/base/reporters/console_spec.js")
+      expect(result).to include("spec_helper.js?body=1")
+      expect(result).to include("teaspoon/base/reporters/console_spec.js?body=1")
     end
 
     it "returns just a file if one was requests" do

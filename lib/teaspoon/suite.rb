@@ -30,9 +30,8 @@ module Teaspoon
 
     def spec_assets(include_helper = true)
       assets = specs
-      assets.unshift(helper) if include_helper
-      assets = asset_tree(assets) if @options[:coverage] || Teaspoon.configuration.use_coverage
-      assets
+      assets.unshift(helper) if include_helper && helper
+      asset_tree(assets)
     end
 
     def include_spec?(file)
@@ -62,7 +61,7 @@ module Teaspoon
         else
           source unless source.blank?
         end
-      end.flatten.uniq
+      end.flatten.compact.uniq
     end
 
     def asset_url(asset)
@@ -72,6 +71,7 @@ module Teaspoon
     end
 
     def instrument_file?(file)
+      return false unless @options[:coverage] || Teaspoon.configuration.use_coverage
       return false if include_spec?(file)
       for ignored in no_coverage
         if ignored.is_a?(String)
