@@ -40,6 +40,8 @@ module Teaspoon
     end
 
     def prepend_routes(app)
+      require Teaspoon::Engine.root.join("app/controllers/teaspoon/suite_controller")
+
       app.routes.prepend do
         mount Teaspoon::Engine => Teaspoon.configuration.mount_at, as: "teaspoon"
       end
