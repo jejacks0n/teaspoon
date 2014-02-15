@@ -19,7 +19,7 @@ module Teaspoon
     def self.add_rails_handling
       return unless Teaspoon.configuration.driver == "phantomjs"
 
-      Rails.application.config.assets.debug = false # debugging should be off to display errors in the spec_controller
+      #Rails.application.config.assets.debug = false # debugging should be off to display errors in the suite_controller
       Rails.application.config.action_dispatch.show_exceptions = true # we want rails to display exceptions
 
       # override the render exception method in ActionDispatch to raise a javascript exception
