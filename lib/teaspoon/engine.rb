@@ -2,7 +2,7 @@ require "teaspoon/environment"
 require "teaspoon/suite"
 require "teaspoon/instrumentation"
 
-require File.expand_path(__FILE__, "../../../app/controllers/teaspoon/suite_controller")
+require File.expand_path("../../../app/controllers/teaspoon/suite_controller", __FILE__)
 
 module Teaspoon
   class Engine < ::Rails::Engine
