@@ -18,7 +18,6 @@ module Teaspoon
 
       default_root_path(app.root)                 # default the root if it's not set
       append_asset_paths(app.config.assets)       # append the asset paths from the configuration
-      ensure_asset_debug(app.config.assets)       # assets need to be in debug mode always
     end
 
     config.after_initialize do |app|
@@ -36,10 +35,6 @@ module Teaspoon
       Teaspoon.configuration.asset_paths.each do |path|
         assets.paths << Teaspoon.configuration.root.join(path).to_s
       end
-    end
-
-    def ensure_asset_debug(assets)
-      assets.debug = true
     end
 
     def inject_instrumentation
