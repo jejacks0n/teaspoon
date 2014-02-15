@@ -10,7 +10,7 @@ Teaspoon is a Javascript test runner built for Rails. It runs test in the browse
 
 The goal is to be simple, while still providing the most complete Javascript testing solution for Rails.
 
-Teaspoon takes advantage of the asset pipeline. And ships with support for Jasmine, Mocha, QUnit, and experimentally Angular.
+Teaspoon takes advantage of the asset pipeline. And ships with support for Jasmine, Mocha, and QUnit.
 
 Ok, another Javascript test runner, right? Yeah, that's tough, but we're pretty confident Teaspoon is one of the nicest and most full featured you'll find at the moment. And if you disagree, let us know and we'll likely fix whatever it is that you didn't like.
 
@@ -681,20 +681,19 @@ These configuration directives are applicable only when running via the rake tas
 
 We know that testing usually requires more than just the test framework, so we've included some of the libraries that we use on a regular basis.
 
-- [Sinon.JS](http://sinonjs.org) Standalone test spies, stubs and mocks for JavaScript. No dependencies, works with any unit testing framework.
-- [ChaiJS](http://chaijs.com/) BDD / TDD assertion library for node and the browser that can be delightfully paired with any javascript testing framework.
-- [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit based on should.js.
-- [jasmine-jquery.js](https://github.com/velesin/jasmine-jquery) A set of custom matchers for jQuery, and an API for handling HTML fixtures in your specs.
-- [angular-scenario.js](https://github.com/angular/angular.js) Angular test setup.
+- [Sinon.JS](http://sinonjs.org) Standalone test spies, stubs and mocks for JavaScript. No dependencies, works with any unit testing framework. BSD Licence.
+- [ChaiJS](http://chaijs.com/) BDD / TDD assertion library for node and the browser that can be delightfully paired with any javascript testing framework. MIT License.
+- [Sinon-Chai](https://github.com/domenic/sinon-chai) Extends Chai with assertions for the Sinon.JS mocking framework. MIT-ish License.
+- [expect.js](https://github.com/LearnBoost/expect.js) Minimalistic BDD assertion toolkit based on should.js. MIT License.
+- [jasmine-jquery.js](https://github.com/velesin/jasmine-jquery) A set of custom matchers for jQuery, and an API for handling HTML fixtures in your specs. MIT License.
 
 You can require these files in your spec helper by using:
 
 ```javascript
-//=require support/sinon
-//=require support/chai
-//=require support/expect
-//=require support/jasmine-jquery
-//=require support/angular-scenario
+//= require support/sinon
+//= require support/chai
+//= require support/expect
+//= require support/jasmine-jquery
 ```
 
 

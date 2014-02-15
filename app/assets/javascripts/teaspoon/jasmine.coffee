@@ -1,7 +1,8 @@
-#= require jasmine/jasmine-1.3.1
+#= require jasmine/1.3.1
 #= require teaspoon/base/teaspoon
 #= require teaspoon/jasmine/reporters/html
 
+throw new Error("Jasmine wasn't found. Please adjust your configuration to ['jasmine/1.3.1', 'teaspoon-jasmine']") unless jasmine
 class Teaspoon.Runner extends Teaspoon.Runner
 
   constructor: ->

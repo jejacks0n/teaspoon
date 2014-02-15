@@ -1,4 +1,4 @@
-#= require mocha/mocha-1.10.0
+#= require mocha/1.17.1
 #= require teaspoon/base/teaspoon
 #= require teaspoon/mocha/reporters/console
 #= require teaspoon/mocha/reporters/html
