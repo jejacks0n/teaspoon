@@ -636,7 +636,7 @@
 
     HTML.prototype.setFilters = function() {
       var link;
-      link = [Teaspoon.root, Teaspoon.suites.active].join('/');
+      link = window.location.pathname;
       if (Teaspoon.params["file"]) {
         this.filters.push("by file: " + Teaspoon.params["file"] + " <a href='" + link + "'>remove</a>");
       }
