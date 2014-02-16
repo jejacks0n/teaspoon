@@ -10,6 +10,7 @@ module Teaspoon
     # - add it to the initializers in /lib/generators/install/templates so it's documented there as well
 
     autoload :CleanFormatter,         "teaspoon/formatters/clean_formatter"
+    autoload :DocumentationFormatter, "teaspoon/formatters/documentation_formatter"
     autoload :DotFormatter,           "teaspoon/formatters/dot_formatter"
     autoload :JsonFormatter,          "teaspoon/formatters/json_formatter"
     autoload :JunitFormatter,         "teaspoon/formatters/junit_formatter"

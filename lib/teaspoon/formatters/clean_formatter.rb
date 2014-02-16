@@ -1,5 +1,3 @@
-require "teaspoon/formatters/dot_formatter"
-
 module Teaspoon
   module Formatters
     class CleanFormatter < DotFormatter

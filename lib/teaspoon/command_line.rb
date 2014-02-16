@@ -91,6 +91,7 @@ module Teaspoon
       opt :formatters, "-f", "--format FORMATTERS",
         "Specify formatters (comma separated)",
         "  dot (default) - dots",
+        "  documentation - descriptive documentation",
         "  clean - like dots but doesn't log re-run commands",
         "  json - json formatter (raw teaspoon)",
         "  junit - junit compatible formatter",

@@ -588,7 +588,7 @@ These configuration directives are applicable only when running via the rake tas
   Specify the formatters to use when outputting the results.<br/>
   <b>Note:</b> Output files can be specified by using <code>"junit>/path/to/output.xml"</code>.<br/><br/>
 
-  <b>available:</b> dot, clean, json, junit, pride, snowday, swayze_or_oprah, tap, tap_y, teamcity<br/>
+  <b>available:</b> dot, documentation, clean, json, junit, pride, snowday, swayze_or_oprah, tap, tap_y, teamcity<br/>
   <b>default:</b> <code>"dot"</code>
 
   <ul>
