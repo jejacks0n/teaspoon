@@ -92,12 +92,14 @@ describe Teaspoon::Configuration do
 
   it "allows defining suite configurations" do
     subject.suite(:test_suite) { }
-    expect(subject.suite_configs["test_suite"]).to be_a(Proc)
+    expect(subject.suite_configs["test_suite"][:block]).to be_a(Proc)
+    expect(subject.suite_configs["test_suite"][:instance]).to be_a(Teaspoon::Configuration::Suite)
   end
 
   it "allows defining coverage configurations" do
     subject.coverage(:test_coverage) { }
-    expect(subject.coverage_configs["test_coverage"]).to be_a(Proc)
+    expect(subject.coverage_configs["test_coverage"][:block]).to be_a(Proc)
+    expect(subject.coverage_configs["test_coverage"][:instance]).to be_a(Teaspoon::Configuration::Coverage)
   end
 
   describe ".root=" do

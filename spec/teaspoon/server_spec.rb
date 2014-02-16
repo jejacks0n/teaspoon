@@ -87,7 +87,7 @@ describe Teaspoon::Server do
   describe "integration" do
 
     before do
-      Teaspoon.configuration.stub(:suite_configs).and_return("foo" => proc{})
+      Teaspoon.configuration.stub(:suite_configs).and_return("foo" => {block: proc{}})
       Teaspoon.configuration.stub(:suppress_log).and_return(true)
     end
 

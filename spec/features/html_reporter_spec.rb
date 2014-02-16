@@ -5,10 +5,10 @@ feature "testing with teaspoon in the browser", js: true do
   let(:spec_helper) { nil }
 
   before do
-    Teaspoon.configuration.stub(:suite_configs).and_return "integration" => proc{ |suite|
+    Teaspoon.configuration.stub(:suite_configs).and_return "integration" => {block: proc{ |suite|
       suite.matcher = "spec/dummy/app/assets/javascripts/integration/*_spec.{js,js.coffee,coffee}"
       suite.helper = spec_helper
-    }
+    }}
   end
 
   scenario "gives me the expected results" do

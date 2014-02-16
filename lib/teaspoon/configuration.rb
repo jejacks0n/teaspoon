@@ -53,10 +53,10 @@ module Teaspoon
     # suite configurations
 
     cattr_accessor :suite_configs
-    @@suite_configs = {"default" => proc{}}
+    @@suite_configs = {"default" => {block: proc{}}}
 
     def self.suite(name = :default, &block)
-      @@suite_configs[name.to_s] = block
+      @@suite_configs[name.to_s] = {block: block, instance: Suite.new(&block)}
     end
 
     class Suite
@@ -87,7 +87,7 @@ module Teaspoon
         @hooks        = Hash.new{ |h, k| h[k] = [] }
 
         default = Teaspoon.configuration.suite_configs["default"]
-        self.instance_eval(&default) if default
+        self.instance_eval(&default[:block]) if default
         yield self if block_given?
       end
 
@@ -118,10 +118,10 @@ module Teaspoon
     # coverage configurations
 
     cattr_accessor :coverage_configs
-    @@coverage_configs = {"default" => proc{}}
+    @@coverage_configs = {"default" => {block: proc{}}}
 
     def self.coverage(name = :default, &block)
-      @@coverage_configs[name.to_s] = block
+      @@coverage_configs[name.to_s] = {block: block, instance: Coverage.new(&block)}
     end
 
     class Coverage
@@ -138,7 +138,7 @@ module Teaspoon
         @lines        = nil
 
         default = Teaspoon.configuration.coverage_configs["default"]
-        self.instance_eval(&default) if default
+        self.instance_eval(&default[:block]) if default
         yield self if block_given?
       end
     end

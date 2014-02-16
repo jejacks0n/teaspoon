@@ -35,7 +35,7 @@ module Teaspoon
     def coverage_configuration(name)
       config = Teaspoon.configuration.coverage_configs[name]
       raise Teaspoon::UnknownCoverage, "Unknown coverage configuration \"#{name}\"" unless config.present?
-      Teaspoon::Configuration::Coverage.new(&config)
+      config[:instance] ||= Teaspoon::Configuration::Coverage.new(&config[:block])
     end
 
     def input_path(&block)
