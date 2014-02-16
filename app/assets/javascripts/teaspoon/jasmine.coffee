@@ -1,8 +1,9 @@
-#= require jasmine/1.3.1
 #= require teaspoon/base/teaspoon
 #= require teaspoon/jasmine/reporters/html
 
-throw new Error("Jasmine wasn't found. Please adjust your configuration to ['jasmine/1.3.1', 'teaspoon-jasmine']") unless jasmine
+unless jasmine
+  throw new Teaspoon.Error('Jasmine not found -- use `suite.use_framework :jasmine` and adjust or remove the `suite.javascripts` directive.')
+
 class Teaspoon.Runner extends Teaspoon.Runner
 
   constructor: ->

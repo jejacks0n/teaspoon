@@ -17,6 +17,7 @@ module Teaspoon
                    desc:    "Generate a CoffeeScript spec helper instead of Javascript"
 
       class_option :no_comments, type: :boolean,
+                   aliases: "-q",
                    default: false,
                    desc:    "Install the teaspoon_env.rb without comments"
 
@@ -27,7 +28,7 @@ module Teaspoon
 
       def validate_framework
         return if frameworks.include?(options[:framework])
-        puts "Unknown framework -- Known: #{frameworks.join(', ')}"
+        puts "Unknown framework -- available #{frameworks.join(", ")}"
         exit(1)
       end
 

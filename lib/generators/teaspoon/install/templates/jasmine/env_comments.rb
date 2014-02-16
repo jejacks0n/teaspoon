@@ -36,6 +36,14 @@ Teaspoon.configure do |config|
   # - with the cli: teaspoon --suite=[suite_name]
   config.suite do |suite|
 
+    # Specify the framework you would like to use. This allows you to select versions, and will do some basic setup for
+    # you -- which you can override with the directives below. This should be specified first, as it can override other
+    # directives.
+    # Note: If no version is specified, the latest is assumed.
+    #
+    # Available: jasmine[1.3.1, 2.0.0], mocha[1.10.0, 1.17.1] qunit[1.12.0, 1.14.0]
+    suite.use_framework :jasmine, "1.3.1"
+
     # Specify a file matcher as a regular expression and all matching files will be loaded when the suite is run. These
     # files need to be within an asset path. You can add asset paths using the `config.asset_paths`.
     #suite.matcher = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
@@ -49,7 +57,7 @@ Teaspoon.configure do |config|
     # Note: For CoffeeScript files use `"teaspoon/jasmine"` etc.
     #
     # Available: teaspoon-jasmine, teaspoon-mocha, teaspoon-qunit
-    #suite.javascripts = ["teaspoon-jasmine"]
+    #suite.javascripts = ["jasmine/1.3.1", "teaspoon-jasmine"]
 
     # You can include your own stylesheets if you want to change how Teaspoon looks.
     # Note: Spec related CSS can and should be loaded using fixtures.

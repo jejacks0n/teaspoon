@@ -58,6 +58,14 @@ module Teaspoon
     end
 
     class Suite
+
+      FRAMEWORKS = {
+        jasmine: ["1.3.1", "2.0.0"],
+        mocha: ["1.10.0", "1.17.0"],
+        qunit: ["1.12.0", "1.14.0"],
+        angular: ["1.0.5"],
+      }
+
       attr_accessor   :matcher, :helper, :javascripts, :stylesheets,
                       :boot_partial, :body_partial,
                       :no_coverage,
@@ -67,7 +75,7 @@ module Teaspoon
       def initialize
         @matcher      = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
         @helper       = "spec_helper"
-        @javascripts  = ["teaspoon-jasmine"]
+        @javascripts  = ["jasmine/1.3.1", "teaspoon-jasmine"]
         @stylesheets  = ["teaspoon"]
 
         @boot_partial = "boot"
@@ -85,6 +93,25 @@ module Teaspoon
       def normalize_asset_path(filename)
         @normalize_asset_path.call(filename)
       end
+
+      def use_framework(name, version = nil)
+        name = name.to_sym
+        version ||= FRAMEWORKS[name].last if FRAMEWORKS[name]
+        unless FRAMEWORKS[name] && FRAMEWORKS[name].include?(version)
+          message = "Unknown framework \"#{name}\""
+          message += " with version #{version} -- available versions #{FRAMEWORKS[name].join(", ")}" if FRAMEWORKS[name] && version
+          raise Teaspoon::UnknownFramework, message
+        end
+
+        @javascripts = [[name, version].join("/"), "teaspoon-#{name}"]
+        case name.to_sym
+        when :qunit
+          @matcher = "{test/javascripts,app/assets}/**/*_test.{js,js.coffee,coffee}"
+          @helper  = "test_helper"
+        else
+        end
+      end
+      alias_method :use_framework=, :use_framework
 
       def hook(group = :default, &block)
         @hooks[group.to_s] << block

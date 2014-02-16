@@ -6,6 +6,6 @@ end
 
 Teaspoon.configure do |config|
   config.suite do |suite|
-    suite.javascripts = ["teaspoon-mocha"]
+    suite.use_framework :mocha
   end
 end

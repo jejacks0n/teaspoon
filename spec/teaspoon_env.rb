@@ -10,7 +10,7 @@ Teaspoon.configure do |config|
 
   config.suite do |suite|
     suite.matcher = "{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}"
-    suite.javascripts = ["teaspoon/jasmine"]
+    suite.javascripts = ["jasmine/1.3.1", "teaspoon/jasmine"]
   end
 
   config.suite :jasmine do |suite|
@@ -21,19 +21,19 @@ Teaspoon.configure do |config|
 
   config.suite :mocha do |suite|
     suite.matcher = "spec/javascripts/**/*_mspec.{js,js.coffee,coffee}"
-    suite.javascripts = ["teaspoon/mocha"]
+    suite.javascripts = ["mocha/1.17.1", "teaspoon/mocha"]
     suite.helper = "mocha_helper"
   end
 
   config.suite :qunit do |suite|
     suite.matcher = "test/javascripts/**/*_test.{js,js.coffee,coffee}"
-    suite.javascripts = ["teaspoon/qunit"]
+    suite.javascripts = ["qunit/1.14.0", "teaspoon/qunit"]
     suite.helper = "qunit_helper"
   end
 
   config.suite :angular do |suite|
     suite.matcher = "spec/javascripts/**/*_aspec.{js,js.coffee,coffee}"
-    suite.javascripts = ["teaspoon/angular"]
+    suite.javascripts = ["angular/1.0.5", "teaspoon/angular"]
     suite.helper = "angular_helper"
   end
 

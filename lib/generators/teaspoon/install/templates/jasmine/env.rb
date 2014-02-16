@@ -5,4 +5,7 @@ unless defined?(Rails)
 end
 
 Teaspoon.configure do |config|
+  config.suite do |suite|
+    suite.use_framework :jasmine, "1.3.1"
+  end
 end

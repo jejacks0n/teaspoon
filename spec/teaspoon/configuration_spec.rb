@@ -156,7 +156,7 @@ describe Teaspoon::Configuration::Suite do
   it "has the default configuration" do
     expect(subject.matcher).to eq("{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}")
     expect(subject.helper).to eq("spec_helper")
-    expect(subject.javascripts).to eq(["teaspoon/jasmine"])
+    expect(subject.javascripts).to eq(["jasmine/1.3.1", "teaspoon/jasmine"])
     expect(subject.stylesheets).to eq(["teaspoon"])
     expect(subject.no_coverage).to eq([%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}])
   end
@@ -186,6 +186,36 @@ describe Teaspoon::Configuration::Suite do
       suite.normalize_asset_path = lambda {|filename| filename.gsub('.erb', '').gsub(/(\.es6)$/, ".js") }
 
       expect(suite.normalize_asset_path('blah/something.es6')).to eq('blah/something.js')
+    end
+
+  end
+
+  describe "specifying a framework" do
+
+    it "allows specifying mocha with a version" do
+      @suite = proc{ |s| s.use_framework :mocha, "1.10.0" }
+      expect(subject.javascripts).to eq(["mocha/1.10.0", "teaspoon-mocha"])
+    end
+
+    it "handles qunit specifically to set matcher and helper" do
+      @suite = proc{ |s| s.use_framework :qunit }
+      expect(subject.javascripts).to eq(["qunit/1.14.0", "teaspoon-qunit"])
+      expect(subject.matcher).to eq("{test/javascripts,app/assets}/**/*_test.{js,js.coffee,coffee}")
+      expect(subject.helper).to eq("test_helper")
+    end
+
+    describe "exceptions" do
+
+      it "shows an error for unknown frameworks" do
+        @suite = proc{ |s| s.use_framework :foo }
+        expect{ subject }.to raise_error Teaspoon::UnknownFramework, "Unknown framework \"foo\""
+      end
+
+      it "shows an error for unknown versions" do
+        @suite = proc{ |s| s.use_framework :qunit, "666" }
+        expect{ subject }.to raise_error Teaspoon::UnknownFramework, "Unknown framework \"qunit\" with version 666 -- available versions 1.12.0, 1.14.0"
+      end
+
     end
 
   end

@@ -407,6 +407,14 @@ When you install Teaspoon a `teaspoon_env.rb` file is generated that contains mo
 
 <dl>
 
+<dt> use_framework(name[, version]) </dt><dd>
+  Specify the framework and optionally version you would like to use. This will do some basic setup for you -- which you can override with the directives below. This should be specified first, as it can override other directives.<br/><br/>
+  <b>Note:</b> If no version is specified, the latest is assumed.<br/><br/>
+
+  <b>available:</b> jasmine[1.3.1, 2.0.0], mocha[1.10.0, 1.17.1] qunit[1.12.0, 1.14.0]<br/>
+  <b>default:</b> <code>[no default]</code>
+</dd>
+
 <dt> matcher </dt><dd>
   Specify a file matcher as a regular expression and all matching files will be loaded when the suite is run. These files need to be within an asset path. You can add asset paths using the `config.asset_paths`.<br/>
   <b>Note:</b> Can be set to <code>nil</code> to match no files.<br/><br/>
@@ -421,11 +429,12 @@ When you install Teaspoon a `teaspoon_env.rb` file is generated that contains mo
 </dd>
 
 <dt> javascripts </dt><dd>
-  The core Teaspoon javascripts. It's recommended to include only the base files here, as you can require support libraries from your spec helper.<br/>
+  The core Teaspoon javascripts. If you're using the `use_framework` directive this will be set based on that, but it can be useful to provide an override to use a custom version of a test framework.<br/>
+  <b>Note:</b> It's recommended to only include the core files here, as you can require support libraries from your spec helper.<br/>
   <b>Note:</b> For CoffeeScript files use <code>"teaspoon/jasmine"</code> etc.<br/><br/>
 
   <b>available:</b> teaspoon-jasmine, teaspoon-mocha, teaspoon-qunit<br/>
-  <b>default:</b> <code>["teaspoon-jasmine"]</code>
+  <b>default:</b> <code>["jasmine/1.3.1", "teaspoon-jasmine"]</code>
 </dd>
 
 <dt> stylesheets </dt><dd>

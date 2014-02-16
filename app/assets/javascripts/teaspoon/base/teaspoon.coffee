@@ -59,3 +59,11 @@ class @Teaspoon
     messages = Teaspoon.messages
     Teaspoon.messages = []
     messages
+
+
+
+class Teaspoon.Error extends Error
+
+  constructor: (message) ->
+    @name = "TeaspoonError"
+    @message = (message || "")

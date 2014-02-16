@@ -128,6 +128,10 @@ describe "PhantomJS Runner", ->
         @callbacks.onError("_message_", ["trace1", "trace2"])
         expect(@logSpy).toHaveBeenCalledWith('{"_teaspoon":true,"type":"error","message":"_message_","trace":["trace1","trace2"]}')
 
+      it "calls #fail if the error is a TeaspoonError", ->
+        spyOn(@runner, "fail")
+        @callbacks.onError("TeaspoonError: _message_")
+        expect(@runner.fail).toHaveBeenCalledWith("Execution halted.")
 
     describe "#onConsoleMessage", ->
 
