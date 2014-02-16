@@ -36,6 +36,7 @@ describe Teaspoon::Coverage do
     let(:config) { double(reports: ["html", "text", "text-summary"], output_path: "output/path") }
 
     it "generates reports using istanbul and passes them to the block provided" do
+      `(exit 0)`
       html_report = "/path/to/executable report html /temp_path/coverage.json --dir output/path/_suite_ 2>&1"
       text1_report = "/path/to/executable report text /temp_path/coverage.json --dir output/path/_suite_ 2>&1"
       text2_report = "/path/to/executable report text-summary /temp_path/coverage.json --dir output/path/_suite_ 2>&1"
@@ -59,7 +60,7 @@ describe Teaspoon::Coverage do
     end
 
     it "checks the coverage using istanbul and passes them to the block provided" do
-      $?.should_receive(:exitstatus).and_return(1)
+      `(exit 1)`
       check_coverage = "/path/to/executable check-coverage --statements=42 --functions=66.6 --branches=0 --lines=100 /temp_path/coverage.json 2>&1"
       subject.should_receive(:`).with(check_coverage).and_return("some mumbo jumbo\nERROR: _failure1_\nmore garbage\nERROR: _failure2_")
       subject.check_thresholds { |r| @result = r }
@@ -67,7 +68,7 @@ describe Teaspoon::Coverage do
     end
 
     it "doesn't call the callback if the exit status is 0" do
-      $?.should_receive(:exitstatus).and_return(0)
+      `(exit 0)`
       subject.should_receive(:`).and_return("ERROR: _failure1_")
       subject.check_thresholds { |r| @called = true }
       expect(@called).to be_false
