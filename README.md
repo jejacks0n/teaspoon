@@ -23,7 +23,7 @@ If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), chec
 
 The master branch deviates heavily from 0.7.9 and represents the changes that will be in 0.8. There's a good [wiki article](https://github.com/modeset/teaspoon/wiki/Changelog) about the notable changes and how you can ease the pain of upgrading.
 
-While we know that considerable changes like these can be a pain, they're not made frivolously, and set the groundwork for what we can all build on and contribute to. There was some cleanup that needed to happen, and some polish, and in that process we tried to think about what we've learned thus far, and how we can better that for future versions. We appreciate your tolerance and willingness to help us fix anything that we missed.
+While we know that considerable changes like these can be a pain, they're not made frivolously, and they set the groundwork for what we can all build on and contribute to. There was some cleanup that needed to happen, and some polish, and in that process we tried to think about what we've learned thus far, and how we can better that for future versions. We appreciate your tolerance and willingness to help us fix anything that we missed.
 
 :heart:
 
