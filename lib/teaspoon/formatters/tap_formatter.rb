@@ -1,47 +1,38 @@
-require 'teaspoon/formatters/base_formatter'
-
 module Teaspoon
   module Formatters
-    class TapFormatter < BaseFormatter
+    class TapFormatter < Base
 
-      def runner(result)
-        log "1..#{result.total}"
+      protected
+
+      def log_runner(result)
+        log_line("1..#{@total_count}")
       end
 
-      def spec(result)
-        super
-        @result = result
-        return passing_spec if result.passing?
-        return pending_spec if result.pending?
-        failing_spec
+      def log_passing_spec(result)
+        log_line("ok #{@run_count} - #{result.description}")
       end
 
-      def error(error)
-        @errors << error
+      def log_pending_spec(result)
+        log_line("ok #{@run_count} - [pending] #{result.description}")
       end
 
-      def suppress_logs?
-        true
+      def log_failing_spec(result)
+        log_line("not ok #{@run_count} - #{result.description}")
+        log_line("  FAIL #{result.message}")
       end
 
-      private
-
-      def passing_spec
-        log "ok #{@total} - #{@result.description}"
+      def log_console(message)
+        log_line("# #{message.gsub(/\n$/, "")}")
       end
 
-      def pending_spec
-        log "ok #{@total} - [pending] #{@result.description}"
+      def log_coverage(message)
+        log_line("# #{message.gsub(/\n/, "\n# ")}")
       end
 
-      def failing_spec
-        log "not ok #{@total} - #{@result.description}\n  # FAIL #{@result.message}"
+      def log_threshold_failure(message)
+        log_line("not ok #{@run_count + 1} - Coverage threshold failed")
+        log_line("# #{message.gsub(/\n/, "\n# ")}")
       end
-
-      def log(str)
-        STDOUT.print("#{str}\n")
-      end
-
     end
   end
 end

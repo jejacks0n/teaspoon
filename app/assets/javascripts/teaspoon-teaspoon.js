@@ -9,7 +9,6 @@
       this.input = $u("#teaspoon-filter-input")[0];
       this.input.value = "";
       this.input.onkeyup = this.filter;
-      this.input.focus();
     }
 
     TeaspoonInterface.prototype.filter = function() {

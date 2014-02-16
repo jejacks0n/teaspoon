@@ -1,7 +1,9 @@
-#= require angular-scenario-1.0.5
 #= require teaspoon/base/teaspoon
 #= require teaspoon/angular/reporters/console
 #= require teaspoon/angular/reporters/html
+
+unless angular?.scenario
+  throw new Teaspoon.Error('Angular Scenario not found -- use `suite.use_framework :angular` and adjust or remove the `suite.javascripts` directive.')
 
 class Teaspoon.Runner extends Teaspoon.Runner
 

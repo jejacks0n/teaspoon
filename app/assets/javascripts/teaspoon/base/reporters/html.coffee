@@ -135,13 +135,13 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
 
 
   setFilters: ->
-    link = [Teaspoon.root, Teaspoon.suites.active].join('/')
+    link = window.location.pathname
     @filters.push("by file: #{Teaspoon.params["file"]} <a href='#{link}'>remove</a>") if Teaspoon.params["file"]
     @filters.push("by match: #{Teaspoon.params["grep"]} <a href='#{link}'>remove</a>") if Teaspoon.params["grep"]
 
 
   readConfig: ->
-    @config = config if config = @cookie("teaspoon")
+    @config = config if config = @store("teaspoon")
 
 
   toggleConfig: (e) =>
@@ -149,7 +149,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     return unless button.tagName.toLowerCase() == "button"
     name = button.getAttribute("id").replace(/^teaspoon-/, "")
     @config[name] = !@config[name]
-    @cookie("teaspoon", @config)
+    @store("teaspoon", @config)
     @refresh()
 
 
@@ -161,6 +161,13 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     window.location.href = window.location.href
 
 
+  store: (name, value) ->
+    if window.localStorage?.setItem?
+      @localstore(name, value)
+    else
+      @cookie(name, value)
+
+
   cookie: (name, value = undefined) ->
     if value == undefined
       name = name.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1")
@@ -170,3 +177,10 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
       date = new Teaspoon.Date()
       date.setDate(date.getDate() + 365)
       document.cookie = "#{name}=#{escape(JSON.stringify(value))}; expires=#{date.toUTCString()}; path=/;"
+
+
+  localstore: (name, value = undefined) ->
+    if value == undefined
+      JSON.parse(unescape(localStorage.getItem(name)))
+    else
+      localStorage.setItem(name, escape(JSON.stringify(value)))

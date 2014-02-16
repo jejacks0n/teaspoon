@@ -4,56 +4,68 @@ require "teaspoon/result"
 module Teaspoon
   class Runner
 
-    attr_accessor :formatters
-    attr_reader   :failure_count
+    attr_reader :failure_count
 
     def initialize(suite_name = :default)
       @suite_name = suite_name
-      @formatters = Teaspoon.configuration.formatters.map{ |f| resolve_formatter(f).new(suite_name) }
       @failure_count = 0
-    end
-
-    def suppress_logs?
-      return @suppress_logs unless @suppress_logs.nil?
-      @suppress_logs = Teaspoon.configuration.suppress_log
-      return true if @suppress_logs
-      for formatter in @formatters
-        return @suppress_logs = true if formatter.suppress_logs?
-      end
-      @suppress_logs = false
+      @formatters = Teaspoon.configuration.formatters.map{ |f| resolve_formatter(f) }
     end
 
     def process(line)
-      return if output_from(line)
-      log line unless suppress_logs?
+      if result = result_from_line(line)
+        return notify_formatters(result.type, result)
+      end
+      notify_formatters("console", line) unless Teaspoon.configuration.suppress_log
     end
 
     private
 
     def resolve_formatter(formatter)
-      Teaspoon::Formatters.const_get("#{formatter.to_s.camelize}Formatter")
+      formatter, output = formatter.to_s.split(">")
+      formatter = Teaspoon::Formatters.const_get("#{formatter.camelize}Formatter")
+      formatter.new(@suite_name, output)
+    rescue NameError
+      raise Teaspoon::UnknownFormatter, "Unknown formatter: \"#{formatter}\""
     end
 
-    def output_from(line)
+    def notify_formatters(event, result)
+      @formatters.each { |f| f.send(event, result) if f.respond_to?(event) }
+      send(:"on_#{event}", result) if respond_to?(:"on_#{event}", true)
+    end
+
+    def result_from_line(line)
       json = JSON.parse(line)
       return false unless json && json["_teaspoon"] && json["type"]
-      result = Teaspoon::Result.build_from_json(json)
-      notify_formatters result
-      @failure_count += 1 if result.failing?
-      return true
+      json["original_json"] = line
+      return result_from_json(json)
     rescue JSON::ParserError
       false
     end
 
-    def notify_formatters(result)
-      @formatters.each do |formatter|
-        event = result.type
-        formatter.send(event, result) if formatter.respond_to?(event)
-      end
+    def result_from_json(json)
+      result = Teaspoon::Result.build_from_json(json)
+      @failure_count += 1 if result.failing?
+      result
     end
 
-    def log(msg)
-      STDOUT.print msg
+    def on_exception(result)
+      raise Teaspoon::RunnerException, result.message
+    end
+
+    def on_result(result)
+      resolve_coverage(result.coverage)
+      notify_formatters("complete", @failure_count)
+    end
+
+    def resolve_coverage(data)
+      return unless Teaspoon.configuration.use_coverage && data.present?
+      coverage = Teaspoon::Coverage.new(@suite_name, Teaspoon.configuration.use_coverage, data)
+      coverage.generate_reports { |msg| notify_formatters("coverage", msg) }
+      coverage.check_thresholds do |msg|
+        notify_formatters("threshold_failure", msg)
+        @failure_count += 1
+      end
     end
   end
 end

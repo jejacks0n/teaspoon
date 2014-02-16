@@ -1,33 +1,44 @@
-# This file allows you to override various Teaspoon configuration directives when running from the command line. It is not
-# required from within the Rails environment, so overriding directives that have been defined within the initializer
-# is not possible.
-#
-# Set RAILS_ROOT and load the environment.
-ENV["RAILS_ROOT"] = File.expand_path("../dummy", __FILE__)
-require File.expand_path("../dummy/config/environment", __FILE__)
+# Set RAILS_ROOT and load the environment if it's not already loaded.
+unless defined?(Rails)
+  ENV["RAILS_ROOT"] = File.expand_path("../dummy", __FILE__)
+  require File.expand_path("../dummy/config/environment", __FILE__)
+end
 
-# Provide default configuration.
-#
-# You can override various configuration directives defined here by using arguments with the teaspoon command.
-#
-# teaspoon --driver=selenium --suppress-log
-# rake teaspoon DRIVER=selenium SUPPRESS_LOG=false
-Teaspoon.setup do |config|
-  # Driver
-  #config.driver              = "phantomjs" # available: phantomjs, selenium
+Teaspoon.configure do |config|
+  config.root = Teaspoon::Engine.root
+  config.asset_paths << Teaspoon::Engine.root.join('lib/teaspoon')
 
-  # Behaviors
-  #config.server_timeout      = 20 # timeout for starting the server
-  #config.server_port         = nil # defaults to any open port unless specified
-  #config.fail_fast           = true # abort after the first failing suite
+  config.suite do |suite|
+    suite.matcher = "{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}"
+    suite.javascripts = ["jasmine/1.3.1", "teaspoon/jasmine"]
+  end
 
-  # Output
-  #config.formatters          = "dot" # available: dot, tap_y, swayze_or_oprah
-  #config.suppress_log        = false # suppress logs coming from console[log/error/debug]
-  #config.color               = true
+  config.suite :jasmine do |suite|
+    suite.matcher = "spec/javascripts/**/*_jspec.{js,js.coffee,coffee}"
+    suite.helper = "jasmine_helper"
+    suite.body_partial = "/body"
+  end
 
-  # Coverage (requires istanbul -- https://github.com/gotwarlost/istanbul)
-  #config.coverage             = true
-  #config.coverage_reports     = "text-summary,text,html,cobertura"
-  #config.coverage_output_dir  = "coverage"
+  config.suite :mocha do |suite|
+    suite.matcher = "spec/javascripts/**/*_mspec.{js,js.coffee,coffee}"
+    suite.javascripts = ["mocha/1.17.1", "teaspoon/mocha"]
+    suite.helper = "mocha_helper"
+  end
+
+  config.suite :qunit do |suite|
+    suite.matcher = "test/javascripts/**/*_test.{js,js.coffee,coffee}"
+    suite.javascripts = ["qunit/1.14.0", "teaspoon/qunit"]
+    suite.helper = "qunit_helper"
+  end
+
+  config.suite :angular do |suite|
+    suite.matcher = "spec/javascripts/**/*_aspec.{js,js.coffee,coffee}"
+    suite.javascripts = ["angular/1.0.5", "teaspoon/angular"]
+    suite.helper = "angular_helper"
+  end
+
+  #config.suite :integration do |suite|
+  #  suite.matcher = "spec/dummy/app/assets/javascripts/integration/*_spec.{js,js.coffee,coffee}"
+  #  suite.helper = nil
+  #end
 end

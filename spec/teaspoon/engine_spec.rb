@@ -2,13 +2,16 @@ require "spec_helper"
 
 describe Teaspoon::Engine do
 
-  it "is a class" do
-    Teaspoon::Engine.should be_a(Class)
-  end
+  subject { Teaspoon::Engine }
 
   it "has been isolated with a name" do
-    expect(Teaspoon::Engine.isolated?).to be(true)
-    expect(Teaspoon::Engine.railtie_name).to eql("teaspoon")
+    expect(subject.isolated?).to be(true)
+    expect(subject.railtie_name).to eql("teaspoon")
+  end
+
+  it "defaults the root path" do
+    # this has to add spec/dummy as we set it manually
+    expect(Teaspoon.configuration.root.join('spec/dummy').to_s).to eq(Rails.root.to_s)
   end
 
   it "adds asset paths from configuration" do

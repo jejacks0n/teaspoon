@@ -1,59 +1,78 @@
-require 'teaspoon/formatters/base_formatter'
+require "cgi"
 
 module Teaspoon
   module Formatters
-    class JunitFormatter < BaseFormatter
+    class JunitFormatter < Base
 
-      def runner(result)
-        @count = result.total;
+      protected
 
-        log "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-        log "<testsuites name=\"jasmine\"><testsuite name=\"#{result.suite}\" tests=\"#{@count}\">"
+      def log_runner(result)
+        log_line(%Q{<?xml version="1.0" encoding="UTF-8"?>})
+        log_line(%Q{<testsuites name="Teaspoon">})
+        log_line(%Q{<testsuite name="#{@suite_name}" tests="#{@total_count}" time="#{result.start}">})
       end
 
-      def spec(result)
-        super
-        @result = result
-        return passing_spec if result.passing?
-        return pending_spec if result.pending?
-        failing_spec
+      def log_suite(result)
+        log_end_suite
+        log_line(%Q{<testsuite name="#{result.label}">})
       end
 
-      def error(error)
-        @errors << error
+      def log_passing_spec(result)
+        log_junit_spec(suite: result.suite, label: result.label)
       end
 
-      def result(result)
-        log "</testsuite></testsuites>"
+      def log_pending_spec(result)
+        log_junit_spec(suite: result.suite, label: result.label) do
+          log_line(%Q{  <skipped/>})
+        end
       end
 
-      def suppress_logs?
-        false
+      def log_failing_spec(result)
+        log_junit_spec(suite: result.suite, label: result.label) do
+          log_line(%Q{  <failure type="AssertionFailed">#{cdata(result.message)}</failure>})
+        end
+      end
+
+      def log_result(result)
+        log_end_suite
+      end
+
+      def log_coverage(message)
+        log_line(%Q{<testsuite name="Coverage summary" tests="0">\n<properties>#{cdata(message)}<properties>\n</testsuite>})
+      end
+
+      def log_threshold_failure(message)
+        log_line(%Q{<testsuite name="Coverage thresholds" tests="1">})
+        log_junit_spec(suite: "Coverage thresholds", label: "were not met") do
+          log_line(%Q{  <failure type="AssertionFailed">#{cdata(message)}</failure>})
+        end
+        log_line(%Q{</testsuite>})
+      end
+
+      def log_complete(failure_count)
+        log_line(%Q{</testsuite>\n</testsuites>})
       end
 
       private
 
-      def passing_spec
-        log %Q[<testcase classname="#{@result.suite}" name="#{@result.label}"></testcase>\n]
+      def log_end_suite
+        log_line(%Q{</testsuite>}) if @last_suite
       end
 
-      def pending_spec
-        log %Q[<testcase classname="#{@result.suite}" name="#{@result.label}"><skipped /></testcase>\n]
+      def log_junit_spec(opts, &block)
+        log_line(%Q{<testcase classname="#{escape(opts[:suite])}" name="#{escape(opts[:label])}">})
+        yield if block_given?
+        log_line(%Q{<system-out>#{cdata(@stdout)}</system-out>}) unless @stdout.blank?
+        log_line(%Q{</testcase>})
       end
 
-      def failing_spec
-        str = <<EOL;
-<testcase classname="#{@result.suite}" name="#{@result.label}">
-<failure type="AssertionFailed">#{@result.message}</failure>
-</testcase>\n
-EOL
-        log str
+      def escape(str)
+        CGI::escapeHTML(str)
       end
 
-      def log(str)
-        STDOUT.print("#{str}\n")
+      def cdata(str)
+        "\n<![CDATA[\n#{str.gsub(/\n$/, "")}\n]]>\n"
       end
-
     end
   end
 end

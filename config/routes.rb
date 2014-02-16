@@ -1,6 +1,16 @@
 Teaspoon::Engine.routes.draw do
-  get "/fixtures/*filename", to: "spec#fixtures"
-  get "/:suite", to: "spec#runner", defaults: { suite: "default" }
-  post "/:suite/hooks(/:group)", to: "spec#hooks", defaults: { suite: "default", group: "default" }
-  root to: "spec#suites"
+
+  root  to: "suite#index"
+
+  match "/fixtures/*filename",
+        to: "suite#fixtures", via: [:get]
+
+  match "/:suite", as: "suite",
+        to: "suite#show", via: [:get],
+        defaults: { suite: "default" }
+
+  match "/:suite/:hook", as: "suite_hook",
+        to: "suite#hook", via: [:get, :post],
+        defaults: { suite: "default", hook: "default" }
+
 end

@@ -1,100 +1,106 @@
 require "spec_helper"
 require "teaspoon/runner"
 require "teaspoon/exceptions"
+require "teaspoon/coverage"
 
 describe Teaspoon::Runner do
 
   before do
-    @log = ""
-    STDOUT.stub(:print) { |s| @log << s }
+    Teaspoon.configuration.stub(:formatters).and_return([])
   end
 
-  describe "constructor" do
+  describe "#initialize" do
+
+    it "sets @suite_name and @failure_count" do
+      subject = Teaspoon::Runner.new(:foo)
+      expect(subject.instance_variable_get(:@suite_name)).to eq(:foo)
+      expect(subject.failure_count).to eq(0)
+    end
 
     it "instantiates formatters based on configuration" do
-      Teaspoon.configuration.should_receive(:formatters).and_return(["dot", "xml"])
+      Teaspoon.configuration.stub(:formatters).and_return(["dot", "xml"])
       Teaspoon::Formatters::XmlFormatter = Class.new do
-        def initialize(suite_name = :default) end
+        def initialize(_suite_name = :default, _output_file = nil) end
       end
-      expect(subject.formatters[0]).to be_a(Teaspoon::Formatters::DotFormatter)
-      expect(subject.formatters[1]).to be_a(Teaspoon::Formatters::XmlFormatter)
-    end
-
-  end
-
-  describe "#suppress_logs?" do
-
-    it "returns true if the configuration is true" do
-      Teaspoon.configuration.should_receive(:suppress_log).and_return(true)
-      expect(subject.suppress_logs?).to be(true)
-    end
-
-    it "asks each formatter if it needs to suppress logs" do
-      Teaspoon.configuration.should_receive(:suppress_log).and_return(false)
-      subject.formatters = [double(suppress_logs?: true)]
-      expect(subject.suppress_logs?).to be(true)
-    end
-
-    it "memoizes" do
-      Teaspoon.configuration.should_not_receive(:suppress_log)
-      subject.instance_variable_set(:@suppress_logs, true)
-      expect(subject.suppress_logs?).to be(true)
+      expect(subject.instance_variable_get(:@formatters)[0]).to be_a(Teaspoon::Formatters::DotFormatter)
+      expect(subject.instance_variable_get(:@formatters)[1]).to be_a(Teaspoon::Formatters::XmlFormatter)
     end
 
   end
 
   describe "#process" do
 
+    let(:formatter) { double }
+    let(:coverage) { double(generate_reports: nil, check_thresholds: nil) }
+
     before do
-      subject.instance_variable_set(:@suppress_logs, false)
+      subject.instance_variable_set(:@formatters, [formatter])
     end
 
-    it "just outputs logs that it doesn't understand" do
-      subject.should_receive(:log).with("_line_")
-      subject.should_receive(:output_from).and_return(false)
+    it "notifies formatters when it understands the log" do
+      formatter.should_receive(:foo)
+      formatter.should_not_receive(:bar)
+      subject.process('{"_teaspoon":true,"type":"foo"}')
+      subject.process('{"_teaspoon":false,"type":"bar"}')
+    end
+
+    it "notifies formatters of console output when it doesn't understand the log" do
+      formatter.should_receive(:console).with("_line_")
+      subject.should_receive(:result_from_line).and_return(false)
       subject.process("_line_")
-    end
-
-    it "doesn't output logs when suppressed" do
-      subject.should_receive(:suppress_logs?).and_return(true)
-      subject.should_not_receive(:log).with("_line_")
-      subject.should_receive(:output_from).and_return(false)
-      subject.process("_line_")
-    end
-
-    it "handles lines and notifies formatters when it should" do
-      formatter = double('formatter')
-      subject.formatters = [ formatter ]
-      formatter.should_receive(:spec)
-      formatter.should_receive(:error)
-      formatter.should_receive(:results)
-      formatter.should_receive(:exception)
-      formatter.should_not_receive(:log)
-      subject.process('{"_teaspoon": true, "type": "spec"}')
-      subject.process('{"_teaspoon": true, "type": "error"}')
-      subject.process('{"_teaspoon": true, "type": "results"}')
-      subject.process('{"_teaspoon": true, "type": "exception"}')
     end
 
     it "handles bad json" do
-      subject.should_receive(:log).with("{bad: true}")
+      formatter.should_receive(:console).with("{bad: true}")
       subject.process("{bad: true}")
     end
 
     it "handles json when it's not intended for it" do
-      subject.should_receive(:log).with('{"good": true}')
+      formatter.should_receive(:console).with('{"good": true}')
       subject.process('{"good": true}')
     end
 
-    it 'keeps a count of errors' do
-      subject.formatters = []
-      subject.process('{"_teaspoon": true, "type": "spec"}')
-      subject.process('{"_teaspoon": true, "type": "spec", "status": "passed"}')
-      subject.process('{"_teaspoon": true, "type": "spec", "status": "pending"}')
-      subject.process('{"_teaspoon": true, "type": "error"}')
-      subject.process('{"_teaspoon": true, "type": "exception"}')
-      subject.process('{"_teaspoon": true, "type": "results"}')
+    it "keeps a count of errors" do
+      subject.process('{"_teaspoon":true,"type":"spec"}')
+      subject.process('{"_teaspoon":true,"type":"spec", "status": "passed"}')
+      subject.process('{"_teaspoon":true,"type":"spec", "status": "pending"}')
+      subject.process('{"_teaspoon":true,"type":"error"}')
+      subject.process('{"_teaspoon":true,"type":"results"}')
       expect(subject.failure_count).to be(1)
+    end
+
+    describe "with an exception" do
+
+      it "notifies itself, and raises Teaspoon::RunnerException" do
+        subject.should_receive(:on_exception).and_call_original
+        expect { subject.process('{"_teaspoon":true,"type":"exception","message":"_message_"}') }.to raise_error Teaspoon::RunnerException, "_message_"
+      end
+
+    end
+
+    describe "with a result" do
+
+      before do
+        Teaspoon::Coverage.stub(:new).and_return(coverage)
+      end
+
+      it "notifies itself" do
+        subject.should_receive(:on_result)
+        subject.process('{"_teaspoon":true,"type":"result"}')
+      end
+
+      it "resolves coverage" do
+        Teaspoon.configuration.should_receive(:use_coverage).twice.and_return("_coverage_config_")
+        Teaspoon::Coverage.should_receive(:new).with(:default, "_coverage_config_", "_coverage_").and_return(coverage)
+        coverage.should_receive(:generate_reports).and_yield("_generated_reports_")
+        coverage.should_receive(:check_thresholds).and_yield("_threshold_failures_")
+        subject.should_receive(:notify_formatters).once.with("coverage", "_generated_reports_")
+        subject.should_receive(:notify_formatters).once.with("threshold_failure", "_threshold_failures_")
+        subject.should_receive(:notify_formatters).exactly(2).times.and_call_original
+        subject.process('{"_teaspoon":true,"type":"result","coverage":"_coverage_"}')
+        expect(subject.failure_count).to eq(1)
+      end
+
     end
 
   end

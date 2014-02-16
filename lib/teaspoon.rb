@@ -1,10 +1,8 @@
 require "teaspoon/version"
 require "teaspoon/exceptions"
-require "teaspoon/configuration"
-require "teaspoon/suite"
 require "teaspoon/utility"
-require "teaspoon/check_coverage"
-require "teaspoon/coverage"
-require "teaspoon/instrumentation"
+require "teaspoon/configuration"
 
-require "teaspoon/engine"
+require "teaspoon/engine" if defined?(Rails)
+
+require "teaspoon/deprecated"

@@ -1,85 +1,37 @@
 module Teaspoon
   class Suite
 
-    attr_accessor :config, :name
-
     def self.all
-      Teaspoon.configuration.suites.keys.map { |suite| Teaspoon::Suite.new(suite: suite) }
+      @all ||= Teaspoon.configuration.suite_configs.keys.map { |suite| Teaspoon::Suite.new(suite: suite) }
     end
 
     def self.resolve_spec_for(file)
-      suites = all
-      suites.each do |suite|
+      all.each do |suite|
         spec = suite.include_spec_for?(file)
         return {suite: suite.name, path: spec} if spec
       end
       false
     end
 
+    attr_accessor :config, :name
+    delegate      :helper, :stylesheets, :javascripts, :boot_partial, :body_partial, :no_coverage, :hooks,
+                  to: :config
+
     def initialize(options = {})
       @options = options
       @name = (@options[:suite] || :default).to_s
       @config = suite_configuration
-    end
-
-    def stylesheets
-      config.stylesheets
-    end
-
-    def helper
-      config.helper
-    end
-
-    def javascripts
-      [core_javascripts, spec_javascripts].flatten
-    end
-
-    def core_javascripts
-      config.javascripts
-    end
-
-    def js_config
-      config.js_config
-    end
-
-    def boot_partial
-      config.boot_partial
-    end
-
-    def spec_javascripts
-      [helper, specs].flatten
-    end
-
-    def spec_javascripts_for_require
-      specs.map { |path|
-        file_without_ext = path.split('.').first
-        "#{file_without_ext}"
-      }
-    end
-
-    def suites
-      {all: Teaspoon.configuration.suites.keys, active: name}
+      @env = Rails.application.assets
     end
 
     def spec_files
       glob.map { |file| {path: file, name: asset_from_file(file)} }
     end
 
-    def link(params = {})
-      query = "/?#{params.to_query}" if params.present?
-      "#{Teaspoon.configuration.context}#{Teaspoon.configuration.mount_at}/#{name}#{query}"
-    end
-
-    def instrument_file?(file)
-      return false if include_spec?(file)
-      for ignored in @config.no_coverage
-        if ignored.is_a?(String)
-          return false if File.basename(file) == ignored
-        elsif ignored.is_a?(Regexp)
-          return false if file =~ ignored
-        end
-      end
-      true
+    def spec_assets(include_helper = true)
+      assets = specs
+      assets.unshift(helper) if include_helper && helper
+      asset_tree(assets)
     end
 
     def include_spec?(file)
@@ -93,12 +45,6 @@ module Teaspoon
       false
     end
 
-    def run_hooks(group = :default)
-      config.hooks[group.to_s].each do |hook|
-        hook.call
-      end
-    end
-
     protected
 
     def specs
@@ -107,14 +53,58 @@ module Teaspoon
       glob.map { |file| asset_from_file(file) }
     end
 
+    def asset_tree(sources)
+      sources.collect do |source|
+        asset = @env.find_asset(source)
+        if asset && asset.respond_to?(:logical_path)
+          asset.to_a.map { |a| asset_url(a) }
+        else
+          source unless source.blank?
+        end
+      end.flatten.compact.uniq
+    end
+
+    def asset_url(asset)
+      params = "?body=1"
+      params << "&instrument=1" if instrument_file?(asset.pathname.to_s)
+      "#{asset.logical_path}#{params}"
+    end
+
+    def instrument_file?(file)
+      return false unless @options[:coverage] || Teaspoon.configuration.use_coverage
+      return false if include_spec?(file)
+      for ignored in no_coverage
+        if ignored.is_a?(String)
+          return false if File.basename(file) == ignored
+        elsif ignored.is_a?(Regexp)
+          return false if file =~ ignored
+        end
+      end
+      true
+    end
+
+    def asset_from_file(original)
+      filename = original
+      Rails.application.config.assets.paths.each do |path|
+        filename = filename.gsub(%r(^#{Regexp.escape(path.to_s)}[\/|\\]), "")
+      end
+
+      raise Teaspoon::AssetNotServable, "#{filename} is not within an asset path" if filename == original
+      normalize_js_extension(filename)
+    end
+
+    def normalize_js_extension(filename)
+      filename.gsub('.erb', '').gsub(/(\.js\.coffee|\.coffee)$/, ".js")
+    end
+
     def glob
       @glob ||= Dir[config.matcher.present? ? Teaspoon.configuration.root.join(config.matcher) : ""]
     end
 
     def suite_configuration
-      config = Teaspoon.configuration.suites[name]
-      raise Teaspoon::UnknownSuite unless config.present?
-      Teaspoon::Configuration::Suite.new(&config)
+      config = Teaspoon.configuration.suite_configs[name]
+      raise Teaspoon::UnknownSuite, "Unknown suite \"#{name}\"" unless config.present?
+      config[:instance] ||= Teaspoon::Configuration::Suite.new(&config[:block])
     end
 
     def specs_from_file
@@ -122,17 +112,5 @@ module Teaspoon
         asset_from_file(File.expand_path(Teaspoon.configuration.root.join(filename)))
       end
     end
-
-    def asset_from_file(original)
-      filename = original
-      Rails.application.config.assets.paths.each do |path|
-        path = path.to_s
-        filename = filename.gsub(%r(^#{Regexp.escape(path)}[\/|\\]), "")
-      end
-      raise Teaspoon::AssetNotServable, "#{filename} is not within an asset path" if filename == original
-      filename.gsub('.erb', '').gsub(/(\.js\.coffee|\.coffee)$/, ".js")
-      @config.normalize_asset_path(filename)
-    end
-
   end
 end

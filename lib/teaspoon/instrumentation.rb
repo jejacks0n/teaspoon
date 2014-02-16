@@ -4,56 +4,56 @@ module Teaspoon
   class Instrumentation
     extend Teaspoon::Utility
 
-    def self.executable
-      @executable ||= istanbul()
+    def self.add_to(response, env)
+      return response unless add?(response, env)
+      Teaspoon::Instrumentation.new(response).instrumented_response
     end
 
     def self.add?(response, env)
-      (
-        executable.present? &&                                          # we have an executable
-        env["QUERY_STRING"].to_s =~ /instrument=(1|true)/ &&            # the instrument param was provided
-        response[0] == 200 &&                                           # the status is 200
-        response[1]["Content-Type"].to_s == "application/javascript" && # the format is something that we care about
-        response[2].respond_to?(:source)                                # it looks like an asset
-      )
+      executable &&                                                   # we have an executable
+      env["QUERY_STRING"].to_s =~ /instrument=(1|true)/ &&            # the instrument param was provided
+      response[0] == 200 &&                                           # the status is 200 (304 might be needed here too)
+      response[1]["Content-Type"].to_s == "application/javascript" && # the format is something that we care about
+      response[2].respond_to?(:source)                                # it looks like an asset
     end
 
-    def self.add_to(response, env)
-      return response unless add?(response, env)
-      Teaspoon::Instrumentation.new(response)
-      response
+    def self.executable
+      return @executable if @executable_checked
+      @executable_checked = true
+      @executable = which("istanbul")
     end
 
     def initialize(response)
-      status, headers, @asset = response
-      headers, @asset = [headers.clone, @asset.clone]
-      result = process_and_instrument
-      length = result.bytesize.to_s
-
-      headers["Content-Length"] = length
-      @asset.instance_variable_set(:@source, result)
-      @asset.instance_variable_set(:@length, length)
-
-      response.replace([status, headers, @asset])
+      @response = response
     end
 
-    private
+    def instrumented_response
+      status, headers, asset = @response
+      headers, asset = [headers.clone, asset.clone]
 
-    def process_and_instrument
-      file = @asset.pathname.to_s
-      Dir.mktmpdir do |path|
-        filename = File.basename(file)
-        input = File.join(path, filename).sub(/\.js.+/, ".js")
-        File.open(input, 'w') { |file| file.write(@asset.source) }
+      result = add_instrumentation(asset)
 
-        instrument(input).gsub(input, file)
+      asset.instance_variable_set(:@source, result)
+      asset.instance_variable_set(:@length, headers["Content-Length"] = result.bytesize.to_s)
+
+      [status, headers, asset]
+    end
+
+    protected
+
+    def add_instrumentation(asset)
+      source_path = asset.pathname.to_s
+      Dir.mktmpdir do |temp_path|
+        input_path = File.join(temp_path, File.basename(source_path)).sub(/\.js.+/, ".js")
+        File.open(input_path, 'w') { |f| f.write(asset.source) }
+        instrument(input_path).gsub(input_path, source_path)
       end
     end
 
     def instrument(input)
-      result = %x{#{Teaspoon::Instrumentation.executable} instrument --embed-source #{input.shellescape}}
-      raise "Could not generate instrumentation for #{File.basename(input)}" unless $?.exitstatus == 0
-      result
+      result = %x{#{self.class.executable} instrument --embed-source #{input.shellescape}}
+      return result if $?.exitstatus == 0
+      raise Teaspoon::DependencyFailure, "Could not generate instrumentation for #{File.basename(input)}"
     end
   end
 

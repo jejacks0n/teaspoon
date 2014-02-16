@@ -93,8 +93,7 @@ describe "PhantomJS Runner", ->
 
     it "logs the error message", ->
       @runner.fail("_message_")
-      expect(@logSpy).toHaveBeenCalledWith("Error: _message_")
-      expect(@logSpy).toHaveBeenCalledWith('{"_teaspoon":true,"type":"exception"}')
+      expect(@logSpy).toHaveBeenCalledWith('{"_teaspoon":true,"type":"exception","message":"_message_"}')
 
     it "exits with the error code", ->
       spy = spyOn(phantom, "exit")
@@ -103,10 +102,6 @@ describe "PhantomJS Runner", ->
 
 
   describe "#finish", ->
-
-    it "logs an empty string (to fix line feeds in the console)", ->
-      @runner.finish()
-      expect(@logSpy).toHaveBeenCalledWith(" ")
 
     it "calls exit with a success code", ->
       spy = spyOn(phantom, "exit")
@@ -133,6 +128,10 @@ describe "PhantomJS Runner", ->
         @callbacks.onError("_message_", ["trace1", "trace2"])
         expect(@logSpy).toHaveBeenCalledWith('{"_teaspoon":true,"type":"error","message":"_message_","trace":["trace1","trace2"]}')
 
+      it "calls #fail if the error is a TeaspoonError", ->
+        spyOn(@runner, "fail")
+        @callbacks.onError("TeaspoonError: _message_")
+        expect(@runner.fail).toHaveBeenCalledWith("Execution halted.")
 
     describe "#onConsoleMessage", ->
 

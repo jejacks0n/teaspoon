@@ -1,7 +1,9 @@
-#= require qunit-1.12.0
 #= require teaspoon/base/teaspoon
 #= require teaspoon/qunit/reporters/console
 #= require teaspoon/qunit/reporters/html
+
+unless QUnit
+  throw new Teaspoon.Error('QUnit not found -- use `suite.use_framework :qunit` and adjust or remove the `suite.javascripts` directive.')
 
 class Teaspoon.Runner extends Teaspoon.Runner
 

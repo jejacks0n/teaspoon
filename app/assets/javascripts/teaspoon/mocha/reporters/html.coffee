@@ -18,7 +18,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.HTML
 
 
   envInfo: ->
-    "mocha 1.9.1"
+    "mocha #{_mocha_version || "[unknown version]"}"
 
 
 class Teaspoon.Reporters.HTML.SpecView extends Teaspoon.Reporters.HTML.SpecView

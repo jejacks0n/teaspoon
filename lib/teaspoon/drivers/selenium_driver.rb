@@ -1,31 +1,50 @@
-require "selenium-webdriver"
-require "teaspoon/runner"
+begin
+  require "selenium-webdriver"
+rescue LoadError
+  STDOUT.print("Could not find Selenium Webdriver. Install the selenium-webdriver gem.\n")
+  exit(1)
+end
 
 module Teaspoon
   module Drivers
-    class SeleniumDriver < BaseDriver
+    class SeleniumDriver < Base
 
-      # note: driver_cli_options which is meant to be used for CLI options to pass into the driver is 
-      #       currently ignored. We use the Selenium Ruby binding, so the Selenium command-line options
-      #       aren't used. There are a variety of Selenium options and browser-specific options
-      #       supported by the binding that will take more thought and design to configure cleanly.
-      def run_specs(suite, url, driver_cli_options = nil)
-        runner = Teaspoon::Runner.new(suite)
+      def initialize(options = nil)
+        options ||= {}
+        case options
+        when Hash   then @options = options
+        when String then @options = JSON.parse(options)
+        else raise Teaspoon::UnknownDriverOptions, "Unknown driver options -- supply a hash or json string"
+        end
 
-        driver = Selenium::WebDriver.for(:firefox)
+      rescue JSON::ParserError
+        raise Teaspoon::UnknownDriverOptions, "Malformed driver options -- supply a hash or json string"
+      end
+
+      def run_specs(runner, url)
+        driver = Selenium::WebDriver.for(driver_options[:client_driver])
         driver.navigate.to(url)
 
-        Selenium::WebDriver::Wait.new(timeout: 180, interval: 0.01, message: "Timed out").until do
+        Selenium::WebDriver::Wait.new(driver_options).until do
           done = driver.execute_script("return window.Teaspoon && window.Teaspoon.finished")
           driver.execute_script("return window.Teaspoon && window.Teaspoon.getMessages() || []").each do |line|
             runner.process("#{line}\n")
           end
           done
         end
-
-        runner.failure_count
       ensure
         driver.quit if driver
+      end
+
+      protected
+
+      def driver_options
+        @driver_options ||= HashWithIndifferentAccess.new({
+          client_driver: :firefox,
+          timeout: Teaspoon.configuration.driver_timeout,
+          interval: 0.01,
+          message: "Timed out"
+        }).merge(@options)
       end
     end
   end

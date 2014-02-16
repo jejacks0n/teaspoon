@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Teaspoon :: Suites</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <%= stylesheet_link_tag "teaspoon" %>
+    <%= javascript_include_tag "teaspoon-teaspoon" %>
+  </head>
+  <body>
+    <div id="teaspoon-interface">
+      <div class="teaspoon-clearfix">
+        <div id="teaspoon-title">
+          <h1>Teaspoon</h1>
+          <ul>
+            <li>version: <b><%= Teaspoon::VERSION %></b></li>
+            <li><a href="http://github.com/modeset/teaspoon" target="blank">http://github.com/modeset/teaspoon</a></li>
+          </ul>
+        </div>
+        <div id="teaspoon-progress"><div class="teaspoon-indicator teaspoon-logo"></div></div>
+      </div>
+      <div id="teaspoon-controls" class="teaspoon-clearfix">
+        <input type="text" id="teaspoon-filter-input" placeholder="filter list" autofocus/>
+      </div>
+      <hr/>
+      <ul id="teaspoon-suite-list">
+        <% for suite in @suites %>
+          <li class="suite">
+            <h1><%= link_to suite.name, teaspoon.suite_path(suite.name) %></h1>
+            <ul class="file">
+              <% for file in suite.spec_files %>
+                <li><%= link_to file[:name], teaspoon.suite_path(suite.name, file: file[:path]) %></li>
+              <% end %>
+            </ul>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </body>
+</html>

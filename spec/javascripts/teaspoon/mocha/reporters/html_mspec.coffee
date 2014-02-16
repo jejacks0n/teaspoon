@@ -26,12 +26,6 @@ describe "Mocha Teaspoon.Reporters.HTML", ->
       expect(spec.err).to.eql(foo: "bar")
 
 
-  describe "#envInfo", ->
-
-    it "returns the version", ->
-      expect(@reporter.envInfo()).to.be("mocha 1.9.1")
-
-
 describe "Mocha Teaspoon.Reporters.HTML.SpecView", ->
 
   describe "#updateState", ->

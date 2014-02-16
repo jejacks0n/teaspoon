@@ -348,11 +348,11 @@ describe "Teaspoon.Reporters.HTML", ->
     beforeEach ->
       @readConfigSpy.andCallThrough()
       @config = {}
-      @cookieSpy = spyOn(@reporter, "cookie").andReturn(@config)
+      @storeSpy = spyOn(@reporter, "store").andReturn(@config)
       @reporter.readConfig()
 
     it "reads the configuration from the cookie", ->
-      expect(@cookieSpy).toHaveBeenCalledWith("teaspoon")
+      expect(@storeSpy).toHaveBeenCalledWith("teaspoon")
       expect(@reporter.config).toEqual(@config)
 
 
@@ -360,14 +360,14 @@ describe "Teaspoon.Reporters.HTML", ->
 
     beforeEach ->
       @refreshSpy = spyOn(@reporter, "refresh")
-      @cookieSpy = spyOn(@reporter, "cookie")
+      @storeSpy = spyOn(@reporter, "store")
       @reporter.toggleConfig(target: {tagName: "button", getAttribute: -> "teaspoon-use-catch"})
 
     it "toggles the configuration", ->
       expect(@reporter.config["use-catch"]).toBe(false)
 
     it "sets the cookie", ->
-      expect(@cookieSpy).toHaveBeenCalledWith("teaspoon", @reporter.config)
+      expect(@storeSpy).toHaveBeenCalledWith("teaspoon", @reporter.config)
 
     it "refreshes the page", ->
       expect(@refreshSpy).toHaveBeenCalled()

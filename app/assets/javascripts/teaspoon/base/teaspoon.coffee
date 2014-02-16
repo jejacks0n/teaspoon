@@ -1,6 +1,7 @@
 #= require_self
 #= require teaspoon/base/runner
 #= require teaspoon/base/fixture
+#= require teaspoon/base/hook
 #= require teaspoon/base/reporters/html
 #= require teaspoon/base/reporters/console
 
@@ -58,3 +59,11 @@ class @Teaspoon
     messages = Teaspoon.messages
     Teaspoon.messages = []
     messages
+
+
+
+class Teaspoon.Error extends Error
+
+  constructor: (message) ->
+    @name = "TeaspoonError"
+    @message = (message || "")
