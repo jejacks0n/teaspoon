@@ -6,7 +6,7 @@ module Teaspoon
 
     def self.add_to(response, env)
       return response unless add?(response, env)
-      Teaspoon::Instrumentation.new(response).instrumented
+      Teaspoon::Instrumentation.new(response).instrumented_response
     end
 
     def self.add?(response, env)
@@ -27,7 +27,7 @@ module Teaspoon
       @response = response
     end
 
-    def instrumented
+    def instrumented_response
       status, headers, asset = @response
       headers, asset = [headers.clone, asset.clone]
 

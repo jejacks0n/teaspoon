@@ -36,8 +36,8 @@ module Teaspoon
         "Require Teaspoon environment file."
 
       #opt :custom_options_file,
-      #    "-O", "--options PATH",
-      #    "Specify the path to a custom options file."
+      #  "-O", "--options PATH",
+      #  "Specify the path to a custom options file."
 
       opt :driver, "-d", "--driver DRIVER",
         "Specify driver:",
