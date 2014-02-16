@@ -29,7 +29,9 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     @findEl("suites").innerHTML = @buildSuiteSelect()
     @findEl("suite-select")?.onchange = @changeSuite
 
-    @findEl("root-link").href = Teaspoon.root
+    @findEl("root-link").href = @onePathUp(window.location.pathname)
+
+    @findEl("filter-clear").onclick = @removeFilters
 
     @el = @findEl("report-all")
 
@@ -135,9 +137,8 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
 
 
   setFilters: ->
-    link = window.location.pathname
-    @filters.push("by file: #{Teaspoon.params["file"]} <a href='#{link}'>remove</a>") if Teaspoon.params["file"]
-    @filters.push("by match: #{Teaspoon.params["grep"]} <a href='#{link}'>remove</a>") if Teaspoon.params["grep"]
+    @filters.push("by file: #{Teaspoon.params["file"]}") if Teaspoon.params["file"]
+    @filters.push("by match: #{Teaspoon.params["grep"]}") if Teaspoon.params["grep"]
 
 
   readConfig: ->
@@ -150,15 +151,21 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     name = button.getAttribute("id").replace(/^teaspoon-/, "")
     @config[name] = !@config[name]
     @store("teaspoon", @config)
-    @refresh()
+    Teaspoon.reload()
 
 
-  changeSuite: ->
-    window.location.href = [Teaspoon.root, @options[@options.selectedIndex].value].join('/')
+  removeFilters: ->
+    window.location.href = window.location.pathname
 
 
-  refresh: ->
-    window.location.href = window.location.href
+  changeSuite: (e) =>
+    el = e.target
+    parts = [@onePathUp(window.location.pathname), el.options[el.options.selectedIndex].value]
+    window.location.href = parts.join('/')
+
+
+  onePathUp: (path) ->
+    path.replace(/\/[^\/]*$/, "")
 
 
   store: (name, value) ->
