@@ -27,6 +27,22 @@ While we know that considerable changes like these can be a pain, they're not ma
 
 :heart:
 
+### 0.8.0 - follow ups / todo
+
+Here's a short list of things that 0.8.0 might also address.
+
+- add jasmine2 support
+- tests for the require js stuff (this is brittle and since we don't use requirejs, intrinsically hard)
+- hooks could be improved to specify method (get/post), and to pass params -- passing to the blocks if they have arity
+- hooks need to be tested better
+- adjust dummy app to use relative_url_root and see how things go so we can get that resolved once and for all
+- move the remove filter link to the filter interface itself (the wrapper part) since we never added more complex filter removal
+
+#### nice to haves
+
+- a more useful rake task library (like rspec https://www.relishapp.com/rspec/rspec-core/docs/command-line/rake-task)
+- rspec interface, so rspec reporters can be used
+
 
 ## Screenshots
 
