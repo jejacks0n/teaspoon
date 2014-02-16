@@ -1,3 +1,4 @@
+;_mocha_version = "1.10.0";
 ;(function(){
 
 // CommonJS require()

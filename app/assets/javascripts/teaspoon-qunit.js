@@ -1203,7 +1203,7 @@
     };
 
     HTML.prototype.envInfo = function() {
-      return "qunit 1.12.0";
+      return "qunit " + (_qunit_version || "[unknown version]");
     };
 
     return HTML;

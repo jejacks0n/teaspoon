@@ -1179,7 +1179,7 @@
     };
 
     HTML.prototype.envInfo = function() {
-      return "mocha 1.9.1";
+      return "mocha " + (_mocha_version || "[unknown version]");
     };
 
     return HTML;

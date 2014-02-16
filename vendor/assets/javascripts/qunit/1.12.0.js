@@ -7,7 +7,7 @@
  * Released under the MIT license.
  * https://jquery.org/license/
  */
-
+;_qunit_version = "1.12.0";
 (function( window ) {
 
 var QUnit,
