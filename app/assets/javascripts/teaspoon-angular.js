@@ -1,4 +1,7 @@
 (function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
   this.Teaspoon = (function() {
     function Teaspoon() {}
 
@@ -94,6 +97,18 @@
     return Teaspoon;
 
   })();
+
+  Teaspoon.Error = (function(_super) {
+    __extends(Error, _super);
+
+    function Error(message) {
+      this.name = "TeaspoonError";
+      this.message = message || "";
+    }
+
+    return Error;
+
+  })(Error);
 
 }).call(this);
 (function() {
@@ -1185,6 +1200,10 @@
   var _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  if (!(typeof angular !== "undefined" && angular !== null ? angular.scenario : void 0)) {
+    throw new Teaspoon.Error('Angular Scenario not found -- use `suite.use_framework :angular` and adjust or remove the `suite.javascripts` directive.');
+  }
 
   Teaspoon.Runner = (function(_super) {
     __extends(Runner, _super);

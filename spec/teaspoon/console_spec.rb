@@ -2,6 +2,7 @@ require "spec_helper"
 require "teaspoon/console"
 require "teaspoon/server"
 require "teaspoon/runner"
+require "teaspoon/exporter"
 
 describe Teaspoon::Console do
 
@@ -76,6 +77,7 @@ describe Teaspoon::Console do
 
     before do
       subject.stub(:run_specs).and_return(0)
+      subject.stub(:export)
     end
 
     it "merges @options" do
@@ -124,12 +126,11 @@ describe Teaspoon::Console do
       expect(subject.execute_without_handling).to be_false
     end
 
-    it "exports the tests when the :export option is given" do
-      subject.stub(:suites => [:default])
-      subject.instance_variable_set(:@options, {:export => true})
-      export = double(:export, :output_path => '/output/path')
-      Teaspoon::Export.stub(:new => export)
-      expect(export).to receive(:execute)
+    it "calls export if the options include :export" do
+      subject.should_receive(:suites).and_return([:default, :foo])
+      subject.instance_variable_set(:@options, export: true)
+      subject.should_receive(:export).with(:default)
+      subject.should_receive(:export).with(:foo)
       subject.execute
     end
 
@@ -160,6 +161,32 @@ describe Teaspoon::Console do
     it "raises a Teaspoon::Failure exception on failures when set to fail_fast" do
       Teaspoon.configuration.stub(:fail_fast).and_return(true)
       expect { subject.run_specs(:suite_name) }.to raise_error Teaspoon::Failure
+    end
+
+  end
+
+  describe "#export" do
+
+    before do
+      Teaspoon.configuration.should_receive(:suite_configs).and_return("_suite_" => proc{}, "suite_name" => proc{})
+      Teaspoon::Exporter.stub(:new).and_return(double(export: nil))
+    end
+
+    it "raises a Teaspoon::UnknownSuite exception when the suite isn't known" do
+      expect { subject.export("_unknown_") }.to raise_error Teaspoon::UnknownSuite
+    end
+
+    it "logs that the suite is being exported" do
+      subject.should_receive(:log).with("Teaspoon exporting _suite_ suite at http://url.com/teaspoon/_suite_")
+      subject.export("_suite_")
+    end
+
+    it "calls #export on the exporter" do
+      subject.instance_variable_set(:@options, export: "_output_path_")
+      exporter = double(export: nil)
+      Teaspoon::Exporter.should_receive(:new).with("_suite_", "http://url.com/teaspoon/_suite_", "_output_path_").and_return(exporter)
+      exporter.should_receive(:export)
+      subject.export("_suite_")
     end
 
   end

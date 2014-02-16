@@ -1,6 +1,4 @@
-require 'open-uri'
-require 'teaspoon/environment'
-require 'teaspoon/export'
+require "teaspoon/environment"
 
 module Teaspoon
   class Console
@@ -33,8 +31,8 @@ module Teaspoon
       resolve(@options[:files])
 
       0 == suites.inject(0) do |failures, suite|
-        export(suite) if @options.include?(:export)
         failures += run_specs(suite)
+        export(suite) if @options.include?(:export)
         log("") # empty line for space
         failures
       end
@@ -50,11 +48,9 @@ module Teaspoon
     end
 
     def export(suite)
-      suite_url = url(suite)
-      export_path = @options[:export] if String === @options[:export]
-      exporter = Export.new(:suite => suite, :url => url(suite), :output_path => export_path)
-      STDOUT.print "Teaspoon exporting #{suite} suite at #{suite_url} to #{exporter.output_path}\n" unless Teaspoon.configuration.suppress_log
-      exporter.execute
+      raise Teaspoon::UnknownSuite, "Unknown suite: \"#{suite}\"" unless Teaspoon.configuration.suite_configs[suite.to_s]
+      log("Teaspoon exporting #{suite} suite at #{base_url_for(suite)}")
+      Teaspoon::Exporter.new(suite, url_for(suite, false), @options[:export]).export
     end
 
     protected
@@ -94,9 +90,10 @@ module Teaspoon
       ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite].join('/')
     end
 
-    def url_for(suite)
+    def url_for(suite, console = true)
       url = [base_url_for(suite), filter(suite)].compact.join('?')
-      "#{url}#{(url.include?("?") ? "&" : "?")}reporter=Console"
+      url += "#{(url.include?("?") ? "&" : "?")}reporter=Console" if console
+      url
     end
 
     def filter(suite)

@@ -10,6 +10,8 @@ module Teaspoon
       require "teaspoon"
       require "teaspoon/server"
       require "teaspoon/runner"
+      require "teaspoon/coverage"
+      require "teaspoon/exporter"
 
       Teaspoon.configuration.override_from_options(options)
       Teaspoon::ExceptionHandling.add_rails_handling

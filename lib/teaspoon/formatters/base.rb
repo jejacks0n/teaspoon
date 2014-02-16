@@ -1,5 +1,3 @@
-require "teaspoon/coverage"
-
 module Teaspoon
   module Formatters
 

@@ -4,6 +4,7 @@ module Teaspoon
   class MissingDependency < Teaspoon::Error; end
   class ServerException < Teaspoon::Error; end
   class RunnerException < Teaspoon::Error; end
+  class ExporterException < Teaspoon::Error; end
   class UnknownFramework < Teaspoon::Error; end
   class UnknownDriver < Teaspoon::Error; end
   class UnknownDriverOptions < Teaspoon::Error; end

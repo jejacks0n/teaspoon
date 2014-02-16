@@ -39,21 +39,33 @@ feature "testing with teaspoon in the console", aruba: true do
     assert_partial_output(expected, output)
   end
 
-  scenario "displays coverage information" do
-    pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable
-    pending("needs to be figured out")
-    # for some reason when loaded in the specs the instrumentation isn't working, though it is working in practice
-    #   confirmed that no data is coming through to Teaspoon::Coverage in the result reported by the console reporter
-    #   confirmed that instrument=true is being added to the asset source urls
-    # which means that our sprockets/rack shim doesn't work in this environment
-    run_simple("bundle exec teaspoon -r ../../spec/teaspoon_env.rb --coverage=default app/assets/javascripts/integration/integration_spec.coffee", false)
+  describe "with coverage" do
 
-    assert_partial_output("=============================== Coverage summary ===============================", all_output)
-    assert_partial_output("Statements   : 92.31% ( 12/13 )", all_output)
-    assert_partial_output("Branches     : 100% ( 0/0 )", all_output)
-    assert_partial_output("Functions    : 75% ( 3/4 )", all_output)
-    assert_partial_output("Lines        : 92.31% ( 12/13 )", all_output)
-    assert_partial_output("================================================================================", all_output)
+    scenario "displays coverage information" do
+      pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable
+      pending("needs to be figured out")
+      # for some reason when loaded in the specs the instrumentation isn't working, though it is working in practice
+      #   confirmed that no data is coming through to Teaspoon::Coverage in the result reported by the console reporter
+      #   confirmed that instrument=true is being added to the asset source urls
+      # which means that our sprockets/rack shim doesn't work in this environment
+      run_simple("bundle exec teaspoon -r ../../spec/teaspoon_env.rb --coverage=default app/assets/javascripts/integration/integration_spec.coffee", false)
+
+      assert_partial_output("=============================== Coverage summary ===============================", all_output)
+      assert_partial_output("Statements   : 92.31% ( 12/13 )", all_output)
+      assert_partial_output("Branches     : 100% ( 0/0 )", all_output)
+      assert_partial_output("Functions    : 75% ( 3/4 )", all_output)
+      assert_partial_output("Lines        : 92.31% ( 12/13 )", all_output)
+      assert_partial_output("================================================================================", all_output)
+    end
+
+  end
+
+  describe "with export" do
+
+    scenario "exports as html" do
+      pending("needs to be tested")
+    end
+
   end
 
 end

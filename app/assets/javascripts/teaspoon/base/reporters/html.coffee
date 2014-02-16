@@ -167,6 +167,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     else
       @cookie(name, value)
 
+
   cookie: (name, value = undefined) ->
     if value == undefined
       name = name.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1")
@@ -176,6 +177,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
       date = new Teaspoon.Date()
       date.setDate(date.getDate() + 365)
       document.cookie = "#{name}=#{escape(JSON.stringify(value))}; expires=#{date.toUTCString()}; path=/;"
+
 
   localstore: (name, value = undefined) ->
     if value == undefined
