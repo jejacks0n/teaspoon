@@ -24,6 +24,7 @@ module Teaspoon
     @@fixture_paths  = ["spec/javascripts/fixtures", "test/javascripts/fixtures"]
 
     # console runner specific
+
     cattr_accessor   :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :fail_fast,
                      :formatters, :color, :suppress_log,
                      :use_coverage
@@ -42,6 +43,7 @@ module Teaspoon
     @@use_coverage   = nil
 
     # options that can be specified in the ENV
+
     ENV_OVERRIDES = {
       boolean: %w(FAIL_FAST SUPPRESS_LOG COLOR),
       integer: %w(DRIVER_TIMEOUT SERVER_TIMEOUT),
@@ -69,8 +71,7 @@ module Teaspoon
       attr_accessor   :matcher, :helper, :javascripts, :stylesheets,
                       :boot_partial, :body_partial,
                       :no_coverage,
-                      :hooks,
-                      :normalize_asset_path
+                      :hooks
 
       def initialize
         @matcher      = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
@@ -88,10 +89,6 @@ module Teaspoon
         default = Teaspoon.configuration.suite_configs["default"]
         self.instance_eval(&default) if default
         yield self if block_given?
-      end
-
-      def normalize_asset_path(filename)
-        @normalize_asset_path.call(filename)
       end
 
       def use_framework(name, version = nil)
