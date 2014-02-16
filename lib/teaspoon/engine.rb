@@ -40,6 +40,7 @@ module Teaspoon
     end
 
     def prepend_routes(app)
+      return if Teaspoon::Engine.routes.recognize_path('/') rescue nil
       require Teaspoon::Engine.root.join("app/controllers/teaspoon/suite_controller")
 
       app.routes.prepend do
