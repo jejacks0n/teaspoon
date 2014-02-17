@@ -2,7 +2,7 @@
 #= require teaspoon/mocha/reporters/console
 #= require teaspoon/mocha/reporters/html
 
-unless mocha
+unless mocha?
   throw new Teaspoon.Error('Mocha not found -- use `suite.use_framework :mocha` and adjust or remove the `suite.javascripts` directive.')
 
 class Teaspoon.Runner extends Teaspoon.Runner
