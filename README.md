@@ -36,7 +36,6 @@ Here's a short list of things that 0.8.0 might also address.
 - hooks could be improved to specify method (get/post), and to pass params -- passing to the blocks if they have arity
 - hooks need to be tested better
 - adjust dummy app to use relative_url_root and see how things go so we can get that resolved once and for all
-- move the remove filter link to the filter interface itself (the wrapper part) since we never added more complex filter removal
 
 #### nice to haves
 
