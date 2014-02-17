@@ -41,7 +41,7 @@ module Teaspoon
       def driver_options
         @driver_options ||= HashWithIndifferentAccess.new({
           client_driver: :firefox,
-          timeout: Teaspoon.configuration.driver_timeout,
+          timeout: Teaspoon.configuration.driver_timeout.to_i,
           interval: 0.01,
           message: "Timed out"
         }).merge(@options)
