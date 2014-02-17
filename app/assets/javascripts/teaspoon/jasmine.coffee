@@ -1,7 +1,7 @@
 #= require teaspoon/base/teaspoon
 #= require teaspoon/jasmine/reporters/html
 
-unless jasmine
+unless jasmine?
   throw new Teaspoon.Error('Jasmine not found -- use `suite.use_framework :jasmine` and adjust or remove the `suite.javascripts` directive.')
 
 class Teaspoon.Runner extends Teaspoon.Runner

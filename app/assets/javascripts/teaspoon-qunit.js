@@ -1294,7 +1294,7 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  if (!QUnit) {
+  if (typeof QUnit === "undefined" || QUnit === null) {
     throw new Teaspoon.Error('QUnit not found -- use `suite.use_framework :qunit` and adjust or remove the `suite.javascripts` directive.');
   }
 
