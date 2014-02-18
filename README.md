@@ -10,7 +10,7 @@ Teaspoon
 <img src="https://raw.github.com/modeset/teaspoon/master/screenshots/logo_big.png" alt="Logo by Morgan Keys" align="right" />
 <sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
 
-Teaspoon is a Javascript test runner built for Rails. It runs test in the browser or headless using PhantomJS or Selenium WebDriver.
+Teaspoon is a Javascript test runner built for Rails. It runs tests in the browser or headless using PhantomJS or Selenium WebDriver.
 
 The goal is to be simple, while still providing the most complete Javascript testing solution for Rails.
 
