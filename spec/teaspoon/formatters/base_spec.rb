@@ -16,6 +16,10 @@ describe Teaspoon::Formatters::Base do
 
     subject { Teaspoon::Formatters::Base.new(:foo, "_output_file_") }
 
+    before do
+      File.stub(:open)
+    end
+
     it "assigns various instance vars" do
       expect(subject.instance_variable_get(:@suite_name)).to eq("foo")
       expect(subject.instance_variable_get(:@output_file)).to eq("_output_file_")
@@ -31,6 +35,11 @@ describe Teaspoon::Formatters::Base do
       expect(subject.pendings).to eq([])
       expect(subject.failures).to eq([])
       expect(subject.errors).to eq([])
+    end
+
+    it "writes a new output file if one is specified" do
+      File.should_receive(:open).with("_output_file_", "w")
+      subject
     end
 
   end

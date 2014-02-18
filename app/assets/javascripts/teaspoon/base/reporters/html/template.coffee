@@ -28,7 +28,7 @@ Teaspoon.Reporters.HTML.template = """
 <hr/>
 
 <div id="teaspoon-filter">
-  <h1>Filtering</h1>
+  <h1>Applied Filters [<a href="#" id="teaspoon-filter-clear">remove</a>]</h1>
   <ul id="teaspoon-filter-list"></ul>
 </div>
 

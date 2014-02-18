@@ -29,12 +29,11 @@ describe "Teaspoon.Reporters.HTML", ->
   describe "constructor", ->
 
     it "sets up the expected variables", ->
-
       expect(@reporter.start).toBeDefined()
       expect(@reporter.config).toEqual("use-catch": true, "build-full-report": false, "display-progress": true)
       expect(@reporter.total).toEqual({exist: 0, run: 0, passes: 0, failures: 0, skipped: 0})
       expect(@reporter.views).toEqual({specs: {}, suites: {}})
-      expect(@reporter.filters).toEqual(["by match: foo <a href='/teaspoon/default'>remove</a>"])
+      expect(@reporter.filters).toEqual(["by match: foo"])
 
     it "calls readConfig", ->
       expect(@readConfigSpy).toHaveBeenCalled()
@@ -68,7 +67,11 @@ describe "Teaspoon.Reporters.HTML", ->
 
     it "makes the toggles clickable", ->
       expect(@findElSpy).toHaveBeenCalledWith("toggles")
-      expect(@el.onclick).toBe(@reporter.toggleConfig)
+#      expect(@el.onclick).toBe(@reporter.toggleConfig)
+
+    it "makes the remove filters link clickable", ->
+      expect(@findElSpy).toHaveBeenCalledWith("filter-clear")
+      expect(@el.onclick).toBe(@reporter.removeFilters)
 
     it "calls showConfiguration", ->
       expect(@showConfigurationSpy).toHaveBeenCalled()
@@ -339,8 +342,8 @@ describe "Teaspoon.Reporters.HTML", ->
 
     it "sets a class and the html for the filter display", ->
       expect(@reporter.filters.length).toBe(2)
-      expect(@reporter.filters[0]).toBe("by file: _file_ <a href='/teaspoon/default'>remove</a>")
-      expect(@reporter.filters[1]).toBe("by match: _grep_ <a href='/teaspoon/default'>remove</a>")
+      expect(@reporter.filters[0]).toBe("by file: _file_")
+      expect(@reporter.filters[1]).toBe("by match: _grep_")
 
 
   describe "#readConfig", ->
@@ -359,7 +362,7 @@ describe "Teaspoon.Reporters.HTML", ->
   describe "#toggleConfig", ->
 
     beforeEach ->
-      @refreshSpy = spyOn(@reporter, "refresh")
+      @refreshSpy = spyOn(Teaspoon, "reload")
       @storeSpy = spyOn(@reporter, "store")
       @reporter.toggleConfig(target: {tagName: "button", getAttribute: -> "teaspoon-use-catch"})
 

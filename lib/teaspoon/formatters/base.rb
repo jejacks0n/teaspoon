@@ -38,6 +38,7 @@ module Teaspoon
         @pendings    = []
         @failures    = []
         @errors      = []
+        File.open(@output_file, "w") { |f| f.write("") } if @output_file
       end
 
       # beginning of the run
@@ -148,7 +149,7 @@ module Teaspoon
       end
 
       def log_to_file(str, output_file)
-        File.open(output_file, "a") { |f| f.write(str) }
+        @_output_file = File.open(output_file, "a") { |f| f.write(str) }
       rescue IOError => e
         raise Teaspoon::FileNotWritable, e.message
       end
