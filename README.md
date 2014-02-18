@@ -38,7 +38,6 @@ Here's a short list of things that 0.8.0 might also address.
 - add jasmine2 support
 - tests for the require js stuff (this is brittle and since we don't use requirejs, intrinsically hard)
 - hooks could be improved to specify method (get/post), and to pass params -- passing to the blocks if they have arity
-- hooks need to be tested better
 - adjust dummy app to use relative_url_root and see how things go so we can get that resolved once and for all
 
 #### nice to haves
