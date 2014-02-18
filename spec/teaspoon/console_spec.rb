@@ -39,6 +39,14 @@ describe Teaspoon::Console do
       Teaspoon::Console.new
     end
 
+    it "aborts (displaying a message) on Teaspoon::ServerException" do
+      STDOUT.should_receive(:print).with("_message_\n")
+      Teaspoon::Console.any_instance.should_receive(:log).and_call_original
+      Teaspoon::Console.any_instance.should_receive(:start_server).and_raise(Teaspoon::ServerException, "_message_")
+      Teaspoon::Console.any_instance.should_receive(:abort).with("_message_").and_call_original
+      expect{ Teaspoon::Console.new }.to raise_error SystemExit
+    end
+
   end
 
   describe "#failures?" do
@@ -161,6 +169,12 @@ describe Teaspoon::Console do
     it "raises a Teaspoon::Failure exception on failures when set to fail_fast" do
       Teaspoon.configuration.stub(:fail_fast).and_return(true)
       expect { subject.run_specs(:suite_name) }.to raise_error Teaspoon::Failure
+    end
+
+    it "raises a Teaspoon:UnknownDriver when an unknown driver is being used" do
+      Teaspoon.configuration.should_receive(:driver).twice.and_return(:foo)
+      subject.should_receive(:driver).and_call_original
+      expect { subject.run_specs(:suite_name) }.to raise_error Teaspoon::UnknownDriver
     end
 
   end

@@ -1,66 +1,47 @@
-# todo: redo
-#require "spec_helper"
-#require "tempfile"
-#require "fileutils"
-#
-#feature "testing hooks in the browser" do
-#  include Rack::Test::Methods
-#
-#  before do
-#    Teaspoon.configuration.stub(:suites).and_return "before_hooks" => proc{ |suite|
-#      suite.hook :before do
-#        File.write('tmp/before_hook_test' , '')
-#      end
-#    }
-#  end
-#
-#  let(:temp_file) { 'tmp/before_hook_test' }
-#
-#  def app
-#    Dummy::Application
-#  end
-#
-#  before do
-#    FileUtils.mkdir 'tmp' unless File.directory?('tmp')
-#    File.delete(temp_file) if File.exists?(temp_file)
-#  end
-#
-#  scenario "gives me the expected results" do
-#    expect(File.exists?(temp_file)).to eql(false)
-#
-#    post "/teaspoon/before_hooks/hooks/before"
-#
-#    expect(File.exists?(temp_file)).to eql(true)
-#  end
-#end
-#
-#feature "testing after hooks in the browser" do
-#  include Rack::Test::Methods
-#
-#  before do
-#    Teaspoon.configuration.stub(:suites).and_return "default" => proc{ |suite|
-#      suite.hook :default do
-#        File.write('tmp/default_hook_test', '')
-#      end
-#    }
-#  end
-#
-#  let(:temp_file) { 'tmp/default_hook_test' }
-#
-#  def app
-#    Dummy::Application
-#  end
-#
-#  before do
-#    FileUtils.mkdir 'tmp' unless File.directory?('tmp')
-#    File.delete(temp_file) if File.exists?(temp_file)
-#  end
-#
-#  scenario "gives me the expected results" do
-#    expect(File.exists?(temp_file)).to eql(false)
-#
-#    post "/teaspoon/default/hooks"
-#
-#    expect(File.exists?(temp_file)).to eql(true)
-#  end
-#end
+require "spec_helper"
+require "tempfile"
+require "fileutils"
+
+feature "testing hooks in the browser" do
+  include Rack::Test::Methods
+
+  let(:app) { Dummy::Application }
+  let(:suites) {{
+    "suite1" => {block: proc{ |suite| suite.hook :before, &proc{ File.write(temp_file, "") } }},
+    "suite2" => {block: proc{ |suite| suite.hook :after, &proc{ File.write(temp_file, "") } }}
+  }}
+
+  before do
+    Teaspoon.configuration.stub(:suite_configs).and_return(suites)
+    FileUtils.mkdir_p('tmp')
+    File.delete(temp_file) if File.exists?(temp_file)
+    expect(File.exists?(temp_file)).to eql(false)
+  end
+
+  after do
+    File.delete(temp_file) if File.exists?(temp_file)
+  end
+
+  describe "requesting a before hook by name (using POST)" do
+
+    let(:temp_file) { "tmp/before_hook_test" }
+
+    scenario "gives me the expected results" do
+      post("/teaspoon/suite1/before")
+      expect(File.exists?(temp_file)).to be_true
+    end
+
+  end
+
+  describe "requesting an after hook by name (using GET)" do
+
+    let(:temp_file) { "tmp/after_hook_test" }
+
+    scenario "gives me the expected results" do
+      post("/teaspoon/suite2/after")
+      expect(File.exists?(temp_file)).to be_true
+    end
+
+  end
+
+end

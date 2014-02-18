@@ -47,6 +47,11 @@ describe Teaspoon::Coverage do
       expect(@result).to eq("_text1_report_\n\n_text2_report_")
     end
 
+    it "raises a Teaspoon::DependencyFailure if the command doesn't exit cleanly" do
+      `(exit 1)`
+      expect { subject.generate_reports }.to raise_error Teaspoon::DependencyFailure, "Could not generate coverage report for html"
+    end
+
   end
 
   describe "#check_thresholds" do

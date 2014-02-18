@@ -102,4 +102,13 @@ describe Teaspoon::Formatters::JunitFormatter do
 
   end
 
+  describe "#complete" do
+
+    it "logs the closing suite tags" do
+      subject.complete(2)
+      expect(@log).to include(%Q{</testsuite>\n</testsuites>})
+    end
+
+  end
+
 end

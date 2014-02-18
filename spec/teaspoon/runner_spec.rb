@@ -26,6 +26,11 @@ describe Teaspoon::Runner do
       expect(subject.instance_variable_get(:@formatters)[1]).to be_a(Teaspoon::Formatters::XmlFormatter)
     end
 
+    it "raises a Teaspoon::UnknownFormatter exception when a formatter isn't found" do
+      Teaspoon.configuration.stub(:formatters).and_return(["bar"])
+      expect { Teaspoon::Runner.new(:foo) }.to raise_error Teaspoon::UnknownFormatter, "Unknown formatter: \"bar\""
+    end
+
   end
 
   describe "#process" do

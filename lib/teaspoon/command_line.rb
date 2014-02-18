@@ -113,8 +113,8 @@ module Teaspoon
     def opts_for_utility
       separator("Utility")
 
-      @parser.on "-v", "--version", "Display the version.", proc{ puts Teaspoon::VERSION; exit }
-      @parser.on "-h", "--help", "You're looking at it.", proc { puts @parser; exit }
+      @parser.on "-v", "--version", "Display the version.", proc{ STDOUT.print("#{Teaspoon::VERSION}\n"); exit }
+      @parser.on "-h", "--help", "You're looking at it.", proc { STDOUT.print("#{@parser}\n"); exit }
     end
 
     private
@@ -124,7 +124,10 @@ module Teaspoon
     end
 
     def opt(config, *args)
-      @parser.on(*args, proc{ |value| @options[config] = value})
+      @parser.on(*args, proc{ |value|
+
+        @options[config] = value
+      })
     end
 
     def require_console

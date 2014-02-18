@@ -54,4 +54,41 @@ describe Teaspoon::Result do
 
   end
 
+  describe "#failing?" do
+
+    it "returns a boolean based on status" do
+      subject.status = "foo"
+      expect(subject.failing?).to be_true
+      subject.status = "bar"
+      expect(subject.failing?).to be_true
+      subject.status = "passed"
+      expect(subject.failing?).to be_false
+      subject.status = "pending"
+      expect(subject.failing?).to be_false
+    end
+
+  end
+
+  describe "#passing?" do
+
+    it "returns a boolean based on status" do
+      subject.status = "passed"
+      expect(subject.passing?).to be_true
+      subject.status = "foo"
+      expect(subject.passing?).to be_false
+    end
+
+  end
+
+  describe "#pending?" do
+
+    it "returns a boolean based on status" do
+      subject.status = "pending"
+      expect(subject.pending?).to be_true
+      subject.status = "foo"
+      expect(subject.pending?).to be_false
+    end
+
+  end
+
 end

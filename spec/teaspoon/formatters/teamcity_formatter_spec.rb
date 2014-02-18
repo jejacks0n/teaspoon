@@ -2,6 +2,7 @@ require "spec_helper"
 
 describe Teaspoon::Formatters::TeamcityFormatter do
 
+  let(:suite) { double(label: "_suite_")}
   let(:passing_spec) { double(passing?: true, description: "_passing_[desc]\rip|'o\n_") }
   let(:pending_spec) { double(passing?: false, pending?: true, description: "_pending_[desc]_") }
   let(:failing_spec) { double(passing?: false, pending?: false, description: "_failing_[desc]_", message: "_failure_[mess]age_") }
@@ -21,6 +22,21 @@ describe Teaspoon::Formatters::TeamcityFormatter do
       subject.runner(result)
       expect(@log).to include("##teamcity[enteredTheMatrix timestamp='_json_time_']\n")
       expect(@log).to include("##teamcity[testCount count='42' timestamp='_start_']\n")
+    end
+
+  end
+
+  describe "#suite" do
+
+    it "logs the suite" do
+      subject.suite(suite)
+      expect(@log).to include(%Q{##teamcity[testSuiteStarted name='_suite_']})
+    end
+
+    it "closes the last suite if there was one" do
+      subject.instance_variable_set(:@last_suite, suite)
+      subject.suite(suite)
+      expect(@log).to include(%Q{##teamcity[testSuiteFinished name='_suite_']})
     end
 
   end

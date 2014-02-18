@@ -231,4 +231,20 @@ describe Teaspoon::Formatters::Base do
 
   end
 
+  describe "logging to file" do
+
+    it "logs to a file" do
+      handle = double(write: nil)
+      File.should_receive(:open).with("_output_file_", "a").and_yield(handle)
+      handle.should_receive(:write).with("_str_")
+      subject.send(:log_to_file, "_str_", "_output_file_")
+    end
+
+    it "raises a Teaspoon::FileNotWritable exception if the file can't be written to" do
+      File.should_receive(:open).and_raise(IOError, "_io_error_message_")
+      expect { subject.send(:log_to_file, "_str_", "_output_file_") }.to raise_error(Teaspoon::FileNotWritable, "_io_error_message_")
+    end
+
+  end
+
 end
