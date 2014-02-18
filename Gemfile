@@ -26,3 +26,6 @@ group :development, :test do
   gem "capybara"
   gem "aruba"
 end
+
+# io services
+gem "coveralls", require: false

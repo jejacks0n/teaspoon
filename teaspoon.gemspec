@@ -14,8 +14,8 @@ Gem::Specification.new do |s|
   s.description = "Run Javascript tests using Jasmine, Mocha or QUnit in the browser or headlessly using PhantomJS or with Selenium Webdriver"
   s.license     = "MIT"
 
-  s.files = Dir["{app,config,lib,vendor,bin}/**/*"] + ["MIT.LICENSE", "README.md"]
-  s.test_files = `git ls-files -- {spec,test}/*`.split("\n")
+  s.files       = Dir["{app,config,lib,vendor,bin}/**/*"] + ["MIT.LICENSE", "README.md"]
+  s.test_files  = `git ls-files -- {spec,test}/*`.split("\n")
   s.executables = ["teaspoon"]
 
   s.add_dependency "railties", [">= 3.2.5","< 5"]
