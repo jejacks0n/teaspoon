@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/teaspoon.png)](http://badge.fury.io/rb/teaspoon)
 [![Build Status](https://travis-ci.org/modeset/teaspoon.png)](https://travis-ci.org/modeset/teaspoon)
 [![Code Climate](https://codeclimate.com/github/modeset/teaspoon.png)](https://codeclimate.com/github/modeset/teaspoon)
+[![Coverage Status](https://coveralls.io/repos/modeset/teaspoon/badge.png?branch=master)](https://coveralls.io/r/modeset/teaspoon?branch=master)
 
 <sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
 
