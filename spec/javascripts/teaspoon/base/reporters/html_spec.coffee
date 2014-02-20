@@ -67,11 +67,7 @@ describe "Teaspoon.Reporters.HTML", ->
 
     it "makes the toggles clickable", ->
       expect(@findElSpy).toHaveBeenCalledWith("toggles")
-#      expect(@el.onclick).toBe(@reporter.toggleConfig)
-
-    it "makes the remove filters link clickable", ->
-      expect(@findElSpy).toHaveBeenCalledWith("filter-clear")
-      expect(@el.onclick).toBe(@reporter.removeFilters)
+      expect(@el.onclick).toBe(@reporter.toggleConfig)
 
     it "calls showConfiguration", ->
       expect(@showConfigurationSpy).toHaveBeenCalled()
@@ -113,7 +109,7 @@ describe "Teaspoon.Reporters.HTML", ->
     it "builds a select that displays the suites", ->
       result = @reporter.buildSuiteSelect()
       expect(result).toContain("select id=")
-      expect(result).toContain("selected='selected' value=\"foo\"")
+      expect(result).toContain("selected='selected' value=\"#{Teaspoon.root}/foo\"")
 
 
   describe "#buildProgress", ->

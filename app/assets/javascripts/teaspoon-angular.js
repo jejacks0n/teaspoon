@@ -9,7 +9,7 @@
 
     Teaspoon.slow = 75;
 
-    Teaspoon.root = null;
+    Teaspoon.root = window.location.pathname.replace(/\/$/, "").replace(/\/[^\/]*$/, "");
 
     Teaspoon.started = false;
 
@@ -465,6 +465,7 @@
     __extends(HTML, _super);
 
     function HTML() {
+      this.changeSuite = __bind(this.changeSuite, this);
       this.toggleConfig = __bind(this.toggleConfig, this);
       this.reportRunnerResults = __bind(this.reportRunnerResults, this);
       this.start = new Teaspoon.Date().getTime();
@@ -500,7 +501,6 @@
       if ((_ref = this.findEl("suite-select")) != null) {
         _ref.onchange = this.changeSuite;
       }
-      this.findEl("root-link").href = Teaspoon.root;
       this.el = this.findEl("report-all");
       this.showConfiguration();
       this.buildProgress();
@@ -511,7 +511,7 @@
       var el;
       el = this.createEl("div");
       el.id = "teaspoon-interface";
-      el.innerHTML = Teaspoon.Reporters.HTML.template;
+      el.innerHTML = Teaspoon.Reporters.HTML.template();
       return document.body.appendChild(el);
     };
 
@@ -524,7 +524,7 @@
       _ref = Teaspoon.suites.all;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         suite = _ref[_i];
-        options.push("<option" + (Teaspoon.suites.active === suite ? " selected='selected'" : "") + " value=\"" + suite + "\">" + suite + "</option>");
+        options.push("<option" + (Teaspoon.suites.active === suite ? " selected='selected'" : "") + " value=\"" + ([Teaspoon.root, suite].join("/")) + "\">" + suite + "</option>");
       }
       return "<select id=\"teaspoon-suite-select\">" + (options.join("")) + "</select>";
     };
@@ -635,13 +635,11 @@
     };
 
     HTML.prototype.setFilters = function() {
-      var link;
-      link = window.location.pathname;
       if (Teaspoon.params["file"]) {
-        this.filters.push("by file: " + Teaspoon.params["file"] + " <a href='" + link + "'>remove</a>");
+        this.filters.push("by file: " + Teaspoon.params["file"]);
       }
       if (Teaspoon.params["grep"]) {
-        return this.filters.push("by match: " + Teaspoon.params["grep"] + " <a href='" + link + "'>remove</a>");
+        return this.filters.push("by match: " + Teaspoon.params["grep"]);
       }
     };
 
@@ -661,15 +659,13 @@
       name = button.getAttribute("id").replace(/^teaspoon-/, "");
       this.config[name] = !this.config[name];
       this.store("teaspoon", this.config);
-      return this.refresh();
+      return Teaspoon.reload();
     };
 
-    HTML.prototype.changeSuite = function() {
-      return window.location.href = [Teaspoon.root, this.options[this.options.selectedIndex].value].join('/');
-    };
-
-    HTML.prototype.refresh = function() {
-      return window.location.href = window.location.href;
+    HTML.prototype.changeSuite = function(e) {
+      var options;
+      options = e.target.options;
+      return window.location.href = options[options.selectedIndex].value;
     };
 
     HTML.prototype.store = function(name, value) {
@@ -996,7 +992,9 @@
 
 }).call(this);
 (function() {
-  Teaspoon.Reporters.HTML.template = "<div class=\"teaspoon-clearfix\">\n  <div id=\"teaspoon-title\">\n    <h1><a href=\"\" id=\"teaspoon-root-link\">Teaspoon</a></h1>\n    <ul>\n      <li>version: <b id=\"teaspoon-version\"></b></li>\n      <li id=\"teaspoon-env-info\"></li>\n    </ul>\n  </div>\n  <div id=\"teaspoon-progress\"></div>\n  <ul id=\"teaspoon-stats\">\n    <li>passes: <b id=\"teaspoon-stats-passes\">0</b></li>\n    <li>failures: <b id=\"teaspoon-stats-failures\">0</b></li>\n    <li>skipped: <b id=\"teaspoon-stats-skipped\">0</b></li>\n    <li>duration: <b id=\"teaspoon-stats-duration\">&infin;</b></li>\n  </ul>\n</div>\n\n<div id=\"teaspoon-controls\" class=\"teaspoon-clearfix\">\n  <div id=\"teaspoon-toggles\">\n    <button id=\"teaspoon-use-catch\" title=\"Toggle using try/catch wrappers when possible\">Try/Catch</button>\n    <button id=\"teaspoon-build-full-report\" title=\"Toggle building the full report\">Full Report</button>\n    <button id=\"teaspoon-display-progress\" title=\"Toggle displaying progress as tests run\">Progress</button>\n  </div>\n  <div id=\"teaspoon-suites\"></div>\n</div>\n\n<hr/>\n\n<div id=\"teaspoon-filter\">\n  <h1>Filtering</h1>\n  <ul id=\"teaspoon-filter-list\"></ul>\n</div>\n\n<div id=\"teaspoon-report\">\n  <ol id=\"teaspoon-report-failures\"></ol>\n  <ol id=\"teaspoon-report-all\"></ol>\n</div>";
+  Teaspoon.Reporters.HTML.template = function() {
+    return "<div class=\"teaspoon-clearfix\">\n  <div id=\"teaspoon-title\">\n    <h1><a href=\"" + Teaspoon.root + "\" id=\"teaspoon-root-link\">Teaspoon</a></h1>\n    <ul>\n      <li>version: <b id=\"teaspoon-version\"></b></li>\n      <li id=\"teaspoon-env-info\"></li>\n    </ul>\n  </div>\n  <div id=\"teaspoon-progress\"></div>\n  <ul id=\"teaspoon-stats\">\n    <li>passes: <b id=\"teaspoon-stats-passes\">0</b></li>\n    <li>failures: <b id=\"teaspoon-stats-failures\">0</b></li>\n    <li>skipped: <b id=\"teaspoon-stats-skipped\">0</b></li>\n    <li>duration: <b id=\"teaspoon-stats-duration\">&infin;</b></li>\n  </ul>\n</div>\n\n<div id=\"teaspoon-controls\" class=\"teaspoon-clearfix\">\n  <div id=\"teaspoon-toggles\">\n    <button id=\"teaspoon-use-catch\" title=\"Toggle using try/catch wrappers when possible\">Try/Catch</button>\n    <button id=\"teaspoon-build-full-report\" title=\"Toggle building the full report\">Full Report</button>\n    <button id=\"teaspoon-display-progress\" title=\"Toggle displaying progress as tests run\">Progress</button>\n  </div>\n  <div id=\"teaspoon-suites\"></div>\n</div>\n\n<hr/>\n\n<div id=\"teaspoon-filter\">\n  <h1>Applied Filters [<a href=\"" + window.location.pathname + "\" id=\"teaspoon-filter-clear\">remove</a>]</h1>\n  <ul id=\"teaspoon-filter-list\"></ul>\n</div>\n\n<div id=\"teaspoon-report\">\n  <ol id=\"teaspoon-report-failures\"></ol>\n  <ol id=\"teaspoon-report-all\"></ol>\n</div>";
+  };
 
 }).call(this);
 (function() {

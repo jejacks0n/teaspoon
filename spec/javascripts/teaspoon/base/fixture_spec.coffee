@@ -21,8 +21,8 @@ describe "Teaspoon.fixture", ->
 
     it "loads all of the files requested", ->
       fixture.load("fixture.html", "fixture.json")
-      expect(@xhrSpy).toHaveBeenCalledWith("GET", "/teaspoon/fixtures/fixture.html", false)
-      expect(@xhrSpy).toHaveBeenCalledWith("GET", "/teaspoon/fixtures/fixture.json", false)
+      expect(@xhrSpy).toHaveBeenCalledWith("GET", "#{Teaspoon.root}/fixtures/fixture.html", false)
+      expect(@xhrSpy).toHaveBeenCalledWith("GET", "#{Teaspoon.root}/fixtures/fixture.json", false)
 
     it "caches the type/contents of those files", ->
       fixture.load("fixture.html")
@@ -83,8 +83,8 @@ describe "Teaspoon.fixture", ->
 
     it "loads all of the files requested", ->
       fixture.preload("fixture.html", "fixture.json")
-      expect(@xhrSpy).toHaveBeenCalledWith("GET", "/teaspoon/fixtures/fixture.html", false)
-      expect(@xhrSpy).toHaveBeenCalledWith("GET", "/teaspoon/fixtures/fixture.json", false)
+      expect(@xhrSpy).toHaveBeenCalledWith("GET", "#{Teaspoon.root}/fixtures/fixture.html", false)
+      expect(@xhrSpy).toHaveBeenCalledWith("GET", "#{Teaspoon.root}/fixtures/fixture.json", false)
     expect(document.getElementById("teaspoon-fixtures")).toBe(null)
 
     it "caches the type/contents of those files", ->

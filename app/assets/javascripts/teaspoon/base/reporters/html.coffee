@@ -29,10 +29,6 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     @findEl("suites").innerHTML = @buildSuiteSelect()
     @findEl("suite-select")?.onchange = @changeSuite
 
-    @findEl("root-link").href = @onePathUp(window.location.pathname)
-
-    @findEl("filter-clear").onclick = @removeFilters
-
     @el = @findEl("report-all")
 
     @showConfiguration()
@@ -43,7 +39,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
   buildLayout: ->
     el = @createEl("div")
     el.id = "teaspoon-interface"
-    el.innerHTML = Teaspoon.Reporters.HTML.template
+    el.innerHTML = Teaspoon.Reporters.HTML.template()
     document.body.appendChild(el)
 
 
@@ -51,7 +47,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     return "" if Teaspoon.suites.all.length == 1
     options = []
     for suite in Teaspoon.suites.all
-      options.push("""<option#{if Teaspoon.suites.active == suite then " selected='selected'" else ""} value="#{suite}">#{suite}</option>""")
+      options.push("""<option#{if Teaspoon.suites.active == suite then " selected='selected'" else ""} value="#{[Teaspoon.root, suite].join("/")}">#{suite}</option>""")
     """<select id="teaspoon-suite-select">#{options.join("")}</select>"""
 
 
@@ -154,18 +150,9 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     Teaspoon.reload()
 
 
-  removeFilters: ->
-    window.location.href = window.location.pathname
-
-
   changeSuite: (e) =>
-    el = e.target
-    parts = [@onePathUp(window.location.pathname), el.options[el.options.selectedIndex].value]
-    window.location.href = parts.join('/')
-
-
-  onePathUp: (path) ->
-    path.replace(/\/[^\/]*$/, "")
+    options = e.target.options
+    window.location.href = options[options.selectedIndex].value
 
 
   store: (name, value) ->

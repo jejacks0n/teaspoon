@@ -8,7 +8,7 @@
 class @Teaspoon
   @defer:     false
   @slow:      75
-  @root:      null
+  @root:      window.location.pathname.replace(/\/$/, "").replace(/\/[^\/]*$/, "")
   @started:   false
   @finished:  false
   @Reporters: {}

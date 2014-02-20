@@ -1,7 +1,7 @@
-Teaspoon.Reporters.HTML.template = """
+Teaspoon.Reporters.HTML.template = -> """
 <div class="teaspoon-clearfix">
   <div id="teaspoon-title">
-    <h1><a href="" id="teaspoon-root-link">Teaspoon</a></h1>
+    <h1><a href="#{Teaspoon.root}" id="teaspoon-root-link">Teaspoon</a></h1>
     <ul>
       <li>version: <b id="teaspoon-version"></b></li>
       <li id="teaspoon-env-info"></li>
@@ -28,7 +28,7 @@ Teaspoon.Reporters.HTML.template = """
 <hr/>
 
 <div id="teaspoon-filter">
-  <h1>Applied Filters [<a href="#" id="teaspoon-filter-clear">remove</a>]</h1>
+  <h1>Applied Filters [<a href="#{window.location.pathname}" id="teaspoon-filter-clear">remove</a>]</h1>
   <ul id="teaspoon-filter-list"></ul>
 </div>
 

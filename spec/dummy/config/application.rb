@@ -26,5 +26,8 @@ module Dummy
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    config.relative_url_root = "/relative"
+    config.assets.prefix = "/relative/assets" # this must be set for any asset paths to be correct!
   end
 end

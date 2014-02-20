@@ -8,8 +8,8 @@ feature "testing with teaspoon in the console", aruba: true do
     expected = <<-OUTPUT.strip_heredoc
     Teaspoon running default suite at http://127.0.0.1:31337/teaspoon/default
     TypeError: 'undefined' is not a function (evaluating 'foo()')
-      # integration/spec_helper.js:12
-      # integration/spec_helper.js:14
+      # http://127.0.0.1:31337/relative/assets/integration/spec_helper.js:12
+      # http://127.0.0.1:31337/relative/assets/integration/spec_helper.js:14
 
     testing console output
     ..FF.*.
@@ -24,7 +24,7 @@ feature "testing with teaspoon in the console", aruba: true do
          Failure/Error: Expected true to be false.
 
       2) Integration tests allows erroring specs
-         Failure/Error: ReferenceError: Can't find variable: foo in http://127.0.0.1:31337/assets/integration/integration_spec.js?body=1 (line 14)
+         Failure/Error: ReferenceError: Can't find variable: foo in http://127.0.0.1:31337/relative/assets/integration/integration_spec.js?body=1 (line 14)
 
     Finished in 0.31337 seconds
     7 examples, 2 failures, 1 pending
@@ -56,14 +56,6 @@ feature "testing with teaspoon in the console", aruba: true do
       assert_partial_output("Functions    : 75% ( 3/4 )", all_output)
       assert_partial_output("Lines        : 92.31% ( 12/13 )", all_output)
       assert_partial_output("================================================================================", all_output)
-    end
-
-  end
-
-  describe "with export" do
-
-    scenario "exports as html" do
-      pending("needs to be tested")
     end
 
   end
