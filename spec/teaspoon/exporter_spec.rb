@@ -68,19 +68,22 @@ describe Teaspoon::Exporter do
       end
 
       it "updates the relative paths" do
-        File.should_receive(:read).with("teaspoon/suite_name.html").and_return('"../../path/to/asset')
+        File.should_receive(:read).with(".#{Teaspoon.configuration.mount_at}/suite_name.html").and_return('"../../path/to/asset')
         File.should_receive(:write).with("index.html", '"../path/to/asset')
         subject.export
       end
 
       it "cleans up the old files" do
+        subject.stub(:move_output)
+        Dir.should_receive(:[]).once.with("{.#{Teaspoon.configuration.mount_at},robots.txt.html}").and_return(["./teaspoon", "robots.txt.html"])
         FileUtils.should_receive(:rm_r).with(["./teaspoon", "robots.txt.html"])
         subject.export
       end
 
       it "moves the files into the output path" do
+        subject.stub(:cleanup_output)
         output_path = subject.instance_variable_get(:@output_path)
-        Dir.stub(:glob).and_return(["1", "2"])
+        Dir.should_receive(:[]).and_return(["1", "2"])
         FileUtils.should_receive(:mkdir_p).with(output_path)
         FileUtils.should_receive(:mv).with(["1", "2"], output_path, force: true)
         subject.export

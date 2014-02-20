@@ -45,9 +45,13 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
 
   buildSuiteSelect: ->
     return "" if Teaspoon.suites.all.length == 1
+    filename = ""
+    filename = "/index.html" if /index\.html$/.test(window.location.pathname)
     options = []
     for suite in Teaspoon.suites.all
-      options.push("""<option#{if Teaspoon.suites.active == suite then " selected='selected'" else ""} value="#{[Teaspoon.root, suite].join("/")}">#{suite}</option>""")
+      path = [Teaspoon.root, suite].join("/")
+      selected = if Teaspoon.suites.active == suite then " selected" else ""
+      options.push("""<option#{selected} value="#{path}#{filename}">#{suite}</option>""")
     """<select id="teaspoon-suite-select">#{options.join("")}</select>"""
 
 

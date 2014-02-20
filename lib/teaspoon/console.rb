@@ -31,8 +31,8 @@ module Teaspoon
       resolve(@options[:files])
 
       0 == suites.inject(0) do |failures, suite|
-        failures += run_specs(suite)
         export(suite) if @options.include?(:export)
+        failures += run_specs(suite)
         log("") # empty line for space
         failures
       end

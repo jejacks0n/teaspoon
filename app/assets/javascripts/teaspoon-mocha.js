@@ -9,7 +9,7 @@
 
     Teaspoon.slow = 75;
 
-    Teaspoon.root = window.location.pathname.replace(/\/$/, "").replace(/\/[^\/]*$/, "");
+    Teaspoon.root = window.location.pathname.replace(/\/+(index\.html)?$/, "").replace(/\/[^\/]*$/, "");
 
     Teaspoon.started = false;
 
@@ -516,15 +516,21 @@
     };
 
     HTML.prototype.buildSuiteSelect = function() {
-      var options, suite, _i, _len, _ref;
+      var filename, options, path, selected, suite, _i, _len, _ref;
       if (Teaspoon.suites.all.length === 1) {
         return "";
+      }
+      filename = "";
+      if (/index\.html$/.test(window.location.pathname)) {
+        filename = "/index.html";
       }
       options = [];
       _ref = Teaspoon.suites.all;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         suite = _ref[_i];
-        options.push("<option" + (Teaspoon.suites.active === suite ? " selected='selected'" : "") + " value=\"" + ([Teaspoon.root, suite].join("/")) + "\">" + suite + "</option>");
+        path = [Teaspoon.root, suite].join("/");
+        selected = Teaspoon.suites.active === suite ? " selected" : "";
+        options.push("<option" + selected + " value=\"" + path + filename + "\">" + suite + "</option>");
       }
       return "<select id=\"teaspoon-suite-select\">" + (options.join("")) + "</select>";
     };

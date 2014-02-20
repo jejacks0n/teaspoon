@@ -109,7 +109,7 @@ describe "Teaspoon.Reporters.HTML", ->
     it "builds a select that displays the suites", ->
       result = @reporter.buildSuiteSelect()
       expect(result).toContain("select id=")
-      expect(result).toContain("selected='selected' value=\"#{Teaspoon.root}/foo\"")
+      expect(result).toContain("selected value=\"#{Teaspoon.root}/foo\"")
 
 
   describe "#buildProgress", ->

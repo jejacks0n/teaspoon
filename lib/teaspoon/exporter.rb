@@ -36,17 +36,17 @@ module Teaspoon
     end
 
     def update_relative_paths
-      html = File.read("teaspoon/#{@suite}.html")
+      html = File.read(".#{Teaspoon.configuration.mount_at}/#{@suite}.html")
       File.write("index.html", html.gsub!('"../', '"'))
     end
 
     def cleanup_output
-      FileUtils.rm_r(["./teaspoon", "robots.txt.html"])
+      FileUtils.rm_r(Dir["{.#{Teaspoon.configuration.mount_at},robots.txt.html}"])
     end
 
     def move_output
       FileUtils.mkdir_p(@output_path)
-      FileUtils.mv(Dir.glob("*"), @output_path, force: true)
+      FileUtils.mv(Dir["*"], @output_path, force: true)
     end
   end
 end
