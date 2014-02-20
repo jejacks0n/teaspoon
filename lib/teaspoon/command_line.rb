@@ -124,10 +124,7 @@ module Teaspoon
     end
 
     def opt(config, *args)
-      @parser.on(*args, proc{ |value|
-
-        @options[config] = value
-      })
+      @parser.on(*args, proc{ |value| @options[config] = value })
     end
 
     def require_console
