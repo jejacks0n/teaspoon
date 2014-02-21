@@ -14,7 +14,7 @@ Teaspoon is a Javascript test runner built for Rails. It runs tests in the brows
 
 The goal is to be simple, while still providing the most complete Javascript testing solution for Rails.
 
-Teaspoon takes advantage of the asset pipeline. And ships with support for Jasmine, Mocha, and QUnit.
+Teaspoon takes advantage of the asset pipeline. And ships with support for Jasmine (v1 and v2), Mocha, and QUnit.
 
 Ok, another Javascript test runner, right? Yeah, that's tough, but we're pretty confident Teaspoon is one of the nicest and most full featured you'll find at the moment. And if you disagree, let us know and we'll likely fix whatever it is that you didn't like.
 
@@ -38,7 +38,6 @@ Here's a short list of things that 0.8.0 might also address.
 - add jasmine2 support
 - tests for the require js stuff (this is brittle and since we don't use requirejs, intrinsically hard)
 - hooks could be improved to specify method (get/post), and to pass params -- passing to the blocks if they have arity
-- adjust dummy app to use relative_url_root and see how things go so we can get that resolved once and for all
 
 #### nice to haves
 
@@ -82,7 +81,7 @@ group :development, :test do
 end
 ```
 
-Run the install generator to get the environment file and a basic spec_helper. You can tell the generator which framework you want to use, if you want coffeescript spec helper files, etc.
+Run the install generator to get the environment file and a basic spec helper. You can tell the generator which framework you want to use, if you want a coffeescript spec helper, etc. Run the install generator with the `--help` flag for a list of available options.
 
 ```
 rails generate teaspoon:install --framework=mocha --coffee
@@ -96,7 +95,7 @@ brew install phantomjs
 npm install -g phantomjs
 ```
 
-The Phantomjs binary is the default if it's available in your path, otherwise you can use the gem as a fallback.
+The PhantomJS binary will be used by default if it's available in your path, otherwise you can use the gem as a fallback.
 
 ```ruby
 group :development, :test do
@@ -107,11 +106,12 @@ end
 
 ### Upgrading
 
-We made some changes to how configuration and loading works for version 0.8.0, which might cause some confusion. For this we're sorry, but it'll be better in the long run -- and hey, we didn't write a javascript test runner and then abandon it.
+We made some changes to how configuration and loading works for version 0.8.0, which might cause some confusion. For this we're sorry, but it'll be better in the long run -- and hey, on the up side, we didn't write a javascript test runner and then abandon it.
 
-1. move your teaspoon_env.rb to a backup file.
-2. run the install generator to get the new teaspoon_env.rb, and migrate your old settings into the new file.
-3. move all settings that you had in /initializers/teaspoon.rb into /spec/teaspoon_env.rb and delete the initializer.
+1. backup your `spec/teaspoon_env.rb` file.
+2. run the install generator to get the new `teaspoon_env.rb`.
+3. migrate your old settings into the new file, noting the changes that might exist.
+4. move all settings that you had in `config/initializers/teaspoon.rb` into `spec/teaspoon_env.rb` and delete the initializer.
 
 
 ## Usage
@@ -141,7 +141,7 @@ rake teaspoon suite=my_fantastic_suite
 rake teaspoon files=spec/javascripts/integration,spec/javascripts/calculator_spec.js
 ```
 
-### Command Line Interface (CLI)
+### CLI
 
 ```
 bundle exec teaspoon
@@ -161,16 +161,14 @@ Get full command line help:
 bundle exec teaspoon --help
 ```
 
-**Note:** By default the rake task and CLI run within the development environment.
+**Note:** The rake task and CLI run within the development environment unless otherwise specified.
 
 
 ## Writing Specs
 
-Depending on which framework you use this can differ. And there's an expectation that you have a certain level of familiarity with the your test framework.
+Depending on which framework you use this can differ, and there's an expectation that you have a certain level of familiarity with your chosen test framework.
 
-Right now Teaspoon supports [Jasmine](http://pivotal.github.com/jasmine), [Mocha](http://visionmedia.github.com/mocha) and [QUnit](http://qunitjs.com).
-
-It's possible to use the asset pipeline, so feel free to use the `= require` directive throughout your specs and spec helpers.
+Teaspoon supports [Jasmine](http://pivotal.github.com/jasmine), [Mocha](http://visionmedia.github.com/mocha) and [QUnit](http://qunitjs.com). And since it's possible to use the asset pipeline, feel free to use the `= require` directive throughout your specs and spec helpers.
 
 Here's a basic spec written in Javascript using Jasmine:
 
@@ -186,17 +184,15 @@ describe("My great feature", function() {
 });
 ```
 
-You can also check out the examples of a [Mocha Spec](https://github.com/modeset/teaspoon/wiki/Using-Mocha), a [QUnit Test](https://github.com/modeset/teaspoon/wiki/Using-QUnit).
+You can also check out the examples of a [Mocha Spec](https://github.com/modeset/teaspoon/wiki/Using-Mocha), and a [QUnit Test](https://github.com/modeset/teaspoon/wiki/Using-QUnit).
 
 ### Pending Specs
 
-Every test framework is different, and we've tried to simplify some of those differences.
+Every test framework is different, but we've tried to normalize some of those differences. For instance, Jasmine (before 2.0.0) lacked the concept pending (which we added), while Mocha provides several ways to achieve this.
 
-Jasmine lacks the concept pending specs, while Mocha provides several ways to define a pending spec. QUnit doesn't support the concept of pending.
+It's complicated, so it's worth defining what is standard between the two frameworks and different versions. QUnit doesn't support the concept of pending at all, so that's not covered.
 
-We thought it would be worth defining what is standard between the two frameworks.
-
-To mark a spec as pending you can either not provide a function as the second argument to the `it` call, or you can use `xit` and `xdescribe`.
+To mark a spec as pending in both Mocha and Jasmine (v1 and v2), you can either not provide a function as the second argument to the `it` call, or you can use `xit` and `xdescribe`. Noting that in Jasmine, `xdescribe` doesn't report the contained specs at all.
 
 ```javascript
 describe("My great feature", function() {
@@ -207,7 +203,7 @@ describe("My great feature", function() {
   });
 
   xdescribe("A whole section that I've not gotten to", function() {
-    it("hasn't been tested yet", function() {
+    it("hasn't been tested yet (and will not be counted at all in Jasmine)", function() {
       expect(true).to.be(false);
     });
   });
@@ -216,7 +212,7 @@ describe("My great feature", function() {
 
 ### Deferring Execution
 
-Teaspoon allows deferring execution which can be useful for asynchronous tasks.
+Teaspoon allows deferring execution, which can be useful for asynchronous execution.
 
 ```javascript
 Teaspoon.defer = true;
@@ -225,9 +221,9 @@ setTimeout(Teaspoon.execute, 1000); // defers execution for 1 second as an examp
 
 ### Using Require.js
 
-You can configure your suite to boot with require.js by setting the `boot_partial` to `"boot_require_js"`.
+You can configure your suite to boot with require.js by setting the suite `boot_partial` directive to `"boot_require_js"`.
 
-Then in your spec helper, be sure to require require.js. Teaspoon doesn't include it as a support library, so you'll need to provide your own.
+Be sure to require `require.js` in your spec helper. Teaspoon doesn't include it as a support library, so you'll need to provide your own.
 
 ```javascript
 //= require require
@@ -236,9 +232,9 @@ Then in your spec helper, be sure to require require.js. Teaspoon doesn't includ
 Now require.js will be used to load all the specs in your suite, however, you'll still need to use require.js to pull down the dependencies as you would normally.
 
 ```javascript
-define(['Model'] , function (Model) {
+define(['Model'], function (Model) {
   describe('Model', function () {
-    // your tests here
+    // ...
   });
 });
 ```
@@ -248,11 +244,11 @@ define(['Model'] , function (Model) {
 
 Teaspoon ships with a fixture library that works with Jasmine, Mocha, and QUnit with a minimum of effort, has a nice consistent API, and isn't dependent on jQuery.
 
-The fixture path is configurable within Teaspoon, and the views will be rendered by a standard controller.  This allows you to use things like RABL/JBuilder if you're building JSON, or HAML if you're building markup.
+The fixture path is configurable within Teaspoon, and the views will be rendered by a standard controller. This allows you to use things like RABL/JBuilder if you're building JSON, or HAML if you're building markup.
 
 ### Loading Files
 
-Loading fixtures allows you to specify any number of files to load, and if they should be appended to the fixture element, or replace what's currently there.
+Loading fixtures allows you to specify any number of files to load, and if they should be appended to the fixture element or replace what's currently there.
 
 `fixture.load(url[, url, ...], append = false)` or `fixture(url[, url, ...], append = false)`
 

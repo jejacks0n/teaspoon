@@ -1,5 +1,7 @@
+
 #= require teaspoon/base/teaspoon
-#= require teaspoon/jasmine/reporters/html
+#= require teaspoon/jasmine2/reporters/html
+#= require teaspoon/jasmine2/reporters/console
 
 unless jasmine?
   throw new Teaspoon.Error('Jasmine not found -- use `suite.use_framework :jasmine` and adjust or remove the `suite.javascripts` directive.')
@@ -12,13 +14,7 @@ class Teaspoon.Runner extends Teaspoon.Runner
 
 
   setup: ->
-    env.updateInterval = 1000
-
-    # add the spec filter
-    if grep = Teaspoon.params["grep"]
-      env.specFilter = (spec) -> return spec.getFullName().indexOf(grep) == 0
-
-    # add the reporter and set the filter
+    # add the reporter
     reporter = new (@getReporter())()
     env.addReporter(reporter)
 
@@ -38,20 +34,19 @@ class Teaspoon.Runner extends Teaspoon.Runner
 class Teaspoon.Spec
 
   constructor: (@spec) ->
-    @fullDescription = @spec.getFullName()
+    @fullDescription = @spec.fullName
     @description = @spec.description
     @link = "?grep=#{encodeURIComponent(@fullDescription)}"
     @parent = @spec.suite
-    @suiteName = @parent.getFullName()
+    @suiteName = @parent.fullName
     @viewId = @spec.viewId
-    @pending = @spec.pending
+    @pending = @spec.status == "pending"
 
 
   errors: ->
-    return [] unless @spec.results
-    for item in @spec.results().getItems()
-      continue if item.passed()
-      {message: item.message, stack: item.trace.stack}
+    for item in @spec.failedExpectations
+      continue if item.passed
+      {message: item.message, stack: item.stack}
 
 
   getParents: ->
@@ -66,22 +61,18 @@ class Teaspoon.Spec
 
 
   result: ->
-    results = @spec.results()
-    status = "failed"
-    status = "passed" if results.passed()
-    status = "pending" if @spec.pending
-    status: status
-    skipped: results.skipped
+    status: @spec.status
+    skipped: @spec.status == "disabled"
 
 
 
 class Teaspoon.Suite
 
   constructor: (@suite) ->
-    @fullDescription = @suite.getFullName()
+    @fullDescription = @suite.fullName
     @description = @suite.description
     @link = "?grep=#{encodeURIComponent(@fullDescription)}"
-    @parent = @suite.parentSuite
+    @parent = @suite.parent
     @viewId = @suite.viewId
 
 
@@ -117,3 +108,5 @@ class Teaspoon.fixture extends Teaspoon.fixture
 
 # set the environment
 env = jasmine.getEnv()
+if grep = Teaspoon.params["grep"]
+  env.specFilter = (spec) -> spec.getFullName().indexOf(grep) == 0

@@ -62,7 +62,7 @@ class Teaspoon.Suite
 env = QUnit
 env.config.autostart = false
 env.config.altertitle = false
-env.config.filter = Teaspoon.Runner.prototype.getParams()["grep"]
+env.config.filter = Teaspoon.params["grep"]
 
 window.fixture = Teaspoon.fixture
 originalReset = env.reset

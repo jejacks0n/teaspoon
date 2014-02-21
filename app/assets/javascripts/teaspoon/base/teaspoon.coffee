@@ -15,6 +15,12 @@ class @Teaspoon
   @Date:      Date
   @location:  window.location
   @messages:  []
+  @params:    do ->
+    params = {}
+    for param in window.location.search.substring(1).split("&")
+      [name, value] = param.split("=")
+      params[decodeURIComponent(name)] = decodeURIComponent(value)
+    params
 
   @execute: ->
     if Teaspoon.defer
@@ -34,18 +40,6 @@ class @Teaspoon
     window.onload = ->
       originalOnload() if originalOnload && originalOnload.call
       method()
-
-
-  @resolveDependenciesFromParams: (all = []) ->
-    deps = []
-    return all if (paths = Teaspoon.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) == null
-
-    for path in paths
-      parts = decodeURIComponent(path.replace(/\+/g, " ")).match(/\/(.+)\.(js|js.coffee|coffee)$/i)
-      continue if parts == null
-      file = parts[1].substr(parts[1].lastIndexOf("/") + 1)
-      for dep in all then deps.push(dep) if dep.indexOf(file) >= 0
-    deps
 
 
   @log: ->

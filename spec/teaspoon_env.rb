@@ -11,12 +11,20 @@ Teaspoon.configure do |config|
   config.suite do |suite|
     suite.matcher = "{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}"
     suite.javascripts = ["jasmine/1.3.1", "teaspoon/jasmine"]
+    #suite.javascripts = ["jasmine/2.0.0", "teaspoon/jasmine2"]
   end
 
-  config.suite :jasmine do |suite|
+  config.suite :jasmine1 do |suite|
     suite.matcher = "spec/javascripts/**/*_jspec.{js,js.coffee,coffee}"
+    suite.javascripts = ["jasmine/1.3.1", "teaspoon/jasmine"]
     suite.helper = "jasmine_helper"
     suite.body_partial = "/body"
+  end
+
+  config.suite :jasmine2 do |suite|
+    suite.matcher = "spec/javascripts/**/*_j2spec.{js,js.coffee,coffee}"
+    suite.javascripts = ["jasmine/2.0.0", "teaspoon/jasmine2"]
+    suite.helper = "jasmine2_helper"
   end
 
   config.suite :mocha do |suite|

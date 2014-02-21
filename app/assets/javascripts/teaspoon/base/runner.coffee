@@ -6,21 +6,12 @@ class Teaspoon.Runner
     return if @constructor.run
     @constructor.run = true
     @fixturePath = "#{Teaspoon.root}/fixtures"
-    @params = Teaspoon.params = @getParams()
     @setup()
 
 
-  getParams: ->
-    params = {}
-    for param in Teaspoon.location.search.substring(1).split("&")
-      [name, value] = param.split("=")
-      params[decodeURIComponent(name)] = decodeURIComponent(value)
-    params
-
-
   getReporter: ->
-    if @params["reporter"]
-      Teaspoon.Reporters[@params["reporter"]]
+    if Teaspoon.params["reporter"]
+      Teaspoon.Reporters[Teaspoon.params["reporter"]]
     else
       if window.navigator.userAgent.match(/PhantomJS/)
         Teaspoon.Reporters.Console

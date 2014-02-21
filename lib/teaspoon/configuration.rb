@@ -62,10 +62,10 @@ module Teaspoon
     class Suite
 
       FRAMEWORKS = {
-        jasmine: ["1.3.1", "2.0.0"],
-        mocha: ["1.10.0", "1.17.0"],
-        qunit: ["1.12.0", "1.14.0"],
-        angular: ["1.0.5"],
+        jasmine: {default: "1.3.1",  versions: {"1.3.1"  => nil, "2.0.0"  => "jasmine2"}},
+        mocha:   {default: "1.17.0", versions: {"1.10.0" => nil, "1.17.0" => nil}},
+        qunit:   {default: "1.14.0", versions: {"1.12.0" => nil, "1.14.0" => nil}},
+        angular: {default: "1.0.5",  versions: {"1.0.5"  => nil}},
       }
 
       attr_accessor   :matcher, :helper, :javascripts, :stylesheets,
@@ -91,16 +91,17 @@ module Teaspoon
         yield self if block_given?
       end
 
+      # todo: break this off and clean it up -- using a Framework class
       def use_framework(name, version = nil)
         name = name.to_sym
-        version ||= FRAMEWORKS[name].last if FRAMEWORKS[name]
-        unless FRAMEWORKS[name] && FRAMEWORKS[name].include?(version)
+        version ||= FRAMEWORKS[name][:default] if FRAMEWORKS[name]
+        unless FRAMEWORKS[name] && FRAMEWORKS[name][:versions].include?(version)
           message = "Unknown framework \"#{name}\""
-          message += " with version #{version} -- available versions #{FRAMEWORKS[name].join(", ")}" if FRAMEWORKS[name] && version
+          message += " with version #{version} -- available versions #{FRAMEWORKS[name][:versions].keys.join(", ")}" if FRAMEWORKS[name] && version
           raise Teaspoon::UnknownFramework, message
         end
 
-        @javascripts = [[name, version].join("/"), "teaspoon-#{name}"]
+        @javascripts = [[name, version].join("/"), "teaspoon-#{FRAMEWORKS[name][:versions][version] || name}"]
         case name.to_sym
         when :qunit
           @matcher = "{test/javascripts,app/assets}/**/*_test.{js,js.coffee,coffee}"

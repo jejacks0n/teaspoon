@@ -12,9 +12,9 @@ describe "Teaspoon.fixture", ->
       send: ->
     @xhrSpy = spyOn(@mockXhr, 'open')
     @xhrSpy
-    try spyOn(window, 'XMLHttpRequest').andReturn(@mockXhr)
+    try spyOn(window, 'XMLHttpRequest').and.returnValue(@mockXhr)
     catch e
-      spyOn(window, 'ActiveXObject').andReturn(@mockXhr)
+      spyOn(window, 'ActiveXObject').and.returnValue(@mockXhr)
 
 
   describe "@load", ->

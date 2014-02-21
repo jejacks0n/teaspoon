@@ -1201,7 +1201,11 @@ getJasmineRequireObj().Expectation = function() {
           args.unshift(name);
           message = this.util.buildFailureMessage.apply(null, args);
         } else {
-          message = result.message;
+          if (Object.prototype.toString.apply(result.message) === "[object Function]") {
+            message = result.message();
+          } else {
+            message = result.message;
+          }
         }
       }
 
@@ -2030,7 +2034,7 @@ getJasmineRequireObj().toBeNaN = function(j$) {
         if (result.pass) {
           result.message = "Expected actual not to be NaN.";
         } else {
-          result.message = "Expected " + j$.pp(actual) + " to be NaN.";
+          result.message = function() { return "Expected " + j$.pp(actual) + " to be NaN."; };
         }
 
         return result;
@@ -2168,15 +2172,15 @@ getJasmineRequireObj().toHaveBeenCalledWith = function(j$) {
         }
 
         if (!actual.calls.any()) {
-          result.message = "Expected spy " + actual.and.identity() + " to have been called with " + j$.pp(expectedArgs) + " but it was never called.";
+          result.message = function() { return "Expected spy " + actual.and.identity() + " to have been called with " + j$.pp(expectedArgs) + " but it was never called."; };
           return result;
         }
 
         if (util.contains(actual.calls.allArgs(), expectedArgs)) {
           result.pass = true;
-          result.message = "Expected spy " + actual.and.identity() + " not to have been called with " + j$.pp(expectedArgs) + " but it was.";
+          result.message = function() { return "Expected spy " + actual.and.identity() + " not to have been called with " + j$.pp(expectedArgs) + " but it was."; };
         } else {
-          result.message = "Expected spy " + actual.and.identity() + " to have been called with " + j$.pp(expectedArgs) + " but actual calls were " + j$.pp(actual.calls.allArgs()).replace(/^\[ | \]$/g, '') + ".";
+          result.message = function() { return "Expected spy " + actual.and.identity() + " to have been called with " + j$.pp(expectedArgs) + " but actual calls were " + j$.pp(actual.calls.allArgs()).replace(/^\[ | \]$/g, '') + "."; };
         }
 
         return result;
@@ -2231,16 +2235,16 @@ getJasmineRequireObj().toThrow = function(j$) {
 
         if (arguments.length == 1) {
           result.pass = true;
-          result.message = "Expected function not to throw, but it threw " + j$.pp(thrown) + ".";
+          result.message = function() { return "Expected function not to throw, but it threw " + j$.pp(thrown) + "."; };
 
           return result;
         }
 
         if (util.equals(thrown, expected)) {
           result.pass = true;
-          result.message = "Expected function not to throw " + j$.pp(expected) + ".";
+          result.message = function() { return "Expected function not to throw " + j$.pp(expected) + "."; };
         } else {
-          result.message = "Expected function to throw " + j$.pp(expected) + ", but it threw " +  j$.pp(thrown) + ".";
+          result.message = function() { return "Expected function to throw " + j$.pp(expected) + ", but it threw " +  j$.pp(thrown) + "."; };
         }
 
         return result;
@@ -2256,6 +2260,8 @@ getJasmineRequireObj().toThrowError = function(j$) {
     return {
       compare: function(actual) {
         var threw = false,
+            pass = {pass: true},
+            fail = {pass: false},
             thrown,
             errorType,
             message,
@@ -2277,15 +2283,18 @@ getJasmineRequireObj().toThrowError = function(j$) {
         }
 
         if (!threw) {
-          return fail("Expected function to throw an Error.");
+          fail.message = "Expected function to throw an Error.";
+          return fail;
         }
 
         if (!(thrown instanceof Error)) {
-          return fail("Expected function to throw an Error, but it threw " + thrown + ".");
+          fail.message = function() { return "Expected function to throw an Error, but it threw " + j$.pp(thrown) + "."; };
+          return fail;
         }
 
         if (arguments.length == 1) {
-          return pass("Expected function not to throw an Error, but it threw " + fnNameFor(thrown) + ".");
+          pass.message = "Expected function not to throw an Error, but it threw " + fnNameFor(thrown) + ".";
+          return pass;
         }
 
         if (errorType) {
@@ -2295,64 +2304,60 @@ getJasmineRequireObj().toThrowError = function(j$) {
 
         if (errorType && message) {
           if (thrown.constructor == errorType && util.equals(thrown.message, message)) {
-            return pass("Expected function not to throw " + name + " with message \"" + message + "\".");
+            pass.message = function() { return "Expected function not to throw " + name + " with message " + j$.pp(message) + "."; };
+            return pass;
           } else {
-            return fail("Expected function to throw " + name + " with message \"" + message +
-                "\", but it threw " + constructorName + " with message \"" + thrown.message + "\".");
+            fail.message = function() { return "Expected function to throw " + name + " with message " + j$.pp(message) +
+                ", but it threw " + constructorName + " with message " + j$.pp(thrown.message) + "."; };
+            return fail;
           }
         }
 
         if (errorType && regexp) {
           if (thrown.constructor == errorType && regexp.test(thrown.message)) {
-            return pass("Expected function not to throw " + name + " with message matching " + regexp + ".");
+            pass.message = function() { return "Expected function not to throw " + name + " with message matching " + j$.pp(regexp) + "."; };
+            return pass;
           } else {
-            return fail("Expected function to throw " + name + " with message matching " + regexp +
-                ", but it threw " + constructorName + " with message \"" + thrown.message + "\".");
+            fail.message = function() { return "Expected function to throw " + name + " with message matching " + j$.pp(regexp) +
+                ", but it threw " + constructorName + " with message " + j$.pp(thrown.message) + "."; };
+            return fail;
           }
         }
 
         if (errorType) {
           if (thrown.constructor == errorType) {
-            return pass("Expected function not to throw " + name + ".");
+            pass.message = "Expected function not to throw " + name + ".";
+            return pass;
           } else {
-            return fail("Expected function to throw " + name + ", but it threw " + constructorName + ".");
+            fail.message = "Expected function to throw " + name + ", but it threw " + constructorName + ".";
+            return fail;
           }
         }
 
         if (message) {
           if (thrown.message == message) {
-            return pass("Expected function not to throw an exception with message " + j$.pp(message) + ".");
+            pass.message = function() { return "Expected function not to throw an exception with message " + j$.pp(message) + "."; };
+            return pass;
           } else {
-            return fail("Expected function to throw an exception with message " + j$.pp(message) +
-                ", but it threw an exception with message " + j$.pp(thrown.message) + ".");
+            fail.message = function() { return "Expected function to throw an exception with message " + j$.pp(message) +
+                ", but it threw an exception with message " + j$.pp(thrown.message) + "."; };
+            return fail;
           }
         }
 
         if (regexp) {
           if (regexp.test(thrown.message)) {
-            return pass("Expected function not to throw an exception with a message matching " + j$.pp(regexp) + ".");
+            pass.message = function() { return "Expected function not to throw an exception with a message matching " + j$.pp(regexp) + "."; };
+            return pass;
           } else {
-            return fail("Expected function to throw an exception with a message matching " + j$.pp(regexp) +
-                ", but it threw an exception with message " + j$.pp(thrown.message) + ".");
+            fail.message = function() { return "Expected function to throw an exception with a message matching " + j$.pp(regexp) +
+                ", but it threw an exception with message " + j$.pp(thrown.message) + "."; };
+            return fail;
           }
         }
 
         function fnNameFor(func) {
           return func.name || func.toString().match(/^\s*function\s*(\w*)\s*\(/)[1];
-        }
-
-        function pass(notMessage) {
-          return {
-            pass: true,
-            message: notMessage
-          };
-        }
-
-        function fail(message) {
-          return {
-            pass: false,
-            message: message
-          };
         }
 
         function extractExpectedParams() {
@@ -2410,3 +2415,195 @@ getJasmineRequireObj().toThrowError = function(j$) {
 getJasmineRequireObj().version = function() {
   return "2.0.0";
 };
+
+/**
+ Starting with version 2.0, this file "boots" Jasmine, performing all of the necessary initialization before executing
+ the loaded environment and all of a project's specs. This file should be loaded after `jasmine.js`, but before any
+ project source files or spec files are loaded. Thus this file can also be used to customize Jasmine for a project.
+
+ If a project is using Jasmine via the standalone distribution, this file can be customized directly. If a project is
+ using Jasmine via the [Ruby gem][jasmine-gem], this file can be copied into the support directory via
+ `jasmine copy_boot_js`. Other environments (e.g., Python) will have different mechanisms.
+
+ The location of `boot.js` can be specified and/or overridden in `jasmine.yml`.
+
+ [jasmine-gem]: http://github.com/pivotal/jasmine-gem
+ */
+
+(function() {
+
+  /**
+   * ## Require &amp; Instantiate
+   *
+   * Require Jasmine's core files. Specifically, this requires and attaches all of Jasmine's code to the `jasmine` reference.
+   */
+  window.jasmine = jasmineRequire.core(jasmineRequire);
+
+  /**
+   * Since this is being run in a browser and the results should populate to an HTML page, require the HTML-specific Jasmine code, injecting the same reference.
+   */
+  //jasmineRequire.html(jasmine); // teaspoon: don't need this.
+
+  /**
+   * Create the Jasmine environment. This is used to run all specs in a project.
+   */
+  var env = jasmine.getEnv();
+
+  /**
+   * ## The Global Interface
+   *
+   * Build up the functions that will be exposed as the Jasmine public interface. A project can customize, rename or alias any of these functions as desired, provided the implementation remains unchanged.
+   */
+  var jasmineInterface = {
+    describe: function(description, specDefinitions) {
+      return env.describe(description, specDefinitions);
+    },
+
+    xdescribe: function(description, specDefinitions) {
+      return env.xdescribe(description, specDefinitions);
+    },
+
+    it: function(desc, func) {
+      return env.it(desc, func);
+    },
+
+    xit: function(desc, func) {
+      return env.xit(desc, func);
+    },
+
+    beforeEach: function(beforeEachFunction) {
+      return env.beforeEach(beforeEachFunction);
+    },
+
+    afterEach: function(afterEachFunction) {
+      return env.afterEach(afterEachFunction);
+    },
+
+    expect: function(actual) {
+      return env.expect(actual);
+    },
+
+    pending: function() {
+      return env.pending();
+    },
+
+    spyOn: function(obj, methodName) {
+      return env.spyOn(obj, methodName);
+    },
+
+    jsApiReporter: new jasmine.JsApiReporter({
+      timer: new jasmine.Timer()
+    })
+  };
+
+  /**
+   * Add all of the Jasmine global/public interface to the proper global, so a project can use the public interface directly. For example, calling `describe` in specs instead of `jasmine.getEnv().describe`.
+   */
+  if (typeof window == "undefined" && typeof exports == "object") {
+    extend(exports, jasmineInterface);
+  } else {
+    extend(window, jasmineInterface);
+  }
+
+  /**
+   * Expose the interface for adding custom equality testers.
+   */
+  jasmine.addCustomEqualityTester = function(tester) {
+    env.addCustomEqualityTester(tester);
+  };
+
+  /**
+   * Expose the interface for adding custom expectation matchers
+   */
+  jasmine.addMatchers = function(matchers) {
+    return env.addMatchers(matchers);
+  };
+
+  /**
+   * Expose the mock interface for the JavaScript timeout functions
+   */
+  jasmine.clock = function() {
+    return env.clock;
+  };
+
+  /**
+   * ## Runner Parameters
+   *
+   * More browser specific code - wrap the query string in an object and to allow for getting/setting parameters from the runner user interface.
+   */
+
+  // teaspoon: this isn't used below, and so is commented
+  //var queryString = new jasmine.QueryString({
+  //  getWindowLocation: function() { return window.location; }
+  //});
+
+  // teaspoon: we handle this differently
+  //var catchingExceptions = queryString.getParam("catch");
+  //env.catchExceptions(typeof catchingExceptions === "undefined" ? true : catchingExceptions);
+
+  /**
+   * ## Reporters
+   * The `HtmlReporter` builds all of the HTML UI for the runner page. This reporter paints the dots, stars, and x's for specs, as well as all spec names and all failures (if any).
+   */
+  // teaspoon: we have our own reporter
+  //var htmlReporter = new jasmine.HtmlReporter({
+  //  env: env,
+  //  onRaiseExceptionsClick: function() { queryString.setParam("catch", !env.catchingExceptions()); },
+  //  getContainer: function() { return document.body; },
+  //  createElement: function() { return document.createElement.apply(document, arguments); },
+  //  createTextNode: function() { return document.createTextNode.apply(document, arguments); },
+  //  timer: new jasmine.Timer()
+  //});
+
+  /**
+   * The `jsApiReporter` also receives spec results, and is used by any environment that needs to extract the results  from JavaScript.
+   */
+  // teaspoon: we use a console reporter instead
+  //env.addReporter(jasmineInterface.jsApiReporter);
+  //env.addReporter(htmlReporter);
+
+  /**
+   * Filter which specs will be run by matching the start of the full name against the `spec` query param.
+   */
+  // teaspoon: we use the same, but since the reporter isn't defined yet we do it elsewhere
+  //var specFilter = new jasmine.HtmlSpecFilter({
+  //  filterString: function() { return queryString.getParam("spec"); }
+  //});
+  //
+  //env.specFilter = function(spec) {
+  //  return specFilter.matches(spec.getFullName());
+  //};
+
+  /**
+   * Setting up timing functions to be able to be overridden. Certain browsers (Safari, IE 8, phantomjs) require this hack.
+   */
+  window.setTimeout = window.setTimeout;
+  window.setInterval = window.setInterval;
+  window.clearTimeout = window.clearTimeout;
+  window.clearInterval = window.clearInterval;
+
+  /**
+   * ## Execution
+   *
+   * Replace the browser window's `onload`, ensure it's called, and then run all of the loaded specs. This includes initializing the `HtmlReporter` instance and then executing the loaded Jasmine environment. All of this will happen after all of the specs are loaded.
+   */
+  // teaspoon: we provide our own interface for this
+  //var currentWindowOnload = window.onload;
+  //
+  //window.onload = function() {
+  //  if (currentWindowOnload) {
+  //    currentWindowOnload();
+  //  }
+  //  htmlReporter.initialize();
+  //  env.execute();
+  //};
+
+  /**
+   * Helper function for readability above.
+   */
+  function extend(destination, source) {
+    for (var property in source) destination[property] = source[property];
+    return destination;
+  }
+
+}());
