@@ -9,7 +9,7 @@ specs = @suite.spec_assets(false).map{ |s| "#{s.gsub(/\.js.*$/, "")}" }
 <script type="text/javascript">
   Teaspoon.onWindowLoad(function () {
     // setup the Teaspoon path prefix to load /assets
-    require.config(<%= require_options.to_json.htm_safe %>);
+    require.config(<%= require_options.to_json.html_safe %>);
 
     // require specs by striping off the .js file extension
     require(<%= specs.to_json.html_safe %>, function() {
