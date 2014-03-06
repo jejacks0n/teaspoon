@@ -27,6 +27,9 @@ module Teaspoon
       execute_without_handling(options)
     rescue Teaspoon::Failure
       false
+    rescue Teaspoon::RunnerException => e
+      log(e.message)
+      false
     rescue Teaspoon::Error => e
       abort(e.message)
     end
