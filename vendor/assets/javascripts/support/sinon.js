@@ -1,5 +1,5 @@
 /**
- * Sinon.JS 1.8.2, 2014/02/11
+ * Sinon.JS 1.9.0, 2014/03/05
  *
  * @author Christian Johansen (christian@cjohansen.no)
  * @author Contributors: https://github.com/cjohansen/Sinon.JS/blob/master/AUTHORS
@@ -772,6 +772,11 @@ this.sinon = (function () {
           return false;
         }
 
+        if (a instanceof RegExp && b instanceof RegExp) {
+          return (a.source === b.source) && (a.global === b.global) &&
+              (a.ignoreCase === b.ignoreCase) && (a.multiline === b.multiline);
+        }
+
         var aString = Object.prototype.toString.call(a);
         if (aString != Object.prototype.toString.call(b)) {
           return false;
@@ -1047,8 +1052,10 @@ this.sinon = (function () {
     }
 
     matcher.or = function (m2) {
-      if (!isMatcher(m2)) {
+      if (!arguments.length) {
         throw new TypeError("Matcher expected");
+      } else if (!isMatcher(m2)) {
+        m2 = match(m2);
       }
       var m1 = this;
       var or = sinon.create(matcher);
@@ -1060,8 +1067,10 @@ this.sinon = (function () {
     };
 
     matcher.and = function (m2) {
-      if (!isMatcher(m2)) {
+      if (!arguments.length) {
         throw new TypeError("Matcher expected");
+      } else if (!isMatcher(m2)) {
+        m2 = match(m2);
       }
       var m1 = this;
       var and = sinon.create(matcher);
@@ -3348,6 +3357,25 @@ this.sinon = (function () {
       }
     };
 
+    sinon.ProgressEvent = function ProgressEvent(type, progressEventRaw, target) {
+      this.initEvent(type, false, false, target);
+      this.loaded = progressEventRaw.loaded || null;
+      this.total = progressEventRaw.total || null;
+    };
+
+    sinon.ProgressEvent.prototype = new sinon.Event();
+
+    sinon.ProgressEvent.prototype.constructor =  sinon.ProgressEvent;
+
+    sinon.CustomEvent = function CustomEvent(type, customData, target) {
+      this.initEvent(type, false, false, target);
+      this.detail = customData.detail || null;
+    };
+
+    sinon.CustomEvent.prototype = new sinon.Event();
+
+    sinon.CustomEvent.prototype.constructor =  sinon.CustomEvent;
+
     sinon.EventTarget = {
       addEventListener: function addEventListener(event, listener) {
         this.eventListeners = this.eventListeners || {};
@@ -3458,7 +3486,7 @@ this.sinon = (function () {
           var listener = xhr["on" + eventName];
 
           if (listener && typeof listener == "function") {
-            listener(event);
+            listener.call(this, event);
           }
         });
       }
@@ -3597,6 +3625,12 @@ this.sinon = (function () {
     };
     FakeXMLHttpRequest.useFilters = false;
 
+    function verifyRequestOpened(xhr) {
+      if (xhr.readyState != FakeXMLHttpRequest.OPENED) {
+        throw new Error("INVALID_STATE_ERR - " + xhr.readyState);
+      }
+    }
+
     function verifyRequestSent(xhr) {
       if (xhr.readyState == FakeXMLHttpRequest.DONE) {
         throw new Error("Request done");
@@ -3662,7 +3696,7 @@ this.sinon = (function () {
             this.dispatchEvent(new sinon.Event("loadend", false, false, this));
             this.upload.dispatchEvent(new sinon.Event("load", false, false, this));
             if (supportsProgress) {
-              this.upload.dispatchEvent(new ProgressEvent("progress", {loaded: 100, total: 100}));
+              this.upload.dispatchEvent(new sinon.ProgressEvent('progress', {loaded: 100, total: 100}));
             }
             break;
         }
@@ -3684,6 +3718,7 @@ this.sinon = (function () {
 
       // Helps testing
       setResponseHeaders: function setResponseHeaders(headers) {
+        verifyRequestOpened(this);
         this.responseHeaders = {};
 
         for (var header in headers) {
@@ -3829,13 +3864,13 @@ this.sinon = (function () {
 
       uploadProgress: function uploadProgress(progressEventRaw) {
         if (supportsProgress) {
-          this.upload.dispatchEvent(new ProgressEvent("progress", progressEventRaw));
+          this.upload.dispatchEvent(new sinon.ProgressEvent("progress", progressEventRaw));
         }
       },
 
       uploadError: function uploadError(error) {
         if (supportsCustomEvent) {
-          this.upload.dispatchEvent(new CustomEvent("error", {"detail": error}));
+          this.upload.dispatchEvent(new sinon.CustomEvent("error", {"detail": error}));
         }
       }
     });
@@ -4276,8 +4311,9 @@ this.sinon = (function () {
         return;
       }
 
-      if (config.injectInto && !(key in config.injectInto) ) {
+      if (config.injectInto && !(key in config.injectInto)) {
         config.injectInto[key] = value;
+        sandbox.injectedKeys.push(key);
       } else {
         push.call(sandbox.args, value);
       }
@@ -4340,6 +4376,20 @@ this.sinon = (function () {
         return obj;
       },
 
+      restore: function () {
+        sinon.collection.restore.apply(this, arguments);
+        this.restoreContext();
+      },
+
+      restoreContext: function () {
+        if (this.injectedKeys) {
+          for (var i = 0, j = this.injectedKeys.length; i < j; i++) {
+            delete this.injectInto[this.injectedKeys[i]];
+          }
+          this.injectedKeys = [];
+        }
+      },
+
       create: function (config) {
         if (!config) {
           return sinon.create(sinon.sandbox);
@@ -4347,6 +4397,8 @@ this.sinon = (function () {
 
         var sandbox = prepareSandboxFromConfig(config);
         sandbox.args = sandbox.args || [];
+        sandbox.injectedKeys = [];
+        sandbox.injectInto = config.injectInto;
         var prop, value, exposed = sandbox.inject({});
 
         if (config.properties) {
@@ -4694,6 +4746,20 @@ this.sinon = (function () {
         }
 
         return target;
+      },
+
+      match: function match(actual, expectation) {
+        var matcher = sinon.match(expectation);
+        if (matcher.test(actual)) {
+          assert.pass("match");
+        } else {
+          var formatted = [
+            "expected value to match",
+            "    expected = " + sinon.format(expectation),
+            "    actual = " + sinon.format(actual)
+          ]
+          failAssertion(this, formatted.join("\n"));
+        }
       }
     };
 
