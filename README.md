@@ -657,7 +657,7 @@ These configuration directives are applicable only when running via the rake tas
 
 <dl>
 
-<dt> output_dir </dt><dd>
+<dt> output_path </dt><dd>
   The path that the coverage should be written to - when there's an artifact to write to disk.<br/>
   <b>Note:</b> Relative to <code>config.root</code>.<br/><br/>
 
