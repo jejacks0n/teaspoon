@@ -22,6 +22,7 @@ Feedback, ideas and pull requests are always welcome, or you can hit us up on Tw
 
 If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), check out the [guard-teaspoon](https://github.com/modeset/guard-teaspoon) project.
 
+Or, if you'd want to use [Spring](https://github.com/rails/spring) preloader, use with  [spring-commands-teaspoon](https://github.com/alejandrobabio/spring-commands-teaspoon).
 
 ## Developer Notice
 
