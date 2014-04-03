@@ -750,6 +750,15 @@ If you want to generate reports that CI can use you can install Istanbul for cov
 We encourage you to experiment and let us know. Feel free to create a wiki article about what you did to get it working on your CI setup.
 
 
+## Alternative Projects
+
+[Konacha](https://github.com/jfirebaugh/konacha)
+[Jasminerice](https://github.com/bradphelan/jasminerice)
+[Evergreen](https://github.com/abepetrillo/evergreen)
+[jasmine-rails](https://github.com/searls/jasmine-rails)
+[guard-jasmine](https://github.com/netzpirat/guard-jasmine)
+
+
 ## License
 
 Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)
