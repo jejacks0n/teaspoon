@@ -10,7 +10,7 @@ module Teaspoon
       ENV["PATH"].split(File::PATH_SEPARATOR).each do |path|
         exts.each do |ext|
           exe = "#{path}/#{cmd}#{ext}"
-          return exe if File.executable?(exe)
+          return exe if File.file?(exe) && File.executable?(exe)
         end
       end
 
