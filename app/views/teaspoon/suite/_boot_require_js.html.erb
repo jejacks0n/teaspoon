@@ -3,9 +3,11 @@ rails_config = Rails.application.config
 require_options = {baseUrl: rails_config.assets.prefix}
 require_options.merge!(rails_config.requirejs.user_config) if rails_config.respond_to?(:requirejs)
 specs = @suite.spec_assets(false).map{ |s| "#{s.gsub(/\.js.*$/, "")}" }
+
+specs.each {|s| require_options['shim'][s] = [@suite.helper] }
 %>
 
-<%= javascript_include_tag @suite.helper %>
+<%= javascript_include_tag 'require' %>
 <script type="text/javascript">
   Teaspoon.onWindowLoad(function () {
     // setup the Teaspoon path prefix to load /assets
