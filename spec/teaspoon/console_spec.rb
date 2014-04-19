@@ -21,9 +21,9 @@ describe Teaspoon::Console do
 
   describe "#initialize" do
 
-    it "assigns @options" do
+    it "assigns @default_options" do
       subject = Teaspoon::Console.new(foo: "bar")
-      expect(subject.instance_variable_get(:@options)).to eql(foo: "bar")
+      expect(subject.instance_variable_get(:@default_options)).to eql(foo: "bar")
     end
 
     it "loads the environment" do
@@ -88,10 +88,10 @@ describe Teaspoon::Console do
       subject.stub(:export)
     end
 
-    it "merges @options" do
-      subject.instance_variable_set(:@options, foo: "bar")
+    it "merges options" do
+      subject.instance_variable_set(:@default_options, foo: "bar")
       subject.execute_without_handling(bar: "baz")
-      expect(subject.instance_variable_get(:@options)).to eql(foo: "bar", bar: "baz")
+      expect(subject.options).to eql(foo: "bar", bar: "baz")
     end
 
     it "clears any @suites" do
@@ -136,7 +136,7 @@ describe Teaspoon::Console do
 
     it "calls export if the options include :export" do
       subject.should_receive(:suites).and_return([:default, :foo])
-      subject.instance_variable_set(:@options, export: true)
+      subject.instance_variable_set(:@default_options, export: true)
       subject.should_receive(:export).with(:default)
       subject.should_receive(:export).with(:foo)
       subject.execute
@@ -196,7 +196,7 @@ describe Teaspoon::Console do
     end
 
     it "calls #export on the exporter" do
-      subject.instance_variable_set(:@options, export: "_output_path_")
+      subject.instance_variable_set(:@default_options, export: "_output_path_")
       exporter = double(export: nil)
       Teaspoon::Exporter.should_receive(:new).with("_suite_", "http://url.com/teaspoon/_suite_", "_output_path_").and_return(exporter)
       exporter.should_receive(:export)

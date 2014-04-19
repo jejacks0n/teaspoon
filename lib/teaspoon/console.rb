@@ -4,13 +4,19 @@ module Teaspoon
   class Console
 
     def initialize(options = {})
-      @options = options
+      @default_options = options
       @suites = {}
-      Teaspoon::Environment.load(@options)
+      Teaspoon::Environment.load(options)
 
       @server = start_server
     rescue Teaspoon::ServerException => e
       abort(e.message)
+    end
+
+    def options
+      @execute_options ||= {}
+      @default_options ||= {}
+      @default_options.merge(@execute_options)
     end
 
     def failures?
@@ -21,17 +27,20 @@ module Teaspoon
       execute_without_handling(options)
     rescue Teaspoon::Failure
       false
+    rescue Teaspoon::RunnerException => e
+      log(e.message)
+      false
     rescue Teaspoon::Error => e
       abort(e.message)
     end
 
-    def execute_without_handling(options = {})
-      @options.merge!(options)
+    def execute_without_handling(execute_options = {})
+      @execute_options = execute_options
       @suites = {}
-      resolve(@options[:files])
+      resolve(options[:files])
 
       0 == suites.inject(0) do |failures, suite|
-        export(suite) if @options.include?(:export)
+        export(suite) if options.include?(:export)
         failures += run_specs(suite)
         log("") # empty line for space
         failures
@@ -50,7 +59,7 @@ module Teaspoon
     def export(suite)
       raise Teaspoon::UnknownSuite, "Unknown suite: \"#{suite}\"" unless Teaspoon.configuration.suite_configs[suite.to_s]
       log("Teaspoon exporting #{suite} suite at #{base_url_for(suite)}")
-      Teaspoon::Exporter.new(suite, url_for(suite, false), @options[:export]).export
+      Teaspoon::Exporter.new(suite, url_for(suite, false), options[:export]).export
     end
 
     protected
@@ -73,7 +82,7 @@ module Teaspoon
     end
 
     def suites
-      return [@options[:suite]] if @options[:suite].present?
+      return [options[:suite]] if options[:suite].present?
       return @suites.keys if @suites.present?
       Teaspoon.configuration.suite_configs.keys
     end
@@ -98,8 +107,8 @@ module Teaspoon
 
     def filter(suite)
       parts = []
-      parts << "grep=#{URI::encode(@options[:filter])}" if @options[:filter].present?
-      (@suites[suite] || @options[:files] || []).flatten.each { |file| parts << "file[]=#{URI::encode(file)}" }
+      parts << "grep=#{URI::encode(options[:filter])}" if options[:filter].present?
+      (@suites[suite] || options[:files] || []).flatten.each { |file| parts << "file[]=#{URI::encode(file)}" }
       "#{parts.join('&')}" if parts.present?
     end
 
