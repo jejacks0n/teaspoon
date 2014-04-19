@@ -6,6 +6,7 @@ Teaspoon
 [![Build Status](https://img.shields.io/travis/modeset/teaspoon.svg)](https://travis-ci.org/modeset/teaspoon)
 [![Code Climate](https://img.shields.io/codeclimate/github/modeset/teaspoon.svg)](https://codeclimate.com/github/modeset/teaspoon)
 [![Coverage Status](https://img.shields.io/coveralls/modeset/teaspoon/master.svg)](https://coveralls.io/r/modeset/teaspoon?branch=master)
+[![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 <img src="https://raw.github.com/modeset/teaspoon/master/screenshots/logo_big.png" alt="Logo by Morgan Keys" align="right" />
 <sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
@@ -23,27 +24,6 @@ Feedback, ideas and pull requests are always welcome, or you can hit us up on Tw
 If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), check out the [guard-teaspoon](https://github.com/modeset/guard-teaspoon) project.
 
 Or, if you'd want to use [Spring](https://github.com/rails/spring) preloader, use with  [spring-commands-teaspoon](https://github.com/alejandrobabio/spring-commands-teaspoon).
-
-## Developer Notice
-
-The master branch deviates heavily from 0.7.9 and represents the changes that will be in 0.8. There's a good [wiki article](https://github.com/modeset/teaspoon/wiki/Changelog) about the notable changes and how you can ease the pain of upgrading.
-
-While we know that considerable changes like these can be a pain, they're not made frivolously, and they set the groundwork for what we can all build on and contribute to. There was some cleanup that needed to happen, and some polish, and in that process we tried to think about what we've learned thus far, and how we can better that for future versions. We appreciate your tolerance and willingness to help us fix anything that we missed.
-
-:heart:
-
-### 0.8.0 - follow ups / todo
-
-Here's a short list of things that 0.8.0 might also address.
-
-- add jasmine2 support
-- tests for the require js stuff (this is brittle and since we don't use requirejs, intrinsically hard)
-- hooks could be improved to specify method (get/post), and to pass params -- passing to the blocks if they have arity
-
-#### nice to haves
-
-- a more useful rake task library (like rspec https://www.relishapp.com/rspec/rspec-core/docs/command-line/rake-task)
-- rspec interface, so rspec reporters can be used
 
 
 ## Screenshots
@@ -108,6 +88,10 @@ end
 ### Upgrading
 
 We made some changes to how configuration and loading works for version 0.8.0, which might cause some confusion. For this we're sorry, but it'll be better in the long run -- and hey, on the up side, we didn't write a javascript test runner and then abandon it.
+
+While we know that considerable changes like these can be a pain, they're not made frivolously, and they set the groundwork for what we can all build on and contribute to. We appreciate your tolerance and willingness to help us fix anything that we missed.
+
+:heart:
 
 1. backup your `spec/teaspoon_env.rb` file.
 2. run the install generator to get the new `teaspoon_env.rb`.
