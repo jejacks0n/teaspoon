@@ -733,6 +733,14 @@ If you want to generate reports that CI can use you can install Istanbul for cov
 
 We encourage you to experiment and let us know. Feel free to create a wiki article about what you did to get it working on your CI setup.
 
+### Selenium
+
+Some build services also support selenium based setups using Xvfb and Firefox. We've had some success doing this on CircleCI, however others may work just as well. Most of the time it should _just work_. If you are experiencing timeout's try to add a Post-dependency command to precompile your assets.
+
+```
+rake assets:precompile
+```
+
 
 ## Alternative Projects
 
