@@ -40,11 +40,13 @@ module Teaspoon
     end
 
     def self.prepend_routes(app)
-      return if Teaspoon::Engine.routes.recognize_path('/') rescue nil
+      mount_at = Teaspoon.configuration.mount_at
+
+      return if app.routes.recognize_path(mount_at)[:action] != 'routing_error' rescue nil
       require Teaspoon::Engine.root.join("app/controllers/teaspoon/suite_controller")
 
       app.routes.prepend do
-        mount Teaspoon::Engine => Teaspoon.configuration.mount_at, as: "teaspoon"
+        mount Teaspoon::Engine => mount_at, as: "teaspoon"
       end
     end
   end
