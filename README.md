@@ -634,7 +634,7 @@ These configuration directives are applicable only when running via the rake tas
 <dl>
 
 <dt> reports </dt><dd>
-  Which coverage reports Instanbul should generate. Correlates directly to what Istanbul supports.<br/><br/>
+  Which coverage reports Istanbul should generate. Correlates directly to what Istanbul supports.<br/><br/>
 
   <b>available:</b> text-summary, text, html, lcov, lcovonly, cobertura, teamcity<br/>
   <b>default:</b> <code>["text-summary", "html"]</code>
