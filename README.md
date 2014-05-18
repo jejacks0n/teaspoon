@@ -11,7 +11,7 @@ Teaspoon
 <img src="https://raw.github.com/modeset/teaspoon/master/screenshots/logo_big.png" alt="Logo by Morgan Keys" align="right" />
 <sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
 
-Teaspoon is a Javascript test runner built for Rails. It runs tests in the browser or headless using PhantomJS or Selenium WebDriver.
+Teaspoon is a Javascript test runner built for Rails. It runs tests in the browser or headless using PhantomJS, Selenium WebDriver, or SlimerJS.
 
 The goal is to be simple, while still providing the most complete Javascript testing solution for Rails.
 
@@ -68,7 +68,7 @@ Run the install generator to get the environment file and a basic spec helper. Y
 rails generate teaspoon:install --framework=mocha --coffee
 ```
 
-To run Teaspoon headless you'll need Selenium Webdriver or PhantomJS. We recommend PhantomJS, which you can install with homebrew, npm or [as a download](http://phantomjs.org/download.html).
+To run Teaspoon headless you'll need Selenium Webdriver, SlimerJS, or PhantomJS. We recommend PhantomJS, which you can install with homebrew, npm or [as a download](http://phantomjs.org/download.html).
 
 ```
 brew install phantomjs
@@ -502,8 +502,9 @@ These configuration directives are applicable only when running via the rake tas
 
   <a href="https://github.com/modeset/teaspoon/wiki/Using-PhantomJS">Using PhantomJS</a>.<br/>
   <a href="https://github.com/modeset/teaspoon/wiki/Using-Selenium-WebDriver">Using Selenium WebDriver</a><br/><br/>
+  <a href="https://github.com/modeset/teaspoon/wiki/Using-SlimerJS">Using SlimerJS</a><br/><br/>
 
-  <b>available:</b> phantomjs, selenium<br/>
+  <b>available:</b> phantomjs, selenium, slimerjs<br/>
   <b>default:</b> <code>"phantomjs"</code>
 
   <ul>
@@ -517,6 +518,7 @@ These configuration directives are applicable only when running via the rake tas
 
   <a href="https://github.com/modeset/teaspoon/wiki/Using-PhantomJS">Using PhantomJS</a>.<br/>
   <a href="https://github.com/modeset/teaspoon/wiki/Using-Selenium-WebDriver">Using Selenium WebDriver</a><br/><br/>
+  <a href="https://github.com/modeset/teaspoon/wiki/Using-SlimerJS-WebDriver">Using SlimerJS</a><br/><br/>
 
   <b>default:</b> <code>nil</code>
 
