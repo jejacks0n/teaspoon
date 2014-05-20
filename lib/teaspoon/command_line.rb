@@ -43,6 +43,7 @@ module Teaspoon
         "Specify driver:",
         "  phantomjs (default)",
         "  selenium"
+        "  slimerjs"
 
       opt :driver_options, "--driver-options OPTIONS",
         "Specify driver-specific options to pass into the driver.",
