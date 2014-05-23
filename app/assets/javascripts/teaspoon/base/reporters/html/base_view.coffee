@@ -47,3 +47,6 @@ class Teaspoon.Reporters.BaseView
     el = document.createElement("div")
     el.appendChild(document.createTextNode(str))
     el.innerHTML
+
+  inspect: (obj) ->
+    JSON.stringify(obj)

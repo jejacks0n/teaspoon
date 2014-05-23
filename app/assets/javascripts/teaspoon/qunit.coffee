@@ -33,7 +33,12 @@ class Teaspoon.Spec
     return [] unless @spec.failed
     for item in @spec.assertions
       continue if item.result
-      {message: item.message, stack: item.source}
+      {
+        message: item.message || 'No message given.',
+        expected: item.expected,
+        actual: item.actual,
+        stack: item.source
+      }
 
 
   getParents: ->

@@ -160,8 +160,7 @@
   var __slice = [].slice;
 
   Teaspoon.fixture = (function() {
-    var addContent, cleanup, create, load, loadComplete, preload, putContent, set, xhr, xhrRequest,
-      _this = this;
+    var addContent, cleanup, create, load, loadComplete, preload, putContent, set, xhr, xhrRequest;
 
     fixture.cache = {};
 
@@ -340,7 +339,7 @@
 
     return fixture;
 
-  }).call(this);
+  })();
 
 }).call(this);
 (function() {
@@ -449,6 +448,10 @@
       el = document.createElement("div");
       el.appendChild(document.createTextNode(str));
       return el.innerHTML;
+    };
+
+    BaseView.prototype.inspect = function(obj) {
+      return JSON.stringify(obj);
     };
 
     return BaseView;
@@ -716,16 +719,14 @@
 
 }).call(this);
 (function() {
-  var _ref, _ref1, _ref2,
-    __hasProp = {}.hasOwnProperty,
+  var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teaspoon.Reporters.HTML.ProgressView = (function(_super) {
     __extends(ProgressView, _super);
 
     function ProgressView() {
-      _ref = ProgressView.__super__.constructor.apply(this, arguments);
-      return _ref;
+      return ProgressView.__super__.constructor.apply(this, arguments);
     }
 
     ProgressView.create = function(displayProgress) {
@@ -756,8 +757,7 @@
     __extends(SimpleProgressView, _super);
 
     function SimpleProgressView() {
-      _ref1 = SimpleProgressView.__super__.constructor.apply(this, arguments);
-      return _ref1;
+      return SimpleProgressView.__super__.constructor.apply(this, arguments);
     }
 
     SimpleProgressView.prototype.build = function() {
@@ -779,8 +779,7 @@
     __extends(RadialProgressView, _super);
 
     function RadialProgressView() {
-      _ref2 = RadialProgressView.__super__.constructor.apply(this, arguments);
-      return _ref2;
+      return RadialProgressView.__super__.constructor.apply(this, arguments);
     }
 
     RadialProgressView.supported = !!document.createElement("canvas").getContext;
@@ -921,7 +920,16 @@
       _ref = this.spec.errors();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         error = _ref[_i];
-        html += "<div><strong>" + (this.htmlSafe(error.message)) + "</strong><br/>" + (this.htmlSafe(error.stack || "Stack trace unavailable")) + "</div>";
+        html += "<div>";
+        html += "<strong>" + (this.htmlSafe(error.message)) + "</strong><br/>";
+        if (error.hasOwnProperty('expected')) {
+          html += "<strong>Expected:</strong> <code>" + (this.inspect(error.expected)) + "</code><br/>";
+        }
+        if (error.hasOwnProperty('actual')) {
+          html += "<strong>Actual:</strong> <code>" + (this.inspect(error.actual)) + "</code><br/>";
+        }
+        html += "" + (this.htmlSafe(error.stack || "Stack trace unavailable"));
+        html += "</div>";
       }
       return this.el.innerHTML = html;
     };
@@ -1091,6 +1099,8 @@
           skipped: result.skipped,
           link: this.spec.fullDescription,
           message: error.message,
+          expected: error.hasOwnProperty('expected') ? error.expected : void 0,
+          actual: error.hasOwnProperty('actual') ? error.expected : void 0,
           trace: error.stack || error.message || "Stack Trace Unavailable"
         }));
       }
@@ -1161,8 +1171,7 @@
 
 }).call(this);
 (function() {
-  var _ref, _ref1,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -1218,17 +1227,16 @@
     __extends(SpecView, _super);
 
     function SpecView() {
-      _ref = SpecView.__super__.constructor.apply(this, arguments);
-      return _ref;
+      return SpecView.__super__.constructor.apply(this, arguments);
     }
 
     SpecView.prototype.buildErrors = function() {
-      var div, error, html, _i, _len, _ref1;
+      var div, error, html, _i, _len, _ref;
       div = this.createEl("div");
       html = "";
-      _ref1 = this.spec.errors();
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        error = _ref1[_i];
+      _ref = this.spec.errors();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        error = _ref[_i];
         html += "<strong>" + error.message + "</strong><br/>" + (this.htmlSafe(error.stack || "Stack trace unavailable")) + "<br/>";
       }
       div.innerHTML = html;
@@ -1257,18 +1265,26 @@
     __extends(FailureView, _super);
 
     function FailureView() {
-      _ref1 = FailureView.__super__.constructor.apply(this, arguments);
-      return _ref1;
+      return FailureView.__super__.constructor.apply(this, arguments);
     }
 
     FailureView.prototype.build = function() {
-      var error, html, _i, _len, _ref2;
+      var error, html, _i, _len, _ref;
       FailureView.__super__.build.call(this, "spec");
       html = "<h1 class=\"teaspoon-clearfix\"><a href=\"" + this.spec.link + "\">" + (this.htmlSafe(this.spec.fullDescription)) + "</a></h1>";
-      _ref2 = this.spec.errors();
-      for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
-        error = _ref2[_i];
-        html += "<div><strong>" + error.message + "</strong><br/>" + (this.htmlSafe(error.stack || "Stack trace unavailable")) + "</div>";
+      _ref = this.spec.errors();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        error = _ref[_i];
+        html += "<div>";
+        html += "<strong>" + error.message + "</strong><br/>";
+        if (error.hasOwnProperty('expected')) {
+          html += "<strong>Expected:</strong> <code>" + (this.inspect(error.expected)) + "</code><br/>";
+        }
+        if (error.hasOwnProperty('actual')) {
+          html += "<strong>Actual:</strong> <code>" + (this.inspect(error.actual)) + "</code><br/>";
+        }
+        html += "" + (this.htmlSafe(error.stack || "Stack trace unavailable"));
+        html += "</div>";
       }
       return this.el.innerHTML = html;
     };
@@ -1345,7 +1361,9 @@
           continue;
         }
         _results.push({
-          message: item.message,
+          message: item.message || 'No message given.',
+          expected: item.expected,
+          actual: item.actual,
           stack: item.source
         });
       }

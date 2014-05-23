@@ -53,14 +53,16 @@ class Teaspoon.Reporters.Console
     result = @spec.result()
     for error in @spec.errors()
       @log
-        type:    "spec"
-        suite:   @spec.suiteName
-        label:   @spec.description
-        status:  result.status
-        skipped: result.skipped
-        link:    @spec.fullDescription
-        message: error.message
-        trace:   error.stack || error.message || "Stack Trace Unavailable"
+        type:     "spec"
+        suite:    @spec.suiteName
+        label:    @spec.description
+        status:   result.status
+        skipped:  result.skipped
+        link:     @spec.fullDescription
+        message:  error.message
+        expected: error.expected if error.hasOwnProperty('expected')
+        actual:   error.expected if error.hasOwnProperty('actual')
+        trace:    error.stack || error.message || "Stack Trace Unavailable"
 
 
   reportRunnerResults: =>
