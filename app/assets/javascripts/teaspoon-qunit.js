@@ -1349,7 +1349,7 @@
     }
 
     Spec.prototype.errors = function() {
-      var item, _i, _len, _ref, _results;
+      var error, item, _i, _len, _ref, _results;
       if (!this.spec.failed) {
         return [];
       }
@@ -1360,12 +1360,17 @@
         if (item.result) {
           continue;
         }
-        _results.push({
+        error = {
           message: item.message || 'No message given.',
-          expected: item.expected,
-          actual: item.actual,
           stack: item.source
-        });
+        };
+        if (item.hasOwnProperty('expected')) {
+          error.expected = item.expected;
+        }
+        if (item.hasOwnProperty('actual')) {
+          error.actual = item.actual;
+        }
+        _results.push(error);
       }
       return _results;
     };
