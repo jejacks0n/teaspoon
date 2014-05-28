@@ -45,7 +45,10 @@ class Teaspoon.Reporters.HTML.SpecView extends Teaspoon.Reporters.HTML.SpecView
     div = @createEl("div")
     html = ""
     for error in @spec.errors()
-      html += """<strong>#{error.message}</strong><br/>#{@htmlSafe(error.stack || "Stack trace unavailable")}<br/>"""
+      html += """<strong>#{error.message}</strong><br/>"""
+      html += """<strong>Expected:</strong> <code>#{@inspect(error.expected)}</code><br/>""" if error.hasOwnProperty('expected')
+      html += """<strong>Actual:</strong> <code>#{@inspect(error.actual)}</code><br/>""" if error.hasOwnProperty('actual')
+      html += """#{@htmlSafe(error.stack || "Stack trace unavailable")}<br/>"""
     div.innerHTML = html
     @append(div)
 

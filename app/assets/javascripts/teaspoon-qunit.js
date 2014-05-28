@@ -1237,7 +1237,14 @@
       _ref = this.spec.errors();
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         error = _ref[_i];
-        html += "<strong>" + error.message + "</strong><br/>" + (this.htmlSafe(error.stack || "Stack trace unavailable")) + "<br/>";
+        html += "<strong>" + error.message + "</strong><br/>";
+        if (error.hasOwnProperty('expected')) {
+          html += "<strong>Expected:</strong> <code>" + (this.inspect(error.expected)) + "</code><br/>";
+        }
+        if (error.hasOwnProperty('actual')) {
+          html += "<strong>Actual:</strong> <code>" + (this.inspect(error.actual)) + "</code><br/>";
+        }
+        html += "" + (this.htmlSafe(error.stack || "Stack trace unavailable")) + "<br/>";
       }
       div.innerHTML = html;
       return this.append(div);
