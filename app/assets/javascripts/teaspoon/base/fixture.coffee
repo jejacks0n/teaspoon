@@ -72,7 +72,6 @@ class Teaspoon.fixture
     Teaspoon.fixture.el.innerHTML += content
 
 
-
   create = =>
     Teaspoon.fixture.el = document.createElement("div")
     Teaspoon.fixture.$el = $(Teaspoon.fixture.el) if typeof(window.$) == 'function'
