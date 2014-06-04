@@ -11,20 +11,15 @@ Teaspoon
 <img src="https://raw.github.com/modeset/teaspoon/master/screenshots/logo_big.png" alt="Logo by Morgan Keys" align="right" />
 <sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
 
-Teaspoon is a Javascript test runner built for Rails. It runs tests in the browser or headless using PhantomJS or Selenium WebDriver.
+Teaspoon is a Javascript test runner built for Rails. It can run tests in the browser and headless using PhantomJS or Selenium WebDriver.
 
-The goal is to be simple, while still providing the most complete Javascript testing solution for Rails.
+The project goal is to stay simple while also providing the most complete Javascript testing solution for Rails.
 
-Teaspoon takes advantage of the asset pipeline. And ships with support for Jasmine, Mocha, and QUnit. *Note that Jasmine 2.0 is not supported at this time.*
-
-Ok, another Javascript test runner, right? Yeah, that's tough, but we're pretty confident Teaspoon is one of the nicest and most full featured you'll find at the moment. And if you disagree, let us know and we'll likely fix whatever it is that you didn't like.
+Teaspoon takes advantage of the asset pipeline, and ships with support for Jasmine, Mocha, and QUnit.
 
 Feedback, ideas and pull requests are always welcome, or you can hit us up on Twitter @modeset_.
 
-If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), check out the [guard-teaspoon](https://github.com/modeset/guard-teaspoon) project.
-
-Or, if you'd want to use [Spring](https://github.com/rails/spring) preloader, use with  [spring-commands-teaspoon](https://github.com/alejandrobabio/spring-commands-teaspoon).
-
+If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), check out the [guard-teaspoon](https://github.com/modeset/guard-teaspoon) project. Or, if you want to use the [Spring](https://github.com/rails/spring) preloader, use the unofficial [spring-commands-teaspoon](https://github.com/alejandrobabio/spring-commands-teaspoon).
 
 ## Screenshots
 
@@ -62,34 +57,17 @@ group :development, :test do
 end
 ```
 
-Run the install generator to get the environment file and a basic spec helper. You can tell the generator which framework you want to use, if you want a coffeescript spec helper, etc. Run the install generator with the `--help` flag for a list of available options.
+Run the install generator to get the environment file and a basic spec helper. You can tell the generator which framework you want to use, or if you want a CoffeeScript spec helper. Run the install generator with the `--help` flag for a list of available options.
 
 ```
 rails generate teaspoon:install --framework=mocha --coffee
 ```
 
-To run Teaspoon headless you'll need Selenium Webdriver or PhantomJS. We recommend PhantomJS, which you can install with homebrew, npm or [as a download](http://phantomjs.org/download.html).
-
-```
-brew install phantomjs
-- OR -
-npm install -g phantomjs
-```
-
-The PhantomJS binary will be used by default if it's available in your path, otherwise you can use the gem as a fallback.
-
-```ruby
-group :development, :test do
-  gem "teaspoon"
-  gem "phantomjs", ">= 1.8.1.1" # this is optional if the phantomjs binary is installed (as of teaspoon 0.7.9)
-end
-```
+To run Teaspoon headless you'll need PhantomJS or Selenium Webdriver. We recommend PhantomJS, which you can install with homebrew, npm or [as a download](http://phantomjs.org/download.html).
 
 ### Upgrading
 
-We made some changes to how configuration and loading works for version 0.8.0, which might cause some confusion. For this we're sorry, but it'll be better in the long run -- and hey, on the up side, we didn't write a javascript test runner and then abandon it.
-
-While we know that considerable changes like these can be a pain, they're not made frivolously, and they set the groundwork for what we can all build on and contribute to. We appreciate your tolerance and willingness to help us fix anything that we missed.
+We made some changes to how configuration and loading works for version 0.8.0, which might cause some confusion. For this we're sorry, but it'll be better in the long run. While we know that considerable changes like these can be a pain, they're not made frivolously, and they set the groundwork for what we can all build on and contribute to. We appreciate your tolerance and willingness to help us fix anything that we missed.
 
 :heart:
 
@@ -688,8 +666,6 @@ These configuration directives are applicable only when running via the rake tas
 [Mocha](http://visionmedia.github.com/mocha) came up while we were working on Teaspoon -- we read up about it and thought it was a pretty awesome library with some really great approaches to some of the things that some of us browser types should consider more often, so we included it and added support for it. We encourage you to give it a try. Read more about [Using Mocha](https://github.com/modeset/teaspoon/wiki/Using-Mocha) with Teaspoon.
 
 [QUnit](http://qunitjs.com) We're not sure about how many people use QUnit, but we like jQuery, so we added it. Read more about [Using QUnit](https://github.com/modeset/teaspoon/wiki/Using-QUnit) with Teaspoon.
-
-[Angular](http://angularjs.org/) This is an experimental addition, and feedback is needed. Read more about [Using Angular](https://github.com/modeset/teaspoon/wiki/Using-Angular) with Teaspoon.
 
 
 ## Support Libraries

@@ -65,7 +65,6 @@ module Teaspoon
         jasmine: ["1.3.1", "2.0.0"],
         mocha: ["1.10.0", "1.17.1"],
         qunit: ["1.12.0", "1.14.0"],
-        angular: ["1.0.5"],
       }
 
       attr_accessor   :matcher, :helper, :javascripts, :stylesheets,
