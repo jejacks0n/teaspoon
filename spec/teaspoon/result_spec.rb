@@ -43,7 +43,7 @@ describe Teaspoon::Result do
         expect(subject.label).to eq('_spec_name_')
         expect(subject.description).to eq('_suite_name_ _spec_name_')
         expect(subject.status).to eq('failed')
-        expect(subject.skipped).to be_false
+        expect(subject.skipped).to be_falsey
         expect(subject.link).to eq('?grep=_spec_description_')
         expect(subject.message).to eq('_message_')
         expect(subject.trace).to eq('_trace_')
@@ -58,13 +58,13 @@ describe Teaspoon::Result do
 
     it "returns a boolean based on status" do
       subject.status = "foo"
-      expect(subject.failing?).to be_true
+      expect(subject.failing?).to be_truthy
       subject.status = "bar"
-      expect(subject.failing?).to be_true
+      expect(subject.failing?).to be_truthy
       subject.status = "passed"
-      expect(subject.failing?).to be_false
+      expect(subject.failing?).to be_falsey
       subject.status = "pending"
-      expect(subject.failing?).to be_false
+      expect(subject.failing?).to be_falsey
     end
 
   end
@@ -73,9 +73,9 @@ describe Teaspoon::Result do
 
     it "returns a boolean based on status" do
       subject.status = "passed"
-      expect(subject.passing?).to be_true
+      expect(subject.passing?).to be_truthy
       subject.status = "foo"
-      expect(subject.passing?).to be_false
+      expect(subject.passing?).to be_falsey
     end
 
   end
@@ -84,9 +84,9 @@ describe Teaspoon::Result do
 
     it "returns a boolean based on status" do
       subject.status = "pending"
-      expect(subject.pending?).to be_true
+      expect(subject.pending?).to be_truthy
       subject.status = "foo"
-      expect(subject.pending?).to be_false
+      expect(subject.pending?).to be_falsey
     end
 
   end

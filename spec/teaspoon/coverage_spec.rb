@@ -76,7 +76,7 @@ describe Teaspoon::Coverage do
       `(exit 0)`
       subject.should_receive(:`).and_return("ERROR: _failure1_")
       subject.check_thresholds { |r| @called = true }
-      expect(@called).to be_false
+      expect(@called).to be_falsey
     end
 
   end

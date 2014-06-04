@@ -28,7 +28,7 @@ feature "testing hooks in the browser" do
 
     scenario "gives me the expected results" do
       post("/teaspoon/suite1/before")
-      expect(File.exists?(temp_file)).to be_true
+      expect(File.exists?(temp_file)).to be_truthy
     end
 
   end
@@ -39,7 +39,7 @@ feature "testing hooks in the browser" do
 
     scenario "gives me the expected results" do
       post("/teaspoon/suite2/after")
-      expect(File.exists?(temp_file)).to be_true
+      expect(File.exists?(temp_file)).to be_truthy
     end
 
   end

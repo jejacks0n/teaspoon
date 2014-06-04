@@ -35,7 +35,7 @@ describe Teaspoon::Suite do
       result = Teaspoon::Suite.resolve_spec_for("base")
       expect(result[:suite]).to eq("default")
       dirs = ["base/fixture_spec.", "base/runner_spec.", "base/teaspoon_spec"]
-      expect(dirs.all? { |path| result[:path].grep(/#{path}/)[0] }).to be_true
+      expect(dirs.all? { |path| result[:path].grep(/#{path}/)[0] }).to be_truthy
     end
 
   end
@@ -112,7 +112,7 @@ describe Teaspoon::Suite do
     end
 
     it "returns a list of specs when the file name looks like it could be a match" do
-      expect( subject.include_spec_for?('fixture_spec').any? { |file| file.include?('fixture_spec.coffee') }).to be_true
+      expect( subject.include_spec_for?('fixture_spec').any? { |file| file.include?('fixture_spec.coffee') }).to be_truthy
     end
 
     it "returns false if a matching spec isn't found" do

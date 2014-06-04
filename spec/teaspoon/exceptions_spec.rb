@@ -22,12 +22,12 @@ describe Teaspoon::ExceptionHandling do
 
     it "sets config.assets.debug to false" do
       subject.add_rails_handling
-      expect(Rails.application.config.assets.debug).to be_false
+      expect(Rails.application.config.assets.debug).to be_falsey
     end
 
     it "sets config.action_dispatch.show_exceptions to true" do
       subject.add_rails_handling
-      expect(Rails.application.config.action_dispatch.show_exceptions).to be_true
+      expect(Rails.application.config.action_dispatch.show_exceptions).to be_truthy
     end
 
     it "calls #render_exceptions_with_javascript" do

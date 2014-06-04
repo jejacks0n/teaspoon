@@ -53,10 +53,10 @@ describe Teaspoon::Console do
 
     it "calls #execute and returns the inverse of #executes return value" do
       subject.should_receive(:execute).and_return(false)
-      expect(subject.failures?).to be_true
+      expect(subject.failures?).to be_truthy
 
       subject.should_receive(:execute).and_return(true)
-      expect(subject.failures?).to be_false
+      expect(subject.failures?).to be_falsey
     end
 
   end
@@ -65,7 +65,7 @@ describe Teaspoon::Console do
 
     it "calls #execute_without_handling and returns its value" do
       subject.should_receive(:execute_without_handling).with(foo: "bar").and_return(true)
-      expect(subject.execute(foo: "bar")).to be_true
+      expect(subject.execute(foo: "bar")).to be_truthy
     end
 
     it "handles Teaspoon::Error exceptions" do
@@ -76,7 +76,7 @@ describe Teaspoon::Console do
 
     it "returns false on Teaspoon::Failure" do
       subject.should_receive(:execute_without_handling).and_raise(Teaspoon::Failure)
-      expect(subject.execute).to be_false
+      expect(subject.execute).to be_falsey
     end
 
   end
@@ -119,19 +119,19 @@ describe Teaspoon::Console do
     it "runs the tests" do
       subject.should_receive(:suites).and_return([:default, :foo])
       subject.should_receive(:run_specs).twice.and_return(2)
-      expect(subject.execute_without_handling).to be_false
+      expect(subject.execute_without_handling).to be_falsey
     end
 
     it "returns true if no failure count" do
       subject.should_receive(:suites).and_return([:default, :foo])
       subject.should_receive(:run_specs).twice.and_return(0)
-      expect(subject.execute_without_handling).to be_true
+      expect(subject.execute_without_handling).to be_truthy
     end
 
     it "returns true if there were failures" do
       subject.should_receive(:suites).and_return([:default])
       subject.should_receive(:run_specs).once.and_return(1)
-      expect(subject.execute_without_handling).to be_false
+      expect(subject.execute_without_handling).to be_falsey
     end
 
     it "calls export if the options include :export" do

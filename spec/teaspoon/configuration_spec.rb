@@ -19,7 +19,7 @@ describe Teaspoon do
     it "sets configured to true" do
       subject.configured = false
       subject.configure { }
-      expect(subject.configured).to be_true
+      expect(subject.configured).to be_truthy
     end
 
     it "overrides configuration from ENV" do
@@ -75,9 +75,9 @@ describe Teaspoon::Configuration do
     expect(subject.server_timeout).to eq(20)
     expect(subject.formatters).to eq(['dot'])
     expect(subject.use_coverage).to be_nil
-    expect(subject.fail_fast).to be_true
-    expect(subject.suppress_log).to be_false
-    expect(subject.color).to be_true
+    expect(subject.fail_fast).to be_truthy
+    expect(subject.suppress_log).to be_falsey
+    expect(subject.color).to be_truthy
 
     expect(subject.suite_configs).to be_a(Hash)
     expect(subject.coverage_configs).to be_a(Hash)
