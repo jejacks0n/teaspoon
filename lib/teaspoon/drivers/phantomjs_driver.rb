@@ -32,7 +32,7 @@ module Teaspoon
       end
 
       def driver_options(url)
-        [@options, script, url.shellescape, Teaspoon.configuration.driver_timeout].flatten.compact
+        [@options, script, url, Teaspoon.configuration.driver_timeout].flatten.compact
       end
 
       def executable
