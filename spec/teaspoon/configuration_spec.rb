@@ -31,7 +31,7 @@ describe Teaspoon do
 
   describe ".setup" do
 
-    it "calls configure" do
+    pending "calls configure" do
       subject.should_receive(:configure).with(&block = proc{})
       subject.setup(&block)
     end

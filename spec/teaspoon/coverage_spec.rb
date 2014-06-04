@@ -24,7 +24,7 @@ describe Teaspoon::Coverage do
       expect(subject.instance_variable_get(:@executable)).to eq("/path/to/executable")
     end
 
-    it "gets the coverage configuration" do
+    pending "gets the coverage configuration" do
       Teaspoon::Coverage.any_instance.should_receive(:coverage_configuration).with("default")
       subject = Teaspoon::Coverage.new("_suite_", :default, data)
     end
