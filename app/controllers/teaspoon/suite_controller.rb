@@ -1,6 +1,4 @@
 class Teaspoon::SuiteController < ActionController::Base
-  helper Teaspoon::SuiteHelper rescue nil
-
   before_filter :prepend_fixture_paths
 
   layout false
