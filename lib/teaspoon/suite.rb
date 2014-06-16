@@ -28,6 +28,10 @@ module Teaspoon
       glob.map { |file| {path: file, name: asset_from_file(file)} }
     end
 
+    def require_js_asset_tree(sources)
+      asset_tree(sources)
+    end
+
     def spec_assets(include_helper = true)
       assets = specs
       assets.unshift(helper) if include_helper && helper
