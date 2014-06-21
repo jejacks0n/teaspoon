@@ -8,7 +8,7 @@ describe Teaspoon::Formatters::JunitFormatter do
 
   before do
     @log = ""
-    STDOUT.stub(:print) { |s| @log << s }
+    allow(STDOUT).to receive(:print) { |s| @log << s }
   end
 
   describe "#runner" do
@@ -31,7 +31,7 @@ describe Teaspoon::Formatters::JunitFormatter do
     let(:result) { double(label: "_label_") }
 
     it "calls #log_end_suite" do
-      subject.should_receive(:log_end_suite)
+      expect(subject).to receive(:log_end_suite)
       subject.suite(result)
     end
 
@@ -74,7 +74,7 @@ describe Teaspoon::Formatters::JunitFormatter do
     let(:result) { double(coverage: nil) }
 
     it "closes the last suite" do
-      subject.should_receive(:log_end_suite)
+      expect(subject).to receive(:log_end_suite)
       subject.result(result)
     end
 

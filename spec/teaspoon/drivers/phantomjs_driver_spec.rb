@@ -32,15 +32,15 @@ describe Teaspoon::Drivers::PhantomjsDriver do
       let(:runner) { double }
 
       before do
-        subject.stub(:run)
+        allow(subject).to receive(:run)
       end
 
       it "calls #run and calls runner.process with each line of output" do
         subject.instance_variable_set(:@options, ["--foo", "--bar"])
         args = ["--foo", "--bar", Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.js").to_s, "_url_", 180]
-        runner.should_receive(:process).with("_line_")
+        expect(runner).to receive(:process).with("_line_")
         @block = nil
-        subject.should_receive(:run).with(*args) { |&b| @block = b }
+        expect(subject).to receive(:run).with(*args) { |&b| @block = b }
         subject.run_specs(runner, "_url_")
         @block.call("_line_")
       end
@@ -50,7 +50,7 @@ describe Teaspoon::Drivers::PhantomjsDriver do
     context "without phantomjs" do
 
       it "raises a MissingDependency exception" do
-        subject.should_receive(:which).and_return(nil)
+        expect(subject).to receive(:which).and_return(nil)
         expect { subject.run_specs(:default, "_url_") }.to raise_error Teaspoon::MissingDependency
       end
 

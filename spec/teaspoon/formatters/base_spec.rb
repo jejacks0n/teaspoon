@@ -9,7 +9,7 @@ describe Teaspoon::Formatters::Base do
 
   before do
     @log = ""
-    STDOUT.stub(:print) { |s| @log << s }
+    allow(STDOUT).to receive(:print) { |s| @log << s }
   end
 
   describe "#initialize" do
@@ -17,7 +17,7 @@ describe Teaspoon::Formatters::Base do
     subject { Teaspoon::Formatters::Base.new(:foo, "_output_file_") }
 
     before do
-      File.stub(:open)
+      allow(File).to receive(:open)
     end
 
     it "assigns various instance vars" do
@@ -38,7 +38,7 @@ describe Teaspoon::Formatters::Base do
     end
 
     it "writes a new output file if one is specified" do
-      File.should_receive(:open).with("_output_file_", "w")
+      expect(File).to receive(:open).with("_output_file_", "w")
       subject
     end
 
@@ -54,10 +54,10 @@ describe Teaspoon::Formatters::Base do
     end
 
     it "calls #log_runner when appropriate" do
-      subject.should_receive(:log_runner).with(result)
+      expect(subject).to receive(:log_runner).with(result)
       subject.runner(result)
 
-      subject.should_not_receive(:log_runner)
+      expect(subject).to_not receive(:log_runner)
       subject.runner(result, false)
     end
 
@@ -72,10 +72,10 @@ describe Teaspoon::Formatters::Base do
     end
 
     it "calls #log_suite when appropriate" do
-      subject.should_receive(:log_suite).with(result)
+      expect(subject).to receive(:log_suite).with(result)
       subject.suite(result)
 
-      subject.should_not_receive(:log_suite)
+      expect(subject).to_not receive(:log_suite)
       subject.suite(result, false)
     end
 
@@ -109,10 +109,10 @@ describe Teaspoon::Formatters::Base do
     end
 
     it "calls #log_spec when appropriate" do
-      subject.should_receive(:log_spec).with(failing_spec)
+      expect(subject).to receive(:log_spec).with(failing_spec)
       subject.spec(failing_spec)
 
-      subject.should_not_receive(:log_spec)
+      expect(subject).to_not receive(:log_spec)
       subject.spec(failing_spec, false)
     end
 
@@ -132,10 +132,10 @@ describe Teaspoon::Formatters::Base do
     end
 
     it "calls #log_error when appropriate" do
-      subject.should_receive(:log_error).with(result)
+      expect(subject).to receive(:log_error).with(result)
       subject.error(result)
 
-      subject.should_not_receive(:log_error)
+      expect(subject).to_not receive(:log_error)
       subject.error(result, false)
     end
 
@@ -144,10 +144,10 @@ describe Teaspoon::Formatters::Base do
   describe "#exception" do
 
     it "calls #log_exception when appropriate" do
-      subject.should_receive(:log_exception).with(result)
+      expect(subject).to receive(:log_exception).with(result)
       subject.exception(result)
 
-      subject.should_not_receive(:log_exception)
+      expect(subject).to_not receive(:log_exception)
       subject.exception(result, false)
     end
 
@@ -162,10 +162,10 @@ describe Teaspoon::Formatters::Base do
     end
 
     it "calls #log_console when appropriate" do
-      subject.should_receive(:log_console).with("_message_")
+      expect(subject).to receive(:log_console).with("_message_")
       subject.console("_message_")
 
-      subject.should_not_receive(:log_console)
+      expect(subject).to_not receive(:log_console)
       subject.console("_message_", false)
     end
 
@@ -176,10 +176,10 @@ describe Teaspoon::Formatters::Base do
     let(:result) { double(coverage: nil) }
 
     it "calls #log_result when appropriate" do
-      subject.should_receive(:log_result).with(result)
+      expect(subject).to receive(:log_result).with(result)
       subject.result(result)
 
-      subject.should_not_receive(:log_result)
+      expect(subject).to_not receive(:log_result)
       subject.result(result, false)
     end
 
@@ -188,10 +188,10 @@ describe Teaspoon::Formatters::Base do
   describe "#coverage" do
 
     it "calls #log_coverage when appropriate" do
-      subject.should_receive(:log_coverage).with("_message_")
+      expect(subject).to receive(:log_coverage).with("_message_")
       subject.coverage("_message_")
 
-      subject.should_receive(:log_coverage).with("_message_")
+      expect(subject).to receive(:log_coverage).with("_message_")
       subject.coverage("_message_")
     end
 
@@ -200,10 +200,10 @@ describe Teaspoon::Formatters::Base do
   describe "#threshold_failure" do
 
     it "calls #log_threshold_failure when appropriate" do
-      subject.should_receive(:log_threshold_failure).with("_message_")
+      expect(subject).to receive(:log_threshold_failure).with("_message_")
       subject.threshold_failure("_message_")
 
-      subject.should_receive(:log_threshold_failure).with("_message_")
+      expect(subject).to receive(:log_threshold_failure).with("_message_")
       subject.threshold_failure("_message_")
     end
 
@@ -212,10 +212,10 @@ describe Teaspoon::Formatters::Base do
   describe "#complete" do
 
     it "calls #log_complete when appropriate" do
-      subject.should_receive(:log_complete).with(42)
+      expect(subject).to receive(:log_complete).with(42)
       subject.complete(42)
 
-      subject.should_receive(:log_complete).with(0)
+      expect(subject).to receive(:log_complete).with(0)
       subject.complete(0)
     end
 
@@ -224,17 +224,17 @@ describe Teaspoon::Formatters::Base do
   describe "#log_spec" do
 
     it "calls #log_passing_spec on passing results" do
-      subject.should_receive(:log_passing_spec).with(passing_spec)
+      expect(subject).to receive(:log_passing_spec).with(passing_spec)
       subject.send(:log_spec, passing_spec)
     end
 
     it "calls #log_pending_spec on pending results" do
-      subject.should_receive(:log_pending_spec).with(pending_spec)
+      expect(subject).to receive(:log_pending_spec).with(pending_spec)
       subject.send(:log_spec, pending_spec)
     end
 
     it "calls #log_failing_spec on failing results" do
-      subject.should_receive(:log_failing_spec).with(failing_spec)
+      expect(subject).to receive(:log_failing_spec).with(failing_spec)
       subject.send(:log_spec, failing_spec)
     end
 
@@ -244,13 +244,13 @@ describe Teaspoon::Formatters::Base do
 
     it "logs to a file" do
       handle = double(write: nil)
-      File.should_receive(:open).with("_output_file_", "a").and_yield(handle)
-      handle.should_receive(:write).with("_str_")
+      expect(File).to receive(:open).with("_output_file_", "a").and_yield(handle)
+      expect(handle).to receive(:write).with("_str_")
       subject.send(:log_to_file, "_str_", "_output_file_")
     end
 
     it "raises a Teaspoon::FileNotWritable exception if the file can't be written to" do
-      File.should_receive(:open).and_raise(IOError, "_io_error_message_")
+      expect(File).to receive(:open).and_raise(IOError, "_io_error_message_")
       expect { subject.send(:log_to_file, "_str_", "_output_file_") }.to raise_error(Teaspoon::FileNotWritable, "_io_error_message_")
     end
 

@@ -6,7 +6,6 @@ require "coveralls"
 Coveralls.wear!
 
 require "rspec/rails"
-require "rspec/autorun"
 require "capybara/rails"
 require "aruba/api"
 
@@ -19,4 +18,8 @@ RSpec.configure do |config|
   config.order = "random"
 
   config.run_all_when_everything_filtered = true
+
+  config.mock_with :rspec do |c|
+    c.syntax = :expect
+  end
 end

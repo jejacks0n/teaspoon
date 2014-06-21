@@ -5,7 +5,7 @@ feature "testing with teaspoon in the browser", js: true do
   let(:spec_helper) { nil }
 
   before do
-    Teaspoon.configuration.stub(:suite_configs).and_return "integration" => {block: proc{ |suite|
+    allow(Teaspoon.configuration).to receive(:suite_configs).and_return "integration" => {block: proc{ |suite|
       suite.matcher = "spec/dummy/app/assets/javascripts/integration/*_spec.{js,js.coffee,coffee}"
       suite.helper = spec_helper
     }}

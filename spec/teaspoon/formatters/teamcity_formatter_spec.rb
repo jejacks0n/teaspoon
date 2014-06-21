@@ -10,7 +10,7 @@ describe Teaspoon::Formatters::TeamcityFormatter do
 
   before do
     @log = ""
-    STDOUT.stub(:print) { |s| @log << s }
+    allow(STDOUT).to receive(:print) { |s| @log << s }
   end
 
   describe "#runner" do
@@ -18,7 +18,7 @@ describe Teaspoon::Formatters::TeamcityFormatter do
     let(:result) { double(total: 42, start: "_start_") }
 
     it "starts the suite" do
-      Time.should_receive(:now).and_return(double(to_json: "_json_time_"))
+      expect(Time).to receive(:now).and_return(double(to_json: "_json_time_"))
       subject.runner(result)
       expect(@log).to include("##teamcity[enteredTheMatrix timestamp='_json_time_']\n")
       expect(@log).to include("##teamcity[testCount count='42' timestamp='_start_']\n")

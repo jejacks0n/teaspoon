@@ -30,35 +30,35 @@ describe Teaspoon::Drivers::SeleniumDriver do
 
     before do
       @driver = double(quit: nil, navigate: @navigate = double(to: nil), execute_script: nil)
-      Selenium::WebDriver.stub(:for).and_return(@driver)
-      Selenium::WebDriver::Wait.stub(:new).and_return(@wait = double(until: nil))
+      allow(Selenium::WebDriver).to receive(:for).and_return(@driver)
+      allow(Selenium::WebDriver::Wait).to receive(:new).and_return(@wait = double(until: nil))
     end
 
     it "loads firefox for the webdriver" do
-      Selenium::WebDriver.should_receive(:for).with(:firefox)
+      expect(Selenium::WebDriver).to receive(:for).with(:firefox)
       subject.run_specs(runner, "_url_")
     end
 
     it "navigates to the correct url" do
-      @navigate.should_receive(:to).with("_url_")
+      expect(@navigate).to receive(:to).with("_url_")
       subject.run_specs(runner, "_url_")
     end
 
     it "ensures quit is called on the driver" do
-      @driver.should_receive(:quit)
+      expect(@driver).to receive(:quit)
       subject.run_specs(runner, "_url_")
     end
 
     it "waits for the specs to complete, setting the interval, timeout and message" do
-      Selenium::WebDriver::Wait.should_receive(:new).with(HashWithIndifferentAccess.new(client_driver: :firefox, timeout: 180, interval: 0.01, message: "Timed out"))
+      expect(Selenium::WebDriver::Wait).to receive(:new).with(HashWithIndifferentAccess.new(client_driver: :firefox, timeout: 180, interval: 0.01, message: "Timed out"))
       subject.run_specs(runner, "_url_")
     end
 
     it "waits until it's done (checking Teaspoon.finished) and processes each line" do
-      @wait.should_receive(:until) { |&b| @block = b }
-      @driver.should_receive(:execute_script).with("return window.Teaspoon && window.Teaspoon.finished").and_return(true)
-      @driver.should_receive(:execute_script).with("return window.Teaspoon && window.Teaspoon.getMessages() || []").and_return(["_line_"])
-      runner.should_receive(:process).with("_line_\n")
+      expect(@wait).to receive(:until) { |&b| @block = b }
+      expect(@driver).to receive(:execute_script).with("return window.Teaspoon && window.Teaspoon.finished").and_return(true)
+      expect(@driver).to receive(:execute_script).with("return window.Teaspoon && window.Teaspoon.getMessages() || []").and_return(["_line_"])
+      expect(runner).to receive(:process).with("_line_\n")
       subject.run_specs(runner, "_url_")
       @block.call
     end

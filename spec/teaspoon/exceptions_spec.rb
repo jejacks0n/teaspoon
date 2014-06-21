@@ -17,7 +17,7 @@ describe Teaspoon::ExceptionHandling do
   describe ".add_rails_handling" do
 
     before do
-      subject.stub(:render_exceptions_with_javascript)
+      allow(subject).to receive(:render_exceptions_with_javascript)
     end
 
     it "sets config.assets.debug to false" do
@@ -31,7 +31,7 @@ describe Teaspoon::ExceptionHandling do
     end
 
     it "calls #render_exceptions_with_javascript" do
-      subject.should_receive(:render_exceptions_with_javascript)
+      expect(subject).to receive(:render_exceptions_with_javascript)
       subject.add_rails_handling
     end
 

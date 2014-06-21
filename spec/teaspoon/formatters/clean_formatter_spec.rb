@@ -8,7 +8,7 @@ describe Teaspoon::Formatters::CleanFormatter do
 
   before do
     @log = ""
-    STDOUT.stub(:print) { |s| @log << s }
+    allow(STDOUT).to receive(:print) { |s| @log << s }
   end
 
   describe "#result" do

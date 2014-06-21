@@ -23,7 +23,7 @@ describe Teaspoon do
     end
 
     it "overrides configuration from ENV" do
-      subject.configuration.should_receive(:override_from_env).with(ENV)
+      expect(subject.configuration).to receive(:override_from_env).with(ENV)
       subject.configure { }
     end
 
@@ -31,8 +31,9 @@ describe Teaspoon do
 
   describe ".setup" do
 
-    pending "calls configure" do
-      subject.should_receive(:configure).with(&block = proc{})
+    it "calls configure" do
+      block = proc{}
+      expect(subject).to receive(:configure).with(no_args) { |&arg| expect(arg).to eq(block) }
       subject.setup(&block)
     end
 
@@ -127,9 +128,9 @@ describe Teaspoon::Configuration do
   describe ".override_from_options" do
 
     it "allows overriding from options" do
-      subject.should_receive(:fail_fast=).with(true)
-      subject.should_receive(:driver_timeout=).with(123)
-      subject.should_receive(:driver=).with("driver")
+      expect(subject).to receive(:fail_fast=).with(true)
+      expect(subject).to receive(:driver_timeout=).with(123)
+      expect(subject).to receive(:driver=).with("driver")
 
       subject.send(:override_from_options, fail_fast: true, driver_timeout: 123, driver: "driver")
     end
@@ -139,9 +140,9 @@ describe Teaspoon::Configuration do
   describe ".override_from_env" do
 
     it "allows overriding from the env" do
-      subject.should_receive(:fail_fast=).with(true)
-      subject.should_receive(:driver_timeout=).with(123)
-      subject.should_receive(:driver=).with("driver")
+      expect(subject).to receive(:fail_fast=).with(true)
+      expect(subject).to receive(:driver_timeout=).with(123)
+      expect(subject).to receive(:driver=).with("driver")
 
       subject.send(:override_from_env, "FAIL_FAST" => "true", "DRIVER_TIMEOUT" => "123", "DRIVER" => "driver")
     end

@@ -22,9 +22,9 @@ describe Teaspoon::CommandLine do
   describe "#initialize" do
 
     before do
-      Teaspoon::Console.stub(:new).and_return(console)
-      subject.any_instance.stub(:abort)
-      subject.any_instance.stub(:opt_parser).and_return(parser)
+      allow(Teaspoon::Console).to receive(:new).and_return(console)
+      allow_any_instance_of(subject).to receive(:abort)
+      allow_any_instance_of(subject).to receive(:opt_parser).and_return(parser)
     end
 
     it "assigns @options and adds the files that were parsed out" do
@@ -32,27 +32,27 @@ describe Teaspoon::CommandLine do
     end
 
     it "aborts with a message on Teaspoon::EnvironmentNotFound" do
-      Teaspoon::Console.should_receive(:new).and_raise(Teaspoon::EnvironmentNotFound)
-      subject.any_instance.should_receive(:abort).with("Teaspoon::EnvironmentNotFound\nConsider using -r path/to/teaspoon_env\n")
+      expect(Teaspoon::Console).to receive(:new).and_raise(Teaspoon::EnvironmentNotFound)
+      expect_any_instance_of(subject).to receive(:abort).with("Teaspoon::EnvironmentNotFound\nConsider using -r path/to/teaspoon_env\n")
       subject.new
     end
 
     it "executes using Teaspoon::Console" do
-      Teaspoon::Console.should_receive(:new).with(files: ["file1", "file2"])
-      console.should_receive(:failures?)
+      expect(Teaspoon::Console).to receive(:new).with(files: ["file1", "file2"])
+      expect(console).to receive(:failures?)
       subject.new
     end
 
     it "aborts if Teaspoon::Console fails" do
-      subject.any_instance.should_receive(:abort)
-      console.should_receive(:failures?).and_return(true)
+      expect_any_instance_of(subject).to receive(:abort)
+      expect(console).to receive(:failures?).and_return(true)
       subject.new
     end
 
     it "logs a message and exits on abort" do
-      STDOUT.should_receive(:print).with("Teaspoon::EnvironmentNotFound\nConsider using -r path/to/teaspoon_env\n")
-      Teaspoon::Console.should_receive(:new).and_raise(Teaspoon::EnvironmentNotFound)
-      subject.any_instance.should_receive(:abort).and_call_original
+      expect(STDOUT).to receive(:print).with("Teaspoon::EnvironmentNotFound\nConsider using -r path/to/teaspoon_env\n")
+      expect(Teaspoon::Console).to receive(:new).and_raise(Teaspoon::EnvironmentNotFound)
+      expect_any_instance_of(subject).to receive(:abort).and_call_original
       expect { subject.new }.to raise_error SystemExit
     end
 
@@ -62,8 +62,8 @@ describe Teaspoon::CommandLine do
 
     before do
       @log = ""
-      STDOUT.stub(:print) { |s| @log << s }
-      Teaspoon::Console.stub(:new).and_return(console)
+      allow(STDOUT).to receive(:print) { |s| @log << s }
+      allow(Teaspoon::Console).to receive(:new).and_return(console)
     end
 
     it "has --help" do

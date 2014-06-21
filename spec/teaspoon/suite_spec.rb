@@ -3,14 +3,14 @@ require "spec_helper"
 describe Teaspoon::Suite do
 
   before do
-    Teaspoon.configuration.stub(:suite_configs).and_return("default" => {block: proc{}})
+    allow(Teaspoon.configuration).to receive(:suite_configs).and_return("default" => {block: proc{}})
   end
 
   describe ".all" do
 
     before do
       Teaspoon::Suite.instance_variable_set(:@all, nil)
-      Teaspoon.configuration.stub(:suite_configs).and_return("default" => {block: proc{}}, "foo" => {block: proc{}})
+      allow(Teaspoon.configuration).to receive(:suite_configs).and_return("default" => {block: proc{}}, "foo" => {block: proc{}})
     end
 
     it "returns all the suites" do
@@ -48,7 +48,7 @@ describe Teaspoon::Suite do
     end
 
     it "accepts a suite in the options" do
-      Teaspoon.configuration.should_receive(:suite_configs).and_return("test" => {block: proc{ |s| s.helper = "helper_file" }})
+      expect(Teaspoon.configuration).to receive(:suite_configs).and_return("test" => {block: proc{ |s| s.helper = "helper_file" }})
       subject = Teaspoon::Suite.new(suite: :test)
       expect(subject.name).to eql("test")
       expect(subject.config.helper).to eq("helper_file")
@@ -60,12 +60,12 @@ describe Teaspoon::Suite do
 
     it "returns an array of hashes with the filename and the asset name" do
       file = Teaspoon::Engine.root.join("spec/javascripts/teaspoon/base/reporters/console_spec.js").to_s
-      subject.should_receive(:glob).and_return([file])
+      expect(subject).to receive(:glob).and_return([file])
       expect(subject.spec_files[0]).to eql(path: file, name: "teaspoon/base/reporters/console_spec.js")
     end
 
     it "raises an exception if the file isn't servable (in an asset path)" do
-      subject.should_receive(:glob).and_return(["/foo"])
+      expect(subject).to receive(:glob).and_return(["/foo"])
       expect { subject.spec_files[0] }.to raise_error Teaspoon::AssetNotServable
     end
 

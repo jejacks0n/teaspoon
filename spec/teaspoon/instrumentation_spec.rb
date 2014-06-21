@@ -15,31 +15,31 @@ describe Teaspoon::Instrumentation do
   describe ".add_to" do
 
     before do
-      Teaspoon::Instrumentation.stub(:executable).and_return("/path/to/istanbul")
+      allow(Teaspoon::Instrumentation).to receive(:executable).and_return("/path/to/istanbul")
     end
 
     before do
-      Teaspoon::Instrumentation.stub(:add?).and_return(true)
-      asset.should_receive(:clone).and_return(asset)
+      allow(Teaspoon::Instrumentation).to receive(:add?).and_return(true)
+      expect(asset).to receive(:clone).and_return(asset)
 
-      File.stub(:open)
-      subject.any_instance.stub(:instrument).and_return(source + " // instrumented")
+      allow(File).to receive(:open)
+      allow_any_instance_of(subject).to receive(:instrument).and_return(source + " // instrumented")
 
       path = nil
       Dir.mktmpdir { |p| path = p }
-      Dir.stub(:mktmpdir).and_yield(path)
+      allow(Dir).to receive(:mktmpdir).and_yield(path)
       @output = File.join(path, "instrument.js")
     end
 
     it "writes the file to a tmp path" do
       file = double('file')
-      File.should_receive(:open).with(@output, "w").and_yield(file)
-      file.should_receive(:write).with("function add(a, b) { return a + b } // ☃ ")
+      expect(File).to receive(:open).with(@output, "w").and_yield(file)
+      expect(file).to receive(:write).with("function add(a, b) { return a + b } // ☃ ")
       subject.add_to(response, env)
     end
 
     it "instruments the javascript file" do
-      subject.any_instance.should_receive(:instrument).with(@output).and_return("_instrumented_")
+      expect_any_instance_of(subject).to receive(:instrument).with(@output).and_return("_instrumented_")
       subject.add_to(response, env)
     end
 
@@ -55,7 +55,7 @@ describe Teaspoon::Instrumentation do
   describe ".add?" do
 
     before do
-      Teaspoon::Instrumentation.stub(:executable).and_return("/path/to/istanbul")
+      allow(Teaspoon::Instrumentation).to receive(:executable).and_return("/path/to/istanbul")
     end
 
     it "returns true when everything is good" do
@@ -77,7 +77,7 @@ describe Teaspoon::Instrumentation do
     end
 
     it "doesn't if there's no executable" do
-      subject.should_receive(:executable).and_return(false)
+      expect(subject).to receive(:executable).and_return(false)
       expect(subject.add?(response, env)).to_not be(true)
     end
 

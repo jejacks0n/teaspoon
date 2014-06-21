@@ -10,7 +10,7 @@ describe Teaspoon::Formatters::JsonFormatter do
     let(:result) { double(hash.merge(total: 42)) }
 
     it "logs the original json" do
-      subject.should_receive(:log_result).with(result)
+      expect(subject).to receive(:log_result).with(result)
       subject.runner(result)
     end
 
@@ -19,7 +19,7 @@ describe Teaspoon::Formatters::JsonFormatter do
   describe "#suite" do
 
     it "logs the original json" do
-      subject.should_receive(:log_result).with(result)
+      expect(subject).to receive(:log_result).with(result)
       subject.suite(result)
     end
 
@@ -30,7 +30,7 @@ describe Teaspoon::Formatters::JsonFormatter do
     let(:result) { double(hash.merge(passing?: true)) }
 
     it "logs the original json" do
-      subject.should_receive(:log_result).with(result)
+      expect(subject).to receive(:log_result).with(result)
       subject.spec(result)
     end
 
@@ -39,7 +39,7 @@ describe Teaspoon::Formatters::JsonFormatter do
   describe "#error" do
 
     it "logs the original json" do
-      subject.should_receive(:log_result).with(result)
+      expect(subject).to receive(:log_result).with(result)
       subject.error(result)
     end
 
@@ -48,7 +48,7 @@ describe Teaspoon::Formatters::JsonFormatter do
   describe "#exception" do
 
     it "logs the original json" do
-      subject.should_receive(:log_result).with(result)
+      expect(subject).to receive(:log_result).with(result)
       subject.exception(result)
     end
 
@@ -57,7 +57,7 @@ describe Teaspoon::Formatters::JsonFormatter do
   describe "#console" do
 
     it "logs the message as json" do
-      subject.should_receive(:log_line).with(%Q{{"type":"console","log":"_message_"}})
+      expect(subject).to receive(:log_line).with(%Q{{"type":"console","log":"_message_"}})
       subject.console("_message_")
     end
 
@@ -68,7 +68,7 @@ describe Teaspoon::Formatters::JsonFormatter do
     let(:result) { double(hash.merge(coverage: nil)) }
 
     it "logs the original json" do
-      subject.should_receive(:log_str).with("_original_json_")
+      expect(subject).to receive(:log_str).with("_original_json_")
       subject.result(result)
     end
 

@@ -12,7 +12,7 @@ feature "testing hooks in the browser" do
   }}
 
   before do
-    Teaspoon.configuration.stub(:suite_configs).and_return(suites)
+    allow(Teaspoon.configuration).to receive(:suite_configs).and_return(suites)
     FileUtils.mkdir_p('tmp')
     File.delete(temp_file) if File.exists?(temp_file)
     expect(File.exists?(temp_file)).to eql(false)

@@ -11,31 +11,31 @@ describe Teaspoon::Server do
     let(:server) { double(start: nil) }
 
     before do
-      Thread.stub(:new) { |&b| @block = b; "_thread_" }
-      subject.stub(wait_until_started: nil)
+      allow(Thread).to receive(:new) { |&b| @block = b; "_thread_" }
+      allow(subject).to receive(:wait_until_started).and_return(nil)
     end
 
     it "spawns a thread" do
-      Thread.should_receive(:new)
+      expect(Thread).to receive(:new)
       subject.start
     end
 
     it "starts a rack server" do
-      Rack::Server.should_receive(:new).and_return(server)
-      server.should_receive(:start)
+      expect(Rack::Server).to receive(:new).and_return(server)
+      expect(server).to receive(:start)
 
       subject.start
       @block.call
     end
 
     it "waits until the server is started" do
-      Thread.should_receive(:new)
-      subject.should_receive(:wait_until_started).with("_thread_")
+      expect(Thread).to receive(:new)
+      expect(subject).to receive(:wait_until_started).with("_thread_")
       subject.start
     end
 
     it "rescues errors" do
-      Thread.should_receive(:new).and_raise("OMG!")
+      expect(Thread).to receive(:new).and_raise("OMG!")
       expect { subject.start }.to raise_error("Cannot start server: OMG!")
     end
 
@@ -48,15 +48,15 @@ describe Teaspoon::Server do
         Logger: Rails.logger,
         server: Teaspoon.configuration.server
       }
-      Rack::Server.should_receive(:new).with(expected_opts).and_return(server)
+      expect(Rack::Server).to receive(:new).with(expected_opts).and_return(server)
 
       subject.start
       @block.call
     end
 
     it "raises a ServerException if the timeout fails" do
-      subject.should_receive(:wait_until_started).and_call_original
-      Timeout.should_receive(:timeout).with(Teaspoon.configuration.server_timeout.to_i).and_raise(Timeout::Error)
+      expect(subject).to receive(:wait_until_started).and_call_original
+      expect(Timeout).to receive(:timeout).with(Teaspoon.configuration.server_timeout.to_i).and_raise(Timeout::Error)
       expect{ subject.start }.to raise_error Teaspoon::ServerException
     end
 
@@ -68,8 +68,8 @@ describe Teaspoon::Server do
 
     it "checks a local port to see if a server is running" do
       subject.port = 31337
-      TCPSocket.should_receive(:new).with("127.0.0.1", 31337).and_return(socket)
-      socket.should_receive(:close)
+      expect(TCPSocket).to receive(:new).with("127.0.0.1", 31337).and_return(socket)
+      expect(socket).to receive(:close)
       subject.responsive?
     end
 
@@ -87,8 +87,8 @@ describe Teaspoon::Server do
   describe "integration" do
 
     before do
-      Teaspoon.configuration.stub(:suite_configs).and_return("foo" => {block: proc{}})
-      Teaspoon.configuration.stub(:suppress_log).and_return(true)
+      allow(Teaspoon.configuration).to receive(:suite_configs).and_return("foo" => {block: proc{}})
+      allow(Teaspoon.configuration).to receive(:suppress_log).and_return(true)
     end
 
     it "really starts a server" do
