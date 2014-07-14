@@ -161,7 +161,7 @@ Teaspoon.configure do |config|
 
   config.coverage do |coverage|
 
-    # Which coverage reports Instanbul should generate. Correlates directly to what Istanbul supports.
+    # Which coverage reports Istanbul should generate. Correlates directly to what Istanbul supports.
     #
     # Available: text-summary, text, html, lcov, lcovonly, cobertura, teamcity
     #coverage.reports = ["text-summary", "html"]
