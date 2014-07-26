@@ -605,6 +605,17 @@ These configuration directives are applicable only when running via the rake tas
   </ul>
 </dd>
 
+<dt> istanbul </dt><dd>
+  Override path to istanbul executable, ignoring any executable in the system path. Useful if istanbul is installed with NPM in the current directory.<br/><br/>
+
+  <b>default:</b> <code>nil</code>
+
+  <ul>
+    <li>CLI: -I, --istanbul=ISTANBUL_PATH</li>
+    <li>ENV: ISTANBUL=[ISTANBUL_PATH]</li>
+  </ul>
+</dd>
+
 </dl>
 
 ### Coverage Configuration Directives

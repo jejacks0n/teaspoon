@@ -87,6 +87,44 @@ describe Teaspoon::Instrumentation do
 
   end
 
+  describe '.executable' do
+    before do
+      @path = ENV['PATH']
+      @executable = subject.instance_variable_get '@executable'
+      @executable_checked = subject.instance_variable_get '@executable_checked'
+    end
+
+    before do
+      ENV['PATH'] = '/some/path/to/bin'
+      subject.instance_variable_set '@executable', nil
+      subject.instance_variable_set '@executable_checked', false
+      allow(File).to receive(:file?).and_return(true)
+      allow(File).to receive(:executable?).and_return(true)
+    end
+
+    after do
+      ENV['PATH'] = @path
+      subject.instance_variable_set '@executable', @executable
+      subject.instance_variable_set '@executable_checked', @executable_checked
+    end
+
+    context 'when istanbul path is not explicitly configured' do
+      it 'should use system path to look for istanbul' do
+        expect(subject.executable).to eq('/some/path/to/bin/istanbul')
+      end
+    end
+
+    context 'when istanbul is configured explicitly' do
+      before do
+        allow(Teaspoon.configuration).to receive(:istanbul).and_return '/custom/path/to/istanbul'
+      end
+
+      it 'should use the configured path' do
+        expect(subject.executable).to eq('/custom/path/to/istanbul')
+      end
+    end
+  end
+
   describe "integration" do
 
     let(:asset) { Rails.application.assets.find_asset('instrumented1.coffee') }

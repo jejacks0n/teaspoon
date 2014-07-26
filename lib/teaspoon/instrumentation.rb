@@ -20,7 +20,7 @@ module Teaspoon
     def self.executable
       return @executable if @executable_checked
       @executable_checked = true
-      @executable = which("istanbul")
+      @executable = Teaspoon.configuration.istanbul || which("istanbul")
     end
 
     def initialize(response)
