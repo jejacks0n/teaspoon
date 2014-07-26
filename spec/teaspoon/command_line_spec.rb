@@ -112,6 +112,7 @@ describe Teaspoon::CommandLine do
         **** Coverage ****
 
           -C, --coverage CONFIG_NAME       Generate coverage reports using a pre-defined coverage configuration.
+          -I, --istanbul ISTANBUL_PATH     Specify path to istanbul executable.
 
         **** Utility ****
 
