@@ -38,7 +38,7 @@ module Teaspoon
       end
 
       def log_coverage(message)
-        log_line(%Q{<testsuite name="Coverage summary" tests="0">\n<properties>#{cdata(message)}<properties>\n</testsuite>})
+        log_line(%Q{<testsuite name="Coverage summary" tests="0">\n<properties>#{cdata(message)}</properties>\n</testsuite>})
       end
 
       def log_threshold_failure(message)
