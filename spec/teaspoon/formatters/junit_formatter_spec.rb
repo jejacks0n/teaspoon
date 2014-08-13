@@ -84,7 +84,7 @@ describe Teaspoon::Formatters::JunitFormatter do
 
     it "logs the coverage" do
       subject.coverage("_text_\n\n_text_summary_")
-      expect(@log).to eq(%Q{<testsuite name="Coverage summary" tests="0">\n<properties>\n<![CDATA[\n_text_\n_text_summary_\n]]>\n<properties>\n</testsuite>\n})
+      expect(@log).to eq(%Q{<testsuite name="Coverage summary" tests="0">\n<properties>\n<![CDATA[\n_text_\n_text_summary_\n]]>\n</properties>\n</testsuite>\n})
     end
 
   end
