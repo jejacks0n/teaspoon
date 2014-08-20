@@ -59,6 +59,7 @@ describe Teaspoon::Coverage do
     let(:config) { double(statements: 42, functions: 66.6, branches: 0, lines: 100) }
 
     it "does nothing if there are no threshold checks to make" do
+      fail()
       expect(subject).to receive(:threshold_args).and_return(nil)
       expect(subject).to_not receive(:input_path)
       subject.check_thresholds {}
