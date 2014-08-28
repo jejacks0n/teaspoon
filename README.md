@@ -292,6 +292,24 @@ end
 
 You can then use the javascript `Teaspoon.hook("fixtures")` call at the beginning of a suite run or similar. All blocks that have been specified for a given hook will be called in the order they were defined.
 
+If your hook accepts arguments:
+
+```ruby
+config.suite :my_suite do |suite|
+  suite.hook :fixtures do |arguments|
+    # some code that has access to your passed in arguments
+  end
+end
+```
+
+You can then use the following javascript to call your hook with arguments:
+
+```js
+args = JSON.stringify({'hook_args': {'foo': 'bar'}})
+Teaspoon.hook('fixtures', { 'method': 'POST', 'payload': args})
+```
+*note that you must specify the HTTP verb under the `method` key and your argurments are passed as a stringied JSON document keyed by `hook_args` under the `payload` key
+
 ### Manifest Style
 
 Teaspoon is happy to look for files for you (and this is recommended), but you can disable this feature and maintain a manifest yourself. Configure the suite to not match any files, and then use your spec helper to create your manifest.
@@ -738,4 +756,3 @@ All licenses for the [bundled Javascript libraries](https://github.com/modeset/t
 
 ## Make Code Not War
 ![crest](https://secure.gravatar.com/avatar/aa8ea677b07f626479fd280049b0e19f?s=75)
-

@@ -8,7 +8,8 @@ feature "testing hooks in the browser" do
   let(:app) { Dummy::Application }
   let(:suites) {{
     "suite1" => {block: proc{ |suite| suite.hook :before, &proc{ File.write(temp_file, "") } }},
-    "suite2" => {block: proc{ |suite| suite.hook :after, &proc{ File.write(temp_file, "") } }}
+    "suite2" => {block: proc{ |suite| suite.hook :after, &proc{ File.write(temp_file, "") } }},
+    "suite3" => {block: proc{ |suite| suite.hook :with_arguments, &proc{ |args| File.write(temp_file, args["message"]) } }},
   }}
 
   before do
@@ -44,4 +45,16 @@ feature "testing hooks in the browser" do
 
   end
 
+  describe "requesting a before hook with arguments (using POST)" do
+    let(:temp_file) { "tmp/before_hook_test" }
+    let(:message) { "Hello World" }
+    let(:params) do
+      { hook_args: { message: message } }
+    end
+
+    scenario "gives me the expected results" do
+      post("/teaspoon/suite3/with_arguments", params)
+      expect(File.open(temp_file).gets.chomp).to eq(message)
+    end
+  end
 end
