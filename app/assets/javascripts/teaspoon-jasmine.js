@@ -160,8 +160,7 @@
   var __slice = [].slice;
 
   Teaspoon.fixture = (function() {
-    var addContent, cleanup, create, load, loadComplete, preload, putContent, set, xhr, xhrRequest,
-      _this = this;
+    var addContent, cleanup, create, load, loadComplete, preload, putContent, set, xhr, xhrRequest;
 
     fixture.cache = {};
 
@@ -340,7 +339,7 @@
 
     return fixture;
 
-  }).call(this);
+  })();
 
 }).call(this);
 (function() {
@@ -371,6 +370,7 @@
       }
       xhr.onreadystatechange = callback;
       xhr.open(options['method'] || "GET", "" + Teaspoon.root + "/" + url, false);
+      xhr.setRequestHeader("Content-Type", "application/json");
       return xhr.send(options['payload']);
     };
     return xhrRequest("" + Teaspoon.suites.active + "/" + name, options, function() {
@@ -716,16 +716,14 @@
 
 }).call(this);
 (function() {
-  var _ref, _ref1, _ref2,
-    __hasProp = {}.hasOwnProperty,
+  var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teaspoon.Reporters.HTML.ProgressView = (function(_super) {
     __extends(ProgressView, _super);
 
     function ProgressView() {
-      _ref = ProgressView.__super__.constructor.apply(this, arguments);
-      return _ref;
+      return ProgressView.__super__.constructor.apply(this, arguments);
     }
 
     ProgressView.create = function(displayProgress) {
@@ -756,8 +754,7 @@
     __extends(SimpleProgressView, _super);
 
     function SimpleProgressView() {
-      _ref1 = SimpleProgressView.__super__.constructor.apply(this, arguments);
-      return _ref1;
+      return SimpleProgressView.__super__.constructor.apply(this, arguments);
     }
 
     SimpleProgressView.prototype.build = function() {
@@ -779,8 +776,7 @@
     __extends(RadialProgressView, _super);
 
     function RadialProgressView() {
-      _ref2 = RadialProgressView.__super__.constructor.apply(this, arguments);
-      return _ref2;
+      return RadialProgressView.__super__.constructor.apply(this, arguments);
     }
 
     RadialProgressView.supported = !!document.createElement("canvas").getContext;
@@ -1120,16 +1116,14 @@
 
 }).call(this);
 (function() {
-  var _ref,
-    __hasProp = {}.hasOwnProperty,
+  var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Teaspoon.Reporters.HTML = (function(_super) {
     __extends(HTML, _super);
 
     function HTML() {
-      _ref = HTML.__super__.constructor.apply(this, arguments);
-      return _ref;
+      return HTML.__super__.constructor.apply(this, arguments);
     }
 
     HTML.prototype.readConfig = function() {
@@ -1150,7 +1144,7 @@
 
 }).call(this);
 (function() {
-  var env, _ref,
+  var env,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -1278,54 +1272,63 @@
     __extends(fixture, _super);
 
     function fixture() {
-      _ref = fixture.__super__.constructor.apply(this, arguments);
-      return _ref;
+      return fixture.__super__.constructor.apply(this, arguments);
     }
 
     window.fixture = fixture;
 
     fixture.load = function() {
-      var args,
-        _this = this;
+      var args;
       args = arguments;
       if (!(env.currentSuite || env.currentSpec)) {
         throw "Teaspoon can't load fixtures outside of describe.";
       }
       if (env.currentSuite) {
-        env.beforeEach(function() {
-          return fixture.__super__.constructor.load.apply(_this, args);
-        });
-        env.afterEach(function() {
-          return _this.cleanup();
-        });
+        env.beforeEach((function(_this) {
+          return function() {
+            return fixture.__super__.constructor.load.apply(_this, args);
+          };
+        })(this));
+        env.afterEach((function(_this) {
+          return function() {
+            return _this.cleanup();
+          };
+        })(this));
         return fixture.__super__.constructor.load.apply(this, arguments);
       } else {
-        env.currentSpec.after(function() {
-          return _this.cleanup();
-        });
+        env.currentSpec.after((function(_this) {
+          return function() {
+            return _this.cleanup();
+          };
+        })(this));
         return fixture.__super__.constructor.load.apply(this, arguments);
       }
     };
 
     fixture.set = function() {
-      var args,
-        _this = this;
+      var args;
       args = arguments;
       if (!(env.currentSuite || env.currentSpec)) {
         throw "Teaspoon can't load fixtures outside of describe.";
       }
       if (env.currentSuite) {
-        env.beforeEach(function() {
-          return fixture.__super__.constructor.set.apply(_this, args);
-        });
-        env.afterEach(function() {
-          return _this.cleanup();
-        });
+        env.beforeEach((function(_this) {
+          return function() {
+            return fixture.__super__.constructor.set.apply(_this, args);
+          };
+        })(this));
+        env.afterEach((function(_this) {
+          return function() {
+            return _this.cleanup();
+          };
+        })(this));
         return fixture.__super__.constructor.set.apply(this, arguments);
       } else {
-        env.currentSpec.after(function() {
-          return _this.cleanup();
-        });
+        env.currentSpec.after((function(_this) {
+          return function() {
+            return _this.cleanup();
+          };
+        })(this));
         return fixture.__super__.constructor.set.apply(this, arguments);
       }
     };

@@ -32,3 +32,23 @@ describe "Teaspoon", ->
     it "will execute if it should", ->
       Teaspoon.execute()
       expect(@spy).toHaveBeenCalled()
+
+  describe ".hook", ->
+
+    beforeEach ->
+      @xhr = jasmine.createSpyObj(
+        'xhr',
+        [
+          'open',
+          'setRequestHeader',
+          'send'
+        ]
+      )
+      spyOn(window, 'XMLHttpRequest').andReturn(@xhr)
+
+    it "sets XMLHttpRequest request header", ->
+      Teaspoon.hook("foo")
+      expect(@xhr.setRequestHeader).toHaveBeenCalledWith(
+        "Content-Type",
+        "application/json"
+      )

@@ -14,6 +14,7 @@ Teaspoon.hook = (name, options = {}) ->
 
     xhr.onreadystatechange = callback
     xhr.open(options['method'] || "GET", "#{Teaspoon.root}/#{url}", false)
+    xhr.setRequestHeader("Content-Type", "application/json")
     xhr.send(options['payload'])
 
   xhrRequest "#{Teaspoon.suites.active}/#{name}", options, ->

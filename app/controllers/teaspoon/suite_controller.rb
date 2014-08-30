@@ -12,7 +12,8 @@ class Teaspoon::SuiteController < ActionController::Base
   end
 
   def hook
-    Teaspoon::Suite.new(params).hooks[params[:hook].to_s].each { |hook| hook.call }
+    hooks = Teaspoon::Suite.new(params).hooks[params[:hook].to_s]
+    hooks.each { |hook| hook.call(params[:hook_args]) }
     render nothing: true
   end
 
