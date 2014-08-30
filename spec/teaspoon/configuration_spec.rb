@@ -76,6 +76,7 @@ describe Teaspoon::Configuration do
     expect(subject.server_timeout).to eq(20)
     expect(subject.formatters).to eq(['dot'])
     expect(subject.use_coverage).to be_nil
+    expect(subject.istanbul).to be_nil
     expect(subject.fail_fast).to be_truthy
     expect(subject.suppress_log).to be_falsey
     expect(subject.color).to be_truthy

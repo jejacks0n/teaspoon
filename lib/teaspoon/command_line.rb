@@ -108,6 +108,9 @@ module Teaspoon
 
       opt :use_coverage, "-C", "--coverage CONFIG_NAME",
         "Generate coverage reports using a pre-defined coverage configuration."
+
+      opt :istanbul, "-I", "--istanbul ISTANBUL_PATH",
+        "Specify path to istanbul executable."
     end
 
     def opts_for_utility

@@ -27,7 +27,7 @@ module Teaspoon
 
     cattr_accessor   :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :fail_fast,
                      :formatters, :color, :suppress_log,
-                     :use_coverage
+                     :use_coverage, :istanbul
     @@driver         = "phantomjs"
     @@driver_options = nil
     @@driver_timeout = 180
@@ -41,13 +41,14 @@ module Teaspoon
     @@suppress_log   = false
 
     @@use_coverage   = nil
+    @@istanbul       = nil
 
     # options that can be specified in the ENV
 
     ENV_OVERRIDES = {
       boolean: %w(FAIL_FAST SUPPRESS_LOG COLOR),
       integer: %w(DRIVER_TIMEOUT SERVER_TIMEOUT),
-      string:  %w(DRIVER DRIVER_OPTIONS SERVER SERVER_PORT FORMATTERS USE_COVERAGE)
+      string:  %w(DRIVER DRIVER_OPTIONS SERVER SERVER_PORT FORMATTERS USE_COVERAGE ISTANBUL)
     }
 
     # suite configurations
