@@ -18,7 +18,7 @@ class Teaspoon::SuiteController < ActionController::Base
   end
 
   def fixtures
-    render "/#{params[:filename]}"
+    render template: "/#{params[:filename]}"
   end
 
   private
