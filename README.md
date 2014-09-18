@@ -692,6 +692,7 @@ We know that testing usually requires more than just the test framework, so we'v
 
 - [Sinon.JS](http://sinonjs.org) (1.8.2) Standalone test spies, stubs and mocks for JavaScript. No dependencies, works with any unit testing framework. BSD Licence.
 - [ChaiJS](http://chaijs.com/) (1.8.1) BDD / TDD assertion library for node and the browser that can be delightfully paired with any javascript testing framework. MIT License.
+- [Chai-jQ](http://formidablelabs.github.io/chai-jq/) (0.0.7) An alternate plugin for the Chai assertion library to provide jQuery-specific assertions. MIT License.
 - [Sinon-Chai](https://github.com/domenic/sinon-chai) (1.0.0) Extends Chai with assertions for the Sinon.JS mocking framework. MIT-ish License.
 - [expect.js](https://github.com/LearnBoost/expect.js) (0.1.2) Minimalistic BDD assertion toolkit based on should.js. MIT License.
 - [jasmine-jquery-1.7.0.js](https://github.com/velesin/jasmine-jquery) (1.7.0) For Jasmine v1, A set of custom matchers for jQuery, and an API for handling HTML fixtures in your specs. MIT License.
