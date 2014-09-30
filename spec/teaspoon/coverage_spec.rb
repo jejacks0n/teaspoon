@@ -37,9 +37,9 @@ describe Teaspoon::Coverage do
 
     it "generates reports using istanbul and passes them to the block provided" do
       `(exit 0)`
-      html_report = "/path/to/executable report html --include=/temp_path/coverage.json --dir output/path/_suite_ 2>&1"
-      text1_report = "/path/to/executable report text --include=/temp_path/coverage.json --dir output/path/_suite_ 2>&1"
-      text2_report = "/path/to/executable report text-summary --include=/temp_path/coverage.json --dir output/path/_suite_ 2>&1"
+      html_report = "/path/to/executable report --include=/temp_path/coverage.json --dir output/path/_suite_ html 2>&1"
+      text1_report = "/path/to/executable report --include=/temp_path/coverage.json --dir output/path/_suite_ text 2>&1"
+      text2_report = "/path/to/executable report --include=/temp_path/coverage.json --dir output/path/_suite_ text-summary 2>&1"
       expect(subject).to receive(:`).with(html_report).and_return("_html_report_")
       expect(subject).to receive(:`).with(text1_report).and_return("_text1_report_")
       expect(subject).to receive(:`).with(text2_report).and_return("_text2_report_")

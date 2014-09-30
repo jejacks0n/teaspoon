@@ -48,7 +48,7 @@ module Teaspoon
 
     def generate_report(input, format)
       output_path = File.join(@config.output_path, @suite_name)
-      result = %x{#{@executable} report #{format} --include=#{input.shellescape} --dir #{output_path} 2>&1}
+      result = %x{#{@executable} report --include=#{input.shellescape} --dir #{output_path} #{format} 2>&1}
       return result.gsub("Done", "").gsub("Using reporter [#{format}]", "").strip if $?.exitstatus == 0
       raise Teaspoon::DependencyFailure, "Could not generate coverage report for #{format}"
     end
