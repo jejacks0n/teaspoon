@@ -146,10 +146,19 @@ describe "PhantomJS Runner", ->
         @runner.initPage()
         @waitSpy = spyOn(@runner, "waitForResults")
 
-      it "fails if the status was not success", ->
+      it "does not fail if status was not success and teaspoon was loaded", ->
         spy = spyOn(@runner, "fail")
         evalSpy = spyOn(@runner.page, "evaluate").andReturn(true)
         @callbacks.onLoadFinished("failure")
+        expect(spy).not.toHaveBeenCalledWith("Failed to load: #{@runner.url}")
+        expect(evalSpy).toHaveBeenCalled()
+        expect(@waitSpy).wasCalled()
+
+
+      it "fails if teaspoon was not loaded", ->
+        spy = spyOn(@runner, "fail")
+        evalSpy = spyOn(@runner.page, "evaluate").andReturn(undefined)
+        @callbacks.onLoadFinished("success")
         expect(spy).toHaveBeenCalledWith("Failed to load: #{@runner.url}")
         expect(evalSpy).toHaveBeenCalled()
         expect(@waitSpy).wasNotCalled()
