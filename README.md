@@ -102,6 +102,7 @@ The rake task provides several ways of focusing tests. You can specify the suite
 ```
 rake teaspoon suite=my_fantastic_suite
 rake teaspoon files=spec/javascripts/integration,spec/javascripts/calculator_spec.js
+rake teaspoon driver_options="—ssl-protocol=TLSv1 --ignore-ssl-errors=yes"
 ```
 
 ### CLI
