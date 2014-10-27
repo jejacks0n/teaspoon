@@ -41,7 +41,7 @@ Teaspoon.configure do |config|
     # directives.
     # Note: If no version is specified, the latest is assumed.
     #
-    # Available: jasmine[1.3.1], mocha[1.10.0, 1.17.1] qunit[1.12.0, 1.14.0]
+    # Available: jasmine[1.3.1], mocha[1.10.0, 1.17.1, 2.0.1] qunit[1.12.0, 1.14.0]
     suite.use_framework :mocha
 
     # Specify a file matcher as a regular expression and all matching files will be loaded when the suite is run. These
@@ -57,7 +57,7 @@ Teaspoon.configure do |config|
     # Note: For CoffeeScript files use `"teaspoon/jasmine"` etc.
     #
     # Available: teaspoon-jasmine, teaspoon-mocha, teaspoon-qunit
-    #suite.javascripts = ["mocha/1.17.1", "teaspoon-mocha"]
+    #suite.javascripts = ["mocha/2.0.1", "teaspoon-mocha"]
 
     # You can include your own stylesheets if you want to change how Teaspoon looks.
     # Note: Spec related CSS can and should be loaded using fixtures.

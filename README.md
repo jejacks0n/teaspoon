@@ -131,7 +131,7 @@ bundle exec teaspoon --help
 
 Depending on which framework you use this can differ, and there's an expectation that you have a certain level of familiarity with your chosen test framework.
 
-Teaspoon supports [Jasmine 1.3](http://pivotal.github.com/jasmine), [Mocha](http://visionmedia.github.com/mocha) and [QUnit](http://qunitjs.com). And since it's possible to use the asset pipeline, feel free to use the `= require` directive throughout your specs and spec helpers.
+Teaspoon supports [Jasmine 1.3](http://pivotal.github.com/jasmine), [Mocha](http://visionmedia.github.com/mocha) 1.10.0, 1.17.1, and 2.0.1, and [QUnit](http://qunitjs.com). And since it's possible to use the asset pipeline, feel free to use the `= require` directive throughout your specs and spec helpers.
 
 Here's a basic spec written in Javascript using Jasmine:
 
@@ -326,7 +326,7 @@ end
 
 ## Coverage
 
-Teaspoon uses [Istanbul](https://github.com/gotwarlost/istanbul) to generate code coverage statistics and reports. You can define coverage configurations the same way you define suites.
+Teaspoon uses [Istanbul](https://github.com/gotwarlost/istanbul) to generate code coverage statistics and reports. After installing Istanbul through NPM, you can define coverage configurations the same way you define suites.
 
 Each suite allows specifying ignored files, which allows you to ignore support libraries and dependencies.
 
@@ -413,7 +413,7 @@ When you install Teaspoon a `teaspoon_env.rb` file is generated that contains mo
   Specify the framework and optionally version you would like to use. This will do some basic setup for you -- which you can override with the directives below. This should be specified first, as it can override other directives.<br/><br/>
   <b>Note:</b> If no version is specified, the latest is assumed.<br/><br/>
 
-  <b>available:</b> jasmine[1.3.1], mocha[1.10.0, 1.17.1] qunit[1.12.0, 1.14.0]<br/>
+  <b>available:</b> jasmine[1.3.1], mocha[1.10.0, 1.17.1, 2.0.1] qunit[1.12.0, 1.14.0]<br/>
   <b>default:</b> <code>[no default]</code>
 </dd>
 
