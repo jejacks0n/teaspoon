@@ -88,7 +88,7 @@ describe Teaspoon::Suite do
     it "returns the asset tree (all dependencies resolved) if we want coverage" do
       subject.instance_variable_set(:@options, coverage: true)
       result = subject.spec_assets(true)
-      expect(result).to include("support/json2.js?body=1")
+      expect(result).to include("support/json2.js?body=1&instrument=1")
       expect(result).to include("spec_helper.js?body=1")
       expect(result).to include("drivers/phantomjs/runner.js?body=1&instrument=1")
     end
