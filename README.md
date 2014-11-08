@@ -11,7 +11,7 @@ Teaspoon
 <img src="https://raw.github.com/modeset/teaspoon/master/screenshots/logo_big.png" alt="Logo by Morgan Keys" align="right" />
 <sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
 
-Teaspoon is a Javascript test runner built for Rails. It can run tests in the browser and headless using PhantomJS or Selenium WebDriver.
+Teaspoon is a Javascript test runner built for Rails. It can run tests in the browser and headless using PhantomJS, Selenium WebDriver, or Capybara Webkit.
 
 The project goal is to stay simple while also providing the most complete Javascript testing solution for Rails.
 
@@ -63,7 +63,7 @@ Run the install generator to get the environment file and a basic spec helper. Y
 rails generate teaspoon:install --framework=mocha --coffee
 ```
 
-To run Teaspoon headless you'll need PhantomJS or Selenium Webdriver. We recommend PhantomJS, which you can install with homebrew, npm or [as a download](http://phantomjs.org/download.html).
+To run Teaspoon headless you'll need PhantomJS, Selenium Webdriver or Capybara Webkit. We recommend PhantomJS, which you can install with homebrew, npm or [as a download](http://phantomjs.org/download.html).
 
 ### Upgrading
 
@@ -494,12 +494,13 @@ These configuration directives are applicable only when running via the rake tas
 <dl>
 
 <dt> driver </dt><dd>
-  Specify which headless driver to use. Supports <a href="http://phantomjs.org">PhantomJS</a> and <a href="http://seleniumhq.org/docs/03_webdriver.jsp">Selenium Webdriver</a>.<br/><br/>
+  Specify which headless driver to use. Supports <a href="http://phantomjs.org">PhantomJS</a>, <a href="http://seleniumhq.org/docs/03_webdriver.jsp">Selenium Webdriver</a> and <a href="https://github.com/thoughtbot/capybara-webkit">Capybara Webkit</a>.<br/><br/>
 
   <a href="https://github.com/modeset/teaspoon/wiki/Using-PhantomJS">Using PhantomJS</a>.<br/>
   <a href="https://github.com/modeset/teaspoon/wiki/Using-Selenium-WebDriver">Using Selenium WebDriver</a><br/><br/>
+  <a href="https://github.com/modeset/teaspoon/wiki/Using-Capybara-Webkit">Using Capybara Webkit</a><br/><br/>
 
-  <b>available:</b> phantomjs, selenium<br/>
+  <b>available:</b> phantomjs, selenium, capybara-webkit<br/>
   <b>default:</b> <code>"phantomjs"</code>
 
   <ul>
@@ -513,6 +514,7 @@ These configuration directives are applicable only when running via the rake tas
 
   <a href="https://github.com/modeset/teaspoon/wiki/Using-PhantomJS">Using PhantomJS</a>.<br/>
   <a href="https://github.com/modeset/teaspoon/wiki/Using-Selenium-WebDriver">Using Selenium WebDriver</a><br/><br/>
+  <a href="https://github.com/modeset/teaspoon/wiki/Using-Capybara-Webkit">Using Capybara Webkit</a><br/><br/>
 
   <b>default:</b> <code>nil</code>
 

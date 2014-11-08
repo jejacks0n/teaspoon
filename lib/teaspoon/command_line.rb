@@ -42,7 +42,8 @@ module Teaspoon
       opt :driver, "-d", "--driver DRIVER",
         "Specify driver:",
         "  phantomjs (default)",
-        "  selenium"
+	"  selenium",
+	"  capybara_webkit"
 
       opt :driver_options, "--driver-options OPTIONS",
         "Specify driver-specific options to pass into the driver.",
