@@ -4,6 +4,7 @@ gemspec
 
 # gems that teaspoon can utilize
 gem "selenium-webdriver"
+gem "capybara-webkit"
 gem "tapout"
 gem "thin"
 
