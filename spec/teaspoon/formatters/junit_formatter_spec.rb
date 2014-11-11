@@ -4,7 +4,7 @@ describe Teaspoon::Formatters::JunitFormatter do
 
   let(:passing_spec) { double(passing?: true, suite: "_suite_name_", label: "_passing_label_") }
   let(:pending_spec) { double(passing?: false, pending?: true, suite: "_suite_name_", label: "_pending_label_") }
-  let(:failing_spec) { double(passing?: false, pending?: false, suite: "_suite_name_", label: "_failing&label_", message: "_failure_message_") }
+  let(:failing_spec) { double(passing?: false, pending?: false, suite: "_suite&name_", label: "_failing&label_", message: "_failure_message_") }
 
   before do
     @log = ""
@@ -16,19 +16,19 @@ describe Teaspoon::Formatters::JunitFormatter do
     let(:result) { double(start: "_start_", total: 42) }
 
     before do
-      subject.instance_variable_set(:@suite_name, "not_default")
+      subject.instance_variable_set(:@suite_name, "not_default&")
     end
 
     it "starts the suite" do
       subject.runner(result)
-      expect(@log).to eq(%Q{<?xml version="1.0" encoding="UTF-8"?>\n<testsuites name="Teaspoon">\n<testsuite name="not_default" tests="42" time="_start_">\n})
+      expect(@log).to eq(%Q{<?xml version="1.0" encoding="UTF-8"?>\n<testsuites name="Teaspoon">\n<testsuite name="not_default&amp;" tests="42" time="_start_">\n})
     end
 
   end
 
   describe "#suite" do
 
-    let(:result) { double(label: "_label_") }
+    let(:result) { double(label: "_suite>label_") }
 
     it "calls #log_end_suite" do
       expect(subject).to receive(:log_end_suite)
@@ -37,7 +37,7 @@ describe Teaspoon::Formatters::JunitFormatter do
 
     it "logs the start of the testsuite" do
       subject.suite(result)
-      expect(@log).to eq(%Q{<testsuite name="_label_">\n})
+      expect(@log).to eq(%Q{<testsuite name="_suite&gt;label_">\n})
     end
 
   end
@@ -56,7 +56,7 @@ describe Teaspoon::Formatters::JunitFormatter do
 
     it "logs a failing testcase with the message on failing results" do
       subject.spec(failing_spec)
-      expect(@log).to include(%Q{<testcase classname="_suite_name_" name="_failing&amp;label_">\n})
+      expect(@log).to include(%Q{<testcase classname="_suite&amp;name_" name="_failing&amp;label_">\n})
       expect(@log).to include(%Q{  <failure type="AssertionFailed">\n<![CDATA[\n_failure_message_\n]]>\n</failure>\n})
       expect(@log).to include(%Q{</testcase>\n})
     end
