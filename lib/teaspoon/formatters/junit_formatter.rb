@@ -9,12 +9,12 @@ module Teaspoon
       def log_runner(result)
         log_line(%Q{<?xml version="1.0" encoding="UTF-8"?>})
         log_line(%Q{<testsuites name="Teaspoon">})
-        log_line(%Q{<testsuite name="#{@suite_name}" tests="#{@total_count}" time="#{result.start}">})
+        log_line(%Q{<testsuite name="#{escape(@suite_name)}" tests="#{@total_count}" time="#{result.start}">})
       end
 
       def log_suite(result)
         log_end_suite
-        log_line(%Q{<testsuite name="#{result.label}">})
+        log_line(%Q{<testsuite name="#{escape(result.label)}">})
       end
 
       def log_passing_spec(result)
