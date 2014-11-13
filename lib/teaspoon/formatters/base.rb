@@ -15,6 +15,7 @@ module Teaspoon
     autoload :JsonFormatter,          "teaspoon/formatters/json_formatter"
     autoload :JunitFormatter,         "teaspoon/formatters/junit_formatter"
     autoload :PrideFormatter,         "teaspoon/formatters/pride_formatter"
+    autoload :RspecHtmlFormatter,     "teaspoon/formatters/rspec_html_formatter"
     autoload :SnowdayFormatter,       "teaspoon/formatters/snowday_formatter"
     autoload :SwayzeOrOprahFormatter, "teaspoon/formatters/swayze_or_oprah_formatter"
     autoload :TapFormatter,           "teaspoon/formatters/tap_formatter"

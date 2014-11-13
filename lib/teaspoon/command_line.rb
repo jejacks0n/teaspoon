@@ -96,6 +96,7 @@ module Teaspoon
         "  json - json formatter (raw teaspoon)",
         "  junit - junit compatible formatter",
         "  pride - yay rainbows!",
+        "  rspec_html - RSpec inspired HTML format",
         "  snowday - makes you feel warm inside",
         "  swayze_or_oprah - quote from either Patrick Swayze or Oprah Winfrey",
         "  tap - test anything protocol formatter",
