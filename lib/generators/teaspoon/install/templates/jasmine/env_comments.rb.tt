@@ -134,8 +134,8 @@ Teaspoon.configure do |config|
   # Specify the formatters to use when outputting the results.
   # Note: Output files can be specified by using `"junit>/path/to/output.xml"`.
   #
-  # Available: dot, documentation, clean, json, junit, pride, rspec_html, snowday, swayze_or_oprah, tap, tap_y, teamcity
-  #config.formatters = ["dot"]
+  # Available: <%= Teaspoon::Formatters.known_formatters.map(&:name).join ", " %>
+  #config.formatters = ["<%= Teaspoon::Formatters.known_formatters.select(&:default?).first.name %>"]
 
   # Specify if you want color output from the formatters.
   #config.color = true

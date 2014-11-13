@@ -97,17 +97,7 @@ describe Teaspoon::CommandLine do
           -c, --[no-]color                 Enable/Disable color output.
           -e, --export [OUTPUT_PATH]       Exports the test suite as the full HTML (requires wget).
           -f, --format FORMATTERS          Specify formatters (comma separated)
-                                             dot (default) - dots
-                                             documentation - descriptive documentation
-                                             clean - like dots but doesn't log re-run commands
-                                             json - json formatter (raw teaspoon)
-                                             junit - junit compatible formatter
-                                             pride - yay rainbows!
-                                             snowday - makes you feel warm inside
-                                             swayze_or_oprah - quote from either Patrick Swayze or Oprah Winfrey
-                                             tap - test anything protocol formatter
-                                             tap_y - tap_yaml, format used by tapout
-                                             teamcity - teamcity compatible formatter
+                                           #{Teaspoon::Formatters.known_formatters.map(&:cli_help).join("\n" + (" " * 43))}
 
         **** Coverage ****
 

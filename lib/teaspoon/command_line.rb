@@ -1,6 +1,7 @@
 require "optparse"
 require "teaspoon/version"
 require "teaspoon/exceptions"
+require "teaspoon/formatters/base"
 
 module Teaspoon
   class CommandLine
@@ -90,18 +91,7 @@ module Teaspoon
 
       opt :formatters, "-f", "--format FORMATTERS",
         "Specify formatters (comma separated)",
-        "  dot (default) - dots",
-        "  documentation - descriptive documentation",
-        "  clean - like dots but doesn't log re-run commands",
-        "  json - json formatter (raw teaspoon)",
-        "  junit - junit compatible formatter",
-        "  pride - yay rainbows!",
-        "  rspec_html - RSpec inspired HTML format",
-        "  snowday - makes you feel warm inside",
-        "  swayze_or_oprah - quote from either Patrick Swayze or Oprah Winfrey",
-        "  tap - test anything protocol formatter",
-        "  tap_y - tap_yaml, format used by tapout",
-        "  teamcity - teamcity compatible formatter"
+        *Teaspoon::Formatters.known_formatters.map(&:cli_help)
     end
 
     def opts_for_coverage

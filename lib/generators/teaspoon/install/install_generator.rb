@@ -33,8 +33,11 @@ module Teaspoon
       end
 
       def copy_environment
-        source = options[:no_comments] ? "env.rb" : "env_comments.rb"
-        copy_file "templates/#{framework}/#{source}", "#{framework_type}/teaspoon_env.rb"
+        if options[:no_comments]
+          copy_file "templates/#{framework}/env.rb", "#{framework_type}/teaspoon_env.rb"
+        else
+          template "templates/#{framework}/env_comments.rb.tt", "#{framework_type}/teaspoon_env.rb"
+        end
       end
 
       def create_structure

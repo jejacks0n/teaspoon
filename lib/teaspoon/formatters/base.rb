@@ -1,26 +1,38 @@
+require "set"
+require "teaspoon/formatters/description"
+
 module Teaspoon
   module Formatters
+    @@known_formatters = SortedSet.new
+
+    def self.known_formatters
+      @@known_formatters
+    end
+
+    def self.register(name, details)
+      description = Description.new(name, details)
+      @@known_formatters << description
+      autoload description.class_name, description.require_path
+    end
 
     # CONTRIBUTORS:
     # If you add a formatter you should do the following before it will be considered for merging.
     # - add it to this list so it can be autoloaded
     # - write specs for it
     # - add it to the readme so it's documented
-    # - add it to the list in command_line.rb so others know it's available
-    # - add it to the initializers in /lib/generators/install/templates so it's documented there as well
 
-    autoload :CleanFormatter,         "teaspoon/formatters/clean_formatter"
-    autoload :DocumentationFormatter, "teaspoon/formatters/documentation_formatter"
-    autoload :DotFormatter,           "teaspoon/formatters/dot_formatter"
-    autoload :JsonFormatter,          "teaspoon/formatters/json_formatter"
-    autoload :JunitFormatter,         "teaspoon/formatters/junit_formatter"
-    autoload :PrideFormatter,         "teaspoon/formatters/pride_formatter"
-    autoload :RspecHtmlFormatter,     "teaspoon/formatters/rspec_html_formatter"
-    autoload :SnowdayFormatter,       "teaspoon/formatters/snowday_formatter"
-    autoload :SwayzeOrOprahFormatter, "teaspoon/formatters/swayze_or_oprah_formatter"
-    autoload :TapFormatter,           "teaspoon/formatters/tap_formatter"
-    autoload :TapYFormatter,          "teaspoon/formatters/tap_y_formatter"
-    autoload :TeamcityFormatter,      "teaspoon/formatters/teamcity_formatter"
+    register :clean,           description: "like dots but doesn't log re-run commands"
+    register :documentation,   description: "descriptive documentation"
+    register :dot,             description: "dots", default: true
+    register :json,            description: "json formatter (raw teaspoon)"
+    register :junit,           description: "junit compatible formatter"
+    register :pride,           description: "yay rainbows!"
+    register :rspec_html,      description: "RSpec inspired HTML format"
+    register :snowday,         description: "makes you feel warm inside"
+    register :swayze_or_oprah, description: "quote from either Patrick Swayze or Oprah Winfrey"
+    register :tap,             description: "test anything protocol formatter"
+    register :tap_y,           description: "tap_yaml, format used by tapout"
+    register :teamcity,        description: "teamcity compatible formatter"
 
     class Base
 
