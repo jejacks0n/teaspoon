@@ -6,6 +6,7 @@ module Teaspoon
   class RunnerException < Teaspoon::Error; end
   class ExporterException < Teaspoon::Error; end
   class UnknownFramework < Teaspoon::Error; end
+  class UnknownCoverage < Teaspoon::Error; end
   class UnknownDriver < Teaspoon::Error; end
   class UnknownDriverOptions < Teaspoon::Error; end
   class UnknownFormatter < Teaspoon::Error; end
