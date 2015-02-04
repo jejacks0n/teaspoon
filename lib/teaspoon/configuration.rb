@@ -62,9 +62,9 @@ module Teaspoon
     class Suite
 
       FRAMEWORKS = {
-        jasmine: ["1.3.1", "2.0.0"],
-        mocha: ["1.10.0", "1.17.1", "2.0.1"],
-        qunit: ["1.12.0", "1.14.0"],
+	jasmine: ["1.3.1", "2.0.0"],
+	mocha: ["1.10.0", "1.17.1", "2.1.0"],
+	qunit: ["1.12.0", "1.14.0"],
       }
 
       attr_accessor   :matcher, :helper, :javascripts, :stylesheets,

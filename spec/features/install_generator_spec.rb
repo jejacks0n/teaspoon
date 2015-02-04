@@ -47,7 +47,7 @@ feature "Installation", aruba: true do
       run_simple("bundle exec rails generate teaspoon:install --trace --framework=mocha")
 
       check_file_content("spec/teaspoon_env.rb", %{    suite.use_framework :mocha}, true)
-      check_file_content("spec/teaspoon_env.rb", %{    #suite.javascripts = ["mocha/2.0.1", "teaspoon-mocha"]}, true)
+      check_file_content("spec/teaspoon_env.rb", %{    #suite.javascripts = ["mocha/2.1.0", "teaspoon-mocha"]}, true)
     end
 
   end

@@ -41,7 +41,7 @@ Teaspoon.configure do |config|
     # directives.
     # Note: If no version is specified, the latest is assumed.
     #
-    # Available: jasmine[1.3.1], mocha[1.10.0, 1.17.1, 2.0.1] qunit[1.12.0, 1.14.0]
+    # Available: jasmine[1.3.1], mocha[1.10.0, 1.17.1, 2.1.0] qunit[1.12.0, 1.14.0]
     suite.use_framework :qunit
 
     # Specify a file matcher as a regular expression and all matching files will be loaded when the suite is run. These
