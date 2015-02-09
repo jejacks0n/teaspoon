@@ -131,7 +131,7 @@ bundle exec teaspoon --help
 
 Depending on which framework you use this can differ, and there's an expectation that you have a certain level of familiarity with your chosen test framework.
 
-Teaspoon supports [Jasmine 1.3](http://pivotal.github.com/jasmine), [Mocha](http://visionmedia.github.com/mocha) and [QUnit](http://qunitjs.com). And since it's possible to use the asset pipeline, feel free to use the `= require` directive throughout your specs and spec helpers.
+Teaspoon supports [Jasmine 1.3](http://pivotal.github.com/jasmine), [Mocha](https://github.com/mochajs/mocha) and [QUnit](http://qunitjs.com). And since it's possible to use the asset pipeline, feel free to use the `= require` directive throughout your specs and spec helpers.
 
 Here's a basic spec written in Javascript using Jasmine:
 
