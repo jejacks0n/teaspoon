@@ -11,13 +11,15 @@ gem "thin"
 # used by the dummy application
 gem "rails", ">= 4.0.0"
 gem "coffee-rails"
-gem "sass-rails", "~> 4.0.2"
+gem "sass-rails"
 gem "jquery-rails"
 gem "haml-rails"
 gem "turbolinks"
 gem "spring"
-gem "jbuilder", "~> 2.0", require: false
-gem 'sdoc', require: false
+gem "jbuilder", require: false
+gem "sdoc", require: false
+gem "web-console"
+gem "byebug"
 
 # used by test rails apps
 gem "sqlite3"
