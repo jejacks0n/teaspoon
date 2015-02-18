@@ -32,7 +32,16 @@ module Teaspoon
       end
 
       def driver_options(url)
-        [@options, script, url, Teaspoon.configuration.driver_timeout].flatten.compact
+        [
+          @options,
+          escape_quotes(script),
+          escape_quotes(url),
+          Teaspoon.configuration.driver_timeout
+        ].flatten.compact
+      end
+
+      def escape_quotes(string)
+        %{"#{string.gsub('"', '\"')}"}
       end
 
       def executable
