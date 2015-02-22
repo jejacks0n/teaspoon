@@ -14,7 +14,20 @@ module Teaspoon
       env["QUERY_STRING"].to_s =~ /instrument=(1|true)/ &&            # the instrument param was provided
       response[0] == 200 &&                                           # the status is 200 (304 might be needed here too)
       response[1]["Content-Type"].to_s == "application/javascript" && # the format is something that we care about
-      response[2].respond_to?(:source)                                # it looks like an asset
+      response[2].respond_to?(:source) &&                             # it looks like an asset
+      instrument_file?(response[2].pathname.to_s)
+    end
+
+    def self.instrument_file?(file)
+      no_coverage = Teaspoon.configuration.suite_configs['default'][:instance].no_coverage
+      for ignored in no_coverage
+        if ignored.is_a?(String)
+          return false if File.basename(file) == ignored
+        elsif ignored.is_a?(Regexp)
+          return false if file =~ ignored
+        end
+      end
+      true
     end
 
     def self.executable

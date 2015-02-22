@@ -73,13 +73,6 @@ module Teaspoon
     def instrument_file?(file)
       return false unless @options[:coverage] || Teaspoon.configuration.use_coverage
       return false if include_spec?(file)
-      for ignored in no_coverage
-        if ignored.is_a?(String)
-          return false if File.basename(file) == ignored
-        elsif ignored.is_a?(Regexp)
-          return false if file =~ ignored
-        end
-      end
       true
     end
 
