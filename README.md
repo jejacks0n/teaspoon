@@ -1,6 +1,8 @@
 Teaspoon
 ========
 
+[![Join the chat at https://gitter.im/modeset/teaspoon](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/modeset/teaspoon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Gem Version](https://img.shields.io/gem/v/teaspoon.svg)](http://badge.fury.io/rb/teaspoon)
 [![Dependency Status](https://gemnasium.com/modeset/teaspoon.svg)](https://gemnasium.com/modeset/teaspoon)
 [![Build Status](https://img.shields.io/travis/modeset/teaspoon.svg)](https://travis-ci.org/modeset/teaspoon)
