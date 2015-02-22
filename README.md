@@ -4,8 +4,8 @@ Teaspoon
 [![Gem Version](https://img.shields.io/gem/v/teaspoon.svg)](http://badge.fury.io/rb/teaspoon)
 [![Dependency Status](https://gemnasium.com/modeset/teaspoon.svg)](https://gemnasium.com/modeset/teaspoon)
 [![Build Status](https://img.shields.io/travis/modeset/teaspoon.svg)](https://travis-ci.org/modeset/teaspoon)
-[![Code Climate](https://img.shields.io/codeclimate/github/modeset/teaspoon.svg)](https://codeclimate.com/github/modeset/teaspoon)
-[![Coverage Status](https://img.shields.io/coveralls/modeset/teaspoon.svg)](https://coveralls.io/r/modeset/teaspoon?branch=master)
+[![Code Climate](https://codeclimate.com/github/modeset/teaspoon/badges/gpa.svg)](https://codeclimate.com/github/modeset/teaspoon)
+[![Test Coverage](https://codeclimate.com/github/modeset/teaspoon/badges/coverage.svg)](https://codeclimate.com/github/modeset/teaspoon)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 <img src="https://raw.github.com/modeset/teaspoon/master/screenshots/logo_big.png" alt="Logo by Morgan Keys" align="right" />
