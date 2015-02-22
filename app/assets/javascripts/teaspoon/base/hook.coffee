@@ -1,9 +1,8 @@
 Teaspoon.hook = (name, payload = {}) ->
   method = "POST"
-  payload = {args: payload}
   xhr = null
 
-  xhrRequest = (url, options, callback) ->
+  xhrRequest = (url, payload, callback) ->
     if window.XMLHttpRequest # Mozilla, Safari, ...
       xhr = new XMLHttpRequest()
     else if window.ActiveXObject # IE
@@ -16,8 +15,8 @@ Teaspoon.hook = (name, payload = {}) ->
     xhr.onreadystatechange = callback
     xhr.open("POST", "#{Teaspoon.root}/#{url}", false)
     xhr.setRequestHeader("Content-Type", "application/json")
-    xhr.send(JSON.stringify(payload))
+    xhr.send(JSON.stringify(args: payload))
 
-  xhrRequest "#{Teaspoon.suites.active}/#{name}", options, ->
+  xhrRequest "#{Teaspoon.suites.active}/#{name}", payload, ->
     return unless xhr.readyState == 4
     throw("Unable to call hook \"#{url}\".") unless xhr.status == 200

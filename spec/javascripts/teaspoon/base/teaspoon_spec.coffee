@@ -24,7 +24,7 @@ describe "Teaspoon", ->
       spyOn(Teaspoon, 'reload')
       @spy = spyOn(Teaspoon, "Runner")
 
-    it "allows defering (thus not instantiating the runner)", ->
+    it "allows deferring (thus not instantiating the runner)", ->
       Teaspoon.defer = true
       Teaspoon.execute()
       expect(@spy).wasNotCalled()
@@ -33,22 +33,15 @@ describe "Teaspoon", ->
       Teaspoon.execute()
       expect(@spy).toHaveBeenCalled()
 
+
   describe ".hook", ->
 
     beforeEach ->
-      @xhr = jasmine.createSpyObj(
-        'xhr',
-        [
-          'open',
-          'setRequestHeader',
-          'send'
-        ]
-      )
-      spyOn(window, 'XMLHttpRequest').andReturn(@xhr)
+      @xhr = jasmine.createSpyObj("xhr", ["open", "setRequestHeader", "send"])
+      spyOn(window, "XMLHttpRequest").andReturn(@xhr)
 
-    it "sets XMLHttpRequest request header", ->
-      Teaspoon.hook("foo")
-      expect(@xhr.setRequestHeader).toHaveBeenCalledWith(
-        "Content-Type",
-        "application/json"
-      )
+    it "makes the proper ajax request", ->
+      Teaspoon.hook("foo", {bar: "baz"})
+      expect(@xhr.open).toHaveBeenCalledWith("POST", "/teaspoon/default/foo", false)
+      expect(@xhr.setRequestHeader).toHaveBeenCalledWith("Content-Type", "application/json")
+      expect(@xhr.send).toHaveBeenCalledWith('{"args":{"bar":"baz"}}')
