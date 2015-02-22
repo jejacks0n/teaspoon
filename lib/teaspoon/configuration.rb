@@ -70,13 +70,15 @@ module Teaspoon
       attr_accessor   :matcher, :helper, :javascripts, :stylesheets,
                       :boot_partial, :body_partial,
                       :no_coverage,
-                      :hooks
+                      :hooks,
+                      :expand_assets
 
       def initialize
         @matcher      = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
         @helper       = "spec_helper"
         @javascripts  = ["jasmine/1.3.1", "teaspoon-jasmine"]
         @stylesheets  = ["teaspoon"]
+        @expand_assets= true
 
         @boot_partial = "boot"
         @body_partial = "body"
