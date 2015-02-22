@@ -37,7 +37,12 @@ describe Teaspoon::Drivers::PhantomjsDriver do
 
       it "calls #run and calls runner.process with each line of output" do
         subject.instance_variable_set(:@options, ["--foo", "--bar"])
-        args = ["--foo", "--bar", Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.js").to_s, "_url_", 180]
+        args = [
+          "--foo",
+          "--bar",
+          %{"#{Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.js").to_s}"},
+          '"_url_"',
+          180]
         expect(runner).to receive(:process).with("_line_")
         @block = nil
         expect(subject).to receive(:run).with(*args) { |&b| @block = b }
