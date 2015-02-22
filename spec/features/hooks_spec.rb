@@ -49,7 +49,7 @@ feature "testing hooks in the browser" do
     let(:temp_file) { "tmp/before_hook_test" }
     let(:message) { "Hello World" }
     let(:params) do
-      { hook_args: { message: message } }
+      { args: { message: message } }
     end
 
     scenario "gives me the expected results" do

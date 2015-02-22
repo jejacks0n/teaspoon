@@ -281,7 +281,7 @@ end
 
 ### Hooks
 
-Hooks are designed to facilitate loading fixtures or other things that might be required on the back end before, after, or during running a suite or test. You can define hooks in your suite by specifying a name and a block. Hooks with the same name will be added to an array, and all will be called when the hook is requested. If you don't specify a name, :default will be assumed.
+Hooks are designed to facilitate loading fixtures or other things that might be required on the back end before, after, or during running a suite or test. You can define hooks in your suite by specifying a name and a block. Hooks with the same name will be added to an array, and all configured hook callbacks with that name will be called when the hook is requested. If you don't specify a name, :default is be assumed.
 
 ```ruby
 config.suite :my_suite do |suite|
@@ -306,10 +306,8 @@ end
 You can then use the following javascript to call your hook with arguments:
 
 ```js
-args = JSON.stringify({'hook_args': {'foo': 'bar'}})
-Teaspoon.hook('fixtures', { 'method': 'POST', 'payload': args})
+Teaspoon.hook('fixtures', {foo: 'bar'})
 ```
-*note that you must specify the HTTP verb under the `method` key and your argurments are passed as a stringied JSON document keyed by `hook_args` under the `payload` key
 
 ### Manifest Style
 

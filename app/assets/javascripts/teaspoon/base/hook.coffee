@@ -1,5 +1,6 @@
-Teaspoon.hook = (name, options = {}) ->
-
+Teaspoon.hook = (name, payload = {}) ->
+  method = "POST"
+  payload = {args: payload}
   xhr = null
 
   xhrRequest = (url, options, callback) ->
@@ -13,9 +14,9 @@ Teaspoon.hook = (name, options = {}) ->
     throw("Unable to make Ajax Request") unless xhr
 
     xhr.onreadystatechange = callback
-    xhr.open(options['method'] || "GET", "#{Teaspoon.root}/#{url}", false)
+    xhr.open("POST", "#{Teaspoon.root}/#{url}", false)
     xhr.setRequestHeader("Content-Type", "application/json")
-    xhr.send(options['payload'])
+    xhr.send(JSON.stringify(payload))
 
   xhrRequest "#{Teaspoon.suites.active}/#{name}", options, ->
     return unless xhr.readyState == 4
