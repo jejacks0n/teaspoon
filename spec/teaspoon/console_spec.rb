@@ -64,18 +64,24 @@ describe Teaspoon::Console do
   describe "#execute" do
 
     it "calls #execute_without_handling and returns its value" do
-      expect(subject).to receive(:execute_without_handling) .with(foo: "bar").and_return(true)
+      expect(subject).to receive(:execute_without_handling).with(foo: "bar").and_return(true)
       expect(subject.execute(foo: "bar")).to be_truthy
     end
 
+    it "handles Teaspoon::RunnerException exceptions" do
+      expect(subject).to receive(:log).with("_runner_error_")
+      expect(subject).to receive(:execute_without_handling).and_raise(Teaspoon::RunnerException, "_runner_error_")
+      expect(subject.execute).to be_falsey
+    end
+
     it "handles Teaspoon::Error exceptions" do
-      expect(subject).to receive(:abort) .with("_unknown_error_")
-      expect(subject).to receive(:execute_without_handling) .and_raise(Teaspoon::Error, "_unknown_error_")
+      expect(subject).to receive(:abort).with("_unknown_error_")
+      expect(subject).to receive(:execute_without_handling).and_raise(Teaspoon::Error, "_unknown_error_")
       subject.execute
     end
 
     it "returns false on Teaspoon::Failure" do
-      expect(subject).to receive(:execute_without_handling) .and_raise(Teaspoon::Failure)
+      expect(subject).to receive(:execute_without_handling).and_raise(Teaspoon::Failure)
       expect(subject.execute).to be_falsey
     end
 

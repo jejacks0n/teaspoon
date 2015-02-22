@@ -28,8 +28,6 @@ module Teaspoon
       standard_environments.each do |filename|
         file = File.expand_path(filename, Dir.pwd)
         return require_env(file) if File.exists?(file)
-        #file = File.expand_path(filename, File.join(Dir.pwd, '../..'))
-        #return require_env(file) if File.exists?(file)
       end
 
       raise Teaspoon::EnvironmentNotFound, "Unable to load Teaspoon environment in {#{standard_environments.join(', ')}}"

@@ -38,6 +38,10 @@ describe Teaspoon::Suite do
       expect(dirs.all? { |path| result[:path].grep(/#{path}/)[0] }).to be_truthy
     end
 
+    it "returns false if the spec wasn't found" do
+      expect(Teaspoon::Suite.resolve_spec_for("foo")).to be_falsey
+    end
+
   end
 
   describe "#initialize" do

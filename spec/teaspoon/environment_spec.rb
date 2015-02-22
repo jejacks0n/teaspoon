@@ -98,4 +98,12 @@ describe Teaspoon::Environment do
 
   end
 
+  describe ".rails_loaded?" do
+
+    it "returns a boolean based on if Rails is defined" do
+      expect(subject.send(:rails_loaded?)).to be_truthy
+    end
+
+  end
+
 end
