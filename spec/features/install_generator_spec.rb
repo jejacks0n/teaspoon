@@ -7,7 +7,7 @@ feature "Installation", aruba: true do
     run_simple("bundle exec rails new testapp --skip-bundle")
     cd("testapp")
     append_to_file("Gemfile", %{\ngem "teaspoon", path: "#{File.expand_path('../../../', __FILE__)}"\n})
-    run_simple("bundle install --local")
+    run_simple("bundle install")
   end
 
   describe "running the generator" do
