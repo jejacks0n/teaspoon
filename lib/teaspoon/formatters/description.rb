@@ -31,7 +31,6 @@ module Teaspoon
       def <=>(other)
         name <=> other.name
       end
-
     end
   end
 end

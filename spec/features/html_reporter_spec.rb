@@ -11,6 +11,16 @@ feature "testing with teaspoon in the browser", js: true do
     }}
   end
 
+  scenario "lists the suites" do
+    visit "/teaspoon"
+
+    within("#teaspoon-suite-list") do
+      expect(find("li.suite h1")).to have_text("integration")
+      expect(find("li.suite li")).to have_text("integration/integration_spec.js")
+    end
+
+  end
+
   scenario "gives me the expected results" do
     visit "/teaspoon/integration"
 
