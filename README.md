@@ -329,6 +329,8 @@ end
 
 Teaspoon uses [Istanbul](https://github.com/gotwarlost/istanbul) to generate code coverage statistics and reports. You can define coverage configurations the same way you define suites.
 
+**Note:** Ensure that you are using Istanbul version `v0.3.0` or greater.
+
 Each suite allows specifying ignored files, which allows you to ignore support libraries and dependencies.
 
 The following configuration and example generates a text and cobertura report -- and an annotated HTML report that you can inspect further.
