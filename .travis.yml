@@ -7,3 +7,10 @@ env:
 notifications:
   slack:
     secure: C/awjHAPtddxoCowdxbLiJG7Ny2wpgYVko4Dtrp62K8nxXfs3MotzndJmfr1D9z1sCIy0T/ZjuSE0gdVBNTcUrXIk0MiZS/G2UikeZFq1sh5Z3UkNbQoCZBJHPPoD7fwHC/hBIeDdZtvN8++zTvEcraFgZxEJMkw7Lihg5efa1Q=
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/4c2f7fb8034903fb62a1
+    on_success: change
+    on_failure: always
+    on_start: false
+
