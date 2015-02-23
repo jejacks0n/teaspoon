@@ -7,7 +7,7 @@ require "teaspoon/exporter"
 describe Teaspoon::Console do
 
   let(:driver) { double(run_specs: 0) }
-  let(:server) { double(start: nil, url: "http://url.com") }
+  let(:server) { double(start: nil, url: "http://url.com", responsive?: false) }
   let(:runner) { double(failure_count: 2) }
 
   before do
@@ -38,6 +38,13 @@ describe Teaspoon::Console do
       expect(server).to receive(:start)
       Teaspoon::Console.new
     end
+
+    it "does not log a message about starting the server if one has already been started" do
+      allow(server).to receive(:responsive?).and_return(true)
+      expect_any_instance_of(Teaspoon::Console).not_to receive(:log).with("Starting the Teaspoon server...")
+      Teaspoon::Console.new
+    end
+
 
     it "aborts (displaying a message) on Teaspoon::ServerException" do
       expect(STDOUT).to receive(:print).with("_message_\n")
