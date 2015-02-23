@@ -33,6 +33,7 @@ class Teaspoon.Spec
     return [] unless @spec.failed
     for item in @spec.assertions
       continue if item.result
+      @provideFallbackMessage(item)
       {message: item.message, stack: item.source}
 
 
@@ -46,6 +47,15 @@ class Teaspoon.Spec
     status = "passed" unless @spec.failed
     status: status
     skipped: false
+
+
+  provideFallbackMessage: (item) ->
+    return if item.message
+
+    if item.actual && item.expected
+      item.message ||= "Expected #{JSON.stringify(item.actual)} to equal #{JSON.stringify(item.expected)}"
+    else
+      item.message = 'failed'
 
 
 

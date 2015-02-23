@@ -3,6 +3,8 @@ module "QUnit Teaspoon.Spec",
     @mockAssertions = [
       {message: "_qunit_message1_", source: "_source1_"}
       {message: "_qunit_message2_", source: "_source2_"}
+      {source: "_source3_", expected: 1, actual: 2}
+      {source: "_source4_"}
     ]
     @mockSpec =
       module: "_full qunit name_"
@@ -23,11 +25,13 @@ test "constructor", 7, ->
   ok(spec.viewId == 420, "sets viewId")
   ok(spec.pending == false, "sets pending to false") # no pending support
 
-test "#errors", 3, ->
+test "#errors", 5, ->
   errors = new Teaspoon.Spec(@mockSpec).errors()
-  ok(errors.length == 2, "returns the correct length array")
+  ok(errors.length == 4, "returns the correct length array")
   equal(errors[0].message, "_qunit_message1_", "the first item in the returned array is correct")
   equal(errors[0].stack, "_source1_", "the first item in the returned array is correct")
+  equal(errors[2].message, "Expected 2 to equal 1", "a nice fallback message is provided if QUnit does not provide one")
+  equal(errors[3].message, "failed", "some fallback message is provided if QUnit does not provide any information")
 
 test "#getParents", 3, ->
   spec = new Teaspoon.Spec(@mockSpec)
