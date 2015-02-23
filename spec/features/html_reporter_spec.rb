@@ -15,8 +15,8 @@ feature "testing with teaspoon in the browser", js: true do
     visit "/teaspoon"
 
     within("#teaspoon-suite-list") do
-      expect(page).not_to have_text("integration")
-      expect(page).not_to have_text("integration/integration_spec.js")
+      expect(page).to have_text("integration")
+      expect(page).to have_text("integration/integration_spec.js")
     end
 
   end
