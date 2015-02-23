@@ -32,19 +32,19 @@ describe Teaspoon::Console do
     end
 
     it "starts the server" do
-      expect_any_instance_of(Teaspoon::Console).to receive(:log) .with("Starting the Teaspoon server...")
+      expect_any_instance_of(Teaspoon::Console).to receive(:log).with("Starting the Teaspoon server...")
       expect_any_instance_of(Teaspoon::Console).to receive(:start_server) .and_call_original
-      expect(Teaspoon::Server).to receive(:new) .and_return(server)
+      expect(Teaspoon::Server).to receive(:new).and_return(server)
       expect(server).to receive(:start)
       Teaspoon::Console.new
     end
 
     it "aborts (displaying a message) on Teaspoon::ServerException" do
-      expect(STDOUT).to receive(:print) .with("_message_\n")
-      expect_any_instance_of(Teaspoon::Console).to receive(:log) .and_call_original
-      expect_any_instance_of(Teaspoon::Console).to receive(:start_server) .and_raise(Teaspoon::ServerException, "_message_")
-      expect_any_instance_of(Teaspoon::Console).to receive(:abort) .with("_message_").and_call_original
-      expect{ Teaspoon::Console.new }.to raise_error SystemExit
+      expect(STDOUT).to receive(:print).with("_message_\n")
+      expect_any_instance_of(Teaspoon::Console).to receive(:log).and_call_original
+      expect_any_instance_of(Teaspoon::Console).to receive(:start_server).and_raise(Teaspoon::ServerException, "_message_")
+      expect_any_instance_of(Teaspoon::Console).to receive(:abort).with("_message_").and_call_original
+      expect{ Teaspoon::Console.new }.to raise_error(SystemExit)
     end
 
   end
@@ -52,10 +52,10 @@ describe Teaspoon::Console do
   describe "#failures?" do
 
     it "calls #execute and returns the inverse of #executes return value" do
-      expect(subject).to receive(:execute) .and_return(false)
+      expect(subject).to receive(:execute).and_return(false)
       expect(subject.failures?).to be_truthy
 
-      expect(subject).to receive(:execute) .and_return(true)
+      expect(subject).to receive(:execute).and_return(true)
       expect(subject.failures?).to be_falsey
     end
 
@@ -107,7 +107,7 @@ describe Teaspoon::Console do
     end
 
     it "resolves the files" do
-      expect(Teaspoon::Suite).to receive(:resolve_spec_for) .with("file").and_return(suite: "foo", path: "file2")
+      expect(Teaspoon::Suite).to receive(:resolve_spec_for).with("file").and_return(suite: "foo", path: "file2")
       subject.execute_without_handling(files: ["file"])
 
       expect(subject.send(:suites)).to eq(["foo"])
@@ -116,35 +116,35 @@ describe Teaspoon::Console do
 
     it "resolves the files if a directory was given" do
       resolve_spec_for_output = ['test/javascripts/foo.coffee', 'test/javascripts/bar.coffee']
-      expect(Teaspoon::Suite).to receive(:resolve_spec_for) .with("full/path").and_return(suite: "foo", path: resolve_spec_for_output)
+      expect(Teaspoon::Suite).to receive(:resolve_spec_for).with("full/path").and_return(suite: "foo", path: resolve_spec_for_output)
       subject.execute_without_handling(files: ["full/path"])
       expect(subject.send(:suites)).to eq(["foo"])
       expect(subject.send(:filter, "foo")).to eq("file[]=#{resolve_spec_for_output.join('&file[]=')}")
     end
 
     it "runs the tests" do
-      expect(subject).to receive(:suites) .and_return([:default, :foo])
-      expect(subject).to receive(:run_specs) .twice.and_return(2)
+      expect(subject).to receive(:suites).and_return([:default, :foo])
+      expect(subject).to receive(:run_specs).twice.and_return(2)
       expect(subject.execute_without_handling).to be_falsey
     end
 
     it "returns true if no failure count" do
-      expect(subject).to receive(:suites) .and_return([:default, :foo])
-      expect(subject).to receive(:run_specs) .twice.and_return(0)
+      expect(subject).to receive(:suites).and_return([:default, :foo])
+      expect(subject).to receive(:run_specs).twice.and_return(0)
       expect(subject.execute_without_handling).to be_truthy
     end
 
     it "returns true if there were failures" do
-      expect(subject).to receive(:suites) .and_return([:default])
-      expect(subject).to receive(:run_specs) .once.and_return(1)
+      expect(subject).to receive(:suites).and_return([:default])
+      expect(subject).to receive(:run_specs).once.and_return(1)
       expect(subject.execute_without_handling).to be_falsey
     end
 
     it "calls export if the options include :export" do
-      expect(subject).to receive(:suites) .and_return([:default, :foo])
+      expect(subject).to receive(:suites).and_return([:default, :foo])
       subject.instance_variable_set(:@default_options, export: true)
-      expect(subject).to receive(:export) .with(:default)
-      expect(subject).to receive(:export) .with(:foo)
+      expect(subject).to receive(:export).with(:default)
+      expect(subject).to receive(:export).with(:foo)
       subject.execute
     end
 
@@ -154,21 +154,24 @@ describe Teaspoon::Console do
 
     before do
       allow(Teaspoon.configuration).to receive(:fail_fast).and_return(false)
-      expect(Teaspoon.configuration).to receive(:suite_configs) .and_return("_suite_" => proc{}, "suite_name" => proc{})
+      expect(Teaspoon.configuration).to receive(:suite_configs).and_return("_suite_" => proc{}, "suite_name" => proc{})
     end
 
     it "raises a Teaspoon::UnknownSuite exception when the suite isn't known" do
-      expect { subject.run_specs("_unknown_") }.to raise_error Teaspoon::UnknownSuite
+      expect { subject.run_specs("_unknown_") }.to raise_error(
+        Teaspoon::UnknownSuite,
+        %{Unknown suite: "_unknown_"}
+      )
     end
 
     it "logs that the suite is being run" do
-      expect(subject).to receive(:log) .with("Teaspoon running _suite_ suite at http://url.com/teaspoon/_suite_")
+      expect(subject).to receive(:log).with("Teaspoon running _suite_ suite at http://url.com/teaspoon/_suite_")
       subject.run_specs("_suite_")
     end
 
     it "calls #run_specs on the driver" do
-      expect(subject).to receive(:driver) .and_return(driver)
-      expect(driver).to receive(:run_specs) .with(runner, "http://url.com/teaspoon/suite_name?reporter=Console")
+      expect(subject).to receive(:driver).and_return(driver)
+      expect(driver).to receive(:run_specs).with(runner, "http://url.com/teaspoon/suite_name?reporter=Console")
       expect(subject.run_specs(:suite_name)).to eq(2)
     end
 
@@ -178,8 +181,8 @@ describe Teaspoon::Console do
     end
 
     it "raises a Teaspoon:UnknownDriver when an unknown driver is being used" do
-      expect(Teaspoon.configuration).to receive(:driver) .twice.and_return(:foo)
-      expect(subject).to receive(:driver) .and_call_original
+      expect(Teaspoon.configuration).to receive(:driver).twice.and_return(:foo)
+      expect(subject).to receive(:driver).and_call_original
       expect { subject.run_specs(:suite_name) }.to raise_error Teaspoon::UnknownDriver
     end
 
@@ -188,7 +191,7 @@ describe Teaspoon::Console do
   describe "#export" do
 
     before do
-      expect(Teaspoon.configuration).to receive(:suite_configs) .and_return("_suite_" => proc{}, "suite_name" => proc{})
+      expect(Teaspoon.configuration).to receive(:suite_configs).and_return("_suite_" => proc{}, "suite_name" => proc{})
       allow(Teaspoon::Exporter).to receive(:new).and_return(double(export: nil))
     end
 
@@ -197,14 +200,14 @@ describe Teaspoon::Console do
     end
 
     it "logs that the suite is being exported" do
-      expect(subject).to receive(:log) .with("Teaspoon exporting _suite_ suite at http://url.com/teaspoon/_suite_")
+      expect(subject).to receive(:log).with("Teaspoon exporting _suite_ suite at http://url.com/teaspoon/_suite_")
       subject.export("_suite_")
     end
 
     it "calls #export on the exporter" do
       subject.instance_variable_set(:@default_options, export: "_output_path_")
       exporter = double(export: nil)
-      expect(Teaspoon::Exporter).to receive(:new) .with("_suite_", "http://url.com/teaspoon/_suite_", "_output_path_").and_return(exporter)
+      expect(Teaspoon::Exporter).to receive(:new).with("_suite_", "http://url.com/teaspoon/_suite_", "_output_path_").and_return(exporter)
       expect(exporter).to receive(:export)
       subject.export("_suite_")
     end

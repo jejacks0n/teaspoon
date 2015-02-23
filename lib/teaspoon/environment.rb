@@ -2,7 +2,6 @@ require "teaspoon/exceptions"
 
 module Teaspoon
   module Environment
-
     def self.load(options = {})
       require_environment(options[:environment])
       raise "Rails environment not found." unless rails_loaded?
@@ -30,7 +29,8 @@ module Teaspoon
         return require_env(file) if File.exists?(file)
       end
 
-      raise Teaspoon::EnvironmentNotFound, "Unable to load Teaspoon environment in {#{standard_environments.join(', ')}}"
+      raise Teaspoon::EnvironmentNotFound,
+            "Unable to load Teaspoon environment in {#{standard_environments.join(', ')}}"
     end
 
     def self.standard_environments

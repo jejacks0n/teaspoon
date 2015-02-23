@@ -35,7 +35,6 @@ module Teaspoon
     register :teamcity,        description: "teamcity compatible formatter"
 
     class Base
-
       attr_accessor :total_count, :run_count, :passes, :pendings, :failures, :errors
 
       def initialize(suite_name = :default, output_file = nil)
@@ -119,9 +118,9 @@ module Teaspoon
 
       protected
 
-      def log_runner(result); end
+      def log_runner(_result); end
 
-      def log_suite(result); end
+      def log_suite(_result); end
 
       def log_spec(result)
         return log_passing_spec(result) if result.passing?
@@ -129,25 +128,25 @@ module Teaspoon
         log_failing_spec(result)
       end
 
-      def log_passing_spec(result); end
+      def log_passing_spec(_result); end
 
-      def log_pending_spec(result); end
+      def log_pending_spec(_result); end
 
-      def log_failing_spec(result); end
+      def log_failing_spec(_result); end
 
-      def log_error(result); end
+      def log_error(_result); end
 
-      def log_exception(result); end
+      def log_exception(_result); end
 
-      def log_console(message); end
+      def log_console(_message); end
 
-      def log_result(result); end
+      def log_result(_result); end
 
-      def log_coverage(message); end
+      def log_coverage(_message); end
 
-      def log_threshold_failure(message); end
+      def log_threshold_failure(_message); end
 
-      def log_complete(failure_count); end
+      def log_complete(_failure_count); end
 
       private
 

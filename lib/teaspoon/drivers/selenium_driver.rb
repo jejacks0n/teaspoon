@@ -8,11 +8,10 @@ end
 module Teaspoon
   module Drivers
     class SeleniumDriver < Base
-
       def initialize(options = nil)
         options ||= {}
         case options
-        when Hash   then @options = options
+        when Hash then @options = options
         when String then @options = JSON.parse(options)
         else raise Teaspoon::UnknownDriverOptions, "Unknown driver options -- supply a hash or json string"
         end
@@ -39,14 +38,13 @@ module Teaspoon
       protected
 
       def driver_options
-        @driver_options ||= HashWithIndifferentAccess.new({
+        @driver_options ||= HashWithIndifferentAccess.new(
           client_driver: :firefox,
           timeout: Teaspoon.configuration.driver_timeout.to_i,
           interval: 0.01,
           message: "Timed out"
-        }).merge(@options)
+        ).merge(@options)
       end
     end
   end
 end
-

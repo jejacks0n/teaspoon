@@ -1,6 +1,5 @@
 module Teaspoon
   class Coverage
-
     def initialize(suite_name, config_name, data)
       @suite_name = suite_name
       @data = data
@@ -11,7 +10,7 @@ module Teaspoon
     def generate_reports(&block)
       input_path do |input|
         results = []
-        for format in @config.reports
+        @config.reports.each do |format|
           result = generate_report(input, format)
           results << result if ["text", "text-summary"].include?(format.to_s)
         end

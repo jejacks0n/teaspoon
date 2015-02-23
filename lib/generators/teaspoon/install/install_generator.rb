@@ -1,42 +1,47 @@
 module Teaspoon
   module Generators
     class InstallGenerator < Rails::Generators::Base
-
       source_root File.expand_path("../", __FILE__)
 
       desc "Installs the Teaspoon initializer into your application."
 
-      class_option :framework, type: :string,
+      class_option :framework,
+                   type: :string,
                    aliases: "-t",
                    default: "jasmine",
                    desc:    "Specify which test framework to use (Available: jasmine, mocha, or qunit)"
 
-      class_option :coffee, type: :boolean,
+      class_option :coffee,
+                   type: :boolean,
                    aliases: "-c",
                    default: false,
                    desc:    "Generate a CoffeeScript spec helper instead of Javascript"
 
-      class_option :no_comments, type: :boolean,
+      class_option :no_comments,
+                   type: :boolean,
                    aliases: "-q",
                    default: false,
                    desc:    "Install the teaspoon_env.rb without comments"
 
-      class_option :partials, type: :boolean,
+      class_option :partials,
+                   type: :boolean,
                    aliases: "-p",
                    default: false,
                    desc:    "Copy the boot and body partials"
 
       def validate_framework
         return if frameworks.include?(options[:framework])
-        puts "Unknown framework -- available #{frameworks.join(", ")}"
+        puts "Unknown framework -- available #{frameworks.join(', ')}"
         exit(1)
       end
 
       def copy_environment
         if options[:no_comments]
-          copy_file "templates/#{framework}/env.rb", "#{framework_type}/teaspoon_env.rb"
+          copy_file "templates/#{framework}/env.rb",
+                    "#{framework_type}/teaspoon_env.rb"
         else
-          template "templates/#{framework}/env_comments.rb.tt", "#{framework_type}/teaspoon_env.rb"
+          template "templates/#{framework}/env_comments.rb.tt",
+                   "#{framework_type}/teaspoon_env.rb"
         end
       end
 
@@ -46,13 +51,16 @@ module Teaspoon
       end
 
       def copy_spec_helper
-        copy_file "templates/#{framework}/#{framework_type}_helper.#{helper_ext}", "#{framework_type}/javascripts/#{framework_type}_helper.#{helper_ext}"
+        copy_file "templates/#{framework}/#{framework_type}_helper.#{helper_ext}",
+                  "#{framework_type}/javascripts/#{framework_type}_helper.#{helper_ext}"
       end
 
       def copy_partials
         return unless options[:partials]
-        copy_file "templates/_boot.html.erb", "#{framework_type}/javascripts/fixtures/_boot.html.erb"
-        copy_file "templates/_body.html.erb", "#{framework_type}/javascripts/fixtures/_body.html.erb"
+        copy_file "templates/_boot.html.erb",
+                  "#{framework_type}/javascripts/fixtures/_boot.html.erb"
+        copy_file "templates/_body.html.erb",
+                  "#{framework_type}/javascripts/fixtures/_body.html.erb"
       end
 
       def display_readme

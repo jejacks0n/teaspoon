@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-root = File.expand_path('../../lib', __FILE__)
+root = File.expand_path("../../lib", __FILE__)
 $:.unshift(root) unless $:.include?(root)
 
 require "teaspoon/command_line"

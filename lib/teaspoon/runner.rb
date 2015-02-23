@@ -3,13 +3,12 @@ require "teaspoon/result"
 
 module Teaspoon
   class Runner
-
     attr_reader :failure_count
 
     def initialize(suite_name = :default)
       @suite_name = suite_name
       @failure_count = 0
-      @formatters = Teaspoon.configuration.formatters.map{ |f| resolve_formatter(f) }
+      @formatters = Teaspoon.configuration.formatters.map { |f| resolve_formatter(f) }
     end
 
     def process(line)

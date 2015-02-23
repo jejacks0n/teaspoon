@@ -1,7 +1,6 @@
 require "singleton"
 
 module Teaspoon
-
   autoload :Formatters, "teaspoon/formatters/base"
   autoload :Drivers,    "teaspoon/drivers/base"
 
@@ -17,7 +16,7 @@ module Teaspoon
     # - add it to ENV_OVERRIDES if it can be overridden from ENV
     # - add it to the initializers in /lib/generators/install/templates so it's documented there as well
 
-    cattr_accessor   :mount_at, :root, :asset_paths, :fixture_paths
+    cattr_accessor :mount_at, :root, :asset_paths, :fixture_paths
     @@mount_at       = "/teaspoon"
     @@root           = nil # will default to Rails.root
     @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
@@ -25,9 +24,9 @@ module Teaspoon
 
     # console runner specific
 
-    cattr_accessor   :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :fail_fast,
-                     :formatters, :color, :suppress_log,
-                     :use_coverage
+    cattr_accessor :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :fail_fast,
+                   :formatters, :color, :suppress_log,
+                   :use_coverage
     @@driver         = "phantomjs"
     @@driver_options = nil
     @@driver_timeout = 180
@@ -53,24 +52,23 @@ module Teaspoon
     # suite configurations
 
     cattr_accessor :suite_configs
-    @@suite_configs = {"default" => {block: proc{}}}
+    @@suite_configs = { "default" => { block: proc {} } }
 
     def self.suite(name = :default, &block)
-      @@suite_configs[name.to_s] = {block: block, instance: Suite.new(&block)}
+      @@suite_configs[name.to_s] = { block: block, instance: Suite.new(&block) }
     end
 
     class Suite
-
       FRAMEWORKS = {
         jasmine: ["1.3.1", "2.0.0"],
         mocha: ["1.10.0", "1.17.1"],
         qunit: ["1.12.0", "1.14.0"],
       }
 
-      attr_accessor   :matcher, :helper, :javascripts, :stylesheets,
-                      :boot_partial, :body_partial,
-                      :no_coverage,
-                      :hooks
+      attr_accessor :matcher, :helper, :javascripts, :stylesheets,
+                    :boot_partial, :body_partial,
+                    :no_coverage,
+                    :hooks
 
       def initialize
         @matcher      = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
@@ -83,10 +81,10 @@ module Teaspoon
 
         @no_coverage  = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
 
-        @hooks        = Hash.new{ |h, k| h[k] = [] }
+        @hooks        = Hash.new { |h, k| h[k] = [] }
 
         default = Teaspoon.configuration.suite_configs["default"]
-        self.instance_eval(&default[:block]) if default
+        instance_eval(&default[:block]) if default
         yield self if block_given?
       end
 
@@ -95,7 +93,9 @@ module Teaspoon
         version ||= FRAMEWORKS[name].last if FRAMEWORKS[name]
         unless FRAMEWORKS[name] && FRAMEWORKS[name].include?(version)
           message = "Unknown framework \"#{name}\""
-          message += " with version #{version} -- available versions #{FRAMEWORKS[name].join(", ")}" if FRAMEWORKS[name] && version
+          if FRAMEWORKS[name] && version
+            message += " with version #{version} -- available versions #{FRAMEWORKS[name].join(', ')}"
+          end
           raise Teaspoon::UnknownFramework, message
         end
 
@@ -104,7 +104,6 @@ module Teaspoon
         when :qunit
           @matcher = "{test/javascripts,app/assets}/**/*_test.{js,js.coffee,coffee}"
           @helper  = "test_helper"
-        else
         end
       end
       alias_method :use_framework=, :use_framework
@@ -117,15 +116,15 @@ module Teaspoon
     # coverage configurations
 
     cattr_accessor :coverage_configs
-    @@coverage_configs = {"default" => {block: proc{}}}
+    @@coverage_configs = { "default" => { block: proc {} } }
 
     def self.coverage(name = :default, &block)
-      @@coverage_configs[name.to_s] = {block: block, instance: Coverage.new(&block)}
+      @@coverage_configs[name.to_s] = { block: block, instance: Coverage.new(&block) }
     end
 
     class Coverage
-      attr_accessor   :reports, :output_path,
-                      :statements, :functions, :branches, :lines
+      attr_accessor :reports, :output_path,
+                    :statements, :functions, :branches, :lines
 
       def initialize
         @reports      = ["text-summary"]
@@ -137,7 +136,7 @@ module Teaspoon
         @lines        = nil
 
         default = Teaspoon.configuration.coverage_configs["default"]
-        self.instance_eval(&default[:block]) if default
+        instance_eval(&default[:block]) if default
         yield self if block_given?
       end
     end

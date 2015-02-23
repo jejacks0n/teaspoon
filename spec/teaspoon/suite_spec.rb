@@ -3,14 +3,15 @@ require "spec_helper"
 describe Teaspoon::Suite do
 
   before do
-    allow(Teaspoon.configuration).to receive(:suite_configs).and_return("default" => {block: proc{}})
+    allow(Teaspoon.configuration).to receive(:suite_configs).and_return("default" => { block: proc {} })
   end
 
   describe ".all" do
 
     before do
       Teaspoon::Suite.instance_variable_set(:@all, nil)
-      allow(Teaspoon.configuration).to receive(:suite_configs).and_return("default" => {block: proc{}}, "foo" => {block: proc{}})
+      suites = { "default" => { block: proc {} }, "foo" => { block: proc {} } }
+      allow(Teaspoon.configuration).to receive(:suite_configs).and_return(suites)
     end
 
     it "returns all the suites" do
@@ -52,7 +53,8 @@ describe Teaspoon::Suite do
     end
 
     it "accepts a suite in the options" do
-      expect(Teaspoon.configuration).to receive(:suite_configs).and_return("test" => {block: proc{ |s| s.helper = "helper_file" }})
+      suite = { "test" => { block: proc { |s| s.helper = "helper_file" } } }
+      expect(Teaspoon.configuration).to receive(:suite_configs).and_return(suite)
       subject = Teaspoon::Suite.new(suite: :test)
       expect(subject.name).to eql("test")
       expect(subject.config.helper).to eq("helper_file")
@@ -83,13 +85,14 @@ describe Teaspoon::Suite do
       expect(result).to include("teaspoon/base/reporters/console_spec.js?body=1")
     end
 
-    it "returns just a file if one was requests" do
+    it "returns just a file if one was requested" do
       subject.instance_variable_set(:@options, file: "spec/javascripts/foo.js")
       result = subject.spec_assets(false)
       expect(result).to eql(["foo.js"])
     end
 
     it "returns the asset tree (all dependencies resolved) if we want coverage" do
+      allow(subject).to receive(:no_coverage).and_return([%r{support/}, "spec_helper.coffee"])
       subject.instance_variable_set(:@options, coverage: true)
       result = subject.spec_assets(true)
       expect(result).to include("support/json2.js?body=1")
@@ -116,11 +119,12 @@ describe Teaspoon::Suite do
     end
 
     it "returns a list of specs when the file name looks like it could be a match" do
-      expect( subject.include_spec_for?('fixture_spec').any? { |file| file.include?('fixture_spec.coffee') }).to be_truthy
+      files = subject.include_spec_for?("fixture_spec")
+      expect(files.any? { |file| file.include?("fixture_spec.coffee") }).to be_truthy
     end
 
     it "returns false if a matching spec isn't found" do
-      expect(subject.include_spec_for?('_not_a_match_')).to eq(false)
+      expect(subject.include_spec_for?("_not_a_match_")).to eq(false)
     end
 
   end

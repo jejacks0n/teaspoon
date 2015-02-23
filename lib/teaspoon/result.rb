@@ -1,5 +1,4 @@
 module Teaspoon
-
   RESULT_ATTRS = [
     :type,
     :suite,
@@ -18,9 +17,8 @@ module Teaspoon
   ]
 
   class Result < Struct.new(*RESULT_ATTRS)
-
     def self.build_from_json(json)
-      new(*RESULT_ATTRS.map{ |attr| json[attr.to_s] })
+      new(*RESULT_ATTRS.map { |attr| json[attr.to_s] })
     end
 
     def description

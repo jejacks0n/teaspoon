@@ -4,7 +4,6 @@ require "active_support/inflector"
 module Teaspoon
   module Formatters
     class Description
-
       attr_reader :name, :description
 
       def initialize(name, details)
@@ -18,7 +17,7 @@ module Teaspoon
       end
 
       def cli_help
-        "  #{name}#{" (default)" if default?} - #{description}"
+        "  #{name}#{' (default)' if default?} - #{description}"
       end
 
       def class_name

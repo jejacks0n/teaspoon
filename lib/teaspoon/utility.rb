@@ -1,9 +1,7 @@
 module Teaspoon
   module Utility
-
     # Cross-platform way of finding an executable in the $PATH.
     # http://stackoverflow.com/questions/2108727/which-in-ruby-checking-if-program-exists-in-path-from-ruby
-    #
     def which(cmd)
       exts = ENV["PATHEXT"] ? ENV["PATHEXT"].split(";") : [""]
 

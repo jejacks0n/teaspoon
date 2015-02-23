@@ -1,9 +1,8 @@
 module Teaspoon
   module Formatters
     class TeamcityFormatter < Base
-
       def initialize(*args)
-        log("enteredTheMatrix timestamp='#{Time.now.to_json.gsub('"', "")}'")
+        log("enteredTheMatrix timestamp='#{Time.now.to_json.gsub('"', '')}'")
         super
       end
 
@@ -58,7 +57,7 @@ module Teaspoon
 
       def log_complete(failure_count)
         log_line("\nFinished in #{@result.elapsed} seconds")
-        stats = "#{pluralize("example", run_count)}, #{pluralize("failure", failure_count)}"
+        stats = "#{pluralize('example', run_count)}, #{pluralize('failure', failure_count)}"
         stats << ", #{pendings.size} pending" if pendings.size > 0
         log_line(stats)
         log_line if failure_count > 0
@@ -70,7 +69,7 @@ module Teaspoon
         log("testSuiteFinished name='#{escape(@last_suite.label)}'") if @last_suite
       end
 
-      def log_teamcity_spec(opts, &block)
+      def log_teamcity_spec(opts, &_block)
         log("#{opts[:type]} name='#{opts[:desc]}' captureStandardOutput='true'")
         log_line(@stdout.gsub(/\n$/, "")) unless @stdout.blank?
         yield if block_given?
@@ -87,7 +86,7 @@ module Teaspoon
       end
 
       def escape_trace(trace)
-        lines = trace.map { |t| ["#{t["file"]}:#{t["line"]}", t["function"]].compact.join(" ") }
+        lines = trace.map { |t| ["#{t['file']}:#{t['line']}", t["function"]].compact.join(" ") }
         escape(lines.join("\n"))
       end
     end

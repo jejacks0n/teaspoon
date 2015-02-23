@@ -43,7 +43,7 @@ module Teaspoon
 
       def log_intent_stdout(level)
         return if @stdout.blank?
-        log_indent_line("# #{@stdout.gsub(/\n$/, "").gsub("\n", "\n# ")}", level, CYAN)
+        log_indent_line("# #{@stdout.gsub(/\n$/, '').gsub("\n", "\n# ")}", level, CYAN)
       end
 
       def log_indent_line(str = "", level = nil, color = nil)
@@ -51,7 +51,7 @@ module Teaspoon
       end
 
       def indent(str = "", level = nil)
-        indent = "#{"  " * level}"
+        indent = " " * (level * 2)
         str.gsub!("\n", "\n#{indent}")
         "#{indent}#{str}"
       end

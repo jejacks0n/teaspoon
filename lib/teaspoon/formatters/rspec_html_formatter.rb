@@ -404,9 +404,12 @@ module Teaspoon
                 </div>
 
                 <div id="display-filters">
-                  <input id="passed-checkbox" data-class-filter data-type="passed" type="checkbox" checked="checked"> <label for="passed-checkbox">Passed</label>
-                  <input id="failed-checkbox" data-class-filter data-type="failed" type="checkbox" checked="checked"> <label for="failed-checkbox">Failed</label>
-                  <input id="pending-checkbox" data-class-filter data-type="pending" type="checkbox" checked="checked"> <label for="pending-checkbox">Pending</label>
+                  <input id="passed-checkbox" data-class-filter data-type="passed" type="checkbox" checked="checked">
+                  <label for="passed-checkbox">Passed</label>
+                  <input id="failed-checkbox" data-class-filter data-type="failed" type="checkbox" checked="checked">
+                  <label for="failed-checkbox">Failed</label>
+                  <input id="pending-checkbox" data-class-filter data-type="pending" type="checkbox" checked="checked">
+                  <label for="pending-checkbox">Pending</label>
                 </div>
 
                 <div id="summary">
@@ -454,7 +457,6 @@ module Teaspoon
           </body>
         </html>
         HTML
-
       end
     end
   end

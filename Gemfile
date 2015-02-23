@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 gemspec
 
@@ -28,3 +28,4 @@ end
 
 # io services
 gem "codeclimate-test-reporter", group: :test, require: nil
+gem "rubocop", require: false

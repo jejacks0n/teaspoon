@@ -4,7 +4,6 @@ require "teaspoon/instrumentation"
 
 module Teaspoon
   class Engine < ::Rails::Engine
-
     isolate_namespace Teaspoon
 
     config.assets.precompile += %w{ teaspoon.css teaspoon-teaspoon.js }
@@ -31,8 +30,6 @@ module Teaspoon
       Teaspoon::Engine.prepend_routes(app)                   # prepend routes so a catchall doesn't get in the way
     end
 
-    private
-
     def self.default_root_path(root)
       Teaspoon.configuration.root ||= root
     end
@@ -51,7 +48,7 @@ module Teaspoon
     def self.prepend_routes(app)
       mount_at = Teaspoon.configuration.mount_at
 
-      return if app.routes.recognize_path(mount_at)[:action] != 'routing_error' rescue nil
+      return if app.routes.recognize_path(mount_at)[:action] != "routing_error" rescue nil
       require Teaspoon::Engine.root.join("app/controllers/teaspoon/suite_controller")
 
       app.routes.prepend do

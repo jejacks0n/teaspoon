@@ -1,7 +1,6 @@
 module Teaspoon
   module Formatters
     class JsonFormatter < Base
-
       protected
 
       def log_runner(result)
@@ -25,7 +24,7 @@ module Teaspoon
       end
 
       def log_console(message)
-        log_line(%Q{{"type":"console","log":"#{message.gsub(/\n$/, "").gsub("\n", "\\n")}"}})
+        log_line(%{{"type":"console","log":"#{message.gsub(/\n$/, '').gsub('\n', '\\n')}"}})
       end
 
       def log_result(result)

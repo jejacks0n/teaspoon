@@ -57,7 +57,10 @@ describe Teaspoon::Server do
     it "raises a ServerException if the timeout fails" do
       expect(subject).to receive(:wait_until_started).and_call_original
       expect(Timeout).to receive(:timeout).with(Teaspoon.configuration.server_timeout.to_i).and_raise(Timeout::Error)
-      expect{ subject.start }.to raise_error Teaspoon::ServerException
+      expect { subject.start }.to raise_error(
+        Teaspoon::ServerException,
+        "Server failed to start. You may need to increase the timeout configuration."
+      )
     end
 
   end
@@ -87,7 +90,7 @@ describe Teaspoon::Server do
   describe "integration" do
 
     before do
-      allow(Teaspoon.configuration).to receive(:suite_configs).and_return("foo" => {block: proc{}})
+      allow(Teaspoon.configuration).to receive(:suite_configs).and_return("foo" => { block: proc {} })
       allow(Teaspoon.configuration).to receive(:suppress_log).and_return(true)
     end
 

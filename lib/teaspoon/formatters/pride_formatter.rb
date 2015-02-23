@@ -1,7 +1,6 @@
 module Teaspoon
   module Formatters
     class PrideFormatter < DotFormatter
-
       PI_3 = Math::PI / 3
 
       def initialize(*args)

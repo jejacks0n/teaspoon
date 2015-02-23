@@ -193,12 +193,18 @@ describe Teaspoon::Configuration::Suite do
 
       it "shows an error for unknown frameworks" do
         @suite = proc{ |s| s.use_framework :foo }
-        expect{ subject }.to raise_error Teaspoon::UnknownFramework, "Unknown framework \"foo\""
+        expect{ subject }.to raise_error(
+          Teaspoon::UnknownFramework,
+          "Unknown framework \"foo\""
+        )
       end
 
       it "shows an error for unknown versions" do
         @suite = proc{ |s| s.use_framework :qunit, "666" }
-        expect{ subject }.to raise_error Teaspoon::UnknownFramework, "Unknown framework \"qunit\" with version 666 -- available versions 1.12.0, 1.14.0"
+        expect{ subject }.to raise_error(
+          Teaspoon::UnknownFramework,
+          "Unknown framework \"qunit\" with version 666 -- available versions 1.12.0, 1.14.0"
+        )
       end
 
     end

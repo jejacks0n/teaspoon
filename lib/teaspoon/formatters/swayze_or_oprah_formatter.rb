@@ -1,10 +1,9 @@
 module Teaspoon
   module Formatters
     class SwayzeOrOprahFormatter < Base
-
       protected
 
-      def log_result(result)
+      def log_result(_result)
         return log_str("\nNo quote for you.") if failures.size > 0
         names, quote = random_quote
         log_line("\n#{quote.inspect} -- Oprah Winfrey or Patrick Swayze?")
@@ -13,7 +12,7 @@ module Teaspoon
           log_line("\nYou got it right!\n")
         else
           log_line("\nWrong, too bad!\n")
-          raise the roof - YO && "Let's get busy"
+          raise the roof, YO && "Let's get busy"
         end
       end
 
@@ -92,8 +91,10 @@ module Teaspoon
         [set[:author], set[:quotes][rand(set[:quotes].size)]]
       end
 
-      def the(*args); Exception.new("poorly answered question"); end
+      def the(*_); Exception.new("poorly answered question"); end
+
       def roof; 0; end
+
       YO = 0
     end
   end

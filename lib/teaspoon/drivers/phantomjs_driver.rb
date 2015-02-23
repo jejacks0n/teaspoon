@@ -12,9 +12,9 @@ module Teaspoon
       def initialize(options = nil)
         options ||= []
         case options
-        when Array  then @options = options
+        when Array then @options = options
         when String then @options = options.split(" ")
-        when Hash   then @options = options.map { |k, v| "--#{k}=#{v}" }
+        when Hash then @options = options.map { |k, v| "--#{k}=#{v}" }
         else raise Teaspoon::UnknownDriverOptions, "Unknown driver options -- supply a string, array or hash"
         end
       end
@@ -28,7 +28,7 @@ module Teaspoon
       protected
 
       def run(*args, &block)
-        IO.popen([executable, *args].join(' ')) { |io| io.each(&block) }
+        IO.popen([executable, *args].join(" ")) { |io| io.each(&block) }
       end
 
       def driver_options(url)

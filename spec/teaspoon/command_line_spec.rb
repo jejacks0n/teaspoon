@@ -53,7 +53,7 @@ describe Teaspoon::CommandLine do
       expect(STDOUT).to receive(:print).with("Teaspoon::EnvironmentNotFound\nConsider using -r path/to/teaspoon_env\n")
       expect(Teaspoon::Console).to receive(:new).and_raise(Teaspoon::EnvironmentNotFound)
       expect_any_instance_of(subject).to receive(:abort).and_call_original
-      expect { subject.new }.to raise_error SystemExit
+      expect { subject.new }.to raise_error(SystemExit)
     end
 
   end
@@ -68,7 +68,7 @@ describe Teaspoon::CommandLine do
 
     it "has --help" do
       suppress_warnings { ARGV = ["--help"] }
-      expect { subject.new.opt_parser }.to raise_error SystemExit
+      expect { subject.new.opt_parser }.to raise_error(SystemExit)
       expect(@log).to include <<-OUTPUT.strip_heredoc
       Usage: teaspoon [options] [files]
 
@@ -113,7 +113,7 @@ describe Teaspoon::CommandLine do
 
     it "has --version" do
       suppress_warnings { ARGV = ["--version"] }
-      expect { subject.new.opt_parser }.to raise_error SystemExit
+      expect { subject.new.opt_parser }.to raise_error(SystemExit)
       expect(@log).to match(/\d+\.\d+\.\d+\n/)
     end
 

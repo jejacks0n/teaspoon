@@ -2,7 +2,6 @@ require "teaspoon/environment"
 
 module Teaspoon
   class Console
-
     def initialize(options = {})
       @default_options = options
       @suites = {}
@@ -48,7 +47,10 @@ module Teaspoon
     end
 
     def run_specs(suite)
-      raise Teaspoon::UnknownSuite, "Unknown suite: \"#{suite}\"" unless Teaspoon.configuration.suite_configs[suite.to_s]
+      unless Teaspoon.configuration.suite_configs[suite.to_s]
+        raise Teaspoon::UnknownSuite, "Unknown suite: \"#{suite}\""
+      end
+
       log("Teaspoon running #{suite} suite at #{base_url_for(suite)}")
       runner = Teaspoon::Runner.new(suite)
       driver.run_specs(runner, url_for(suite))
@@ -57,7 +59,10 @@ module Teaspoon
     end
 
     def export(suite)
-      raise Teaspoon::UnknownSuite, "Unknown suite: \"#{suite}\"" unless Teaspoon.configuration.suite_configs[suite.to_s]
+      unless Teaspoon.configuration.suite_configs[suite.to_s]
+        raise Teaspoon::UnknownSuite, "Unknown suite: \"#{suite}\""
+      end
+
       log("Teaspoon exporting #{suite} suite at #{base_url_for(suite)}")
       Teaspoon::Exporter.new(suite, url_for(suite, false), options[:export]).export
     end
@@ -96,12 +101,12 @@ module Teaspoon
     end
 
     def base_url_for(suite)
-      ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite].join('/')
+      ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite].join("/")
     end
 
     def url_for(suite, console = true)
-      url = [base_url_for(suite), filter(suite)].compact.join('?')
-      url += "#{(url.include?("?") ? "&" : "?")}reporter=Console" if console
+      url = [base_url_for(suite), filter(suite)].compact.join("?")
+      url += "#{(url.include?('?') ? '&' : '?')}reporter=Console" if console
       url
     end
 

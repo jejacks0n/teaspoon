@@ -1,5 +1,5 @@
 desc "Run the javascript specs"
-task :teaspoon => :environment do |t, args|
+task teaspoon: :environment do
   require "teaspoon/console"
 
   options = {

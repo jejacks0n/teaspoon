@@ -30,13 +30,13 @@ describe Teaspoon::Formatters::TeamcityFormatter do
 
     it "logs the suite" do
       subject.suite(suite)
-      expect(@log).to include(%Q{##teamcity[testSuiteStarted name='_suite_']})
+      expect(@log).to include(%{##teamcity[testSuiteStarted name='_suite_']})
     end
 
     it "closes the last suite if there was one" do
       subject.instance_variable_set(:@last_suite, suite)
       subject.suite(suite)
-      expect(@log).to include(%Q{##teamcity[testSuiteFinished name='_suite_']})
+      expect(@log).to include(%{##teamcity[testSuiteFinished name='_suite_']})
     end
 
   end
@@ -45,29 +45,29 @@ describe Teaspoon::Formatters::TeamcityFormatter do
 
     it "logs a passing testcase on passing results" do
       subject.spec(passing_spec)
-      expect(@log).to include(%Q{##teamcity[testStarted name='_passing_|[desc|]|rip|||'o|n_' captureStandardOutput='true']\n})
-      expect(@log).to include(%Q{##teamcity[testFinished name='_passing_|[desc|]|rip|||'o|n_']\n})
+      expect(@log).to include(%{##teamcity[testStarted name='_passing_|[desc|]|rip|||'o|n_' captureStandardOutput='true']\n})
+      expect(@log).to include(%{##teamcity[testFinished name='_passing_|[desc|]|rip|||'o|n_']\n})
     end
 
     it "logs a skipped testcase on pending results" do
       subject.spec(pending_spec)
-      expect(@log).to include(%Q{##teamcity[testIgnored name='_pending_|[desc|]_' captureStandardOutput='true']\n})
-      expect(@log).to include(%Q{##teamcity[testFinished name='_pending_|[desc|]_']\n})
+      expect(@log).to include(%{##teamcity[testIgnored name='_pending_|[desc|]_' captureStandardOutput='true']\n})
+      expect(@log).to include(%{##teamcity[testFinished name='_pending_|[desc|]_']\n})
     end
 
     it "logs a failing testcase with the message on failing results" do
       subject.spec(failing_spec)
-      expect(@log).to include(%Q{##teamcity[testStarted name='_failing_|[desc|]_' captureStandardOutput='true']\n})
-      expect(@log).to include(%Q{##teamcity[testFailed name='_failing_|[desc|]_' message='_failure_|[mess|]age_']\n})
-      expect(@log).to include(%Q{##teamcity[testFinished name='_failing_|[desc|]_']\n})
+      expect(@log).to include(%{##teamcity[testStarted name='_failing_|[desc|]_' captureStandardOutput='true']\n})
+      expect(@log).to include(%{##teamcity[testFailed name='_failing_|[desc|]_' message='_failure_|[mess|]age_']\n})
+      expect(@log).to include(%{##teamcity[testFinished name='_failing_|[desc|]_']\n})
     end
 
     it "captures stdout and puts it in the right place" do
       subject.instance_variable_set(:@stdout, "_stdout_\n")
       subject.spec(pending_spec)
-      expect(@log).to include(%Q{##teamcity[testIgnored name='_pending_|[desc|]_' captureStandardOutput='true']\n})
-      expect(@log).to include(%Q{_stdout_\n})
-      expect(@log).to include(%Q{##teamcity[testFinished name='_pending_|[desc|]_']\n})
+      expect(@log).to include(%{##teamcity[testIgnored name='_pending_|[desc|]_' captureStandardOutput='true']\n})
+      expect(@log).to include(%{_stdout_\n})
+      expect(@log).to include(%{##teamcity[testFinished name='_pending_|[desc|]_']\n})
     end
 
   end
@@ -78,7 +78,7 @@ describe Teaspoon::Formatters::TeamcityFormatter do
 
     it "logs the error" do
       subject.error(result)
-      expect(@log).to include(%Q{##teamcity[message text='_error_message_' errorDetails='myfile.js:420|nmyfile.js:666' status='ERROR']\n})
+      expect(@log).to include(%{##teamcity[message text='_error_message_' errorDetails='myfile.js:420|nmyfile.js:666' status='ERROR']\n})
     end
 
   end
@@ -88,7 +88,7 @@ describe Teaspoon::Formatters::TeamcityFormatter do
     it "closes any open suites" do
       subject.instance_variable_set(:@last_suite, double(label: "_last_suite_label_"))
       subject.result(result)
-      expect(@log).to include(%Q{##teamcity[testSuiteFinished name='_last_suite_label_']})
+      expect(@log).to include(%{##teamcity[testSuiteFinished name='_last_suite_label_']})
     end
 
     it "assigns @result" do
@@ -102,9 +102,9 @@ describe Teaspoon::Formatters::TeamcityFormatter do
 
     it "logs the coverage" do
       subject.coverage("_text_\n\n_text_summary_")
-      expect(@log).to include(%Q{##teamcity[testSuiteStarted name='Coverage summary']\n})
-      expect(@log).to include(%Q{_text_\n\n_text_summary_\n})
-      expect(@log).to include(%Q{##teamcity[testSuiteFinished name='Coverage summary']\n})
+      expect(@log).to include(%{##teamcity[testSuiteStarted name='Coverage summary']\n})
+      expect(@log).to include(%{_text_\n\n_text_summary_\n})
+      expect(@log).to include(%{##teamcity[testSuiteFinished name='Coverage summary']\n})
     end
 
   end
@@ -113,12 +113,12 @@ describe Teaspoon::Formatters::TeamcityFormatter do
 
     it "logs the threshold failures" do
       subject.threshold_failure("_was_not_met_\n_was_not_met_")
-      expect(@log).to include(%Q{##teamcity[testSuiteStarted name='Coverage thresholds']\n})
-      expect(@log).to include(%Q{##teamcity[testStarted name='Coverage thresholds' captureStandardOutput='true']\n})
-      expect(@log).to include(%Q{##teamcity[testFailed name='Coverage thresholds' message='were not met']\n})
-      expect(@log).to include(%Q{_was_not_met_\n_was_not_met_\n})
-      expect(@log).to include(%Q{##teamcity[testFinished name='Coverage thresholds']\n})
-      expect(@log).to include(%Q{##teamcity[testSuiteFinished name='Coverage thresholds']\n})
+      expect(@log).to include(%{##teamcity[testSuiteStarted name='Coverage thresholds']\n})
+      expect(@log).to include(%{##teamcity[testStarted name='Coverage thresholds' captureStandardOutput='true']\n})
+      expect(@log).to include(%{##teamcity[testFailed name='Coverage thresholds' message='were not met']\n})
+      expect(@log).to include(%{_was_not_met_\n_was_not_met_\n})
+      expect(@log).to include(%{##teamcity[testFinished name='Coverage thresholds']\n})
+      expect(@log).to include(%{##teamcity[testSuiteFinished name='Coverage thresholds']\n})
     end
 
   end
@@ -139,8 +139,8 @@ describe Teaspoon::Formatters::TeamcityFormatter do
 
     it "ends the suite" do
       subject.complete(1)
-      expect(@log).to include(%Q{Finished in 3.1337 seconds\n})
-      expect(@log).to include(%Q{6 examples, 1 failure, 2 pending\n\n})
+      expect(@log).to include(%{Finished in 3.1337 seconds\n})
+      expect(@log).to include(%{6 examples, 1 failure, 2 pending\n\n})
     end
 
   end

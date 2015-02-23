@@ -1,10 +1,9 @@
 module Teaspoon
   module Formatters
     class TapFormatter < Base
-
       protected
 
-      def log_runner(result)
+      def log_runner(_result)
         log_line("1..#{@total_count}")
       end
 
@@ -22,7 +21,7 @@ module Teaspoon
       end
 
       def log_console(message)
-        log_line("# #{message.gsub(/\n$/, "")}")
+        log_line("# #{message.gsub(/\n$/, '')}")
       end
 
       def log_coverage(message)

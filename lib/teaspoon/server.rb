@@ -4,7 +4,6 @@ require "webrick"
 
 module Teaspoon
   class Server
-
     attr_accessor :port
 
     def initialize

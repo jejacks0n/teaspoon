@@ -26,21 +26,20 @@ end
 # Teaspoon
 # -----------------------------------------------------------------------------
 desc "Run the javascript specs"
-task :teaspoon => "app:teaspoon"
+task teaspoon: "app:teaspoon"
 
 namespace :teaspoon do
   desc "Builds Teaspoon into the distribution ready bundle"
-  task :build => "build:javascripts"
+  task build: "build:javascripts"
 
   namespace :build do
-
     desc "Compile coffeescripts into javacripts"
-    task :javascripts => :environment do
+    task javascripts: :environment do
       env = Rails.application.assets
 
       %w(teaspoon/jasmine.js teaspoon/mocha.js teaspoon/qunit.js teaspoon/teaspoon.js).each do |path|
         asset = env.find_asset(path)
-        asset.write_to(Teaspoon::Engine.root.join("app/assets/javascripts/#{path.gsub(/\//, "-")}"))
+        asset.write_to(Teaspoon::Engine.root.join("app/assets/javascripts/#{path.gsub(/\//, '-')}"))
       end
     end
   end
@@ -51,4 +50,4 @@ end
 Rake::Task["default"].prerequisites.clear
 Rake::Task["default"].clear
 
-task :default => [:spec, :teaspoon]
+task default: [:spec, :teaspoon]

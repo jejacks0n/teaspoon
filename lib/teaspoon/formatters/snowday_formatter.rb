@@ -3,7 +3,6 @@
 module Teaspoon
   module Formatters
     class SnowdayFormatter < DotFormatter
-
       protected
 
       def log_spec(result)

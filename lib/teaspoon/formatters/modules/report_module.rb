@@ -1,7 +1,6 @@
 module Teaspoon
   module Formatters
     module ReportModule
-
       RED = 31
       GREEN = 32
       YELLOW = 33
@@ -9,8 +8,9 @@ module Teaspoon
 
       def log_error(result)
         log_line(result.message, RED)
-        for trace in result.trace || []
-          log_line("  # #{filename(trace["file"])}:#{trace["line"]}#{trace["function"].present? ? " -- #{trace["function"]}" : ""}", CYAN)
+        (result.trace || []).each do |trace|
+          function = trace["function"].present? ? " -- #{trace['function']}" : ""
+          log_line("  # #{filename(trace['file'])}:#{trace['line']}#{function}", CYAN)
         end
         log_line
       end
@@ -54,7 +54,7 @@ module Teaspoon
 
       def log_stats(result)
         log_line("Finished in #{result.elapsed} seconds")
-        stats = "#{pluralize("example", run_count)}, #{pluralize("failure", failures.size)}"
+        stats = "#{pluralize('example', run_count)}, #{pluralize('failure', failures.size)}"
         stats << ", #{pendings.size} pending" if pendings.size > 0
         log_line(stats, stats_color)
       end

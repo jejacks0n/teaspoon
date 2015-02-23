@@ -11,12 +11,13 @@ Gem::Specification.new do |s|
   s.email       = ["info@modeset.com"]
   s.homepage    = "https://github.com/modeset/teaspoon"
   s.summary     = "Teaspoon: A Javascript test runner built on top of Rails"
-  s.description = "Run Javascript tests using Jasmine, Mocha or QUnit in the browser or headlessly using PhantomJS, Selenium Webdriver, or Capybara Webkit"
+  s.description = ["Run Javascript tests using Jasmine, Mocha or QUnit in the browser",
+                   "or headless using PhantomJS, Selenium Webdriver, or Capybara Webkit"].join(" ")
   s.license     = "MIT"
 
   s.files       = Dir["{app,config,lib,vendor,bin}/**/*"] + ["MIT.LICENSE", "README.md"]
   s.test_files  = `git ls-files -- {spec,test}/*`.split("\n")
   s.executables = ["teaspoon"]
 
-  s.add_dependency "railties", [">= 3.2.5","< 5"]
+  s.add_dependency "railties", [">= 3.2.5", "< 5"]
 end
