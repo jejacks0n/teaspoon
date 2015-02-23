@@ -65,9 +65,9 @@ module Teaspoon
         qunit: ["1.12.0", "1.14.0"],
       }
 
-      attr_accessor   :matcher, :helper, :javascripts, :stylesheets,
-                      :boot_partial, :body_partial, :no_coverage, :hooks,
-                      :expand_assets
+      attr_accessor :matcher, :helper, :javascripts, :stylesheets,
+                    :boot_partial, :body_partial,
+                    :no_coverage, :hooks, :expand_assets
 
       def initialize
         @matcher       = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
@@ -79,7 +79,6 @@ module Teaspoon
         @body_partial  = "body"
 
         @no_coverage   = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
-
         @hooks         = Hash.new { |h, k| h[k] = [] }
         @expand_assets = true
 
