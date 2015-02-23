@@ -11,6 +11,8 @@ module Teaspoon
     end
 
     def start
+      return if responsive?
+
       thread = Thread.new do
         disable_logging
         server = Rack::Server.new(rack_options)

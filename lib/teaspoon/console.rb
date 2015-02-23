@@ -80,8 +80,8 @@ module Teaspoon
     end
 
     def start_server
-      log("Starting the Teaspoon server...")
       server = Teaspoon::Server.new
+      log("Starting the Teaspoon server...") unless server.responsive?
       server.start
       server
     end
