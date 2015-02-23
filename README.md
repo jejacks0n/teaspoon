@@ -374,7 +374,7 @@ end
 
 ## Configuration
 
-When you install Teaspoon a `teaspoon_env.rb` file is generated that contains most of this information, but we've provided it here too.
+When you install Teaspoon a `teaspoon_env.rb` file is generated that contains most of this information, but we've provided it here too. If you want `teaspoon_env.rb` to live in a location other than the default, you can specify a path to your configuration in a `TEASPOON_ENV` environment variable (eg `$ TEASPOON_ENV=config/teaspoon.rb teaspoon`).
 
 <dl>
 
