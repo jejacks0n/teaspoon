@@ -11,7 +11,7 @@ module Teaspoon
     config.assets.precompile += %w{ angular/1.0.5.js }
     config.assets.precompile += %w{ jasmine/1.3.1.js jasmine/2.0.0.js }
     config.assets.precompile += %w{ mocha/1.10.0.js mocha/1.17.1.js }
-    config.assets.precompile += %w{ qunit/1.12.0.js qunit/1.14.1.js }
+    config.assets.precompile += %w{ qunit/1.12.0.js qunit/1.14.0.js }
     config.assets.precompile += %w{ support/*.js }
 
     initializer :assets, group: :all do |app|
