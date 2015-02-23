@@ -162,6 +162,7 @@ describe Teaspoon::Configuration::Suite do
     expect(subject.javascripts).to eq(["jasmine/1.3.1", "teaspoon/jasmine"])
     expect(subject.stylesheets).to eq(["teaspoon"])
     expect(subject.no_coverage).to eq([%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}])
+    expect(subject.expand_assets).to eq(true)
   end
 
   it "accepts a block that can override defaults" do

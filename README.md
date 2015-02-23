@@ -463,6 +463,14 @@ When you install Teaspoon a `teaspoon_env.rb` file is generated that contains mo
   <b>default:</b> <code>`filename.gsub('.erb', '').gsub(/(\.js\.coffee|\.coffee)$/, ".js")`</code>
 </dd>
 
+<dt> expand_assets </dt><dd>
+  Determine whether specs loaded into the test harness should be embedded as individual script tags or concatenated into a
+  single file. Similar to Rails' asset `debug: true` and `config.assets.debug = true` options. By default, Teaspoon expands
+  all assets to provide more valuable stack traces that reference individual source files.<br/><br/>
+
+  <b>default:</b> <code>true</code>
+</dd>
+
 </dl>
 
 
