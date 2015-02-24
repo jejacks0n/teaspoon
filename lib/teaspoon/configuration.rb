@@ -67,21 +67,20 @@ module Teaspoon
 
       attr_accessor :matcher, :helper, :javascripts, :stylesheets,
                     :boot_partial, :body_partial,
-                    :no_coverage,
-                    :hooks
+                    :no_coverage, :hooks, :expand_assets
 
       def initialize
-        @matcher      = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
-        @helper       = "spec_helper"
-        @javascripts  = ["jasmine/1.3.1", "teaspoon-jasmine"]
-        @stylesheets  = ["teaspoon"]
+        @matcher       = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
+        @helper        = "spec_helper"
+        @javascripts   = ["jasmine/1.3.1", "teaspoon-jasmine"]
+        @stylesheets   = ["teaspoon"]
 
-        @boot_partial = "boot"
-        @body_partial = "body"
+        @boot_partial  = "boot"
+        @body_partial  = "body"
 
-        @no_coverage  = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
-
-        @hooks        = Hash.new { |h, k| h[k] = [] }
+        @no_coverage   = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
+        @hooks         = Hash.new { |h, k| h[k] = [] }
+        @expand_assets = true
 
         default = Teaspoon.configuration.suite_configs["default"]
         instance_eval(&default[:block]) if default

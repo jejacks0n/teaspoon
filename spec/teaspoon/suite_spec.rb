@@ -100,6 +100,12 @@ describe Teaspoon::Suite do
       expect(result).to include("drivers/phantomjs/runner.js?body=1&instrument=1")
     end
 
+    it "returns only the top level assets in the asset tree if config/expand_assets is set to false" do
+      allow(subject.config).to receive(:expand_assets).and_return(false)
+      result = subject.spec_assets(true)
+      expect(result.any? { |file| file =~ /body=1/ }).to eq(false)
+    end
+
   end
 
   describe "#include_spec?" do

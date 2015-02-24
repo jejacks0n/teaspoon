@@ -66,7 +66,7 @@ module Teaspoon
     def asset_tree(sources)
       sources.map do |source|
         asset = @env.find_asset(source)
-        if asset && asset.respond_to?(:logical_path)
+        if asset && asset.respond_to?(:logical_path) && config.expand_assets
           asset.to_a.map { |a| asset_url(a) }
         else
           source unless source.blank?
