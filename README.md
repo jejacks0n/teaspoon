@@ -17,7 +17,7 @@ Feedback, ideas and pull requests are always welcome, or you can hit us up on Tw
 
 [![Join the chat at https://gitter.im/modeset/teaspoon](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/modeset/teaspoon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-The project goal is to stay simple while also providing the most complete Javascript testing solution for Rails.
+The goal of Teaspoon is to stay simple while also providing the most complete Javascript testing solution for Rails.
 
 Teaspoon takes advantage of the Rails asset pipeline, and ships with support for Jasmine, Mocha, and QUnit.
 
@@ -359,8 +359,7 @@ end
 
 ## Configuration
 
-When you install Teaspoon a `teaspoon_env.rb` file is generated that contains good documentation for each configuration
-directive. Otherwise you can get a refresher by checking the [Teaspoon Configuration] article.
+When you install Teaspoon a `teaspoon_env.rb` file is generated that contains good documentation for each configuration directive. Otherwise you can get a refresher by checking the [Teaspoon Configuration](https://github.com/modeset/teaspoon/wiki/Teaspoon-Configuration) article.
 
 **Note** If you want `teaspoon_env.rb` to live in a location other than the default install path, you can specify an alternate path in a `TEASPOON_ENV` environment variable (eg `$ TEASPOON_ENV=config/teaspoon.rb teaspoon`).
 
@@ -386,11 +385,13 @@ We know that testing usually requires more than just the test framework, so we'v
 - [jasmine-jquery-1.7.0.js](https://github.com/velesin/jasmine-jquery) (1.7.0) For Jasmine v1, A set of custom matchers for jQuery, and an API for handling HTML fixtures in your specs. MIT License.
 - [jasmine-jquery-2.0.0.js](https://github.com/velesin/jasmine-jquery) (2.0.0) For Jasmine v2, A set of custom matchers for jQuery, and an API for handling HTML fixtures in your specs. MIT License.
 
-You can require these files in your spec helper by using:
+You can require the various support files in your spec helper by using:
 
 ```javascript
 //= require support/sinon
 //= require support/chai
+//= require support/chai-1.10.0
+//= require support/sinon-chai
 //= require support/expect
 //= require support/jasmine-jquery-1.7.0
 //= require support/jasmine-jquery-2.0.0
@@ -412,17 +413,11 @@ Rake::Task['default'].clear
 task default: [:spec, :teaspoon, :cucumber]
 ```
 
+Some build services also support selenium based setups using Xvfb and Firefox. This works well on on TravisCI, and we've heard of some success doing this on CircleCI, however if you are experiencing timeouts try to add a post-dependency command to precompile your assets (eg. `rake assets:precompile`.
+
 If you want to generate reports that CI can use you can install Istanbul for coverage reports -- and output the report using the cobertura format, which Hudson and some others can read. You can track spec failure rates by using the tap formatter, or on TeamCity setups you can use the teamcity formatter. A junit formatter is available as well.
 
 We encourage you to experiment and let us know. Feel free to create a wiki article about what you did to get it working on your CI setup.
-
-### Selenium
-
-Some build services also support selenium based setups using Xvfb and Firefox. We've had some success doing this on CircleCI, however others may work just as well. Most of the time it should _just work_. If you are experiencing timeout's try to add a Post-dependency command to precompile your assets.
-
-```
-rake assets:precompile
-```
 
 
 ## Alternative Projects
