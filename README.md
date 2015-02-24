@@ -13,15 +13,15 @@ Teaspoon
 
 Teaspoon is a Javascript test runner built for Rails. It can run tests in the browser and headless using PhantomJS, Selenium WebDriver, or Capybara Webkit.
 
+Feedback, ideas and pull requests are always welcome, or you can hit us up on Twitter @modeset_.
+
 [![Join the chat at https://gitter.im/modeset/teaspoon](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/modeset/teaspoon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 The project goal is to stay simple while also providing the most complete Javascript testing solution for Rails.
 
-Teaspoon takes advantage of the asset pipeline, and ships with support for Jasmine, Mocha, and QUnit.
+Teaspoon takes advantage of the Rails asset pipeline, and ships with support for Jasmine, Mocha, and QUnit.
 
-Feedback, ideas and pull requests are always welcome, or you can hit us up on Twitter @modeset_.
-
-If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), check out the [guard-teaspoon](https://github.com/modeset/guard-teaspoon) project. Or, if you want to use the [Spring](https://github.com/rails/spring) preloader, use the unofficial [spring-commands-teaspoon](https://github.com/alejandrobabio/spring-commands-teaspoon).
+If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), check out the [guard-teaspoon](https://github.com/modeset/guard-teaspoon) project. Or, if you want to use the [Spring](https://github.com/rails/spring) preloader, try the unofficial [spring-commands-teaspoon](https://github.com/alejandrobabio/spring-commands-teaspoon).
 
 ## Screenshots
 
@@ -69,7 +69,7 @@ To run Teaspoon headless you'll need PhantomJS, Selenium Webdriver or Capybara W
 
 ### Upgrading
 
-We made some changes to how configuration and loading works for version 0.8.0, which might cause some confusion. For this we're sorry, but it'll be better in the long run. While we know that considerable changes like these can be a pain, they're not made frivolously, and they set the groundwork for what we can all build on and contribute to. We appreciate your tolerance and willingness to help us fix anything that we missed.
+As of version 0.8.0 there are some changes to how configuration and loading works, which might cause some confusion. For this we're sorry, but it'll be better in the long run. While we know that considerable changes like these can be a pain, they're not made frivolously, and they set the groundwork for what we can all build on and contribute to. We appreciate your tolerance and willingness to help us fix anything that we missed.
 
 :heart:
 
@@ -113,7 +113,7 @@ rake teaspoon driver_options="—ssl-protocol=TLSv1 --ignore-ssl-errors=yes"
 bundle exec teaspoon
 ```
 
-The CLI also provides several ways of focusing tests. You can specify the suite to run, the files to run, directories to run, filters, etc.
+The CLI also provides several ways of focusing tests and is more full featured than the rake task. You can specify the suite to run, the files to run, directories to run, filters, etc.
 
 ```
 bundle exec teaspoon --suite=my_fantastic_suite
@@ -127,7 +127,7 @@ Get full command line help:
 bundle exec teaspoon --help
 ```
 
-**Note:** The rake task and CLI run within the development environment unless otherwise specified.
+**Note:** The rake task and CLI run within the development environment for optimization unless otherwise specified.
 
 
 ## Writing Specs
@@ -180,12 +180,12 @@ Teaspoon allows deferring execution, which can be useful for asynchronous execut
 
 ```javascript
 Teaspoon.defer = true;
-setTimeout(Teaspoon.execute, 1000); // defers execution for 1 second as an example
+setTimeout(Teaspoon.execute, 1000); // defers execution for 1 second
 ```
 
 ### Using Require.js
 
-You can configure your suite to boot with require.js by setting the suite `boot_partial` directive to `"boot_require_js"`.
+There's a wiki article that goes into more depth on using [RequireJS with Teaspoon](https://github.com/modeset/teaspoon/wiki/RequireJS-with-Teaspoon). But in simple terms you can configure your suite to boot with RequireJS by setting the suite `boot_partial` directive to `"boot_require_js"`.
 
 Be sure to require `require.js` in your spec helper. Teaspoon doesn't include it as a support library, so you'll need to provide your own.
 
@@ -206,7 +206,7 @@ define(['Model'], function (Model) {
 
 ## Fixtures
 
-Teaspoon ships with a fixture library that works with Jasmine, Mocha, and QUnit with a minimum of effort, has a nice consistent API, and isn't dependent on jQuery.
+Teaspoon ships with a fixture library that works with Jasmine, Mocha, and QUnit with minimal effort. It has a consistent API, and isn't dependent on jQuery.
 
 The fixture path is configurable within Teaspoon, and the views will be rendered by a standard controller. This allows you to use things like RABL/JBuilder if you're building JSON, or HAML if you're building markup.
 
@@ -256,7 +256,7 @@ describe("Using fixtures", function() {
 
 Check out some example of using fixtures with [Mocha](https://github.com/modeset/teaspoon/wiki/Using-Mocha), [QUnit](https://github.com/modeset/teaspoon/wiki/Using-QUnit).
 
-**Note:** The element that Teaspoon creates is "#teaspoon-fixtures", in case you need to access it directly.
+**Note:** The element that Teaspoon creates is "#teaspoon-fixtures", in case you need to access it directly and put your own fixtures in manually.
 
 
 ## Suites
@@ -265,7 +265,7 @@ Teaspoon uses the concept of suites to group tests at a high level. These suites
 
 A default suite has been generated for you in your `teaspoon_env.rb`.
 
-Suites inherit from a "default" suite. To modify the "default" suite simply don't specify a name for the suite. In this example we're configuring the default suite, which all other suites will inherit from.
+Suites inherit from a "default" suite. To modify this default, simply don't specify a name for the suite. In this example we're configuring the default, which all other suites will inherit from.
 
 ```ruby
 config.suite do |suite|
@@ -283,46 +283,29 @@ end
 
 ### Hooks
 
-Hooks are designed to facilitate loading fixtures or other things that might be required on the back end before, after, or during running a suite or test. You can define hooks in your suite by specifying a name and a block. Hooks with the same name will be added to an array, and all configured hook callbacks with that name will be called when the hook is requested. If you don't specify a name, :default is be assumed.
+Hooks are designed to facilitate loading fixtures or other things that might be required on the back end before, after, or during running a suite or test.
+
+You can define hooks in your suite configuration by specifying a name and a block. Hooks with the same name will be added to an array, and all configured hook callbacks with that name will be called when the hook is requested. If you don't specify a name, :default will be assumed.
 
 ```ruby
 config.suite :my_suite do |suite|
   suite.hook :fixtures do
     # some code that would load your fixtures
   end
-end
-```
 
-You can then use the javascript `Teaspoon.hook("fixtures")` call at the beginning of a suite run or similar. All blocks that have been specified for a given hook will be called in the order they were defined.
-
-If your hook accepts arguments:
-
-```ruby
-config.suite :my_suite do |suite|
-  suite.hook :fixtures do |arguments|
+  suite.hook :setup do |arguments|
     # some code that has access to your passed in arguments
   end
 end
 ```
 
-You can then use the following javascript to call your hook with arguments:
+Once hooks have been defined in your configuration, you can invoke them using the javascript `Teaspoon.hook` interface in your specs. A request will be sent to the server, where all blocks that have been specified for a given hook will be called in the order they were defined. Any arguments passed to `Teaspoon.hook` will be provided to the hooks defined in the configuration.
+```
 
 ```js
-Teaspoon.hook('fixtures', {foo: 'bar'})
+Teaspoon.hook('fixtures')
+Teaspoon.hook('setup', {foo: 'bar'})
 ```
-
-### Manifest Style
-
-Teaspoon is happy to look for files for you (and this is recommended), but you can disable this feature and maintain a manifest yourself. Configure the suite to not match any files, and then use your spec helper to create your manifest.
-
-```ruby
-config.suite do |suite|
-  suite.matcher = nil
-  suite.helper = "spec_manifest"
-end
-```
-
-**Note:** This limits your ability to run specific files from the command line interface and other benefits, and so isn't recommended.
 
 
 ## Coverage
@@ -376,319 +359,11 @@ end
 
 ## Configuration
 
-When you install Teaspoon a `teaspoon_env.rb` file is generated that contains most of this information, but we've provided it here too. If you want `teaspoon_env.rb` to live in a location other than the default, you can specify a path to your configuration in a `TEASPOON_ENV` environment variable (eg `$ TEASPOON_ENV=config/teaspoon.rb teaspoon`).
+When you install Teaspoon a `teaspoon_env.rb` file is generated that contains good documentation for each configuration
+directive. Otherwise you can get a refresher by checking the [Teaspoon Configuration] article.
 
-<dl>
+**Note** If you want `teaspoon_env.rb` to live in a location other than the default install path, you can specify an alternate path in a `TEASPOON_ENV` environment variable (eg `$ TEASPOON_ENV=config/teaspoon.rb teaspoon`).
 
-<dt> mount_at </dt><dd>
-  Determines where the Teaspoon routes will be mounted. Changing this to "/jasmine" would allow you to browse to <code>http://localhost:3000/jasmine</code> to run your tests.<br/><br/>
-
-  <b>default:</b> <code>"/teaspoon"</code>
-</dd>
-
-<dt> root </dt><dd>
-  Specifies the root where Teaspoon will look for files. If you're testing an engine using a dummy application it can be useful to set this to your engines root (e.g. <code>Teaspoon::Engine.root</code>).<br/>
-  <b>Note:</b> Defaults to <code>Rails.root</code> if nil.<br/><br/>
-
-  <b>default:</b> <code>nil</code>
-</dd>
-
-<dt> asset_paths </dt><dd>
-  Paths that will be appended to the Rails assets paths.<br/>
-  <b>Note:</b> Relative to <code>config.root</code>.<br/><br/>
-
-  <b>default:</b> <code>["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]</code>
-</dd>
-
-<dt> fixture_paths </dt><dd>
-  Fixtures are rendered through a controller, which allows using HAML, RABL/JBuilder, etc. Files in this path will be rendered as fixtures.<br/><br/>
-
-  <b>default:</b> <code>["spec/javascripts/fixtures", "test/javascripts/fixtures"]</code>
-</dd>
-
-</dl>
-
-### Suite Configuration Directives
-
-<dl>
-
-<dt> use_framework(name[, version]) </dt><dd>
-  Specify the framework and optionally version you would like to use. This will do some basic setup for you -- which you can override with the directives below. This should be specified first, as it can override other directives.<br/><br/>
-  <b>Note:</b> If no version is specified, the latest is assumed.<br/><br/>
-
-  <b>available:</b> jasmine[1.3.1], mocha[1.10.0, 1.17.1] qunit[1.12.0, 1.14.0]<br/>
-  <b>default:</b> <code>[no default]</code>
-</dd>
-
-<dt> matcher </dt><dd>
-  Specify a file matcher as a regular expression and all matching files will be loaded when the suite is run. These files need to be within an asset path. You can add asset paths using the `config.asset_paths`.<br/>
-  <b>Note:</b> Can be set to <code>nil</code> to match no files.<br/><br/>
-
-  <b>default:</b> <code>"{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"</code>
-</dd>
-
-<dt> helper </dt><dd>
-  This suites spec helper, which can require additional support files. This file is loaded before any of your test files are loaded.<br/><br/>
-
-  <b>default:</b> <code>"spec_helper"</code>
-</dd>
-
-<dt> javascripts </dt><dd>
-  The core Teaspoon javascripts. If you're using the `use_framework` directive this will be set based on that, but it can be useful to provide an override to use a custom version of a test framework.<br/>
-  <b>Note:</b> It's recommended to only include the core files here, as you can require support libraries from your spec helper.<br/>
-  <b>Note:</b> For CoffeeScript files use <code>"teaspoon/jasmine"</code> etc.<br/><br/>
-
-  <b>available:</b> teaspoon-jasmine, teaspoon-mocha, teaspoon-qunit<br/>
-  <b>default:</b> <code>["jasmine/1.3.1", "teaspoon-jasmine"]</code>
-</dd>
-
-<dt> stylesheets </dt><dd>
-  You can include your own stylesheets if you want to change how Teaspoon looks.<br/>
-  <b>Note:</b> Spec related CSS can and should be loaded using fixtures.<br/><br/>
-
-  <b>default:</b> <code>["teaspoon"]</code>
-</dd>
-
-<dt> boot_partial </dt><dd>
-  Partial to be rendered in the head tag of the runner. You can use the provided ones or define your own by creating a `_boot.html.erb` in your fixtures path, and adjust the config to `"/boot"` for instance.<br/><br/>
-
-  <b>available:</b> boot, boot_require_js<br/>
-  <b>default:</b> <code>"boot"</code>
-</dd>
-
-<dt> normalize_asset_path </dt><dd>
-  When using custom file-extensions you might need to supply a custom asset path normalization. If you need to match a
-  custom extension, simply supply a custom lambda/proc that returns the desired filename.<br/><br/>
-
-  <b>default:</b> <code>`filename.gsub('.erb', '').gsub(/(\.js\.coffee|\.coffee)$/, ".js")`</code>
-</dd>
-
-<dt> expand_assets </dt><dd>
-  Determine whether specs loaded into the test harness should be embedded as individual script tags or concatenated into a
-  single file. Similar to Rails' asset `debug: true` and `config.assets.debug = true` options. By default, Teaspoon expands
-  all assets to provide more valuable stack traces that reference individual source files.<br/><br/>
-
-  <b>default:</b> <code>true</code>
-</dd>
-
-</dl>
-
-
-## Configuration
-
-The best way to read about the configuration options is to generate the initializer and env, but we've included the info here as well.
-
-<dt> body_partial </dt><dd>
-  Partial to be rendered in the body tag of the runner. You can define your own to create a custom body structure.<br/><br/>
-
-  <b>default:</b> <code>"body"</code>
-</dd>
-
-<dt> no_coverage </dt><dd>
-  Assets to be ignored when generating coverage reports. Accepts an array of filenames or regular expressions. The default excludes assets from vendor, gems and support libraries.<br/><br/>
-
-  <b>default:</b> <code>[%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]</code>
-</dd>
-
-<dt> hook(name, &block) </dt><dd>
-  Hooks allow you to use `Teaspoon.hook("fixtures")` before, after, or during your spec run. This will make a synchronous Ajax request to the server that will call all of the blocks you've defined for that hook name. (e.g. <code>suite.hook :fixtures, proc{ }</code>)
-
-  <b>default:</b> <code>Hash.new{ |h, k| h[k] = [] }</code>
-</dd>
-
-</dl>
-
-### Console Runner Specific
-
-These configuration directives are applicable only when running via the rake task or command line interface. These directives can be overridden using the command line interface arguments or with ENV variables when using the rake task.
-
-<dl>
-
-<dt> driver </dt><dd>
-  Specify which headless driver to use. Supports <a href="http://phantomjs.org">PhantomJS</a>, <a href="http://seleniumhq.org/docs/03_webdriver.jsp">Selenium Webdriver</a> and <a href="https://github.com/thoughtbot/capybara-webkit">Capybara Webkit</a>.<br/><br/>
-
-  <a href="https://github.com/modeset/teaspoon/wiki/Using-PhantomJS">Using PhantomJS</a>.<br/>
-  <a href="https://github.com/modeset/teaspoon/wiki/Using-Selenium-WebDriver">Using Selenium WebDriver</a><br/><br/>
-  <a href="https://github.com/modeset/teaspoon/wiki/Using-Capybara-Webkit">Using Capybara Webkit</a><br/><br/>
-
-  <b>available:</b> phantomjs, selenium, capybara-webkit<br/>
-  <b>default:</b> <code>"phantomjs"</code>
-
-  <ul>
-    <li>CLI: -d, --driver DRIVER</li>
-    <li>ENV: DRIVER=[DRIVER]</li>
-  </ul>
-</dd>
-
-<dt> driver_options </dt><dd>
-  Specify additional options/switches for the driver.<br/><br/>
-
-  <a href="https://github.com/modeset/teaspoon/wiki/Using-PhantomJS">Using PhantomJS</a>.<br/>
-  <a href="https://github.com/modeset/teaspoon/wiki/Using-Selenium-WebDriver">Using Selenium WebDriver</a><br/><br/>
-  <a href="https://github.com/modeset/teaspoon/wiki/Using-Capybara-Webkit">Using Capybara Webkit</a><br/><br/>
-
-  <b>default:</b> <code>nil</code>
-
-  <ul>
-    <li>CLI: --driver-options OPTIONS</li>
-    <li>ENV: DRIVER_OPTIONS=[OPTIONS]</li>
-  </ul>
-</dd>
-
-<dt> driver_timeout </dt><dd>
-  Specify the timeout for the driver. Specs are expected to complete within this time frame or the run will be considered a failure. This is to avoid issues that can arise where tests stall.<br/><br/>
-
-  <b>default:</b> <code>180</code>
-
-  <ul>
-    <li>CLI: --driver-timeout SECONDS</li>
-    <li>ENV: DRIVER_TIMEOUT=[SECONDS]</li>
-  </ul>
-</dd>
-
-<dt> server </dt><dd>
-  Specify a server to use with Rack (e.g. thin, mongrel). If nil is provided Rack::Server is used.<br/><br/>
-
-  <b>default:</b> <code>nil</code>
-
-  <ul>
-    <li>CLI: --server SERVER</li>
-    <li>ENV: SERVER=[SERVER]</li>
-  </ul>
-</dd>
-
-<dt> server_port </dt><dd>
-  Specify a port to run on a specific port, otherwise Teaspoon will use a random available port.<br/><br/>
-
-  <b>default:</b> <code>nil</code>
-
-  <ul>
-    <li>CLI: --server-port PORT</li>
-    <li>ENV: SERVER_PORT=[PORT]</li>
-  </ul>
-</dd>
-
-<dt> server_timeout </dt><dd>
-  Timeout for starting the server in seconds. If your server is slow to start you may have to bump this, or you may want to lower this if you know it shouldn't take long to start.<br/><br/>
-
-  <b>default:</b> <code>20</code>
-
-  <ul>
-    <li>CLI: --server-timeout SECONDS</li>
-    <li>ENV: SERVER_TIMEOUT=[SECONDS]</li>
-  </ul>
-</dd>
-
-<dt> fail_fast </dt><dd>
-  Force Teaspoon to fail immediately after a failing suite. Can be useful to make Teaspoon fail early if you have several suites, but in environments like CI this may not be desirable.<br/><br/>
-
-  <b>default:</b> <code>true</code>
-
-  <ul>
-    <li>CLI: -F, --[no-]fail-fast</li>
-    <li>ENV: FAIL_FAST=[true/false]</li>
-  </ul>
-</dd>
-
-<dt> formatters </dt><dd>
-  Specify the formatters to use when outputting the results.<br/>
-  <b>Note:</b> Output files can be specified by using <code>"junit>/path/to/output.xml"</code>.<br/><br/>
-
-  <b>available:</b> dot, documentation, clean, json, junit, pride, rspec_html, snowday, swayze_or_oprah, tap, tap_y, teamcity<br/>
-  <b>default:</b> <code>"dot"</code>
-
-  <ul>
-    <li>CLI: -f, --format FORMATTERS</li>
-    <li>ENV: FORMATTERS=[FORMATTERS]</li>
-  </ul>
-</dd>
-
-<dt> color </dt><dd>
-  Specify if you want color output from the formatters.<br/><br/>
-
-  <b>default:</b> <code>true</code>
-
-  <ul>
-    <li>CLI: -c, --[no-]color</li>
-    <li>ENV: COLOR=[true/false]</li>
-  </ul>
-</dd>
-
-<dt> suppress_log </dt><dd>
-  Teaspoon pipes all console[log/debug/error] to $stdout. This is useful to catch places where you've forgotten to remove them, but in verbose applications this may not be desirable.<br/><br/>
-
-  <b>default:</b> <code>false</code>
-
-  <ul>
-    <li>CLI: -q, --[no-]suppress-log</li>
-    <li>ENV: SUPPRESS_LOG=[true/false]</li>
-  </ul>
-</dd>
-
-<dt> use_coverage </dt><dd>
-  Specify that you always want a coverage configuration to be used.<br/><br/>
-
-  <b>default:</b> <code>nil</code>
-
-  <ul>
-    <li>CLI: -C, --coverage=CONFIG_NAME</li>
-    <li>ENV: USE_COVERAGE=[CONFIG_NAME]</li>
-  </ul>
-</dd>
-
-</dl>
-
-### Coverage Configuration Directives
-
-<dl>
-
-<dt> reports </dt><dd>
-  Which coverage reports Istanbul should generate. Correlates directly to what Istanbul supports.<br/><br/>
-
-  <b>available:</b> text-summary, text, html, lcov, lcovonly, cobertura, teamcity<br/>
-  <b>default:</b> <code>["text-summary", "html"]</code>
-</dd>
-
-<dl>
-
-<dt> output_path </dt><dd>
-  The path that the coverage should be written to - when there's an artifact to write to disk.<br/>
-  <b>Note:</b> Relative to <code>config.root</code>.<br/><br/>
-
-  <b>default:</b> <code>"coverage"</code>
-</dd>
-
-<dl>
-
-<dt> statements </dt><dd>
-  Specify a statement threshold. If this coverage threshold isn't met the test run will fail. (0-100) or nil.<br/><br/>
-
-  <b>default:</b> <code>nil</code>
-</dd>
-
-<dl>
-
-<dt> functions </dt><dd>
-  Specify a function threshold. If this coverage threshold isn't met the test run will fail. (0-100) or nil.<br/><br/>
-
-  <b>default:</b> <code>nil</code>
-</dd>
-
-<dl>
-
-<dt> branches </dt><dd>
-  Specify a branch threshold. If this coverage threshold isn't met the test run will fail. (0-100) or nil.<br/><br/>
-
-  <b>default:</b> <code>nil</code>
-</dd>
-
-<dt> lines </dt><dd>
-  Specify a line threshold. If this coverage threshold isn't met the test run will fail. (0-100) or nil.<br/><br/>
-
-  <b>default:</b> <code>nil</code>
-</dd>
-
-</dl>
 
 ## Test Frameworks
 
