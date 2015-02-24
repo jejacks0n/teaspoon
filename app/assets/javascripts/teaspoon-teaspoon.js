@@ -1,10 +1,10 @@
 (function() {
   var TeaspoonInterface,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   TeaspoonInterface = (function() {
     function TeaspoonInterface() {
-      this.filter = __bind(this.filter, this);
+      this.filter = bind(this.filter, this);
       this.files = $u("#teaspoon-suite-list .file a");
       this.input = $u("#teaspoon-filter-input")[0];
       this.input.value = "";
@@ -12,18 +12,18 @@
     }
 
     TeaspoonInterface.prototype.filter = function() {
-      var file, _i, _len, _ref, _results;
-      _ref = this.files;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        file = _ref[_i];
+      var file, i, len, ref, results;
+      ref = this.files;
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        file = ref[i];
         if (LiquidMetal.score(file.innerHTML, this.input.value) > 0) {
-          _results.push(file.parentNode.style.display = "block");
+          results.push(file.parentNode.style.display = "block");
         } else {
-          _results.push(file.parentNode.style.display = "none");
+          results.push(file.parentNode.style.display = "none");
         }
       }
-      return _results;
+      return results;
     };
 
     return TeaspoonInterface;
