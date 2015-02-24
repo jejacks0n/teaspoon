@@ -9,7 +9,7 @@ gem "tapout"
 gem "thin"
 
 # used by the dummy application
-gem "rails", ">= 4.0.0"
+gem "rails", ">= 4.2.0"
 gem "coffee-rails"
 gem "sass-rails"
 gem "haml-rails"
