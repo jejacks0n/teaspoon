@@ -6,13 +6,28 @@ module Teaspoon
   class Engine < ::Rails::Engine
     isolate_namespace Teaspoon
 
-    config.assets.precompile += %w{ teaspoon.css teaspoon-teaspoon.js }
-    config.assets.precompile += %w{ teaspoon-angular.js teaspoon-jasmine.js teaspoon-mocha.js teaspoon-qunit.js }
-    config.assets.precompile += %w{ angular/1.0.5.js }
-    config.assets.precompile += %w{ jasmine/1.3.1.js jasmine/2.0.0.js }
-    config.assets.precompile += %w{ mocha/1.10.0.js mocha/1.17.1.js }
-    config.assets.precompile += %w{ qunit/1.12.0.js qunit/1.14.0.js }
-    config.assets.precompile += %w{ support/*.js }
+    ASSET_MANIFEST = [
+      # core library
+      'teaspoon.css',
+      'teaspoon-teaspoon.js',
+
+      # framework ties
+      'teaspoon/*.js',
+      'teaspoon-jasmine.js',
+      'teaspoon-mocha.js',
+      'teaspoon-qunit.js',
+
+      # frameworks
+      'jasmine/1.3.1.js',
+      'jasmine/2.0.0.js',
+      'mocha/1.10.0.js',
+      'mocha/1.17.1.js',
+      'qunit/1.12.0.js',
+      'qunit/1.14.0.js',
+
+      # all support libraries
+      'support/*.js'
+    ]
 
     initializer :assets, group: :all do |app|
       begin
@@ -23,6 +38,7 @@ module Teaspoon
 
       Teaspoon::Engine.default_root_path(app.root)           # default the root if it's not set
       Teaspoon::Engine.append_asset_paths(app.config.assets) # append the asset paths from the configuration
+      Teaspoon::Engine.add_precompiled_assets(app.config.assets)
     end
 
     config.after_initialize do |app|
@@ -38,6 +54,10 @@ module Teaspoon
       Teaspoon.configuration.asset_paths.each do |path|
         assets.paths << Teaspoon.configuration.root.join(path).to_s
       end
+    end
+
+    def self.add_precompiled_assets(assets)
+      assets.precompile += ASSET_MANIFEST
     end
 
     def self.inject_instrumentation
