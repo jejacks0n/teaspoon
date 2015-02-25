@@ -8,10 +8,17 @@
 * Add `expand_assets` suite configuration to control spec compilation
 * Provide QUnit tests with a default `equal` message
 * Support cli reusing running Rails server
+* Add support for Capybara Webkit
+* Better support for RequireJS
+* Add RSpec HTML formatter
 
 #### Bug Fixes
 
 * Fix qunit 1.14.0 precompile path
+
+#### Removals
+
+* Direct support for Angular
 
 
 ### 0.8.0
