@@ -101,7 +101,7 @@ module Teaspoon
     end
 
     def glob
-      @glob ||= Dir[config.matcher.present? ? Teaspoon.configuration.root.join(config.matcher) : ""]
+      @glob ||= Dir[config.matcher.present? ? Teaspoon.configuration.root.join(config.matcher) : ""].sort!
     end
 
     def suite_configuration
