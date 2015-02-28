@@ -19,7 +19,7 @@ module Teaspoon
 
       # frameworks
       'jasmine/1.3.1.js',
-      'jasmine/2.0.0.js',
+      'jasmine/2.2.0.js',
       'mocha/1.10.0.js',
       'mocha/1.17.1.js',
       'qunit/1.12.0.js',
