@@ -1,7 +1,7 @@
 Teaspoon
 ========
 
-[![Gem Version](https://img.shields.io/gem/v/guard-teaspoon.svg)](https://rubygems.org/gems/teaspoon)
+[![Gem Version](https://img.shields.io/gem/v/teaspoon.svg)](https://rubygems.org/gems/teaspoon)
 [![Dependency Status](https://gemnasium.com/modeset/teaspoon.svg)](https://gemnasium.com/modeset/teaspoon)
 [![Build Status](https://img.shields.io/travis/modeset/teaspoon.svg)](https://travis-ci.org/modeset/teaspoon)
 [![Code Climate](https://codeclimate.com/github/modeset/teaspoon/badges/gpa.svg)](https://codeclimate.com/github/modeset/teaspoon)
