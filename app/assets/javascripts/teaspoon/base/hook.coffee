@@ -1,5 +1,5 @@
 Teaspoon.hook = (name, payload = {}) ->
-  method = "POST"
+
   xhr = null
 
   xhrRequest = (url, payload, callback) ->
