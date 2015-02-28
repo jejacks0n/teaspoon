@@ -1,5 +1,7 @@
 ### Unreleased
 
+* CI/Linux stability improvement (alphanumeric ordering of spec files)
+
 
 ### 0.9.0
 
