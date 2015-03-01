@@ -26,20 +26,21 @@ module Teaspoon
 
     cattr_accessor :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :fail_fast,
                    :formatters, :color, :suppress_log,
-                   :use_coverage
-    @@driver         = "phantomjs"
-    @@driver_options = nil
-    @@driver_timeout = 180
-    @@server         = nil
-    @@server_port    = nil
-    @@server_timeout = 20
-    @@fail_fast      = true
+                   :use_coverage, :coverage_ignored_files
+    @@driver                 = "phantomjs"
+    @@driver_options         = nil
+    @@driver_timeout         = 180
+    @@server                 = nil
+    @@server_port            = nil
+    @@server_timeout         = 20
+    @@fail_fast              = true
 
-    @@formatters     = ["dot"]
-    @@color          = true
-    @@suppress_log   = false
+    @@formatters             = ["dot"]
+    @@color                  = true
+    @@suppress_log           = false
 
-    @@use_coverage   = nil
+    @@use_coverage           = nil
+    @@coverage_ignored_files = []
 
     # options that can be specified in the ENV
 
@@ -150,6 +151,12 @@ module Teaspoon
       return ["dot"] if @@formatters.blank?
       return @@formatters if @@formatters.is_a?(Array)
       @@formatters.to_s.split(/,\s?/)
+    end
+
+    def self.coverage_ignored_files
+      return [] if @@coverage_ignored_files.blank?
+      return @@coverage_ignored_files if @@coverage_ignored_files.is_a?(Array)
+      @@coverage_ignored_files.to_s.split(/,\s?/)
     end
 
     # override from env or options

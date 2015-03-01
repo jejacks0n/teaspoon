@@ -94,6 +94,15 @@ describe Teaspoon::Instrumentation do
       expect(subject.add?([404, { "Content-Type" => "application/javascript" }, []], env)).to_not be(true)
     end
 
+    it "doesn't when the asset is in the ignore list" do
+      asset = double(
+        source: source,
+        pathname: "path/to/ignored_files/instrument.js"
+      )
+      allow(Teaspoon.configuration).to receive(:coverage_ignored_files).and_return(["/ignored_files/"])
+      expect(subject.add?([200, { "Content-Type" => "application/javascript" }, asset], env)).to_not be(true)
+    end
+
   end
 
   describe "integration" do
