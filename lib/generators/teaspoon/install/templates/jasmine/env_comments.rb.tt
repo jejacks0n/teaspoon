@@ -164,6 +164,9 @@ Teaspoon.configure do |config|
   # Specify that you always want a coverage configuration to be used.
   #config.use_coverage = nil
 
+  # Specify any files/directories that should not be instrumented
+  #config.coverage_ignored_files = ["test/javascripts"]
+
   config.coverage do |coverage|
 
     # Which coverage reports Istanbul should generate. Correlates directly to what Istanbul supports.
