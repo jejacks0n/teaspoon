@@ -9,8 +9,12 @@ feature "testing with teaspoon in the console", aruba: true do
     Teaspoon running default suite at http://127.0.0.1:31337/teaspoon/default
     TypeError: 'undefined' is not a function (evaluating 'foo()')
       # http://127.0.0.1:31337/relative/assets/integration/spec_helper.js:12
-      # http://127.0.0.1:31337/relative/assets/integration/spec_helper.js:14
+    OUTPUT
+    output = all_output.gsub(/127\.0\.0\.1:\d+/, "127.0.0.1:31337")
+    output = output.gsub("undefined is not a constructor", "'undefined' is not a function")
+    assert_partial_output(expected, output)
 
+    expected = <<-OUTPUT.strip_heredoc
     testing console output
     ..FF.*.
 
@@ -34,8 +38,8 @@ feature "testing with teaspoon in the console", aruba: true do
     teaspoon -s default --filter="Integration tests allows failing specs."
     teaspoon -s default --filter="Integration tests allows erroring specs."
     OUTPUT
-    output = all_output.gsub(/Finished in [\d\.]+ seconds/, "Finished in 0.31337 seconds")
-    output = output.gsub(/127\.0\.0\.1:\d+/, "127.0.0.1:31337")
+    output = all_output.gsub(/127\.0\.0\.1:\d+/, "127.0.0.1:31337")
+    output = output.gsub(/Finished in [\d\.]+ seconds/, "Finished in 0.31337 seconds")
     assert_partial_output(expected, output)
   end
 
