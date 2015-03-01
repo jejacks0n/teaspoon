@@ -33,7 +33,7 @@ module Teaspoon
       begin
         Teaspoon::Environment.require_environment
       rescue Teaspoon::EnvironmentNotFound
-        # it's ok for this to fail sometimes, like before the initializer is run etc
+        # it's ok for this to fail sometimes, like before the generator is run etc
       end
 
       Teaspoon::Engine.default_root_path(app.root)           # default the root if it's not set
