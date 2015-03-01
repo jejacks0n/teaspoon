@@ -7,9 +7,8 @@ feature "testing with teaspoon in the console", aruba: true do
 
     expected = <<-OUTPUT.strip_heredoc
     Teaspoon running default suite at http://127.0.0.1:31337/teaspoon/default
-    TypeError: 'undefined' is not a function (evaluating 'foo()')
+    TypeError: undefined is not a constructor (evaluating 'foo()')
       # http://127.0.0.1:31337/relative/assets/integration/spec_helper.js:12
-      # http://127.0.0.1:31337/relative/assets/integration/spec_helper.js:14
 
     testing console output
     ..FF.*.
