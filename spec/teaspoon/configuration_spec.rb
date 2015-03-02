@@ -158,9 +158,9 @@ describe Teaspoon::Configuration do
       expect(subject.coverage_ignored).to eq([])
     end
 
-    it "returns the array of Strings defined during configuration" do
-      subject.coverage_ignored = ["/spec/javascripts", "/vendor/assets"]
-      expect(subject.coverage_ignored).to eq(["/spec/javascripts", "/vendor/assets"])
+    it "returns the array defined during configuration" do
+      subject.coverage_ignored = ["/spec/javascripts", %r{/vendor/assets}]
+      expect(subject.coverage_ignored).to eq(["/spec/javascripts", %r{/vendor/assets}])
     end
 
   end

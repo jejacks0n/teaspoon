@@ -360,13 +360,11 @@ end
 
 Teaspoon allows defining files and directories to ignore when performing coverage instrumentation.
 
-The below example will ensure that the files within `/test/javascripts` and `/vendor/assets` are not intrumented by Istanbul and will not show up in the coverage results.
+The below example will ensure that any files within `/test/javascripts` and `/vendor/assets` are not intrumented by Istanbul and will not show up in the coverage results.
 
 ```ruby
-config.coverage_ignored = ["/test/javascripts", "/vendor/assets"]
+config.coverage_ignored = ["/test/javascripts", %r{/vendor/assets}]
 ```
-
-The defined strings are used within regular expression and any filepath which matches any of these will not be instrumented.
 
 ## Configuration
 

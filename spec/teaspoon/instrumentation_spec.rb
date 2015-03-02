@@ -94,13 +94,28 @@ describe Teaspoon::Instrumentation do
       expect(subject.add?([404, { "Content-Type" => "application/javascript" }, []], env)).to_not be(true)
     end
 
-    it "doesn't when the asset is in the ignore list" do
-      asset = double(
-        source: source,
-        pathname: "path/to/ignored_files/instrument.js"
-      )
-      allow(Teaspoon.configuration).to receive(:coverage_ignored).and_return(["/ignored_files/"])
-      expect(subject.add?([200, { "Content-Type" => "application/javascript" }, asset], env)).to_not be(true)
+    describe "Ignored Coverage" do
+      context "with a String" do
+        it "doesn't when the asset is in the coverage_ignored list" do
+          allow(Teaspoon.configuration).to receive(:coverage_ignored).and_return(["/ignored_files/"])
+          asset = double(
+            source: source,
+            pathname: "path/to/ignored_files/instrument.js"
+            )
+          expect(subject.add?([200, { "Content-Type" => "application/javascript" }, asset], env)).to_not be(true)
+        end
+      end
+
+      context "with a Regular Expression" do
+        it "doesn't when the asset is in the coverage_ignored list" do
+          allow(Teaspoon.configuration).to receive(:coverage_ignored).and_return([%r{/ignored_files/}])
+          asset = double(
+            source: source,
+            pathname: "path/to/ignored_files/instrument.js"
+            )
+          expect(subject.add?([200, { "Content-Type" => "application/javascript" }, asset], env)).to_not be(true)
+        end
+      end
     end
 
   end
