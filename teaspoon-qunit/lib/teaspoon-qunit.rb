@@ -1,5 +1,4 @@
 require "teaspoon"
-
 require "teaspoon/qunit/version"
 
 module Teaspoon

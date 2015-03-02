@@ -1,5 +1,4 @@
 require "teaspoon"
-
 require "teaspoon/jasmine/version"
 
 module Teaspoon

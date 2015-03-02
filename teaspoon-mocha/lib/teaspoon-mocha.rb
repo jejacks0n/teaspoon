@@ -1,5 +1,4 @@
 require "teaspoon"
-
 require "teaspoon/mocha/version"
 
 module Teaspoon
