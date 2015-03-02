@@ -1,0 +1,16 @@
+{
+  "max_line_length": {
+    "level": "error",
+    "value": 120
+  },
+  "no_empty_functions": {
+    "level": "ignore"
+  },
+  "no_stand_alone_at": {
+    "name": "no_stand_alone_at",
+    "level": "ignore"
+  },
+  "no_empty_param_list": {
+    "level": "error"
+  }
+}
