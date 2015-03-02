@@ -1,5 +1,8 @@
 ### Unreleased
 
+### 0.9.1
+
+* Fixes an issue where suite view was failing
 * CI/Linux stability improvement (alphanumeric ordering of spec files)
 
 
