@@ -29,6 +29,13 @@ module Teaspoon
       'support/*.js'
     ]
 
+    routes do
+      root to: "suite#index"
+      match "/fixtures/*filename", to: "suite#fixtures", via: :get, as: "fixture"
+      match "/:suite", to: "suite#show", via: :get, as: "suite", defaults: { suite: "default" }
+      match "/:suite/:hook", to: "suite#hook", via: :post, as: "suite_hook", defaults: { suite: "default", hook: "default" }
+    end
+
     initializer :assets, group: :all do |app|
       begin
         Teaspoon::Environment.require_environment
@@ -71,9 +78,7 @@ module Teaspoon
       return if app.routes.recognize_path(mount_at)[:action] != "routing_error" rescue nil
       require Teaspoon::Engine.root.join("app/controllers/teaspoon/suite_controller")
 
-      app.routes.prepend do
-        mount Teaspoon::Engine => mount_at, as: "teaspoon"
-      end
+      app.routes.prepend { mount Teaspoon::Engine => mount_at, as: "teaspoon" }
     end
   end
 end
