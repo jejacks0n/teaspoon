@@ -2,6 +2,11 @@ source "https://rubygems.org"
 
 gemspec
 
+# frameworks
+gem "teaspoon-jasmine", path: "teaspoon-jasmine"
+gem "teaspoon-mocha", path: "teaspoon-mocha"
+gem "teaspoon-qunit", path: "teaspoon-qunit"
+
 # gems that teaspoon can utilize
 gem "selenium-webdriver"
 gem "capybara-webkit"

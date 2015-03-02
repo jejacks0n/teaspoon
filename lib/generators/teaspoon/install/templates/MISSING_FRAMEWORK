@@ -1,0 +1,14 @@
+******************************************************************************
+Error: There don't seem to be any frameworks registered within Teaspoon yet.
+
+Teaspoon has been split into separate gems so you can now include only the
+javascript frameworks you want.
+
+Add one or more of the following to your gemfile:
+
+  gem "teaspoon-jasmine"
+  gem "teaspoon-mocha"
+  gem "teaspoon-qunit"
+
+More information can be found at: https://github.com/modeset/teaspoon
+
