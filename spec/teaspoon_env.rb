@@ -14,12 +14,6 @@ Teaspoon.configure do |config|
     suite.javascripts = ["jasmine/1.3.1", "teaspoon/jasmine"]
   end
 
-  config.suite :mocha do |suite|
-    suite.matcher = "spec/javascripts/**/*_mspec.{js,js.coffee,coffee}"
-    suite.javascripts = ["mocha/1.17.1", "teaspoon/mocha"]
-    suite.helper = "mocha_helper"
-  end
-
   config.suite :qunit do |suite|
     suite.matcher = "test/javascripts/**/*_test.{js,js.coffee,coffee}"
     suite.javascripts = ["qunit/1.14.0", "teaspoon/qunit"]
@@ -32,3 +26,4 @@ Teaspoon.configure do |config|
   # end
 end
 require_relative "../teaspoon-jasmine/spec/teaspoon_env"
+require_relative "../teaspoon-mocha/spec/teaspoon_env"
