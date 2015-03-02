@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = "Run QUnit specs in the browser or headless with PhantomJS, Selenium Webdriver, or Capybara Webkit"
   s.license     = "MIT"
 
-  s.files       = Dir["{lib/teaspoon/qunit}/**/*"] + ["lib/teaspoon-qunit.rb", "../MIT.LICENSE", "../README.md"]
+  s.files       = Dir["{lib}/**/*"] + ["../MIT.LICENSE"]
   s.test_files  = `git ls-files -- {spec}/*`.split("\n")
 
   s.add_dependency "teaspoon", [">= 0.9.0"]
