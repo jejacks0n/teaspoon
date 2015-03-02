@@ -165,7 +165,7 @@ Teaspoon.configure do |config|
   #config.use_coverage = nil
 
   # Specify any files/directories that should not be instrumented
-  #config.coverage_ignored_files = ["test/javascripts"]
+  #config.coverage_ignored = ["test/javascripts"]
 
   config.coverage do |coverage|
 

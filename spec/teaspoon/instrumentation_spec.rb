@@ -99,7 +99,7 @@ describe Teaspoon::Instrumentation do
         source: source,
         pathname: "path/to/ignored_files/instrument.js"
       )
-      allow(Teaspoon.configuration).to receive(:coverage_ignored_files).and_return(["/ignored_files/"])
+      allow(Teaspoon.configuration).to receive(:coverage_ignored).and_return(["/ignored_files/"])
       expect(subject.add?([200, { "Content-Type" => "application/javascript" }, asset], env)).to_not be(true)
     end
 
