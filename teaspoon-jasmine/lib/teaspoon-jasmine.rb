@@ -9,8 +9,8 @@ module Teaspoon
       framework_name :jasmine
 
       # register available versions
-      register_version "1.3.1", "jasmine/1.3.0", "teaspoon-jasmine"
-      register_version "2.2.0", "jasmine/2.2.0", "teaspoon-jasmine"
+      register_version "1.3.1", "jasmine/1.3.1", "teaspoon-jasmine"
+      # register_version "2.2.0", "jasmine/2.2.0", "teaspoon-jasmine"
 
       # add asset paths
       add_asset_path File.expand_path("../teaspoon/jasmine/assets", __FILE__)
