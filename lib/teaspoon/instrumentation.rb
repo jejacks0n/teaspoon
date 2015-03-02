@@ -19,9 +19,9 @@ module Teaspoon
     end
 
     def self.ignored?(asset)
-      Teaspoon::Configuration.coverage_ignored_files.select do |file|
+      Teaspoon::Configuration.coverage_ignored_files.any? do |file|
         asset.pathname.to_s.match(file)
-      end.any?
+      end
     end
 
     def self.executable
