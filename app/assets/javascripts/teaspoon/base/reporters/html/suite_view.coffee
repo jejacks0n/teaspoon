@@ -6,7 +6,7 @@ class Teaspoon.Reporters.HTML.SuiteView extends Teaspoon.Reporters.BaseView
     @views = @reporter.views
     @suite.viewId = viewId += 1
     @views.suites[@suite.viewId] = @
-    @suite = new Teaspoon.Suite(suite)
+    @suite = new Teaspoon.Suite(@suite)
     super
 
 

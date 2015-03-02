@@ -344,11 +344,10 @@
 }).call(this);
 (function() {
   Teaspoon.hook = function(name, payload) {
-    var method, xhr, xhrRequest;
+    var xhr, xhrRequest;
     if (payload == null) {
       payload = {};
     }
-    method = "POST";
     xhr = null;
     xhrRequest = function(url, payload, callback) {
       var e;
@@ -941,13 +940,13 @@
 
     viewId = 0;
 
-    function SuiteView(suite1, reporter) {
-      this.suite = suite1;
+    function SuiteView(suite, reporter) {
+      this.suite = suite;
       this.reporter = reporter;
       this.views = this.reporter.views;
       this.suite.viewId = viewId += 1;
       this.views.suites[this.suite.viewId] = this;
-      this.suite = new Teaspoon.Suite(suite);
+      this.suite = new Teaspoon.Suite(this.suite);
       SuiteView.__super__.constructor.apply(this, arguments);
     }
 
