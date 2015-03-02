@@ -158,8 +158,8 @@ describe Teaspoon::Configuration do
       expect(subject.coverage_ignored).to eq([])
     end
 
-    it "returns an array of  if they were comma separated" do
-      subject.coverage_ignored = "/spec/javascripts,/vendor/assets"
+    it "returns the array of Strings defined during configuration" do
+      subject.coverage_ignored = ["/spec/javascripts", "/vendor/assets"]
       expect(subject.coverage_ignored).to eq(["/spec/javascripts", "/vendor/assets"])
     end
 

@@ -153,12 +153,6 @@ module Teaspoon
       @@formatters.to_s.split(/,\s?/)
     end
 
-    def self.coverage_ignored
-      return [] if @@coverage_ignored.blank?
-      return @@coverage_ignored if @@coverage_ignored.is_a?(Array)
-      @@coverage_ignored.to_s.split(/,\s?/)
-    end
-
     # override from env or options
 
     def self.override_from_options(options)
