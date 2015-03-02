@@ -35,6 +35,22 @@ describe Teaspoon::Framework do
 
   end
 
+  describe "adding asset paths" do
+
+    before do
+      subject.add_asset_path "/foo/bar"
+    end
+
+    it "tracks specified template paths" do
+      subject.add_asset_path File.expand_path("../assets", __FILE__)
+
+      asset_paths = subject.asset_paths
+      expect(asset_paths[0]).to eq("/foo/bar")
+      expect(asset_paths[1]).to include("/teaspoon/spec/teaspoon/assets")
+    end
+
+  end
+
   describe "adding custom install templates" do
 
     before do

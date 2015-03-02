@@ -61,6 +61,10 @@ module Teaspoon
       Teaspoon.configuration.asset_paths.each do |path|
         assets.paths << Teaspoon.configuration.root.join(path).to_s
       end
+
+      Teaspoon.frameworks.values.each do |framework|
+        assets.paths += framework.asset_paths
+      end
     end
 
     def self.add_precompiled_assets(assets)

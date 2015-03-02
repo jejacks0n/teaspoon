@@ -2,6 +2,7 @@ module Teaspoon
   class Framework
     class << self
       attr_accessor :_versions
+      attr_accessor :_asset_paths
       attr_accessor :_template_paths
       attr_accessor :_install_path
       attr_accessor :_install_proc
@@ -9,6 +10,7 @@ module Teaspoon
 
     def self.inherited(base)
       base._versions = {}
+      base._asset_paths = []
       base._template_paths = []
       base._install_path = "spec"
       base._install_proc = proc {}
@@ -22,6 +24,10 @@ module Teaspoon
       @_versions[version] = dependencies
     end
 
+    def self.add_asset_path(path)
+      @_asset_paths << path
+    end
+
     def self.add_template_path(path)
       @_template_paths << path
     end
@@ -33,6 +39,10 @@ module Teaspoon
 
     def self.description
       "#{@_framework_name}[#{@_versions.keys.join(', ')}]"
+    end
+
+    def self.asset_paths
+      @_asset_paths
     end
 
     def initialize(_config)
