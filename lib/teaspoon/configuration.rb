@@ -59,12 +59,6 @@ module Teaspoon
     end
 
     class Suite
-      FRAMEWORKS = {
-        jasmine: ["1.3.1", "2.0.0"],
-        mocha: ["1.10.0", "1.17.1"],
-        qunit: ["1.12.0", "1.14.0"],
-      }
-
       attr_accessor :matcher, :helper, :javascripts, :stylesheets,
                     :boot_partial, :body_partial,
                     :no_coverage, :hooks, :expand_assets
@@ -93,22 +87,14 @@ module Teaspoon
       end
 
       def use_framework(name, version = nil)
-        name = name.to_sym
-        version ||= FRAMEWORKS[name].last if FRAMEWORKS[name]
-        unless FRAMEWORKS[name] && FRAMEWORKS[name].include?(version)
-          message = "Unknown framework \"#{name}\""
-          if FRAMEWORKS[name] && version
-            message += " with version #{version} -- available versions #{FRAMEWORKS[name].join(', ')}"
-          end
-          raise Teaspoon::UnknownFramework, message
-        end
+        framework = Teaspoon.frameworks[name.to_sym].new(self)
+        @javascripts = framework.javascripts_for(version)
+        return if @javascripts
 
-        @javascripts = [[name, version].join("/"), "teaspoon-#{name}"]
-        case name.to_sym
-        when :qunit
-          @matcher = "{test/javascripts,app/assets}/**/*_test.{js,js.coffee,coffee}"
-          @helper  = "test_helper"
-        end
+        message = "Unknown framework. \"#{name}[#{version}]\" -- available #{framework.versions.join(', ')}."
+        raise Teaspoon::UnknownFrameworkVersion, message
+      rescue NameError
+        raise Teaspoon::UnknownFramework, "Unknown framework. \"#{name}\" has not yet been registered."
       end
       alias_method :use_framework=, :use_framework
 
@@ -183,5 +169,12 @@ module Teaspoon
     yield @@configuration
     @@configured = true
     @@configuration.override_from_env(ENV)
+  end
+
+  mattr_reader :frameworks
+  @@frameworks = {}
+
+  def self.register_framework(klass)
+    @@frameworks[klass.framework_name] = klass
   end
 end
