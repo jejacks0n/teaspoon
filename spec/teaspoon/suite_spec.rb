@@ -2,15 +2,17 @@ require "spec_helper"
 
 describe Teaspoon::Suite do
 
+  let(:suite_config) { {block: proc { |c| c.javascripts = ['foo'] }} }
+
   before do
-    allow(Teaspoon.configuration).to receive(:suite_configs).and_return("default" => { block: proc {} })
+    allow(Teaspoon.configuration).to receive(:suite_configs).and_return("default" => suite_config)
   end
 
   describe ".all" do
 
     before do
       Teaspoon::Suite.instance_variable_set(:@all, nil)
-      suites = { "default" => { block: proc {} }, "foo" => { block: proc {} } }
+      suites = { "default" => suite_config, "foo" => suite_config }
       allow(Teaspoon.configuration).to receive(:suite_configs).and_return(suites)
     end
 

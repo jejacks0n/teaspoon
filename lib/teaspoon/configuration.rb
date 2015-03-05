@@ -84,7 +84,12 @@ module Teaspoon
 
         default = Teaspoon.configuration.suite_configs["default"]
         instance_eval(&default[:block]) if default
-        yield self if block_given?
+        if block_given?
+          yield self
+          if @javascripts.length == 0
+            raise Teaspoon::FrameworkUnspecified, "Expected a framework to be configured using `suite.use_framework`."
+          end
+        end
       end
 
       def use_framework(name, version = nil)

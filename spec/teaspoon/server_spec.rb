@@ -90,7 +90,8 @@ describe Teaspoon::Server do
   describe "integration" do
 
     before do
-      allow(Teaspoon.configuration).to receive(:suite_configs).and_return("foo" => { block: proc {} })
+      suite_config = proc { |c| c.javascripts = ["foo"] }
+      allow(Teaspoon.configuration).to receive(:suite_configs).and_return("foo" => {block: suite_config})
       allow(Teaspoon.configuration).to receive(:suppress_log).and_return(true)
     end
 
