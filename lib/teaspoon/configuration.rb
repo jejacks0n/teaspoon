@@ -67,7 +67,7 @@ module Teaspoon
       def initialize
         @matcher       = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
         @helper        = "spec_helper"
-        @javascripts   = ["jasmine/1.3.1", "teaspoon-jasmine"]
+        @javascripts   = []
         @stylesheets   = ["teaspoon"]
 
         @boot_partial  = "boot"
