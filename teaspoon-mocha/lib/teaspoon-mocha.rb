@@ -8,8 +8,8 @@ module Teaspoon
       framework_name :mocha
 
       # register available versions
-      register_version "1.10.0", "mocha/1.10.0", "teaspoon-mocha"
-      register_version "1.17.1", "mocha/1.17.1", "teaspoon-mocha"
+      register_version "1.10.0", "mocha/1.10.0.js", "teaspoon-mocha.js"
+      register_version "1.17.1", "mocha/1.17.1.js", "teaspoon-mocha.js"
 
       # add asset paths
       add_asset_path File.expand_path("../teaspoon/mocha/assets", __FILE__)

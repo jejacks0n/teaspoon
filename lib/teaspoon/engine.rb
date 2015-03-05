@@ -6,29 +6,6 @@ module Teaspoon
   class Engine < ::Rails::Engine
     isolate_namespace Teaspoon
 
-    ASSET_MANIFEST = [
-      # core library
-      'teaspoon.css',
-      'teaspoon-teaspoon.js',
-
-      # framework ties
-      'teaspoon/*.js',
-      'teaspoon-jasmine.js',
-      'teaspoon-mocha.js',
-      'teaspoon-qunit.js',
-
-      # frameworks
-      'jasmine/1.3.1.js',
-      'jasmine/2.2.0.js',
-      'mocha/1.10.0.js',
-      'mocha/1.17.1.js',
-      'qunit/1.12.0.js',
-      'qunit/1.14.0.js',
-
-      # all support libraries
-      'support/*.js'
-    ]
-
     routes do
       root to: "suite#index"
       match "/fixtures/*filename", to: "suite#fixtures", via: :get, as: "fixture"
@@ -68,7 +45,7 @@ module Teaspoon
     end
 
     def self.add_precompiled_assets(assets)
-      assets.precompile += ASSET_MANIFEST
+      assets.precompile += Teaspoon.configuration.asset_manifest
     end
 
     def self.inject_instrumentation

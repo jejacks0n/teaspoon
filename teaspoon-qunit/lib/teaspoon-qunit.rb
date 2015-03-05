@@ -8,8 +8,8 @@ module Teaspoon
       framework_name :qunit
 
       # register available versions
-      register_version "1.12.0", "qunit/1.10.0", "teaspoon-qunit"
-      register_version "1.14.0", "qunit/1.14.0", "teaspoon-qunit"
+      register_version "1.12.0", "qunit/1.10.0.js", "teaspoon-qunit.js"
+      register_version "1.14.0", "qunit/1.14.0.js", "teaspoon-qunit.js"
 
       # add asset paths
       add_asset_path File.expand_path("../teaspoon/qunit/assets", __FILE__)

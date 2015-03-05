@@ -190,12 +190,12 @@ describe Teaspoon::Configuration::Suite do
 
     it "allows specifying mocha with a version" do
       @suite = proc{ |s| s.use_framework :mocha, "1.10.0" }
-      expect(subject.javascripts).to eq(["mocha/1.10.0", "teaspoon-mocha"])
+      expect(subject.javascripts).to eq(["mocha/1.10.0.js", "teaspoon-mocha.js"])
     end
 
     it "handles qunit specifically to set matcher and helper" do
       @suite = proc{ |s| s.use_framework :qunit }
-      expect(subject.javascripts).to eq(["qunit/1.14.0", "teaspoon-qunit"])
+      expect(subject.javascripts).to eq(["qunit/1.14.0.js", "teaspoon-qunit.js"])
       expect(subject.matcher).to eq("{test/javascripts,app/assets}/**/*_test.{js,js.coffee,coffee}")
       expect(subject.helper).to eq("test_helper")
     end

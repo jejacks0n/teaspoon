@@ -22,6 +22,7 @@ module Teaspoon
 
     def self.register_version(version, *dependencies)
       @_versions[version] = dependencies
+      Teaspoon.configuration.asset_manifest += dependencies
     end
 
     def self.add_asset_path(path)
