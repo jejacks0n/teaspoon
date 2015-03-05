@@ -50,6 +50,7 @@ describe Teaspoon::Configuration do
     @orig_root = subject.root
     @orig_asset_paths = subject.asset_paths
     @orig_formatters = subject.formatters
+    @orig_coverage_ignored = subject.coverage_ignored
   end
 
   after do
@@ -59,6 +60,7 @@ describe Teaspoon::Configuration do
     subject.root = @orig_root
     subject.asset_paths = @orig_asset_paths
     subject.formatters = @orig_formatters
+    subject.coverage_ignored = @orig_coverage_ignored
   end
 
   it "has the default configuration" do
@@ -79,6 +81,7 @@ describe Teaspoon::Configuration do
     expect(subject.fail_fast).to be_truthy
     expect(subject.suppress_log).to be_falsey
     expect(subject.color).to be_truthy
+    expect(subject.coverage_ignored).to eq([])
 
     expect(subject.suite_configs).to be_a(Hash)
     expect(subject.coverage_configs).to be_a(Hash)
@@ -145,6 +148,19 @@ describe Teaspoon::Configuration do
       expect(subject).to receive(:driver=).with("driver")
 
       subject.send(:override_from_env, "FAIL_FAST" => "true", "DRIVER_TIMEOUT" => "123", "DRIVER" => "driver")
+    end
+
+  end
+
+  describe ".coverage_ignored" do
+
+    it "returns an empty list if nothing was set" do
+      expect(subject.coverage_ignored).to eq([])
+    end
+
+    it "returns the array defined during configuration" do
+      subject.coverage_ignored = ["/spec/javascripts", %r{/vendor/assets}]
+      expect(subject.coverage_ignored).to eq(["/spec/javascripts", %r{/vendor/assets}])
     end
 
   end

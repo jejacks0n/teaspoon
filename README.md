@@ -356,6 +356,15 @@ config.coverage :CI do |coverage|
 end
 ```
 
+### Ignoring Files
+
+Teaspoon allows defining files and directories to ignore when performing coverage instrumentation.
+
+The below example will ensure that any files within `/test/javascripts` and `/vendor/assets` are not intrumented by Istanbul and will not show up in the coverage results.
+
+```ruby
+config.coverage_ignored = ["/test/javascripts", %r{/vendor/assets}]
+```
 
 ## Configuration
 

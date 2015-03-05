@@ -26,20 +26,21 @@ module Teaspoon
 
     cattr_accessor :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :fail_fast,
                    :formatters, :color, :suppress_log,
-                   :use_coverage
-    @@driver         = "phantomjs"
-    @@driver_options = nil
-    @@driver_timeout = 180
-    @@server         = nil
-    @@server_port    = nil
-    @@server_timeout = 20
-    @@fail_fast      = true
+                   :use_coverage, :coverage_ignored
+    @@driver           = "phantomjs"
+    @@driver_options   = nil
+    @@driver_timeout   = 180
+    @@server           = nil
+    @@server_port      = nil
+    @@server_timeout   = 20
+    @@fail_fast        = true
 
-    @@formatters     = ["dot"]
-    @@color          = true
-    @@suppress_log   = false
+    @@formatters       = ["dot"]
+    @@color            = true
+    @@suppress_log     = false
 
-    @@use_coverage   = nil
+    @@use_coverage     = nil
+    @@coverage_ignored = []
 
     # options that can be specified in the ENV
 
