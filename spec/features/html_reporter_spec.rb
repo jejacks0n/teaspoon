@@ -6,10 +6,13 @@ feature "testing with teaspoon in the browser", js: true do
 
   before do
     Teaspoon::Suite.instance_variable_set(:@all, nil)
-    allow(Teaspoon.configuration).to receive(:suite_configs).and_return "integration" => {block: proc{ |suite|
-      suite.matcher = "spec/dummy/app/assets/javascripts/integration/*_spec.{js,js.coffee,coffee}"
-      suite.helper = spec_helper
-    }}
+    allow(Teaspoon.configuration).to receive(:suite_configs).and_return "integration" => {
+      block: proc{ |c|
+        c.matcher = "spec/dummy/app/assets/javascripts/integration/*_spec.{js,js.coffee,coffee}"
+        c.helper = spec_helper
+        c.javascripts = ["jasmine/1.3.1", "teaspoon-jasmine"]
+      }
+    }
   end
 
   scenario "lists the suites" do

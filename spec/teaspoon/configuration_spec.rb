@@ -208,6 +208,14 @@ describe Teaspoon::Configuration::Suite do
         )
       end
 
+      it "shows an error when there are no javascripts configured" do
+        @suite = proc{ |s| s.javascripts = [] }
+        expect{ subject }.to raise_error(
+            Teaspoon::FrameworkUnspecified,
+            "Expected a framework to be configured using `suite.use_framework`."
+          )
+      end
+
     end
 
   end

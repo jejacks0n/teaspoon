@@ -6,11 +6,28 @@ feature "testing hooks in the browser" do
   include Rack::Test::Methods
 
   let(:app) { Dummy::Application }
-  let(:suites) {{
-    "suite1" => {block: proc{ |suite| suite.hook :before, &proc{ File.write(temp_file, "") } }},
-    "suite2" => {block: proc{ |suite| suite.hook :after, &proc{ File.write(temp_file, "") } }},
-    "suite3" => {block: proc{ |suite| suite.hook :with_arguments, &proc{ |args| File.write(temp_file, args["message"]) } }},
-  }}
+  let(:suites) do
+    {
+      "suite1" => {
+        block: proc{ |c|
+          c.javascripts = ["foo"]
+          c.hook :before, &proc{ File.write(temp_file, "") }
+        }
+      },
+      "suite2" => {
+        block: proc{ |c|
+          c.javascripts = ["foo"]
+          c.hook :after, &proc{ File.write(temp_file, "") }
+        }
+      },
+      "suite3" => {
+        block: proc{ |c|
+          c.javascripts = ["foo"]
+          c.hook :with_arguments, &proc{ |args| File.write(temp_file, args["message"]) }
+        }
+      },
+    }
+  end
 
   before do
     allow(Teaspoon.configuration).to receive(:suite_configs).and_return(suites)

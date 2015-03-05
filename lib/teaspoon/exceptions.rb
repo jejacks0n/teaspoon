@@ -5,6 +5,7 @@ module Teaspoon
   class ServerException < Teaspoon::Error; end
   class RunnerException < Teaspoon::Error; end
   class ExporterException < Teaspoon::Error; end
+  class FrameworkUnspecified < Teaspoon::Error; end
   class UnknownFramework < Teaspoon::Error; end
   class UnknownCoverage < Teaspoon::Error; end
   class UnknownDriver < Teaspoon::Error; end
