@@ -1,15 +1,15 @@
 module Teaspoon
   module Generators
     class InstallGenerator < Rails::Generators::Base
-      source_root File.expand_path("../", __FILE__)
+      source_root File.expand_path("../templates", __FILE__)
 
       desc "Installs the Teaspoon initializer into your application."
 
       class_option :framework,
                    type: :string,
                    aliases: "-t",
-                   default: "jasmine",
-                   desc:    "Specify which test framework to use (Available: jasmine, mocha, or qunit)"
+                   default: Teaspoon.frameworks.keys.first,
+                   desc:    "Specify which test framework to use (Available: #{Teaspoon.frameworks.keys.join(', ')})"
 
       class_option :coffee,
                    type: :boolean,
@@ -29,60 +29,54 @@ module Teaspoon
                    default: false,
                    desc:    "Copy the boot and body partials"
 
-      def validate_framework
-        return if frameworks.include?(options[:framework])
-        puts "Unknown framework -- available #{frameworks.join(', ')}"
+      def verify_framework
+        framework.present?
+      rescue
+        if Teaspoon.frameworks.length == 0
+          readme "MISSING_FRAMEWORK"
+        else
+          say_status "Unknown framework -- available #{Teaspoon.frameworks.keys.join(', ')}.", :red
+        end
         exit(1)
       end
 
       def copy_environment
-        if options[:no_comments]
-          copy_file "templates/#{framework}/env.rb",
-                    "#{framework_type}/teaspoon_env.rb"
-        else
-          template "templates/#{framework}/env_comments.rb.tt",
-                   "#{framework_type}/teaspoon_env.rb"
-        end
+        source = options[:no_comments] ? "env.rb.tt" : "env_comments.rb.tt"
+        template source, "#{framework.install_path}/teaspoon_env.rb"
       end
 
       def create_structure
-        empty_directory "#{framework_type}/javascripts/support"
-        empty_directory "#{framework_type}/javascripts/fixtures"
+        empty_directory "#{framework.install_path}/javascripts/support"
+        empty_directory "#{framework.install_path}/javascripts/fixtures"
       end
 
-      def copy_spec_helper
-        copy_file "templates/#{framework}/#{framework_type}_helper.#{helper_ext}",
-                  "#{framework_type}/javascripts/#{framework_type}_helper.#{helper_ext}"
+      def install_framework_files
+        instance_eval(&framework.install_callback)
       end
 
       def copy_partials
         return unless options[:partials]
-        copy_file "templates/_boot.html.erb",
-                  "#{framework_type}/javascripts/fixtures/_boot.html.erb"
-        copy_file "templates/_body.html.erb",
-                  "#{framework_type}/javascripts/fixtures/_body.html.erb"
+        copy_file "_boot.html.erb", "#{framework.install_path}/javascripts/fixtures/_boot.html.erb"
+        copy_file "_body.html.erb", "#{framework.install_path}/javascripts/fixtures/_body.html.erb"
       end
 
-      def display_readme
+      def display_post_install
         readme "POST_INSTALL" if behavior == :invoke
       end
 
       private
 
       def framework
-        options[:framework]
+        @framework ||= begin
+          framework = Teaspoon.frameworks[options[:framework].to_sym].new(suite)
+          source_paths
+          @source_paths = framework.template_paths + @source_paths
+          framework
+        end
       end
 
-      def frameworks
-        %w{jasmine mocha qunit}
-      end
-
-      def helper_ext
-        (options[:coffee]) ? "coffee" : "js"
-      end
-
-      def framework_type
-        (options[:framework] == "qunit") ? "test" : "spec"
+      def suite
+        @suite ||= Teaspoon::Configuration::Suite.new
       end
     end
   end

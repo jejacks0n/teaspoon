@@ -39,6 +39,16 @@ describe Teaspoon do
 
   end
 
+  describe ".register_framework" do
+
+    it "keeps track of the registered frameworks" do
+      foo = Class.new(Teaspoon::Framework) { framework_name :foo }
+      subject.register_framework(foo)
+      expect(subject.frameworks[:foo]).to eq(foo)
+    end
+
+  end
+
 end
 
 
@@ -180,12 +190,12 @@ describe Teaspoon::Configuration::Suite do
 
     it "allows specifying mocha with a version" do
       @suite = proc{ |s| s.use_framework :mocha, "1.10.0" }
-      expect(subject.javascripts).to eq(["mocha/1.10.0", "teaspoon-mocha"])
+      expect(subject.javascripts).to eq(["mocha/1.10.0.js", "teaspoon-mocha.js"])
     end
 
     it "handles qunit specifically to set matcher and helper" do
       @suite = proc{ |s| s.use_framework :qunit }
-      expect(subject.javascripts).to eq(["qunit/1.14.0", "teaspoon-qunit"])
+      expect(subject.javascripts).to eq(["qunit/1.14.0.js", "teaspoon-qunit.js"])
       expect(subject.matcher).to eq("{test/javascripts,app/assets}/**/*_test.{js,js.coffee,coffee}")
       expect(subject.helper).to eq("test_helper")
     end
@@ -193,18 +203,19 @@ describe Teaspoon::Configuration::Suite do
     describe "exceptions" do
 
       it "shows an error for unknown frameworks" do
+        allow(Teaspoon).to receive(:frameworks).and_return({})
         @suite = proc{ |s| s.use_framework :foo }
         expect{ subject }.to raise_error(
           Teaspoon::UnknownFramework,
-          "Unknown framework \"foo\""
+          "Unknown framework. \"foo\" has not yet been registered."
         )
       end
 
       it "shows an error for unknown versions" do
-        @suite = proc{ |s| s.use_framework :qunit, "666" }
+        @suite = proc{ |s| s.use_framework :qunit, "6.6.6" }
         expect{ subject }.to raise_error(
-          Teaspoon::UnknownFramework,
-          "Unknown framework \"qunit\" with version 666 -- available versions 1.12.0, 1.14.0"
+          Teaspoon::UnknownFrameworkVersion,
+          "Unknown framework. \"qunit[6.6.6]\" -- available 1.12.0, 1.14.0."
         )
       end
 

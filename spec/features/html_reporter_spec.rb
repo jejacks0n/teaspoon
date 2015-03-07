@@ -8,9 +8,9 @@ feature "testing with teaspoon in the browser", js: true do
     Teaspoon::Suite.instance_variable_set(:@all, nil)
     allow(Teaspoon.configuration).to receive(:suite_configs).and_return "integration" => {
       block: proc{ |c|
+        c.use_framework :jasmine, "1.3.1"
         c.matcher = "spec/dummy/app/assets/javascripts/integration/*_spec.{js,js.coffee,coffee}"
         c.helper = spec_helper
-        c.javascripts = ["jasmine/1.3.1", "teaspoon-jasmine"]
       }
     }
   end
