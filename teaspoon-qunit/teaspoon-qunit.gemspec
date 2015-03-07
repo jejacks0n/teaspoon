@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
 
   s.files       = Dir["{lib}/**/*"] + ["../MIT.LICENSE"]
-  s.test_files  = `git ls-files -- {spec}/*`.split("\n")
+  s.test_files  = `git ls-files -- {spec,test}/*`.split("\n")
 
   s.add_dependency "teaspoon", [">= 0.9.0"]
 end
