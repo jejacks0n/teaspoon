@@ -1,6 +1,6 @@
 fixture.preload("fixture.html", "fixture.json") # make the actual requests for the files
 # fixture.set("<h2>Another Title</h2>") # create some markup manually (will be in a beforeEach)
-describe "Using fixtures", ->
+describe "Using fixtures in Jasmine 2", ->
 
   fixture.set("<h2>Another Title</h2>") # create some markup manually (will be in a beforeEach)
 

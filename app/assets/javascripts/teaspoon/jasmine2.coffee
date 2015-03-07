@@ -1,4 +1,6 @@
 #= require teaspoon/base/teaspoon
+#= require teaspoon/jasmine2/_namespace
+#= require teaspoon/jasmine2/responder
 #= require teaspoon/jasmine2/reporters/console
 #= require teaspoon/jasmine2/reporters/html
 
@@ -24,9 +26,10 @@ class Teaspoon.Runner extends Teaspoon.Runner
 
 
   setup: ->
-    # add the reporter and set the filter
+    # add the responder
     reporter = new (@getReporter())()
-    env.addReporter(reporter)
+    responder = new Teaspoon.Jasmine2.Responder(reporter)
+    env.addReporter(responder)
 
     # add fixture support
     @addFixtureSupport()
