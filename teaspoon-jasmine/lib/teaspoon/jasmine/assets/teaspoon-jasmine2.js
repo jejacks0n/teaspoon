@@ -1118,6 +1118,84 @@
 
 }).call(this);
 (function() {
+  var base;
+
+  if (this.Teaspoon == null) {
+    this.Teaspoon = {};
+  }
+
+  if ((base = this.Teaspoon).Jasmine2 == null) {
+    base.Jasmine2 = {};
+  }
+
+}).call(this);
+(function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Teaspoon.Jasmine2.Responder = (function(superClass) {
+    extend(Responder, superClass);
+
+    function Responder(reporter) {
+      this.reporter = reporter;
+    }
+
+    Responder.prototype.jasmineStarted = function(result) {
+      return this.reporter.reportRunnerStarting({
+        total: result.totalSpecsDefined
+      });
+    };
+
+    Responder.prototype.jasmineDone = function() {
+      return this.reporter.reportRunnerResults();
+    };
+
+    Responder.prototype.suiteStarted = function(result) {
+      var base;
+      if (this.currentSuite) {
+        result.parent = this.currentSuite;
+      }
+      this.currentSuite = result;
+      return typeof (base = this.reporter).reportSuiteStarting === "function" ? base.reportSuiteStarting({
+        id: result.id,
+        description: result.description,
+        fullName: result.fullName
+      }) : void 0;
+    };
+
+    Responder.prototype.suiteDone = function(result) {
+      var base;
+      this.currentSuite = this.currentSuite.parent;
+      return typeof (base = this.reporter).reportSuiteResults === "function" ? base.reportSuiteResults({
+        id: result.id,
+        description: result.description,
+        fullName: result.fullName
+      }) : void 0;
+    };
+
+    Responder.prototype.specStarted = function(result) {
+      var base;
+      if (jasmine.getEnv().specFilter({
+        getFullName: function() {
+          return result.fullName;
+        }
+      })) {
+        result.parent = this.currentSuite;
+        return typeof (base = this.reporter).reportSpecStarting === "function" ? base.reportSpecStarting(result) : void 0;
+      }
+    };
+
+    Responder.prototype.specDone = function(result) {
+      result.parent = this.currentSuite;
+      return this.reporter.reportSpecResults(result);
+    };
+
+    return Responder;
+
+  })(Teaspoon.Runner);
+
+}).call(this);
+(function() {
   var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
@@ -1130,10 +1208,6 @@
       return Console.__super__.constructor.apply(this, arguments);
     }
 
-    Console.prototype.jasmineStarted = function() {
-      return this.reportRunnerStarting();
-    };
-
     Console.prototype.reportRunnerStarting = function() {
       this.currentAssertions = [];
       return this.log({
@@ -1143,10 +1217,6 @@
       });
     };
 
-    Console.prototype.jasmineDone = function() {
-      return this.reportRunnerResults();
-    };
-
     Console.prototype.reportRunnerResults = function() {
       this.log({
         type: "result",
@@ -1154,22 +1224,6 @@
         coverage: window.__coverage__
       });
       return Teaspoon.finished = true;
-    };
-
-    Console.prototype.suiteStarted = function(result) {
-      if (this.currentSuite) {
-        result.parent = this.currentSuite;
-      }
-      return this.currentSuite = result;
-    };
-
-    Console.prototype.suiteDone = function(result) {
-      return this.currentSuite = this.currentSuite.parent;
-    };
-
-    Console.prototype.specDone = function(result) {
-      result.parent = this.currentSuite;
-      return this.reportSpecResults(result);
     };
 
     return Console;
@@ -1195,43 +1249,6 @@
 
     HTML.prototype.envInfo = function() {
       return "jasmine " + jasmine.version;
-    };
-
-    HTML.prototype.jasmineStarted = function(result) {
-      return this.reportRunnerStarting({
-        total: result.totalSpecsDefined
-      });
-    };
-
-    HTML.prototype.jasmineDone = function() {
-      return this.reportRunnerResults();
-    };
-
-    HTML.prototype.suiteStarted = function(result) {
-      if (this.currentSuite) {
-        result.parent = this.currentSuite;
-      }
-      return this.currentSuite = result;
-    };
-
-    HTML.prototype.suiteDone = function(result) {
-      return this.currentSuite = this.currentSuite.parent;
-    };
-
-    HTML.prototype.specStarted = function(result) {
-      if (jasmine.getEnv().specFilter({
-        getFullName: function() {
-          return result.fullName;
-        }
-      })) {
-        result.parent = this.currentSuite;
-        return this.reportSpecStarting(result);
-      }
-    };
-
-    HTML.prototype.specDone = function(result) {
-      result.parent = this.currentSuite;
-      return this.reportSpecResults(result);
     };
 
     return HTML;
@@ -1266,9 +1283,10 @@
     }
 
     Runner.prototype.setup = function() {
-      var reporter;
+      var reporter, responder;
       reporter = new (this.getReporter())();
-      env.addReporter(reporter);
+      responder = new Teaspoon.Jasmine2.Responder(reporter);
+      env.addReporter(responder);
       return this.addFixtureSupport();
     };
 
