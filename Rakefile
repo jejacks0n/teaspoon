@@ -37,7 +37,7 @@ namespace :teaspoon do
     task javascripts: :environment do
       env = Rails.application.assets
 
-      %w(teaspoon/jasmine.js teaspoon/mocha.js teaspoon/qunit.js teaspoon/teaspoon.js).each do |path|
+      %w(teaspoon/jasmine.js teaspoon/jasmine2.js teaspoon/mocha.js teaspoon/qunit.js teaspoon/teaspoon.js).each do |path|
         asset = env.find_asset(path)
         asset.write_to(Teaspoon::Engine.root.join("app/assets/javascripts/#{path.gsub(/\//, '-')}"))
       end
