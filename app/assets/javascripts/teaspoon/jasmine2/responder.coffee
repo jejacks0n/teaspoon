@@ -1,4 +1,4 @@
-class Teaspoon.Jasmine2.Responder extends Teaspoon.Runner
+class Teaspoon.Jasmine2.Responder
 
   constructor: (@reporter) ->
 

@@ -1,4 +1,4 @@
-describe "Jasmine 2 describe", ->
+describe "Teaspoon.Jasmine2.Responder", ->
 
   beforeEach ->
     @jasmineStartedDetails =
