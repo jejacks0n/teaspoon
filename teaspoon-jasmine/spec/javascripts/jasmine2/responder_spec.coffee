@@ -47,7 +47,7 @@ describe "Teaspoon.Jasmine2.Responder", ->
 
   describe "#jasmineStarted", ->
 
-    it "has an it", ->
+    it "reports the runner starting", ->
       spyOn(@reporter, 'reportRunnerStarting')
 
       @responder.jasmineStarted(@jasmineStartedDetails)
