@@ -9,12 +9,12 @@ describe "Teaspoon.Jasmine.Responder", ->
       getFullName: -> "Jasmine 1 describe"
     @reportSpecStartingDetails =
       id: 1
-      getFullName: -> "Jasmine 2 describe has an it"
+      getFullName: -> "Jasmine 1 describe has an it"
       description: "has an it"
       suite: @reportSuiteResultsDetails
     @reportSpecResultsDetails =
       id: 1
-      getFullName: -> "Jasmine 2 describe has an it"
+      getFullName: -> "Jasmine 1 describe has an it"
       description: "has an it"
       suite: @reportSuiteResultsDetails
 
