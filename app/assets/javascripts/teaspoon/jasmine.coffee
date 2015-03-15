@@ -1,4 +1,6 @@
 #= require teaspoon/base/teaspoon
+#= require teaspoon/jasmine/_namespace
+#= require teaspoon/jasmine/responder
 #= require teaspoon/jasmine/reporters/html
 
 unless jasmine?
@@ -20,7 +22,8 @@ class Teaspoon.Runner extends Teaspoon.Runner
 
     # add the reporter and set the filter
     reporter = new (@getReporter())()
-    env.addReporter(reporter)
+    responder = new Teaspoon.Jasmine.Responder(reporter)
+    env.addReporter(responder)
 
     # add fixture support
     @addFixtureSupport()

@@ -66,7 +66,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
 
 
   reportRunnerStarting: (runner) ->
-    @total.exist = runner.total || runner.specs?().length || 0
+    @total.exist = runner.total || 0
     @setText("stats-duration", "...") if @total.exist
 
 

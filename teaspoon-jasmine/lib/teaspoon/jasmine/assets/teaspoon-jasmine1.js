@@ -550,7 +550,7 @@
     };
 
     HTML.prototype.reportRunnerStarting = function(runner) {
-      this.total.exist = runner.total || (typeof runner.specs === "function" ? runner.specs().length : void 0) || 0;
+      this.total.exist = runner.total || 0;
       if (this.total.exist) {
         return this.setText("stats-duration", "...");
       }
@@ -1118,6 +1118,61 @@
 
 }).call(this);
 (function() {
+  var base;
+
+  if (this.Teaspoon == null) {
+    this.Teaspoon = {};
+  }
+
+  if ((base = this.Teaspoon).Jasmine == null) {
+    base.Jasmine = {};
+  }
+
+}).call(this);
+(function() {
+  Teaspoon.Jasmine.Responder = (function() {
+    function Responder(reporter) {
+      this.reporter = reporter;
+    }
+
+    Responder.prototype.reportRunnerStarting = function(runner) {
+      return this.reporter.reportRunnerStarting({
+        total: runner.specs().length
+      });
+    };
+
+    Responder.prototype.reportRunnerResults = function() {
+      return this.reporter.reportRunnerResults();
+    };
+
+    Responder.prototype.reportSuiteStarting = function() {
+      debugger;
+    };
+
+    Responder.prototype.reportSuiteResults = function(result) {
+      var base;
+      return typeof (base = this.reporter).reportSuiteResults === "function" ? base.reportSuiteResults({
+        id: result.id,
+        description: result.description,
+        fullName: result.getFullName()
+      }) : void 0;
+    };
+
+    Responder.prototype.reportSpecStarting = function(result) {
+      var base;
+      return typeof (base = this.reporter).reportSpecStarting === "function" ? base.reportSpecStarting(result) : void 0;
+    };
+
+    Responder.prototype.reportSpecResults = function(result) {
+      return this.reporter.reportSpecResults(result);
+    };
+
+    return Responder;
+
+  })();
+
+}).call(this);
+(function() {
   var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
@@ -1163,7 +1218,7 @@
     }
 
     Runner.prototype.setup = function() {
-      var grep, reporter;
+      var grep, reporter, responder;
       env.updateInterval = 1000;
       if (grep = this.params["grep"]) {
         env.specFilter = function(spec) {
@@ -1171,7 +1226,8 @@
         };
       }
       reporter = new (this.getReporter())();
-      env.addReporter(reporter);
+      responder = new Teaspoon.Jasmine.Responder(reporter);
+      env.addReporter(responder);
       return this.addFixtureSupport();
     };
 
