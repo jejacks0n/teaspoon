@@ -509,6 +509,49 @@
       return this.buildFilters();
     };
 
+    HTML.prototype.reportRunnerStarting = function(runner) {
+      this.total.exist = runner.total || 0;
+      if (this.total.exist) {
+        return this.setText("stats-duration", "...");
+      }
+    };
+
+    HTML.prototype.reportRunnerResults = function() {
+      if (!this.total.run) {
+        return;
+      }
+      this.setText("stats-duration", this.elapsedTime());
+      if (!this.total.failures) {
+        this.setStatus("passed");
+      }
+      this.setText("stats-passes", this.total.passes);
+      this.setText("stats-failures", this.total.failures);
+      if (this.total.run < this.total.exist) {
+        this.total.skipped = this.total.exist - this.total.run;
+        this.total.run = this.total.exist;
+      }
+      this.setText("stats-skipped", this.total.skipped);
+      return this.updateProgress();
+    };
+
+    HTML.prototype.reportSuiteStarting = function(suite) {};
+
+    HTML.prototype.reportSuiteResults = function(suite) {};
+
+    HTML.prototype.reportSpecStarting = function(spec) {
+      spec = new Teaspoon.Spec(spec);
+      if (this.config["build-full-report"]) {
+        this.reportView = new Teaspoon.Reporters.HTML.SpecView(spec, this);
+      }
+      return this.specStart = new Teaspoon.Date().getTime();
+    };
+
+    HTML.prototype.reportSpecResults = function(spec) {
+      this.total.run += 1;
+      this.updateProgress();
+      return this.updateStatus(spec);
+    };
+
     HTML.prototype.buildLayout = function() {
       var el;
       el = this.createEl("div");
@@ -547,45 +590,6 @@
         this.setClass("filter", "teaspoon-filtered");
       }
       return this.setHtml("filter-list", "<li>" + (this.filters.join("</li><li>")), true);
-    };
-
-    HTML.prototype.reportRunnerStarting = function(runner) {
-      this.total.exist = runner.total || 0;
-      if (this.total.exist) {
-        return this.setText("stats-duration", "...");
-      }
-    };
-
-    HTML.prototype.reportSpecStarting = function(spec) {
-      spec = new Teaspoon.Spec(spec);
-      if (this.config["build-full-report"]) {
-        this.reportView = new Teaspoon.Reporters.HTML.SpecView(spec, this);
-      }
-      return this.specStart = new Teaspoon.Date().getTime();
-    };
-
-    HTML.prototype.reportSpecResults = function(spec) {
-      this.total.run += 1;
-      this.updateProgress();
-      return this.updateStatus(spec);
-    };
-
-    HTML.prototype.reportRunnerResults = function() {
-      if (!this.total.run) {
-        return;
-      }
-      this.setText("stats-duration", this.elapsedTime());
-      if (!this.total.failures) {
-        this.setStatus("passed");
-      }
-      this.setText("stats-passes", this.total.passes);
-      this.setText("stats-failures", this.total.failures);
-      if (this.total.run < this.total.exist) {
-        this.total.skipped = this.total.exist - this.total.run;
-        this.total.run = this.total.exist;
-      }
-      this.setText("stats-skipped", this.total.skipped);
-      return this.updateProgress();
     };
 
     HTML.prototype.elapsedTime = function() {
@@ -1019,6 +1023,21 @@
       });
     };
 
+    Console.prototype.reportRunnerResults = function() {
+      this.log({
+        type: "result",
+        elapsed: ((new Teaspoon.Date().getTime() - this.start.getTime()) / 1000).toFixed(5),
+        coverage: window.__coverage__
+      });
+      return Teaspoon.finished = true;
+    };
+
+    Console.prototype.reportSuiteStarting = function(suite) {};
+
+    Console.prototype.reportSuiteResults = function(suite) {};
+
+    Console.prototype.reportSpecStarting = function(spec) {};
+
     Console.prototype.reportSuites = function() {
       var i, index, len, ref, results, suite;
       ref = this.spec.getParents();
@@ -1095,15 +1114,6 @@
       return results;
     };
 
-    Console.prototype.reportRunnerResults = function() {
-      this.log({
-        type: "result",
-        elapsed: ((new Teaspoon.Date().getTime() - this.start.getTime()) / 1000).toFixed(5),
-        coverage: window.__coverage__
-      });
-      return Teaspoon.finished = true;
-    };
-
     Console.prototype.log = function(obj) {
       if (obj == null) {
         obj = {};
@@ -1145,26 +1155,20 @@
       return this.reporter.reportRunnerResults();
     };
 
-    Responder.prototype.reportSuiteStarting = function() {
-      debugger;
+    Responder.prototype.reportSuiteResults = function(suite) {
+      return this.reporter.reportSuiteResults({
+        id: suite.id,
+        description: suite.description,
+        fullName: suite.getFullName()
+      });
     };
 
-    Responder.prototype.reportSuiteResults = function(result) {
-      var base;
-      return typeof (base = this.reporter).reportSuiteResults === "function" ? base.reportSuiteResults({
-        id: result.id,
-        description: result.description,
-        fullName: result.getFullName()
-      }) : void 0;
+    Responder.prototype.reportSpecStarting = function(spec) {
+      return this.reporter.reportSpecStarting(spec);
     };
 
-    Responder.prototype.reportSpecStarting = function(result) {
-      var base;
-      return typeof (base = this.reporter).reportSpecStarting === "function" ? base.reportSpecStarting(result) : void 0;
-    };
-
-    Responder.prototype.reportSpecResults = function(result) {
-      return this.reporter.reportSpecResults(result);
+    Responder.prototype.reportSpecResults = function(spec) {
+      return this.reporter.reportSpecResults(spec);
     };
 
     return Responder;

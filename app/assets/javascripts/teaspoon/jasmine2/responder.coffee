@@ -3,45 +3,45 @@ class Teaspoon.Jasmine2.Responder
   constructor: (@reporter) ->
 
   
-  jasmineStarted: (result) ->
-    @reporter.reportRunnerStarting(total: result.totalSpecsDefined)
+  jasmineStarted: (runner) ->
+    @reporter.reportRunnerStarting(total: runner.totalSpecsDefined)
 
   
   jasmineDone: ->
     @reporter.reportRunnerResults()
 
 
-  suiteStarted: (result) ->
+  suiteStarted: (suite) ->
     if @currentSuite # suite already running, we're nested
-      result.parent = @currentSuite
-    @currentSuite = result
+      suite.parent = @currentSuite
+    @currentSuite = suite
 
-    @reporter.reportSuiteStarting?(
-      id: result.id
-      description: result.description
-      fullName: result.fullName
+    @reporter.reportSuiteStarting(
+      id: suite.id
+      description: suite.description
+      fullName: suite.fullName
     )
 
 
-  suiteDone: (result) ->
+  suiteDone: (suite) ->
     @currentSuite = @currentSuite.parent
 
-    @reporter.reportSuiteResults?(
-      id: result.id
-      description: result.description
-      fullName: result.fullName
+    @reporter.reportSuiteResults(
+      id: suite.id
+      description: suite.description
+      fullName: suite.fullName
     )
 
 
-  specStarted: (result) ->
+  specStarted: (spec) ->
     # Jasmine 2 reports the spec starting even though it may
     # be filtered out, but there's no way to tell.
     # TODO: Is there a way to clean this up?
-    if jasmine.getEnv().specFilter(getFullName: -> result.fullName)
-      result.parent = @currentSuite
-      @reporter.reportSpecStarting?(result)
+    if jasmine.getEnv().specFilter(getFullName: -> spec.fullName)
+      spec.parent = @currentSuite
+      @reporter.reportSpecStarting(spec)
 
 
-  specDone: (result) ->
-    result.parent = @currentSuite
-    @reporter.reportSpecResults(result)
+  specDone: (spec) ->
+    spec.parent = @currentSuite
+    @reporter.reportSpecResults(spec)

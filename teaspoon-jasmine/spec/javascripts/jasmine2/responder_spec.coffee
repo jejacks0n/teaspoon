@@ -78,14 +78,6 @@ describe "Teaspoon.Jasmine2.Responder", ->
         fullName: "Jasmine 2 describe"
 
 
-    it "does not error out if the reporter doesn't care about starting suites", ->
-      delete @reporter.reportSuiteStarting
-
-      expect(=>
-        @responder.suiteStarted(@suiteStartedDetails)
-      ).not.toThrow()
-
-
   describe "#suiteDone", ->
 
     beforeEach ->
@@ -103,14 +95,6 @@ describe "Teaspoon.Jasmine2.Responder", ->
         fullName: "Jasmine 2 describe"
 
 
-    it "does not error out if the reporter doesn't care about finishing suites", ->
-      delete @reporter.reportSuiteResults
-
-      expect(=>
-        @responder.suiteDone(@suiteDoneDetails)
-      ).not.toThrow()
-
-
   describe "#specStarted", ->
 
     it "reports the spec starting", ->
@@ -126,14 +110,6 @@ describe "Teaspoon.Jasmine2.Responder", ->
         passedExpectations: []
         pendingReason: ""
         parent: undefined
-
-
-    it "does not error out if the reporter doesn't care about starting specs", ->
-      delete @reporter.reportSpecStarting
-
-      expect(=>
-        @responder.specStarted(@specStartedDetails)
-      ).not.toThrow()
 
 
   describe "#specDone", ->

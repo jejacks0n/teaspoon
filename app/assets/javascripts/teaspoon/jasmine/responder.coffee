@@ -11,17 +11,17 @@ class Teaspoon.Jasmine.Responder
     @reporter.reportRunnerResults()
 
 
-  reportSuiteResults: (result) ->
-    @reporter.reportSuiteResults?(
-      id: result.id
-      description: result.description
-      fullName: result.getFullName()
+  reportSuiteResults: (suite) ->
+    @reporter.reportSuiteResults(
+      id: suite.id
+      description: suite.description
+      fullName: suite.getFullName()
     )
 
 
-  reportSpecStarting: (result) ->
-    @reporter.reportSpecStarting?(result)
+  reportSpecStarting: (spec) ->
+    @reporter.reportSpecStarting(spec)
 
 
-  reportSpecResults: (result) ->
-    @reporter.reportSpecResults(result)
+  reportSpecResults: (spec) ->
+    @reporter.reportSpecResults(spec)

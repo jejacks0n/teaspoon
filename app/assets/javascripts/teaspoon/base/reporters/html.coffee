@@ -36,6 +36,42 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     @buildFilters()
 
 
+  reportRunnerStarting: (runner) ->
+    @total.exist = runner.total || 0
+    @setText("stats-duration", "...") if @total.exist
+
+
+  reportRunnerResults: =>
+    return unless @total.run
+    @setText("stats-duration", @elapsedTime())
+    @setStatus("passed") unless @total.failures
+    @setText("stats-passes", @total.passes)
+    @setText("stats-failures", @total.failures)
+    if @total.run < @total.exist
+      @total.skipped = @total.exist - @total.run
+      @total.run = @total.exist
+    @setText("stats-skipped", @total.skipped)
+    @updateProgress()
+
+
+  reportSuiteStarting: (suite) -> # noop
+
+
+  reportSuiteResults: (suite) -> # noop
+
+
+  reportSpecStarting: (spec) ->
+    spec = new Teaspoon.Spec(spec)
+    @reportView = new Teaspoon.Reporters.HTML.SpecView(spec, @) if @config["build-full-report"]
+    @specStart = new Teaspoon.Date().getTime()
+
+
+  reportSpecResults: (spec) ->
+    @total.run += 1
+    @updateProgress()
+    @updateStatus(spec)
+
+
   buildLayout: ->
     el = @createEl("div")
     el.id = "teaspoon-interface"
@@ -63,36 +99,6 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
   buildFilters: ->
     @setClass("filter", "teaspoon-filtered") if @filters.length
     @setHtml("filter-list", "<li>#{@filters.join("</li><li>")}", true)
-
-
-  reportRunnerStarting: (runner) ->
-    @total.exist = runner.total || 0
-    @setText("stats-duration", "...") if @total.exist
-
-
-  reportSpecStarting: (spec) ->
-    spec = new Teaspoon.Spec(spec)
-    @reportView = new Teaspoon.Reporters.HTML.SpecView(spec, @) if @config["build-full-report"]
-    @specStart = new Teaspoon.Date().getTime()
-
-
-  reportSpecResults: (spec) ->
-    @total.run += 1
-    @updateProgress()
-    @updateStatus(spec)
-
-
-  reportRunnerResults: =>
-    return unless @total.run
-    @setText("stats-duration", @elapsedTime())
-    @setStatus("passed") unless @total.failures
-    @setText("stats-passes", @total.passes)
-    @setText("stats-failures", @total.failures)
-    if @total.run < @total.exist
-      @total.skipped = @total.exist - @total.run
-      @total.run = @total.exist
-    @setText("stats-skipped", @total.skipped)
-    @updateProgress()
 
 
   elapsedTime: ->

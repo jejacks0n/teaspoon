@@ -12,6 +12,23 @@ class Teaspoon.Reporters.Console
       start: JSON.parse(JSON.stringify(@start))
 
 
+  reportRunnerResults: =>
+    @log
+      type:    "result"
+      elapsed: ((new Teaspoon.Date().getTime() - @start.getTime()) / 1000).toFixed(5)
+      coverage: window.__coverage__
+    Teaspoon.finished = true
+
+
+  reportSuiteStarting: (suite) -> # noop
+
+
+  reportSuiteResults: (suite) -> # noop
+
+
+  reportSpecStarting: (spec) -> # noop
+
+
   reportSuites: ->
     for suite, index in @spec.getParents()
       continue if @suites[suite.fullDescription]
@@ -61,14 +78,6 @@ class Teaspoon.Reporters.Console
         link:    @spec.fullDescription
         message: error.message
         trace:   error.stack || error.message || "Stack Trace Unavailable"
-
-
-  reportRunnerResults: =>
-    @log
-      type:    "result"
-      elapsed: ((new Teaspoon.Date().getTime() - @start.getTime()) / 1000).toFixed(5)
-      coverage: window.__coverage__
-    Teaspoon.finished = true
 
 
   log: (obj = {}) ->

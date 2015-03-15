@@ -509,6 +509,49 @@
       return this.buildFilters();
     };
 
+    HTML.prototype.reportRunnerStarting = function(runner) {
+      this.total.exist = runner.total || 0;
+      if (this.total.exist) {
+        return this.setText("stats-duration", "...");
+      }
+    };
+
+    HTML.prototype.reportRunnerResults = function() {
+      if (!this.total.run) {
+        return;
+      }
+      this.setText("stats-duration", this.elapsedTime());
+      if (!this.total.failures) {
+        this.setStatus("passed");
+      }
+      this.setText("stats-passes", this.total.passes);
+      this.setText("stats-failures", this.total.failures);
+      if (this.total.run < this.total.exist) {
+        this.total.skipped = this.total.exist - this.total.run;
+        this.total.run = this.total.exist;
+      }
+      this.setText("stats-skipped", this.total.skipped);
+      return this.updateProgress();
+    };
+
+    HTML.prototype.reportSuiteStarting = function(suite) {};
+
+    HTML.prototype.reportSuiteResults = function(suite) {};
+
+    HTML.prototype.reportSpecStarting = function(spec) {
+      spec = new Teaspoon.Spec(spec);
+      if (this.config["build-full-report"]) {
+        this.reportView = new Teaspoon.Reporters.HTML.SpecView(spec, this);
+      }
+      return this.specStart = new Teaspoon.Date().getTime();
+    };
+
+    HTML.prototype.reportSpecResults = function(spec) {
+      this.total.run += 1;
+      this.updateProgress();
+      return this.updateStatus(spec);
+    };
+
     HTML.prototype.buildLayout = function() {
       var el;
       el = this.createEl("div");
@@ -547,45 +590,6 @@
         this.setClass("filter", "teaspoon-filtered");
       }
       return this.setHtml("filter-list", "<li>" + (this.filters.join("</li><li>")), true);
-    };
-
-    HTML.prototype.reportRunnerStarting = function(runner) {
-      this.total.exist = runner.total || (typeof runner.specs === "function" ? runner.specs().length : void 0) || 0;
-      if (this.total.exist) {
-        return this.setText("stats-duration", "...");
-      }
-    };
-
-    HTML.prototype.reportSpecStarting = function(spec) {
-      spec = new Teaspoon.Spec(spec);
-      if (this.config["build-full-report"]) {
-        this.reportView = new Teaspoon.Reporters.HTML.SpecView(spec, this);
-      }
-      return this.specStart = new Teaspoon.Date().getTime();
-    };
-
-    HTML.prototype.reportSpecResults = function(spec) {
-      this.total.run += 1;
-      this.updateProgress();
-      return this.updateStatus(spec);
-    };
-
-    HTML.prototype.reportRunnerResults = function() {
-      if (!this.total.run) {
-        return;
-      }
-      this.setText("stats-duration", this.elapsedTime());
-      if (!this.total.failures) {
-        this.setStatus("passed");
-      }
-      this.setText("stats-passes", this.total.passes);
-      this.setText("stats-failures", this.total.failures);
-      if (this.total.run < this.total.exist) {
-        this.total.skipped = this.total.exist - this.total.run;
-        this.total.run = this.total.exist;
-      }
-      this.setText("stats-skipped", this.total.skipped);
-      return this.updateProgress();
     };
 
     HTML.prototype.elapsedTime = function() {
@@ -1019,6 +1023,21 @@
       });
     };
 
+    Console.prototype.reportRunnerResults = function() {
+      this.log({
+        type: "result",
+        elapsed: ((new Teaspoon.Date().getTime() - this.start.getTime()) / 1000).toFixed(5),
+        coverage: window.__coverage__
+      });
+      return Teaspoon.finished = true;
+    };
+
+    Console.prototype.reportSuiteStarting = function(suite) {};
+
+    Console.prototype.reportSuiteResults = function(suite) {};
+
+    Console.prototype.reportSpecStarting = function(spec) {};
+
     Console.prototype.reportSuites = function() {
       var i, index, len, ref, results, suite;
       ref = this.spec.getParents();
@@ -1095,15 +1114,6 @@
       return results;
     };
 
-    Console.prototype.reportRunnerResults = function() {
-      this.log({
-        type: "result",
-        elapsed: ((new Teaspoon.Date().getTime() - this.start.getTime()) / 1000).toFixed(5),
-        coverage: window.__coverage__
-      });
-      return Teaspoon.finished = true;
-    };
-
     Console.prototype.log = function(obj) {
       if (obj == null) {
         obj = {};
@@ -1130,19 +1140,14 @@
 
 }).call(this);
 (function() {
-  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
-
-  Teaspoon.Jasmine2.Responder = (function(superClass) {
-    extend(Responder, superClass);
-
+  Teaspoon.Jasmine2.Responder = (function() {
     function Responder(reporter) {
       this.reporter = reporter;
     }
 
-    Responder.prototype.jasmineStarted = function(result) {
+    Responder.prototype.jasmineStarted = function(runner) {
       return this.reporter.reportRunnerStarting({
-        total: result.totalSpecsDefined
+        total: runner.totalSpecsDefined
       });
     };
 
@@ -1150,49 +1155,46 @@
       return this.reporter.reportRunnerResults();
     };
 
-    Responder.prototype.suiteStarted = function(result) {
-      var base;
+    Responder.prototype.suiteStarted = function(suite) {
       if (this.currentSuite) {
-        result.parent = this.currentSuite;
+        suite.parent = this.currentSuite;
       }
-      this.currentSuite = result;
-      return typeof (base = this.reporter).reportSuiteStarting === "function" ? base.reportSuiteStarting({
-        id: result.id,
-        description: result.description,
-        fullName: result.fullName
-      }) : void 0;
+      this.currentSuite = suite;
+      return this.reporter.reportSuiteStarting({
+        id: suite.id,
+        description: suite.description,
+        fullName: suite.fullName
+      });
     };
 
-    Responder.prototype.suiteDone = function(result) {
-      var base;
+    Responder.prototype.suiteDone = function(suite) {
       this.currentSuite = this.currentSuite.parent;
-      return typeof (base = this.reporter).reportSuiteResults === "function" ? base.reportSuiteResults({
-        id: result.id,
-        description: result.description,
-        fullName: result.fullName
-      }) : void 0;
+      return this.reporter.reportSuiteResults({
+        id: suite.id,
+        description: suite.description,
+        fullName: suite.fullName
+      });
     };
 
-    Responder.prototype.specStarted = function(result) {
-      var base;
+    Responder.prototype.specStarted = function(spec) {
       if (jasmine.getEnv().specFilter({
         getFullName: function() {
-          return result.fullName;
+          return spec.fullName;
         }
       })) {
-        result.parent = this.currentSuite;
-        return typeof (base = this.reporter).reportSpecStarting === "function" ? base.reportSpecStarting(result) : void 0;
+        spec.parent = this.currentSuite;
+        return this.reporter.reportSpecStarting(spec);
       }
     };
 
-    Responder.prototype.specDone = function(result) {
-      result.parent = this.currentSuite;
-      return this.reporter.reportSpecResults(result);
+    Responder.prototype.specDone = function(spec) {
+      spec.parent = this.currentSuite;
+      return this.reporter.reportSpecResults(spec);
     };
 
     return Responder;
 
-  })(Teaspoon.Runner);
+  })();
 
 }).call(this);
 (function() {
