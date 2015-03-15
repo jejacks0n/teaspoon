@@ -1,5 +1,6 @@
 #= require teaspoon/base/teaspoon
-#= require teaspoon/mocha/reporters/console
+#= require teaspoon/mocha/_namespace
+#= require teaspoon/mocha/responder
 #= require teaspoon/mocha/reporters/html
 
 unless mocha?
@@ -16,8 +17,9 @@ class Teaspoon.Runner extends Teaspoon.Runner
 
   setup: ->
     # add the reporter and set the filter
-    reporter = @getReporter()
-    env.setup(reporter: reporter)
+    reporter = new (@getReporter())()
+    Teaspoon.Mocha.Responder::reporter = reporter
+    env.setup(reporter: Teaspoon.Mocha.Responder)
 
 
 

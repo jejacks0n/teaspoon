@@ -5,5 +5,5 @@ describe "Teaspoon running Mocha", ->
   it "displays spec times", ->
 
   it "can delay assertions", (run) ->
-    setTimeout((-> run()), 1800)
+    setTimeout((-> run()), 100)
 

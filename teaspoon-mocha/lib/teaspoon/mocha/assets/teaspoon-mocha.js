@@ -509,6 +509,49 @@
       return this.buildFilters();
     };
 
+    HTML.prototype.reportRunnerStarting = function(runner) {
+      this.total.exist = runner.total || 0;
+      if (this.total.exist) {
+        return this.setText("stats-duration", "...");
+      }
+    };
+
+    HTML.prototype.reportRunnerResults = function() {
+      if (!this.total.run) {
+        return;
+      }
+      this.setText("stats-duration", this.elapsedTime());
+      if (!this.total.failures) {
+        this.setStatus("passed");
+      }
+      this.setText("stats-passes", this.total.passes);
+      this.setText("stats-failures", this.total.failures);
+      if (this.total.run < this.total.exist) {
+        this.total.skipped = this.total.exist - this.total.run;
+        this.total.run = this.total.exist;
+      }
+      this.setText("stats-skipped", this.total.skipped);
+      return this.updateProgress();
+    };
+
+    HTML.prototype.reportSuiteStarting = function(suite) {};
+
+    HTML.prototype.reportSuiteResults = function(suite) {};
+
+    HTML.prototype.reportSpecStarting = function(spec) {
+      spec = new Teaspoon.Spec(spec);
+      if (this.config["build-full-report"]) {
+        this.reportView = new Teaspoon.Reporters.HTML.SpecView(spec, this);
+      }
+      return this.specStart = new Teaspoon.Date().getTime();
+    };
+
+    HTML.prototype.reportSpecResults = function(spec) {
+      this.total.run += 1;
+      this.updateProgress();
+      return this.updateStatus(spec);
+    };
+
     HTML.prototype.buildLayout = function() {
       var el;
       el = this.createEl("div");
@@ -547,45 +590,6 @@
         this.setClass("filter", "teaspoon-filtered");
       }
       return this.setHtml("filter-list", "<li>" + (this.filters.join("</li><li>")), true);
-    };
-
-    HTML.prototype.reportRunnerStarting = function(runner) {
-      this.total.exist = runner.total || (typeof runner.specs === "function" ? runner.specs().length : void 0) || 0;
-      if (this.total.exist) {
-        return this.setText("stats-duration", "...");
-      }
-    };
-
-    HTML.prototype.reportSpecStarting = function(spec) {
-      spec = new Teaspoon.Spec(spec);
-      if (this.config["build-full-report"]) {
-        this.reportView = new Teaspoon.Reporters.HTML.SpecView(spec, this);
-      }
-      return this.specStart = new Teaspoon.Date().getTime();
-    };
-
-    HTML.prototype.reportSpecResults = function(spec) {
-      this.total.run += 1;
-      this.updateProgress();
-      return this.updateStatus(spec);
-    };
-
-    HTML.prototype.reportRunnerResults = function() {
-      if (!this.total.run) {
-        return;
-      }
-      this.setText("stats-duration", this.elapsedTime());
-      if (!this.total.failures) {
-        this.setStatus("passed");
-      }
-      this.setText("stats-passes", this.total.passes);
-      this.setText("stats-failures", this.total.failures);
-      if (this.total.run < this.total.exist) {
-        this.total.skipped = this.total.exist - this.total.run;
-        this.total.run = this.total.exist;
-      }
-      this.setText("stats-skipped", this.total.skipped);
-      return this.updateProgress();
     };
 
     HTML.prototype.elapsedTime = function() {
@@ -1019,6 +1023,21 @@
       });
     };
 
+    Console.prototype.reportRunnerResults = function() {
+      this.log({
+        type: "result",
+        elapsed: ((new Teaspoon.Date().getTime() - this.start.getTime()) / 1000).toFixed(5),
+        coverage: window.__coverage__
+      });
+      return Teaspoon.finished = true;
+    };
+
+    Console.prototype.reportSuiteStarting = function(suite) {};
+
+    Console.prototype.reportSuiteResults = function(suite) {};
+
+    Console.prototype.reportSpecStarting = function(spec) {};
+
     Console.prototype.reportSuites = function() {
       var i, index, len, ref, results, suite;
       ref = this.spec.getParents();
@@ -1095,15 +1114,6 @@
       return results;
     };
 
-    Console.prototype.reportRunnerResults = function() {
-      this.log({
-        type: "result",
-        elapsed: ((new Teaspoon.Date().getTime() - this.start.getTime()) / 1000).toFixed(5),
-        coverage: window.__coverage__
-      });
-      return Teaspoon.finished = true;
-    };
-
     Console.prototype.log = function(obj) {
       if (obj == null) {
         obj = {};
@@ -1118,66 +1128,79 @@
 
 }).call(this);
 (function() {
-  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+  var base;
 
-  Teaspoon.Reporters.Console = (function(superClass) {
-    extend(Console, superClass);
+  if (this.Teaspoon == null) {
+    this.Teaspoon = {};
+  }
 
-    function Console(runner) {
-      this.reportSpecResults = bind(this.reportSpecResults, this);
-      Console.__super__.constructor.apply(this, arguments);
-      this.reportRunnerStarting(runner);
-      runner.on("fail", this.reportSpecResults);
-      runner.on("test end", this.reportSpecResults);
-      runner.on("end", this.reportRunnerResults);
-    }
-
-    Console.prototype.reportSpecResults = function(spec, err) {
-      if (err) {
-        spec.err = err;
-        if (spec.type === "hook") {
-          this.reportSpecResults(spec);
-        }
-        return;
-      }
-      return Console.__super__.reportSpecResults.apply(this, arguments);
-    };
-
-    return Console;
-
-  })(Teaspoon.Reporters.Console);
+  if ((base = this.Teaspoon).Mocha == null) {
+    base.Mocha = {};
+  }
 
 }).call(this);
 (function() {
-  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  Teaspoon.Mocha.Responder = (function() {
+    function Responder(runner) {
+      this.specFailed = bind(this.specFailed, this);
+      this.specPassed = bind(this.specPassed, this);
+      this.specStarted = bind(this.specStarted, this);
+      this.suiteDone = bind(this.suiteDone, this);
+      this.suiteStarted = bind(this.suiteStarted, this);
+      this.runnerDone = bind(this.runnerDone, this);
+      this.reporter.reportRunnerStarting({
+        total: runner.total
+      });
+      runner.on("end", this.runnerDone);
+      runner.on("suite", this.suiteStarted);
+      runner.on("suite end", this.suiteDone);
+      runner.on("test", this.specStarted);
+      runner.on("pass", this.specPassed);
+      runner.on("fail", this.specFailed);
+    }
+
+    Responder.prototype.runnerDone = function() {
+      return this.reporter.reportRunnerResults();
+    };
+
+    Responder.prototype.suiteStarted = function(suite) {
+      return this.reporter.reportSuiteStarting();
+    };
+
+    Responder.prototype.suiteDone = function(suite) {
+      return this.reporter.reportSuiteResults();
+    };
+
+    Responder.prototype.specStarted = function(spec) {
+      return this.reporter.reportSpecStarting(spec);
+    };
+
+    Responder.prototype.specPassed = function(spec) {
+      return this.reporter.reportSpecResults(spec);
+    };
+
+    Responder.prototype.specFailed = function(specOrHook, err) {
+      specOrHook.err = err;
+      return this.reporter.reportSpecResults(specOrHook);
+    };
+
+    return Responder;
+
+  })();
+
+}).call(this);
+(function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
   Teaspoon.Reporters.HTML = (function(superClass) {
     extend(HTML, superClass);
 
-    function HTML(runner) {
-      this.reportSpecResults = bind(this.reportSpecResults, this);
-      HTML.__super__.constructor.apply(this, arguments);
-      this.reportRunnerStarting(runner);
-      runner.on("fail", this.reportSpecResults);
-      runner.on("test end", this.reportSpecResults);
-      runner.on("end", this.reportRunnerResults);
+    function HTML() {
+      return HTML.__super__.constructor.apply(this, arguments);
     }
-
-    HTML.prototype.reportSpecResults = function(spec, err) {
-      if (err) {
-        spec.err = err;
-        if (spec.type === "hook") {
-          this.reportSpecResults(spec);
-        }
-        return;
-      }
-      this.reportSpecStarting(spec);
-      return HTML.__super__.reportSpecResults.apply(this, arguments);
-    };
 
     HTML.prototype.envInfo = function() {
       return "mocha " + (_mocha_version || "[unknown version]");
@@ -1226,9 +1249,10 @@
 
     Runner.prototype.setup = function() {
       var reporter;
-      reporter = this.getReporter();
+      reporter = new (this.getReporter())();
+      Teaspoon.Mocha.Responder.prototype.reporter = reporter;
       return env.setup({
-        reporter: reporter
+        reporter: Teaspoon.Mocha.Responder
       });
     };
 
