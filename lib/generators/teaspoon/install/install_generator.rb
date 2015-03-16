@@ -19,7 +19,7 @@ module Teaspoon
 
       class_option :no_comments,
                    type: :boolean,
-                   aliases: "-q",
+                   aliases: ["-q", "no-comments"],
                    default: false,
                    desc:    "Install the teaspoon_env.rb without comments"
 
