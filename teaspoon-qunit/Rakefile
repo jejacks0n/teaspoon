@@ -1,0 +1,3 @@
+#!/usr/bin/env rake
+require "teaspoon-devkit"
+load File.join(Teaspoon::RAKEFILE)
