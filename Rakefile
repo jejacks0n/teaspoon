@@ -22,6 +22,15 @@ end
 load "rspec/rails/tasks/rspec.rake"
 
 namespace :spec do
+  desc "Run the unit code examples"
+  RSpec::Core::RakeTask.new(:unit) do |t|
+    file_list = FileList['spec/**/*_spec.rb']
+    %w(features).each do |exclude|
+      file_list = file_list.exclude("spec/#{exclude}/**/*_spec.rb")
+    end
+    t.pattern = file_list
+  end
+
   desc "Run the code examples in teaspoon-jasmine/spec"
   RSpec::Core::RakeTask.new(:jasmine) do |t|
     t.pattern = "../teaspoon-jasmine/spec/**/*_spec.rb"
@@ -65,4 +74,14 @@ end
 Rake::Task["default"].prerequisites.clear
 Rake::Task["default"].clear
 
-task default: [:spec, "spec:jasmine", "spec:mocha", "spec:qunit", :teaspoon]
+task default: [
+  # core
+  :spec,
+  :teaspoon,
+  # teaspoon-jasmine
+  "spec:jasmine",
+  # teaspoon-mocha
+  "spec:mocha",
+  # teaspoon-qunit
+  "spec:qunit",
+]

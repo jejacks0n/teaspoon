@@ -52,7 +52,7 @@ describe Teaspoon::Instrumentation do
 
     it "raises an exception if istanbul fails" do
       `(exit 1)`
-      allow(subject).to receive(:`)
+      allow_any_instance_of(subject).to receive(:`)
       allow_any_instance_of(subject).to receive(:instrument).and_call_original
       expect { subject.add_to(response, env) }.to raise_error(
         Teaspoon::DependencyFailure, "Could not generate instrumentation for instrument.js."

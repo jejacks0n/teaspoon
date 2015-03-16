@@ -2,7 +2,7 @@ require_relative "./spec_helper"
 
 feature "Installation", shell: true do
   before do
-    teaspoon_test_app("gem 'teaspoon-mocha', path: '#{Teaspoon::DEV_PATH}'", true)
+    teaspoon_test_app("gem 'teaspoon-mocha', path: '#{Teaspoon::DEV_PATH}'")
   end
 
   it "installs the expected files" do

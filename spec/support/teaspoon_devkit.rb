@@ -11,7 +11,7 @@ module Teaspoon
 
     include Aruba::Api
 
-    def teaspoon_test_app(gem = '', local = false)
+    def teaspoon_test_app(gem = "", local = !ENV["TRAVIS"])
       set_env("TEASPOON_ENV", nil)
       unset_bundler_env_vars
 
@@ -48,6 +48,7 @@ module Teaspoon
 
     def teaspoon_output
       output = all_output.gsub(/127\.0\.0\.1:\d+/, "127.0.0.1:31337")
+      output = output.gsub("'undefined' is not a function", "undefined is not a constructor")
       output = output.gsub(/Finished in [\d\.]+ seconds/, "Finished in 0.31337 seconds")
       output
     end

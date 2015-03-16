@@ -1,13 +1,15 @@
 require_relative "./spec_helper"
 
 feature "Running in the console", shell: true do
-  let(:expected_output) do
+  let(:expected_loading_output) do
     <<-OUTPUT.strip_heredoc
       Starting the Teaspoon server...
       Teaspoon running default suite at http://127.0.0.1:31337/teaspoon/default
-      TypeError: undefined is not a constructor (evaluating 'foo()')
-        # integration/test_helper.js:12
+    OUTPUT
+  end
 
+  let(:expected_testing_output) do
+    <<-OUTPUT.strip_heredoc
       FFFit can log to the console
       ..
 
@@ -34,7 +36,7 @@ feature "Running in the console", shell: true do
   end
 
   before do
-    teaspoon_test_app("gem 'teaspoon-qunit', path: '#{Teaspoon::DEV_PATH}'", true)
+    teaspoon_test_app("gem 'teaspoon-qunit', path: '#{Teaspoon::DEV_PATH}'")
     install_teaspoon("--coffee")
     copy_integration_files("test", File.expand_path("../../test", __FILE__), "test")
   end
@@ -42,13 +44,15 @@ feature "Running in the console", shell: true do
   it "runs successfully using the CLI" do
     run_teaspoon("--no-color")
 
-    expect(teaspoon_output).to include(expected_output)
+    expect(teaspoon_output).to include(expected_loading_output)
+    expect(teaspoon_output).to include(expected_testing_output)
   end
 
   it "runs successfully using the rake task" do
     rake_teaspoon("COLOR=false")
 
-    expect(teaspoon_output).to include(expected_output)
+    expect(teaspoon_output).to include(expected_loading_output)
+    expect(teaspoon_output).to include(expected_testing_output)
   end
 
   it "can display coverage information" do

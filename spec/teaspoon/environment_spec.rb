@@ -100,16 +100,13 @@ describe Teaspoon::Environment do
 
   describe ".require_environment_from_engine?" do
 
-    after do
-      subject.console = false
-    end
-
     it "returns true if not run from within the console" do
+      allow(subject).to receive(:console?).and_return(false)
       expect(subject.require_environment_from_engine?).to eql(true)
     end
 
     it "returns false if run from within the console" do
-      subject.console = true
+      allow(subject).to receive(:console?).and_return(true)
       expect(subject.require_environment_from_engine?).to eql(false)
     end
 

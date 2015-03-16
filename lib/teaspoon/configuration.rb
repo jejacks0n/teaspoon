@@ -73,7 +73,7 @@ module Teaspoon
         @boot_partial  = "boot"
         @body_partial  = "body"
 
-        @no_coverage   = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
+        @no_coverage   = [%r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
         @hooks         = Hash.new { |h, k| h[k] = [] }
         @expand_assets = true
 

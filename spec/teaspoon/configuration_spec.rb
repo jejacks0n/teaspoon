@@ -167,11 +167,15 @@ describe Teaspoon::Configuration::Suite do
   subject { Teaspoon::Configuration::Suite.new &(@suite || proc{}) }
 
   it "has the default configuration" do
-    expect(subject.matcher).to eq("{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}")
+    expect(subject.matcher).to eq(
+      "{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}"
+    )
     expect(subject.helper).to eq("spec_helper")
     expect(subject.javascripts).to eq(["jasmine/1.3.1", "teaspoon/jasmine"])
     expect(subject.stylesheets).to eq(["teaspoon"])
-    expect(subject.no_coverage).to eq([%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}])
+    expect(subject.no_coverage).to eq([
+      %r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}
+    ])
     expect(subject.expand_assets).to eq(true)
   end
 

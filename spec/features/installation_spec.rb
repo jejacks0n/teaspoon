@@ -2,7 +2,7 @@ require "spec_helper"
 
 feature "Installation", shell: true do
   before do
-    teaspoon_test_app("gem 'teaspoon', path: '#{Teaspoon::DEV_PATH}'", true)
+    teaspoon_test_app("gem 'teaspoon', path: '#{Teaspoon::DEV_PATH}'")
   end
 
   it "errors with the expected message" do
