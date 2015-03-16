@@ -2,7 +2,7 @@ require_relative "./spec_helper"
 
 feature "Running in the browser", browser: true do
   before do
-    path = File.expand_path('../../test/javascripts', __FILE__)
+    path = File.expand_path("../../test/javascripts", __FILE__)
     set_teaspoon_suite do |c|
       c.use_framework :qunit
       c.matcher = "#{path}/**/*_integration.{js,js.coffee,coffee}"

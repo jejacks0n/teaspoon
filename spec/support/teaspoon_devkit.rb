@@ -4,7 +4,7 @@ module Teaspoon
   module Devkit
     def set_teaspoon_suite(name = "default", &block)
       suites = {}
-      suites[name] = { block: block }
+      suites[name.to_s] = { block: block }
       Teaspoon::Suite.instance_variable_set(:@all, nil)
       allow(Teaspoon.configuration).to receive(:suite_configs).and_return(suites)
     end

@@ -1,1 +1,0 @@
-instrumented2 = -> 'foo'

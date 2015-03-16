@@ -21,6 +21,23 @@ end
 # -----------------------------------------------------------------------------
 load "rspec/rails/tasks/rspec.rake"
 
+namespace :spec do
+  desc "Run the code examples in teaspoon-jasmine/spec"
+  RSpec::Core::RakeTask.new(:jasmine) do |t|
+    t.pattern = "../teaspoon-jasmine/spec/**/*_spec.rb"
+  end
+
+  desc "Run the code examples in teaspoon-mocha/spec"
+  RSpec::Core::RakeTask.new(:mocha) do |t|
+    t.pattern = "../teaspoon-mocha/spec/**/*_spec.rb"
+  end
+
+  desc "Run the code examples in teaspoon-qunit/spec"
+  RSpec::Core::RakeTask.new(:qunit) do |t|
+    t.pattern = "../teaspoon-qunit/spec/**/*_spec.rb"
+  end
+end
+
 # Teaspoon
 # -----------------------------------------------------------------------------
 desc "Run the javascript specs"
@@ -48,4 +65,4 @@ end
 Rake::Task["default"].prerequisites.clear
 Rake::Task["default"].clear
 
-task default: [:spec, :teaspoon]
+task default: [:spec, "spec:jasmine", "spec:mocha", "spec:qunit", :teaspoon]

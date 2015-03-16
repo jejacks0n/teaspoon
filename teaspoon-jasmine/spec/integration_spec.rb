@@ -3,7 +3,7 @@ require_relative "./spec_helper"
 feature "Running in the browser", browser: true do
   describe "with jasmine1" do
     before do
-      path = File.expand_path('../../spec/javascripts', __FILE__)
+      path = File.expand_path("../../spec/javascripts", __FILE__)
       set_teaspoon_suite do |c|
         c.use_framework :jasmine, "1.3.1"
         c.matcher = "#{path}/**/*_integration.{js,js.coffee,coffee}"
@@ -76,7 +76,7 @@ feature "Running in the browser", browser: true do
 
   describe "with jasmine2" do
     before do
-      path = File.expand_path('../../spec/javascripts', __FILE__)
+      path = File.expand_path("../../spec/javascripts", __FILE__)
       set_teaspoon_suite do |c|
         c.use_framework :jasmine, "2.2.0"
         c.matcher = "#{path}/**/*_integration.{js,js.coffee,coffee}"

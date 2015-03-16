@@ -98,7 +98,7 @@ describe Teaspoon::Instrumentation do
 
   describe "integration" do
 
-    let(:asset) { Rails.application.assets.find_asset("instrumented1.coffee") }
+    let(:asset) { Rails.application.assets.find_asset("support/instrumented.coffee") }
 
     it "instruments a file" do
       pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable
