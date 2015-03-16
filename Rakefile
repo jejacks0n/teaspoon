@@ -11,17 +11,15 @@ end
 # -----------------------------------------------------------------------------
 APP_RAKEFILE = File.expand_path("../spec/dummy/Rakefile", __FILE__)
 load "rails/tasks/engine.rake"
-Bundler::GemHelper.install_tasks
+begin
+  Bundler::GemHelper.install_tasks
+rescue RuntimeError
+  Bundler::GemHelper.install_tasks name: 'teaspoon'
+end
 
 # RSpec
 # -----------------------------------------------------------------------------
 load "rspec/rails/tasks/rspec.rake"
-namespace :spec do
-  desc "Run the code examples in spec/features"
-  RSpec::Core::RakeTask.new("features") do |t|
-    t.pattern = "./spec/features/**/*_spec.rb"
-  end
-end
 
 # Teaspoon
 # -----------------------------------------------------------------------------
