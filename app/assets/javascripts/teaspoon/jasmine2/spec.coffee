@@ -21,7 +21,7 @@ class Teaspoon.Jasmine2.Spec
     @parents ||= []
     parent = @parent
     while parent
-      parent = new Teaspoon.Suite(parent)
+      parent = new Teaspoon.Jasmine2.Suite(parent)
       @parents.unshift(parent)
       parent = parent.parent
     @parents

@@ -72,10 +72,9 @@ describe "Teaspoon.Jasmine2.Responder", ->
 
       @responder.suiteStarted(@suiteStartedDetails)
 
-      expect(@reporter.reportSuiteStarting).toHaveBeenCalledWith
-        id: "suite1"
-        description: "Jasmine 2 describe"
-        fullName: "Jasmine 2 describe"
+      suiteArg = @reporter.reportSuiteStarting.calls.first().args[0]
+      expect(suiteArg).toEqual(jasmine.any(Teaspoon.Jasmine2.Suite))
+      expect(suiteArg.fullDescription).toEqual("Jasmine 2 describe")
 
 
   describe "#suiteDone", ->
@@ -89,10 +88,9 @@ describe "Teaspoon.Jasmine2.Responder", ->
 
       @responder.suiteDone(@suiteDoneDetails)
 
-      expect(@reporter.reportSuiteResults).toHaveBeenCalledWith
-        id: "suite1"
-        description: "Jasmine 2 describe"
-        fullName: "Jasmine 2 describe"
+      suiteArg = @reporter.reportSuiteResults.calls.first().args[0]
+      expect(suiteArg).toEqual(jasmine.any(Teaspoon.Jasmine2.Suite))
+      expect(suiteArg.fullDescription).toEqual("Jasmine 2 describe")
 
 
   describe "#specStarted", ->

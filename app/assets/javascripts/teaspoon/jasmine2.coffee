@@ -1,6 +1,7 @@
 #= require teaspoon/base/teaspoon
 #= require teaspoon/jasmine2/_namespace
 #= require teaspoon/jasmine2/spec
+#= require teaspoon/jasmine2/suite
 #= require teaspoon/jasmine2/responder
 #= require teaspoon/jasmine2/reporters/console
 #= require teaspoon/jasmine2/reporters/html
@@ -42,17 +43,6 @@ class Teaspoon.Runner extends Teaspoon.Runner
     jasmine.getFixtures().fixturesPath = @fixturePath
     jasmine.getStyleFixtures().fixturesPath = @fixturePath
     jasmine.getJSONFixtures().fixturesPath = @fixturePath
-
-
-
-class Teaspoon.Suite
-
-  constructor: (@suite) ->
-    @fullDescription = @suite.fullName
-    @description = @suite.description
-    @link = "?grep=#{encodeURIComponent(@fullDescription)}"
-    @parent = @suite.parent
-    @viewId = @suite.id
 
 
 

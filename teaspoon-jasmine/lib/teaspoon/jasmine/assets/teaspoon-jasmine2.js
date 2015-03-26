@@ -1177,7 +1177,7 @@
       this.parents || (this.parents = []);
       parent = this.parent;
       while (parent) {
-        parent = new Teaspoon.Suite(parent);
+        parent = new Teaspoon.Jasmine2.Suite(parent);
         this.parents.unshift(parent);
         parent = parent.parent;
       }
@@ -1214,6 +1214,31 @@
 
 }).call(this);
 (function() {
+  Teaspoon.Jasmine2.Suite = (function() {
+    function Suite(suite1) {
+      this.suite = suite1;
+      this.fullDescription = this.suite.fullName;
+      this.description = this.suite.description;
+      this.link = "?grep=" + (encodeURIComponent(this.fullDescription));
+      this.parent = this.suite.parent;
+      this.viewId = this.suite.id;
+    }
+
+    return Suite;
+
+  })();
+
+  Teaspoon.Suite = (function() {
+    function Suite(suite) {
+      return new Teaspoon.Jasmine2.Suite(suite);
+    }
+
+    return Suite;
+
+  })();
+
+}).call(this);
+(function() {
   Teaspoon.Jasmine2.Responder = (function() {
     function Responder(reporter) {
       this.reporter = reporter;
@@ -1234,20 +1259,12 @@
         suite.parent = this.currentSuite;
       }
       this.currentSuite = suite;
-      return this.reporter.reportSuiteStarting({
-        id: suite.id,
-        description: suite.description,
-        fullName: suite.fullName
-      });
+      return this.reporter.reportSuiteStarting(new Teaspoon.Jasmine2.Suite(suite));
     };
 
     Responder.prototype.suiteDone = function(suite) {
       this.currentSuite = this.currentSuite.parent;
-      return this.reporter.reportSuiteResults({
-        id: suite.id,
-        description: suite.description,
-        fullName: suite.fullName
-      });
+      return this.reporter.reportSuiteResults(new Teaspoon.Jasmine2.Suite(suite));
     };
 
     Responder.prototype.specStarted = function(spec) {
@@ -1379,20 +1396,6 @@
     return Runner;
 
   })(Teaspoon.Runner);
-
-  Teaspoon.Suite = (function() {
-    function Suite(suite) {
-      this.suite = suite;
-      this.fullDescription = this.suite.fullName;
-      this.description = this.suite.description;
-      this.link = "?grep=" + (encodeURIComponent(this.fullDescription));
-      this.parent = this.suite.parent;
-      this.viewId = this.suite.id;
-    }
-
-    return Suite;
-
-  })();
 
   Teaspoon.fixture = (function(superClass) {
     extend1(fixture, superClass);

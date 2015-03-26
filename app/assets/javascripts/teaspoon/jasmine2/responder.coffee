@@ -16,21 +16,13 @@ class Teaspoon.Jasmine2.Responder
       suite.parent = @currentSuite
     @currentSuite = suite
 
-    @reporter.reportSuiteStarting(
-      id: suite.id
-      description: suite.description
-      fullName: suite.fullName
-    )
+    @reporter.reportSuiteStarting(new Teaspoon.Jasmine2.Suite(suite))
 
 
   suiteDone: (suite) ->
     @currentSuite = @currentSuite.parent
 
-    @reporter.reportSuiteResults(
-      id: suite.id
-      description: suite.description
-      fullName: suite.fullName
-    )
+    @reporter.reportSuiteResults(new Teaspoon.Jasmine2.Suite(suite))
 
 
   specStarted: (spec) ->

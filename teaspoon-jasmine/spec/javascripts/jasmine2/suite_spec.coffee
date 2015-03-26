@@ -13,7 +13,7 @@ describe "Teaspoon.Jasmine2.Suite", ->
   describe "constructor", ->
 
     it "has the expected properties", ->
-      suite = new Teaspoon.Suite(@mockSuite)
+      suite = new Teaspoon.Jasmine2.Suite(@mockSuite)
       expect(suite.fullDescription).toBe("_full jasmine description_")
       expect(suite.description).toBe("_jasmine_description_")
       expect(suite.link).toBe("?grep=_full%20jasmine%20description_")
