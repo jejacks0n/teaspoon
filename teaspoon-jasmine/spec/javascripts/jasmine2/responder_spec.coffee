@@ -48,7 +48,7 @@ describe "Teaspoon.Jasmine2.Responder", ->
   describe "#jasmineStarted", ->
 
     it "reports the runner starting", ->
-      spyOn(@reporter, 'reportRunnerStarting')
+      spyOn(@reporter, "reportRunnerStarting")
 
       @responder.jasmineStarted(@jasmineStartedDetails)
 
@@ -58,7 +58,7 @@ describe "Teaspoon.Jasmine2.Responder", ->
   describe "#jasmineDone", ->
 
     it "reports the runner finishing", ->
-      spyOn(@reporter, 'reportRunnerResults')
+      spyOn(@reporter, "reportRunnerResults")
 
       @responder.jasmineDone()
 
@@ -68,7 +68,7 @@ describe "Teaspoon.Jasmine2.Responder", ->
   describe "#suiteStarted", ->
 
     it "reports the suite starting", ->
-      spyOn(@reporter, 'reportSuiteStarting')
+      spyOn(@reporter, "reportSuiteStarting")
 
       @responder.suiteStarted(@suiteStartedDetails)
 
@@ -85,7 +85,7 @@ describe "Teaspoon.Jasmine2.Responder", ->
 
 
     it "reports the suite finishing", ->
-      spyOn(@reporter, 'reportSuiteResults')
+      spyOn(@reporter, "reportSuiteResults")
 
       @responder.suiteDone(@suiteDoneDetails)
 
@@ -97,48 +97,40 @@ describe "Teaspoon.Jasmine2.Responder", ->
 
   describe "#specStarted", ->
 
+    beforeEach ->
+      @responder.currentSuite = @suiteStartedDetails
+
+
     it "reports the spec starting", ->
-      spyOn(@reporter, 'reportSpecStarting')
+      spyOn(@reporter, "reportSpecStarting")
 
       @responder.specStarted(@specStartedDetails)
 
-      expect(@reporter.reportSpecStarting).toHaveBeenCalledWith
-        id: "spec0"
-        description: "has an it"
-        fullName: "Jasmine 2 describe has an it"
-        failedExpectations: []
-        passedExpectations: []
-        pendingReason: ""
-        parent: undefined
+      specArg = @reporter.reportSpecStarting.calls.first().args[0]
+      expect(specArg).toEqual(jasmine.any(Teaspoon.Jasmine2.Spec))
+      expect(specArg.fullDescription).toEqual("Jasmine 2 describe has an it")
 
 
   describe "#specDone", ->
 
+    beforeEach ->
+      @responder.currentSuite = @suiteStartedDetails
+
+
     it "reports the spec finishing", ->
-      spyOn(@reporter, 'reportSpecResults')
+      spyOn(@reporter, "reportSpecResults")
 
       @responder.specDone(@specDoneDetails)
 
-      expect(@reporter.reportSpecResults).toHaveBeenCalledWith
-        id: "spec0"
-        description: "has an it"
-        fullName: "Jasmine 2 describe has an it"
-        failedExpectations: []
-        passedExpectations: [
-          matcherName: "toEqual"
-          message: "Passed."
-          passed: true
-          stack: ""
-        ]
-        pendingReason: ""
-        status: "passed"
-        parent: undefined
+      specArg = @reporter.reportSpecResults.calls.first().args[0]
+      expect(specArg).toEqual(jasmine.any(Teaspoon.Jasmine2.Spec))
+      expect(specArg.fullDescription).toEqual("Jasmine 2 describe has an it")
 
 
   describe "nested suites and specs", ->
 
     beforeEach ->
-      spyOn(jasmine.getEnv(), 'specFilter').and.returnValue(true)
+      spyOn(jasmine.getEnv(), "specFilter").and.returnValue(true)
 
 
     it "tracks the parent suite", ->
@@ -150,7 +142,7 @@ describe "Teaspoon.Jasmine2.Responder", ->
 
       suitea = {}
       suiteb = {}
-      speca = {fullName: ''}
+      speca = {fullName: ""}
       suitec = {}
 
       @responder.suiteStarted(suitea)

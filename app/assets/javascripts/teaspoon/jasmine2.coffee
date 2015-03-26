@@ -1,5 +1,6 @@
 #= require teaspoon/base/teaspoon
 #= require teaspoon/jasmine2/_namespace
+#= require teaspoon/jasmine2/spec
 #= require teaspoon/jasmine2/responder
 #= require teaspoon/jasmine2/reporters/console
 #= require teaspoon/jasmine2/reporters/html
@@ -41,45 +42,6 @@ class Teaspoon.Runner extends Teaspoon.Runner
     jasmine.getFixtures().fixturesPath = @fixturePath
     jasmine.getStyleFixtures().fixturesPath = @fixturePath
     jasmine.getJSONFixtures().fixturesPath = @fixturePath
-
-
-
-class Teaspoon.Spec
-
-  constructor: (@spec) ->
-    @fullDescription = @spec.fullName
-    @description = @spec.description
-    @link = "?grep=#{encodeURIComponent(@fullDescription)}"
-    @parent = @spec.parent
-    @suiteName = @parent.fullName
-    @viewId = @spec.id
-    @pending = @spec.status == "pending"
-
-
-  errors: ->
-    return [] unless @spec.failedExpectations.length
-    for item in @spec.failedExpectations
-      {message: item.message, stack: item.stack}
-
-
-  getParents: ->
-    return @parents if @parents
-    @parents ||= []
-    parent = @parent
-    while parent
-      parent = new Teaspoon.Suite(parent)
-      @parents.unshift(parent)
-      parent = parent.parent
-    @parents
-
-
-  result: ->
-    status: @status()
-    skipped: @spec.status == "disabled"
-
-
-  status: ->
-    if @spec.status == "disabled" then "passed" else @spec.status
 
 
 

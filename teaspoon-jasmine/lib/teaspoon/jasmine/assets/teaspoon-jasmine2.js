@@ -1140,6 +1140,80 @@
 
 }).call(this);
 (function() {
+  Teaspoon.Jasmine2.Spec = (function() {
+    function Spec(spec1) {
+      this.spec = spec1;
+      this.fullDescription = this.spec.fullName;
+      this.description = this.spec.description;
+      this.link = "?grep=" + (encodeURIComponent(this.fullDescription));
+      this.parent = this.spec.parent;
+      this.suiteName = this.parent.fullName;
+      this.viewId = this.spec.id;
+      this.pending = this.spec.status === "pending";
+    }
+
+    Spec.prototype.errors = function() {
+      var i, item, len, ref, results;
+      if (!this.spec.failedExpectations.length) {
+        return [];
+      }
+      ref = this.spec.failedExpectations;
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        item = ref[i];
+        results.push({
+          message: item.message,
+          stack: item.stack
+        });
+      }
+      return results;
+    };
+
+    Spec.prototype.getParents = function() {
+      var parent;
+      if (this.parents) {
+        return this.parents;
+      }
+      this.parents || (this.parents = []);
+      parent = this.parent;
+      while (parent) {
+        parent = new Teaspoon.Suite(parent);
+        this.parents.unshift(parent);
+        parent = parent.parent;
+      }
+      return this.parents;
+    };
+
+    Spec.prototype.result = function() {
+      return {
+        status: this.status(),
+        skipped: this.spec.status === "disabled"
+      };
+    };
+
+    Spec.prototype.status = function() {
+      if (this.spec.status === "disabled") {
+        return "passed";
+      } else {
+        return this.spec.status;
+      }
+    };
+
+    return Spec;
+
+  })();
+
+  Teaspoon.Spec = (function() {
+    function Spec(spec) {
+      return spec;
+    }
+
+    return Spec;
+
+  })();
+
+}).call(this);
+(function() {
   Teaspoon.Jasmine2.Responder = (function() {
     function Responder(reporter) {
       this.reporter = reporter;
@@ -1183,13 +1257,13 @@
         }
       })) {
         spec.parent = this.currentSuite;
-        return this.reporter.reportSpecStarting(spec);
+        return this.reporter.reportSpecStarting(new Teaspoon.Jasmine2.Spec(spec));
       }
     };
 
     Responder.prototype.specDone = function(spec) {
       spec.parent = this.currentSuite;
-      return this.reporter.reportSpecResults(spec);
+      return this.reporter.reportSpecResults(new Teaspoon.Jasmine2.Spec(spec));
     };
 
     return Responder;
@@ -1305,69 +1379,6 @@
     return Runner;
 
   })(Teaspoon.Runner);
-
-  Teaspoon.Spec = (function() {
-    function Spec(spec1) {
-      this.spec = spec1;
-      this.fullDescription = this.spec.fullName;
-      this.description = this.spec.description;
-      this.link = "?grep=" + (encodeURIComponent(this.fullDescription));
-      this.parent = this.spec.parent;
-      this.suiteName = this.parent.fullName;
-      this.viewId = this.spec.id;
-      this.pending = this.spec.status === "pending";
-    }
-
-    Spec.prototype.errors = function() {
-      var i, item, len, ref, results;
-      if (!this.spec.failedExpectations.length) {
-        return [];
-      }
-      ref = this.spec.failedExpectations;
-      results = [];
-      for (i = 0, len = ref.length; i < len; i++) {
-        item = ref[i];
-        results.push({
-          message: item.message,
-          stack: item.stack
-        });
-      }
-      return results;
-    };
-
-    Spec.prototype.getParents = function() {
-      var parent;
-      if (this.parents) {
-        return this.parents;
-      }
-      this.parents || (this.parents = []);
-      parent = this.parent;
-      while (parent) {
-        parent = new Teaspoon.Suite(parent);
-        this.parents.unshift(parent);
-        parent = parent.parent;
-      }
-      return this.parents;
-    };
-
-    Spec.prototype.result = function() {
-      return {
-        status: this.status(),
-        skipped: this.spec.status === "disabled"
-      };
-    };
-
-    Spec.prototype.status = function() {
-      if (this.spec.status === "disabled") {
-        return "passed";
-      } else {
-        return this.spec.status;
-      }
-    };
-
-    return Spec;
-
-  })();
 
   Teaspoon.Suite = (function() {
     function Suite(suite) {

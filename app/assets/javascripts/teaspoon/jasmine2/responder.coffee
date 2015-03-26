@@ -39,9 +39,9 @@ class Teaspoon.Jasmine2.Responder
     # TODO: Is there a way to clean this up?
     if jasmine.getEnv().specFilter(getFullName: -> spec.fullName)
       spec.parent = @currentSuite
-      @reporter.reportSpecStarting(spec)
+      @reporter.reportSpecStarting(new Teaspoon.Jasmine2.Spec(spec))
 
 
   specDone: (spec) ->
     spec.parent = @currentSuite
-    @reporter.reportSpecResults(spec)
+    @reporter.reportSpecResults(new Teaspoon.Jasmine2.Spec(spec))
