@@ -1130,6 +1130,10 @@
 (function() {
   var base;
 
+  if (typeof jasmineRequire === "undefined" || jasmineRequire === null) {
+    throw new Teaspoon.Error('Jasmine 2 not found -- use `suite.use_framework :jasmine` and adjust or remove the `suite.javascripts` directive.');
+  }
+
   if (this.Teaspoon == null) {
     this.Teaspoon = {};
   }
@@ -1137,6 +1141,245 @@
   if ((base = this.Teaspoon).Jasmine2 == null) {
     base.Jasmine2 = {};
   }
+
+}).call(this);
+(function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Teaspoon.Jasmine2.Fixture = (function(superClass) {
+    extend(Fixture, superClass);
+
+    function Fixture() {
+      return Fixture.__super__.constructor.apply(this, arguments);
+    }
+
+    Fixture.load = function() {
+      var args;
+      args = arguments;
+      this.env().beforeEach((function(_this) {
+        return function() {
+          return fixture.__super__.constructor.load.apply(_this, args);
+        };
+      })(this));
+      this.env().afterEach((function(_this) {
+        return function() {
+          return _this.cleanup();
+        };
+      })(this));
+      return Fixture.__super__.constructor.load.apply(this, arguments);
+    };
+
+    Fixture.set = function() {
+      var args;
+      args = arguments;
+      this.env().beforeEach((function(_this) {
+        return function() {
+          return fixture.__super__.constructor.set.apply(_this, args);
+        };
+      })(this));
+      this.env().afterEach((function(_this) {
+        return function() {
+          return _this.cleanup();
+        };
+      })(this));
+      return Fixture.__super__.constructor.set.apply(this, arguments);
+    };
+
+    Fixture.env = function() {
+      return window.jasmine.getEnv();
+    };
+
+    return Fixture;
+
+  })(Teaspoon.fixture);
+
+  window.fixture = Teaspoon.Jasmine2.Fixture;
+
+}).call(this);
+(function() {
+  var env, extend, setupSpecFilter;
+
+  setupSpecFilter = function(env) {
+    var grep;
+    if (grep = Teaspoon.Runner.prototype.getParams()["grep"]) {
+      return env.specFilter = function(spec) {
+        return spec.getFullName().indexOf(grep) === 0;
+      };
+    }
+  };
+
+  extend = function(destination, source) {
+    var property;
+    for (property in source) {
+      destination[property] = source[property];
+    }
+    return destination;
+  };
+
+  window.jasmine = jasmineRequire.core(jasmineRequire);
+
+  env = window.jasmine.getEnv();
+
+  setupSpecFilter(env);
+
+  extend(window, jasmineRequire["interface"](jasmine, env));
+
+}).call(this);
+(function() {
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Teaspoon.Reporters.Console = (function(superClass) {
+    extend(Console, superClass);
+
+    function Console() {
+      this.reportRunnerResults = bind(this.reportRunnerResults, this);
+      return Console.__super__.constructor.apply(this, arguments);
+    }
+
+    Console.prototype.reportRunnerStarting = function() {
+      this.currentAssertions = [];
+      return this.log({
+        type: "runner",
+        total: null,
+        start: JSON.parse(JSON.stringify(this.start))
+      });
+    };
+
+    Console.prototype.reportRunnerResults = function() {
+      this.log({
+        type: "result",
+        elapsed: ((new Teaspoon.Date().getTime() - this.start.getTime()) / 1000).toFixed(5),
+        coverage: window.__coverage__
+      });
+      return Teaspoon.finished = true;
+    };
+
+    return Console;
+
+  })(Teaspoon.Reporters.Console);
+
+}).call(this);
+(function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Teaspoon.Reporters.HTML = (function(superClass) {
+    extend(HTML, superClass);
+
+    function HTML() {
+      return HTML.__super__.constructor.apply(this, arguments);
+    }
+
+    HTML.prototype.readConfig = function() {
+      HTML.__super__.readConfig.apply(this, arguments);
+      return jasmine.CATCH_EXCEPTIONS = this.config["use-catch"];
+    };
+
+    HTML.prototype.envInfo = function() {
+      return "jasmine " + jasmine.version;
+    };
+
+    return HTML;
+
+  })(Teaspoon.Reporters.HTML);
+
+}).call(this);
+(function() {
+  Teaspoon.Jasmine2.Responder = (function() {
+    function Responder(reporter) {
+      this.reporter = reporter;
+    }
+
+    Responder.prototype.jasmineStarted = function(runner) {
+      return this.reporter.reportRunnerStarting({
+        total: runner.totalSpecsDefined
+      });
+    };
+
+    Responder.prototype.jasmineDone = function() {
+      return this.reporter.reportRunnerResults();
+    };
+
+    Responder.prototype.suiteStarted = function(suite) {
+      if (this.currentSuite) {
+        suite.parent = this.currentSuite;
+      }
+      this.currentSuite = suite;
+      return this.reporter.reportSuiteStarting(new Teaspoon.Jasmine2.Suite(suite));
+    };
+
+    Responder.prototype.suiteDone = function(suite) {
+      this.currentSuite = this.currentSuite.parent;
+      return this.reporter.reportSuiteResults(new Teaspoon.Jasmine2.Suite(suite));
+    };
+
+    Responder.prototype.specStarted = function(spec) {
+      if (jasmine.getEnv().specFilter({
+        getFullName: function() {
+          return spec.fullName;
+        }
+      })) {
+        spec.parent = this.currentSuite;
+        return this.reporter.reportSpecStarting(new Teaspoon.Jasmine2.Spec(spec));
+      }
+    };
+
+    Responder.prototype.specDone = function(spec) {
+      spec.parent = this.currentSuite;
+      return this.reporter.reportSpecResults(new Teaspoon.Jasmine2.Spec(spec));
+    };
+
+    return Responder;
+
+  })();
+
+}).call(this);
+(function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Teaspoon.Jasmine2.Runner = (function(superClass) {
+    extend(Runner, superClass);
+
+    function Runner() {
+      this.env = window.jasmine.getEnv();
+      Runner.__super__.constructor.apply(this, arguments);
+      this.env.execute();
+    }
+
+    Runner.prototype.setup = function() {
+      var reporter, responder;
+      reporter = new (this.getReporter())();
+      responder = new Teaspoon.Jasmine2.Responder(reporter);
+      this.env.addReporter(responder);
+      return this.addFixtureSupport();
+    };
+
+    Runner.prototype.addFixtureSupport = function() {
+      if (!(jasmine.getFixtures && this.fixturePath)) {
+        return;
+      }
+      jasmine.getFixtures().containerId = "teaspoon-fixtures";
+      jasmine.getFixtures().fixturesPath = this.fixturePath;
+      jasmine.getStyleFixtures().fixturesPath = this.fixturePath;
+      return jasmine.getJSONFixtures().fixturesPath = this.fixturePath;
+    };
+
+    return Runner;
+
+  })(Teaspoon.Runner);
+
+  Teaspoon.Runner = (function() {
+    function Runner() {
+      new Teaspoon.Jasmine2.Runner;
+    }
+
+    return Runner;
+
+  })();
 
 }).call(this);
 (function() {
@@ -1236,247 +1479,5 @@
     return Suite;
 
   })();
-
-}).call(this);
-(function() {
-  var extend1 = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
-
-  Teaspoon.Jasmine2.Runner = (function(superClass) {
-    extend1(Runner, superClass);
-
-    Runner.setup = function() {
-      var env, extend;
-      extend = function(destination, source) {
-        var property;
-        for (property in source) {
-          destination[property] = source[property];
-        }
-        return destination;
-      };
-      window.jasmine = jasmineRequire.core(jasmineRequire);
-      env = window.jasmine.getEnv();
-      this.setupSpecFilter(env);
-      return extend(window, jasmineRequire["interface"](jasmine, env));
-    };
-
-    Runner.setupSpecFilter = function(env) {
-      var grep;
-      if (grep = Teaspoon.Jasmine2.Runner.prototype.getParams()["grep"]) {
-        return env.specFilter = function(spec) {
-          return spec.getFullName().indexOf(grep) === 0;
-        };
-      }
-    };
-
-    function Runner() {
-      this.env = window.jasmine.getEnv();
-      Runner.__super__.constructor.apply(this, arguments);
-      this.env.execute();
-    }
-
-    Runner.prototype.setup = function() {
-      var reporter, responder;
-      reporter = new (this.getReporter())();
-      responder = new Teaspoon.Jasmine2.Responder(reporter);
-      this.env.addReporter(responder);
-      return this.addFixtureSupport();
-    };
-
-    Runner.prototype.addFixtureSupport = function() {
-      if (!(jasmine.getFixtures && this.fixturePath)) {
-        return;
-      }
-      jasmine.getFixtures().containerId = "teaspoon-fixtures";
-      jasmine.getFixtures().fixturesPath = this.fixturePath;
-      jasmine.getStyleFixtures().fixturesPath = this.fixturePath;
-      return jasmine.getJSONFixtures().fixturesPath = this.fixturePath;
-    };
-
-    return Runner;
-
-  })(Teaspoon.Runner);
-
-  Teaspoon.Runner = (function() {
-    function Runner() {
-      new Teaspoon.Jasmine2.Runner;
-    }
-
-    return Runner;
-
-  })();
-
-}).call(this);
-(function() {
-  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
-
-  Teaspoon.Jasmine2.Fixture = (function(superClass) {
-    extend(Fixture, superClass);
-
-    function Fixture() {
-      return Fixture.__super__.constructor.apply(this, arguments);
-    }
-
-    Fixture.load = function() {
-      var args;
-      args = arguments;
-      this.env().beforeEach((function(_this) {
-        return function() {
-          return fixture.__super__.constructor.load.apply(_this, args);
-        };
-      })(this));
-      this.env().afterEach((function(_this) {
-        return function() {
-          return _this.cleanup();
-        };
-      })(this));
-      return Fixture.__super__.constructor.load.apply(this, arguments);
-    };
-
-    Fixture.set = function() {
-      var args;
-      args = arguments;
-      this.env().beforeEach((function(_this) {
-        return function() {
-          return fixture.__super__.constructor.set.apply(_this, args);
-        };
-      })(this));
-      this.env().afterEach((function(_this) {
-        return function() {
-          return _this.cleanup();
-        };
-      })(this));
-      return Fixture.__super__.constructor.set.apply(this, arguments);
-    };
-
-    Fixture.env = function() {
-      return window.jasmine.getEnv();
-    };
-
-    return Fixture;
-
-  })(Teaspoon.fixture);
-
-  window.fixture = Teaspoon.Jasmine2.Fixture;
-
-}).call(this);
-(function() {
-  Teaspoon.Jasmine2.Responder = (function() {
-    function Responder(reporter) {
-      this.reporter = reporter;
-    }
-
-    Responder.prototype.jasmineStarted = function(runner) {
-      return this.reporter.reportRunnerStarting({
-        total: runner.totalSpecsDefined
-      });
-    };
-
-    Responder.prototype.jasmineDone = function() {
-      return this.reporter.reportRunnerResults();
-    };
-
-    Responder.prototype.suiteStarted = function(suite) {
-      if (this.currentSuite) {
-        suite.parent = this.currentSuite;
-      }
-      this.currentSuite = suite;
-      return this.reporter.reportSuiteStarting(new Teaspoon.Jasmine2.Suite(suite));
-    };
-
-    Responder.prototype.suiteDone = function(suite) {
-      this.currentSuite = this.currentSuite.parent;
-      return this.reporter.reportSuiteResults(new Teaspoon.Jasmine2.Suite(suite));
-    };
-
-    Responder.prototype.specStarted = function(spec) {
-      if (jasmine.getEnv().specFilter({
-        getFullName: function() {
-          return spec.fullName;
-        }
-      })) {
-        spec.parent = this.currentSuite;
-        return this.reporter.reportSpecStarting(new Teaspoon.Jasmine2.Spec(spec));
-      }
-    };
-
-    Responder.prototype.specDone = function(spec) {
-      spec.parent = this.currentSuite;
-      return this.reporter.reportSpecResults(new Teaspoon.Jasmine2.Spec(spec));
-    };
-
-    return Responder;
-
-  })();
-
-}).call(this);
-(function() {
-  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
-
-  Teaspoon.Reporters.Console = (function(superClass) {
-    extend(Console, superClass);
-
-    function Console() {
-      this.reportRunnerResults = bind(this.reportRunnerResults, this);
-      return Console.__super__.constructor.apply(this, arguments);
-    }
-
-    Console.prototype.reportRunnerStarting = function() {
-      this.currentAssertions = [];
-      return this.log({
-        type: "runner",
-        total: null,
-        start: JSON.parse(JSON.stringify(this.start))
-      });
-    };
-
-    Console.prototype.reportRunnerResults = function() {
-      this.log({
-        type: "result",
-        elapsed: ((new Teaspoon.Date().getTime() - this.start.getTime()) / 1000).toFixed(5),
-        coverage: window.__coverage__
-      });
-      return Teaspoon.finished = true;
-    };
-
-    return Console;
-
-  })(Teaspoon.Reporters.Console);
-
-}).call(this);
-(function() {
-  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
-
-  Teaspoon.Reporters.HTML = (function(superClass) {
-    extend(HTML, superClass);
-
-    function HTML() {
-      return HTML.__super__.constructor.apply(this, arguments);
-    }
-
-    HTML.prototype.readConfig = function() {
-      HTML.__super__.readConfig.apply(this, arguments);
-      return jasmine.CATCH_EXCEPTIONS = this.config["use-catch"];
-    };
-
-    HTML.prototype.envInfo = function() {
-      return "jasmine " + jasmine.version;
-    };
-
-    return HTML;
-
-  })(Teaspoon.Reporters.HTML);
-
-}).call(this);
-(function() {
-  if (typeof jasmineRequire === "undefined" || jasmineRequire === null) {
-    throw new Teaspoon.Error('Jasmine 2 not found -- use `suite.use_framework :jasmine` and adjust or remove the `suite.javascripts` directive.');
-  }
-
-  Teaspoon.Jasmine2.Runner.setup();
 
 }).call(this);
