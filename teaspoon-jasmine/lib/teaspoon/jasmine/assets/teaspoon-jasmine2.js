@@ -222,7 +222,7 @@
     };
 
     function fixture() {
-      Teaspoon.fixture.load.apply(window, arguments);
+      window.fixture.load.apply(window, arguments);
     }
 
     xhr = null;
@@ -236,7 +236,7 @@
       if (preload == null) {
         preload = false;
       }
-      if (cached = Teaspoon.fixture.cache[url]) {
+      if (cached = window.fixture.cache[url]) {
         return loadComplete(url, cached.type, cached.content, append, preload);
       }
       value = null;
@@ -253,7 +253,7 @@
     };
 
     loadComplete = function(url, type, content, append, preload) {
-      Teaspoon.fixture.cache[url] = {
+      window.fixture.cache[url] = {
         type: type,
         content: content
       };
@@ -268,7 +268,7 @@
       } else {
         putContent(content);
       }
-      return Teaspoon.fixture.el;
+      return window.fixture.el;
     };
 
     set = function(content, append) {
@@ -282,35 +282,35 @@
     putContent = function(content) {
       cleanup();
       create();
-      return Teaspoon.fixture.el.innerHTML = content;
+      return window.fixture.el.innerHTML = content;
     };
 
     addContent = function(content) {
-      if (!Teaspoon.fixture.el) {
+      if (!window.fixture.el) {
         create();
       }
-      return Teaspoon.fixture.el.innerHTML += content;
+      return window.fixture.el.innerHTML += content;
     };
 
     create = function() {
       var ref;
-      Teaspoon.fixture.el = document.createElement("div");
+      window.fixture.el = document.createElement("div");
       if (typeof window.$ === 'function') {
-        Teaspoon.fixture.$el = $(Teaspoon.fixture.el);
+        window.fixture.$el = $(window.fixture.el);
       }
-      Teaspoon.fixture.el.id = "teaspoon-fixtures";
-      return (ref = document.body) != null ? ref.appendChild(Teaspoon.fixture.el) : void 0;
+      window.fixture.el.id = "teaspoon-fixtures";
+      return (ref = document.body) != null ? ref.appendChild(window.fixture.el) : void 0;
     };
 
     cleanup = function() {
       var base, ref, ref1;
-      (base = Teaspoon.fixture).el || (base.el = document.getElementById("teaspoon-fixtures"));
-      if ((ref = Teaspoon.fixture.el) != null) {
+      (base = window.fixture).el || (base.el = document.getElementById("teaspoon-fixtures"));
+      if ((ref = window.fixture.el) != null) {
         if ((ref1 = ref.parentNode) != null) {
-          ref1.removeChild(Teaspoon.fixture.el);
+          ref1.removeChild(window.fixture.el);
         }
       }
-      return Teaspoon.fixture.el = null;
+      return window.fixture.el = null;
     };
 
     xhrRequest = function(url, callback) {
@@ -1308,6 +1308,60 @@
 
 }).call(this);
 (function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Teaspoon.Jasmine2.Fixture = (function(superClass) {
+    extend(Fixture, superClass);
+
+    function Fixture() {
+      return Fixture.__super__.constructor.apply(this, arguments);
+    }
+
+    Fixture.load = function() {
+      var args;
+      args = arguments;
+      this.env().beforeEach((function(_this) {
+        return function() {
+          return fixture.__super__.constructor.load.apply(_this, args);
+        };
+      })(this));
+      this.env().afterEach((function(_this) {
+        return function() {
+          return _this.cleanup();
+        };
+      })(this));
+      return Fixture.__super__.constructor.load.apply(this, arguments);
+    };
+
+    Fixture.set = function() {
+      var args;
+      args = arguments;
+      this.env().beforeEach((function(_this) {
+        return function() {
+          return fixture.__super__.constructor.set.apply(_this, args);
+        };
+      })(this));
+      this.env().afterEach((function(_this) {
+        return function() {
+          return _this.cleanup();
+        };
+      })(this));
+      return Fixture.__super__.constructor.set.apply(this, arguments);
+    };
+
+    Fixture.env = function() {
+      return window.jasmine.getEnv();
+    };
+
+    return Fixture;
+
+  })(Teaspoon.fixture);
+
+  window.fixture = Teaspoon.Jasmine2.Fixture;
+
+}).call(this);
+(function() {
   Teaspoon.Jasmine2.Responder = (function() {
     function Responder(reporter) {
       this.reporter = reporter;
@@ -1419,61 +1473,9 @@
 
 }).call(this);
 (function() {
-  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
-
   if (typeof jasmineRequire === "undefined" || jasmineRequire === null) {
     throw new Teaspoon.Error('Jasmine 2 not found -- use `suite.use_framework :jasmine` and adjust or remove the `suite.javascripts` directive.');
   }
-
-  Teaspoon.fixture = (function(superClass) {
-    extend(fixture, superClass);
-
-    function fixture() {
-      return fixture.__super__.constructor.apply(this, arguments);
-    }
-
-    window.fixture = fixture;
-
-    fixture.load = function() {
-      var args;
-      args = arguments;
-      this.env().beforeEach((function(_this) {
-        return function() {
-          return fixture.__super__.constructor.load.apply(_this, args);
-        };
-      })(this));
-      this.env().afterEach((function(_this) {
-        return function() {
-          return _this.cleanup();
-        };
-      })(this));
-      return fixture.__super__.constructor.load.apply(this, arguments);
-    };
-
-    fixture.set = function() {
-      var args;
-      args = arguments;
-      this.env().beforeEach((function(_this) {
-        return function() {
-          return fixture.__super__.constructor.set.apply(_this, args);
-        };
-      })(this));
-      this.env().afterEach((function(_this) {
-        return function() {
-          return _this.cleanup();
-        };
-      })(this));
-      return fixture.__super__.constructor.set.apply(this, arguments);
-    };
-
-    fixture.env = function() {
-      return window.jasmine.getEnv();
-    };
-
-    return fixture;
-
-  })(Teaspoon.fixture);
 
   Teaspoon.Jasmine2.Runner.setup();
 

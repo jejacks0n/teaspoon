@@ -1,3 +1,7 @@
+# TODO: register framework-specific fixture lib with core
+# so that this base class doesn't have to reference the
+# lib via window.fixture
+
 class Teaspoon.fixture
 
   @cache: {}
@@ -28,7 +32,7 @@ class Teaspoon.fixture
 
 
   # behaves like load, and is only provided as a convenience
-  constructor: -> Teaspoon.fixture.load.apply(window, arguments)
+  constructor: -> window.fixture.load.apply(window, arguments)
 
 
   # Private
@@ -40,7 +44,7 @@ class Teaspoon.fixture
 
 
   load = (url, append, preload = false) =>
-    return loadComplete(url, cached.type, cached.content, append, preload) if cached = Teaspoon.fixture.cache[url]
+    return loadComplete(url, cached.type, cached.content, append, preload) if cached = window.fixture.cache[url]
     value = null
     xhrRequest url, ->
       return unless xhr.readyState == 4
@@ -50,11 +54,11 @@ class Teaspoon.fixture
 
 
   loadComplete = (url, type, content, append, preload) =>
-    Teaspoon.fixture.cache[url] = {type: type, content: content}
+    window.fixture.cache[url] = {type: type, content: content}
     return @json[@json.push(JSON.parse(content)) - 1] if type.match(/application\/json;/)
     return content if preload
     if append then addContent(content) else putContent(content)
-    return Teaspoon.fixture.el
+    return window.fixture.el
 
 
   set = (content, append) ->
@@ -64,25 +68,25 @@ class Teaspoon.fixture
   putContent = (content) =>
     cleanup()
     create()
-    Teaspoon.fixture.el.innerHTML = content
+    window.fixture.el.innerHTML = content
 
 
   addContent = (content) =>
-    create() unless Teaspoon.fixture.el
-    Teaspoon.fixture.el.innerHTML += content
+    create() unless window.fixture.el
+    window.fixture.el.innerHTML += content
 
 
   create = =>
-    Teaspoon.fixture.el = document.createElement("div")
-    Teaspoon.fixture.$el = $(Teaspoon.fixture.el) if typeof(window.$) == 'function'
-    Teaspoon.fixture.el.id = "teaspoon-fixtures"
-    document.body?.appendChild(Teaspoon.fixture.el)
+    window.fixture.el = document.createElement("div")
+    window.fixture.$el = $(window.fixture.el) if typeof(window.$) == 'function'
+    window.fixture.el.id = "teaspoon-fixtures"
+    document.body?.appendChild(window.fixture.el)
 
 
   cleanup = =>
-    Teaspoon.fixture.el ||= document.getElementById("teaspoon-fixtures")
-    Teaspoon.fixture.el?.parentNode?.removeChild(Teaspoon.fixture.el)
-    Teaspoon.fixture.el = null
+    window.fixture.el ||= document.getElementById("teaspoon-fixtures")
+    window.fixture.el?.parentNode?.removeChild(window.fixture.el)
+    window.fixture.el = null
 
 
   xhrRequest = (url, callback) ->
