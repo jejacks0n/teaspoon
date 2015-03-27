@@ -1239,6 +1239,75 @@
 
 }).call(this);
 (function() {
+  var extend1 = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Teaspoon.Jasmine2.Runner = (function(superClass) {
+    extend1(Runner, superClass);
+
+    Runner.setup = function() {
+      var env, extend;
+      extend = function(destination, source) {
+        var property;
+        for (property in source) {
+          destination[property] = source[property];
+        }
+        return destination;
+      };
+      window.jasmine = jasmineRequire.core(jasmineRequire);
+      env = window.jasmine.getEnv();
+      this.setupSpecFilter(env);
+      return extend(window, jasmineRequire["interface"](jasmine, env));
+    };
+
+    Runner.setupSpecFilter = function(env) {
+      var grep;
+      if (grep = Teaspoon.Jasmine2.Runner.prototype.getParams()["grep"]) {
+        return env.specFilter = function(spec) {
+          return spec.getFullName().indexOf(grep) === 0;
+        };
+      }
+    };
+
+    function Runner() {
+      this.env = window.jasmine.getEnv();
+      Runner.__super__.constructor.apply(this, arguments);
+      this.env.execute();
+    }
+
+    Runner.prototype.setup = function() {
+      var reporter, responder;
+      reporter = new (this.getReporter())();
+      responder = new Teaspoon.Jasmine2.Responder(reporter);
+      this.env.addReporter(responder);
+      return this.addFixtureSupport();
+    };
+
+    Runner.prototype.addFixtureSupport = function() {
+      if (!(jasmine.getFixtures && this.fixturePath)) {
+        return;
+      }
+      jasmine.getFixtures().containerId = "teaspoon-fixtures";
+      jasmine.getFixtures().fixturesPath = this.fixturePath;
+      jasmine.getStyleFixtures().fixturesPath = this.fixturePath;
+      return jasmine.getJSONFixtures().fixturesPath = this.fixturePath;
+    };
+
+    return Runner;
+
+  })(Teaspoon.Runner);
+
+  Teaspoon.Runner = (function() {
+    function Runner() {
+      new Teaspoon.Jasmine2.Runner;
+    }
+
+    return Runner;
+
+  })();
+
+}).call(this);
+(function() {
   Teaspoon.Jasmine2.Responder = (function() {
     function Responder(reporter) {
       this.reporter = reporter;
@@ -1350,55 +1419,15 @@
 
 }).call(this);
 (function() {
-  var env, extend, jasmineInterface,
-    extend1 = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
   if (typeof jasmineRequire === "undefined" || jasmineRequire === null) {
     throw new Teaspoon.Error('Jasmine 2 not found -- use `suite.use_framework :jasmine` and adjust or remove the `suite.javascripts` directive.');
   }
 
-  Teaspoon.Runner = (function(superClass) {
-    extend1(Runner, superClass);
-
-    Runner.setupSpecFilter = function(env) {
-      var grep;
-      if (grep = Teaspoon.Runner.prototype.getParams()["grep"]) {
-        return env.specFilter = function(spec) {
-          return spec.getFullName().indexOf(grep) === 0;
-        };
-      }
-    };
-
-    function Runner() {
-      Runner.__super__.constructor.apply(this, arguments);
-      env.execute();
-    }
-
-    Runner.prototype.setup = function() {
-      var reporter, responder;
-      reporter = new (this.getReporter())();
-      responder = new Teaspoon.Jasmine2.Responder(reporter);
-      env.addReporter(responder);
-      return this.addFixtureSupport();
-    };
-
-    Runner.prototype.addFixtureSupport = function() {
-      if (!(jasmine.getFixtures && this.fixturePath)) {
-        return;
-      }
-      jasmine.getFixtures().containerId = "teaspoon-fixtures";
-      jasmine.getFixtures().fixturesPath = this.fixturePath;
-      jasmine.getStyleFixtures().fixturesPath = this.fixturePath;
-      return jasmine.getJSONFixtures().fixturesPath = this.fixturePath;
-    };
-
-    return Runner;
-
-  })(Teaspoon.Runner);
-
   Teaspoon.fixture = (function(superClass) {
-    extend1(fixture, superClass);
+    extend(fixture, superClass);
 
     function fixture() {
       return fixture.__super__.constructor.apply(this, arguments);
@@ -1409,12 +1438,12 @@
     fixture.load = function() {
       var args;
       args = arguments;
-      env.beforeEach((function(_this) {
+      this.env().beforeEach((function(_this) {
         return function() {
           return fixture.__super__.constructor.load.apply(_this, args);
         };
       })(this));
-      env.afterEach((function(_this) {
+      this.env().afterEach((function(_this) {
         return function() {
           return _this.cleanup();
         };
@@ -1425,12 +1454,12 @@
     fixture.set = function() {
       var args;
       args = arguments;
-      env.beforeEach((function(_this) {
+      this.env().beforeEach((function(_this) {
         return function() {
           return fixture.__super__.constructor.set.apply(_this, args);
         };
       })(this));
-      env.afterEach((function(_this) {
+      this.env().afterEach((function(_this) {
         return function() {
           return _this.cleanup();
         };
@@ -1438,26 +1467,14 @@
       return fixture.__super__.constructor.set.apply(this, arguments);
     };
 
+    fixture.env = function() {
+      return window.jasmine.getEnv();
+    };
+
     return fixture;
 
   })(Teaspoon.fixture);
 
-  extend = function(destination, source) {
-    var property;
-    for (property in source) {
-      destination[property] = source[property];
-    }
-    return destination;
-  };
-
-  window.jasmine = jasmineRequire.core(jasmineRequire);
-
-  env = window.jasmine.getEnv();
-
-  Teaspoon.Runner.setupSpecFilter(env);
-
-  jasmineInterface = jasmineRequire["interface"](jasmine, env);
-
-  extend(window, jasmineInterface);
+  Teaspoon.Jasmine2.Runner.setup();
 
 }).call(this);

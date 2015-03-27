@@ -1,13 +1,15 @@
-describe "Jasmine 2 Teaspoon.Runner", ->
+describe "Teaspoon.Jasmine2.Runner", ->
 
   beforeEach ->
     @env = jasmine.getEnv()
     @originalFilter = @env.specFilter
     @executeSpy = spyOn(@env, "execute")
-    @runner = new Teaspoon.Runner()
+    @runner = new Teaspoon.Jasmine2.Runner()
+
 
   afterEach ->
     @env.specFilter = @originalFilter
+
 
   describe "constructor", ->
 
