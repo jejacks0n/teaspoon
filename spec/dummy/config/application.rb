@@ -8,6 +8,17 @@ require "sprockets/railtie"
 Bundler.require(*Rails.groups)
 require_relative "../../teaspoon_env"
 
+
+require "coffee-rails"
+require "sass-rails"
+require "haml-rails"
+require "turbolinks"
+require "jquery-rails"
+require "uglifier"
+require "phantomjs"
+
+
+
 module Dummy
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

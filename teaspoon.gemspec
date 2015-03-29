@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency "capybara-webkit"
   s.add_dependency "tapout"
   s.add_dependency "thin"
-
+  s.add_dependency "phantomjs"
 
 
   #
