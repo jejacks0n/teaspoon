@@ -44,7 +44,7 @@ Gem::Specification.new do |s|
 
   # rails
   s.add_development_dependency "sqlite3"
-  s.add_development_dependency "rspec-rails", "~> 3.0.0"
+  s.add_development_dependency "rspec-rails"
   s.add_development_dependency "capybara"
   s.add_development_dependency "aruba"
 
