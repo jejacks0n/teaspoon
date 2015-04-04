@@ -8,6 +8,17 @@ require "sprockets/railtie"
 Bundler.require(*Rails.groups)
 require_relative "../../teaspoon_env"
 
+
+require "coffee-rails"
+require "sass-rails"
+require "haml-rails"
+require "turbolinks"
+require "jquery-rails"
+require "uglifier"
+require "phantomjs"
+
+
+
 module Dummy
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -26,5 +37,9 @@ module Dummy
     # continue to work and load the proper urls.
     config.relative_url_root = "/relative"
     config.assets.prefix = "/relative/assets" # this must be set for any asset paths to be correct!
+
+    secret_string = "12077500d55798a739945c97696367c3725ce90463131e1000379143f6732f2bcfaef023db841eea4b370f8599448b7a36d7baa389053d2207150120d0579eaf"
+    config.secret_key_base = secret_string
+    config.secret_token    = secret_string
   end
 end
