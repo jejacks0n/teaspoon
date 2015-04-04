@@ -37,6 +37,7 @@ If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), chec
 
 ## Table of Contents
 
+0. [Status](#status)
 1. [Installation](#installation)
 2. [Usage](#usage)
 3. [Writing Specs](#writing-specs)
@@ -47,6 +48,25 @@ If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), chec
 8. [Test Frameworks](#test-frameworks)
 9. [Support Libraries](#support-libraries)
 10. [CI Support](#ci-support)
+
+
+## Status
+
+Teaspoon is currently being restructured as we push towards 1.0. The last stable series before 1.0 is 0.9. We'll continue to release fixes under 0.9.x, but will not ship improvements until 1.0 has been cut. For 1.0, we are extracting framework-specific logic into constituent libraries, adding Jasmine 2 support, simplifying configuration, refactoring for the long-term, and more.
+
+If you want to use the master branch, you'll need to require the framework adapter that you intend to use within your Gemfile:
+
+```ruby
+gem 'teaspoon', github: 'modeset/teaspoon', require: 'teaspoon-mocha'
+```
+
+On master, there is no longer a default framework. If you used Jasmine as the default previously, you'll need to require it explicitly:
+
+```ruby
+gem 'teaspoon', github: 'modeset/teaspoon', require: 'teaspoon-jasmine'
+```
+
+Feedback welcome!
 
 
 ## Installation
