@@ -2,6 +2,11 @@ require "teaspoon/exceptions"
 
 module Teaspoon
   module Environment
+    class << self
+      attr_accessor :console
+      alias :console? :console
+    end
+
     def self.load(options = {})
       require_environment(options[:environment])
       raise "Rails environment not found." unless rails_loaded?
@@ -37,6 +42,12 @@ module Teaspoon
       ["spec/teaspoon_env.rb", "test/teaspoon_env.rb", "teaspoon_env.rb"]
     end
 
+    def self.require_environment_from_engine?
+      # Console has already loaded the environment at this point. Console loads teaspoon_env,
+      # which loads Rails, which loads the engine. So, no need to load teaspoon_env again.
+      !console?
+    end
+
     private
 
     def self.require_env(file)
@@ -44,7 +55,7 @@ module Teaspoon
     end
 
     def self.rails_loaded?
-      defined?(Rails)
+      !!defined?(Rails)
     end
   end
 end

@@ -5,6 +5,7 @@ module Teaspoon
     def initialize(options = {})
       @default_options = options
       @suites = {}
+      Teaspoon::Environment.console = true
       Teaspoon::Environment.load(options)
 
       @server = start_server
