@@ -300,7 +300,6 @@ end
 ```
 
 Once hooks have been defined in your configuration, you can invoke them using the javascript `Teaspoon.hook` interface in your specs. A request will be sent to the server, where all blocks that have been specified for a given hook will be called in the order they were defined. Any arguments passed to `Teaspoon.hook` will be provided to the hooks defined in the configuration.
-```
 
 ```js
 Teaspoon.hook('fixtures')
