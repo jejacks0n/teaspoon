@@ -1,4 +1,4 @@
-#= require teaspoon/base/teaspoon
+#= require teaspoon/teaspoon
 #= require teaspoon/mocha/_namespace
 #= require teaspoon/mocha/responder
 #= require teaspoon/mocha/reporters/html

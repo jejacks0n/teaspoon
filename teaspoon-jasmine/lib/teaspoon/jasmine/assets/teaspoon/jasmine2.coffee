@@ -1,4 +1,4 @@
-#= require teaspoon/base/teaspoon
+#= require teaspoon/teaspoon
 #= require_self
 #= require_tree ./jasmine2
 

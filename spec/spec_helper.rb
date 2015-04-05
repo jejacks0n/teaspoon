@@ -30,6 +30,7 @@ RSpec.configure do |config|
 
   config.after(:each, shell: true) do
     restore_env
+    clean_current_dir
   end
 
   config.before(:each, browser: true) do

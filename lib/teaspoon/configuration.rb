@@ -21,7 +21,7 @@ module Teaspoon
     @@root           = nil # will default to Rails.root
     @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
     @@fixture_paths  = ["spec/javascripts/fixtures", "test/javascripts/fixtures"]
-    @@asset_manifest = ["teaspoon.css", "teaspoon-teaspoon.js", "teaspoon/*.js", "support/*.js"]
+    @@asset_manifest = ["teaspoon.css", "teaspoon-filterer.js", "teaspoon/*.js", "support/*.js"]
 
     # console runner specific
 

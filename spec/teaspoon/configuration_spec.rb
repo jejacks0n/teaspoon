@@ -171,7 +171,7 @@ describe Teaspoon::Configuration::Suite do
       "{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}"
     )
     expect(subject.helper).to eq("spec_helper")
-    expect(subject.javascripts).to eq(["jasmine/1.3.1", "teaspoon/jasmine"])
+    expect(subject.javascripts).to eq(["jasmine/1.3.1", "teaspoon/jasmine1"])
     expect(subject.stylesheets).to eq(["teaspoon"])
     expect(subject.no_coverage).to eq([
       %r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}

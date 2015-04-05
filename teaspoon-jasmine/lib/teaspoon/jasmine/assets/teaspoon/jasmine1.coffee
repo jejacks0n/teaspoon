@@ -1,7 +1,7 @@
-#= require teaspoon/base/teaspoon
-#= require teaspoon/jasmine/_namespace
-#= require teaspoon/jasmine/responder
-#= require teaspoon/jasmine/reporters/html
+#= require teaspoon/teaspoon
+#= require teaspoon/jasmine1/_namespace
+#= require teaspoon/jasmine1/responder
+#= require teaspoon/jasmine1/reporters/html
 
 unless jasmine?
   throw new Teaspoon.Error('Jasmine not found -- use `suite.use_framework :jasmine` and adjust or remove the `suite.javascripts` directive.')

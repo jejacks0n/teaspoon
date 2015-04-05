@@ -31,13 +31,13 @@ describe Teaspoon::Suite do
     it "return a hash with the suite name and path" do
       result = Teaspoon::Suite.resolve_spec_for("fixture_spec")
       expect(result[:suite]).to eq("default")
-      expect(result[:path].first).to include("base/fixture_spec.")
+      expect(result[:path].first).to include("teaspoon/fixture_spec.")
     end
 
     it "returns a hash with the suite name and an array of paths if a directory is given" do
-      result = Teaspoon::Suite.resolve_spec_for("base")
+      result = Teaspoon::Suite.resolve_spec_for("reporters")
       expect(result[:suite]).to eq("default")
-      dirs = ["base/fixture_spec.", "base/runner_spec.", "base/teaspoon_spec"]
+      dirs = ["reporters/console_spec.", "reporters/html/base_view_spec.", "reporters/html/failure_view_spec."]
       expect(dirs.all? { |path| result[:path].grep(/#{path}/)[0] }).to be_truthy
     end
 
@@ -84,7 +84,7 @@ describe Teaspoon::Suite do
     it "returns an array of assets" do
       result = subject.spec_assets
       expect(result).to include("spec_helper.js?body=1")
-      expect(result).to include("teaspoon/base/reporters/console_spec.js?body=1")
+      expect(result).to include("teaspoon/reporters/console_spec.js?body=1")
     end
 
     it "returns just a file if one was requested" do

@@ -1,10 +1,10 @@
-#= require teaspoon/base/reporters/html/base_view
+#= require teaspoon/reporters/html/base_view
 #= require_self
-#= require teaspoon/base/reporters/html/progress_view
-#= require teaspoon/base/reporters/html/spec_view
-#= require teaspoon/base/reporters/html/failure_view
-#= require teaspoon/base/reporters/html/suite_view
-#= require teaspoon/base/reporters/html/template
+#= require teaspoon/reporters/html/progress_view
+#= require teaspoon/reporters/html/spec_view
+#= require teaspoon/reporters/html/failure_view
+#= require teaspoon/reporters/html/suite_view
+#= require teaspoon/reporters/html/template
 
 class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
 

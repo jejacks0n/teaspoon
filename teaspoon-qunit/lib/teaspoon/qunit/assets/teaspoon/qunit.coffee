@@ -1,4 +1,4 @@
-#= require teaspoon/base/teaspoon
+#= require teaspoon/teaspoon
 #= require teaspoon/qunit/reporters/console
 #= require teaspoon/qunit/reporters/html
 
