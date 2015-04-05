@@ -6,7 +6,7 @@ Teaspoon.configure do |config|
   config.fixture_paths << Teaspoon::FIXTURE_PATH
 
   config.suite do |suite|
-    suite.use_framework :mocha
+    suite.use_framework :mocha, "1.17.1-dev"
     suite.matcher = "#{path}/**/*_spec.{js,js.coffee,coffee}"
   end
 end

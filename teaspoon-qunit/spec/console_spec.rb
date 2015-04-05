@@ -35,9 +35,13 @@ feature "Running in the console", shell: true do
     OUTPUT
   end
 
+  let(:version) do
+    Teaspoon.frameworks[:qunit]._versions.keys.select{ |k| k =~ /-dev$/ }.last
+  end
+
   before do
     teaspoon_test_app("gem 'teaspoon-qunit', path: '#{Teaspoon::DEV_PATH}'")
-    install_teaspoon("--coffee")
+    install_teaspoon("--coffee --version=#{version}")
     copy_integration_files("test", File.expand_path("../../test", __FILE__), "test")
   end
 
