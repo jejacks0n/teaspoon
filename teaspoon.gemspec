@@ -15,8 +15,8 @@ Gem::Specification.new do |s|
                    "or headless using PhantomJS, Selenium Webdriver, or Capybara Webkit"].join(" ")
   s.license     = "MIT"
 
-  s.files       = Dir["{app,config,lib,vendor,bin}/**/*"] + ["MIT.LICENSE", "README.md"]
-  s.test_files  = `git ls-files -- {spec,test}/*`.split("\n")
+  s.files       = Dir["{app,config,lib,bin}/**/*"] + ["MIT.LICENSE", "README.md"]
+  s.test_files  = `git ls-files -- {spec}/*`.split("\n")
   s.executables = ["teaspoon"]
 
   s.add_dependency "railties", [">= 3.2.5", "< 5"]

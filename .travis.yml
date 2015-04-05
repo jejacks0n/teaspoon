@@ -1,9 +1,11 @@
 rvm:
-- 2.1.2
+  - 2.1.2
 before_script:
-- sh -e /etc/init.d/xvfb start && npm install -g istanbul
+  - sh -e /etc/init.d/xvfb start && npm install -g istanbul
 env:
-- DISPLAY=":99.0"
+  global:
+    - TRAVIS=true
+    - DISPLAY=:99.0
 notifications:
   slack:
     secure: C/awjHAPtddxoCowdxbLiJG7Ny2wpgYVko4Dtrp62K8nxXfs3MotzndJmfr1D9z1sCIy0T/ZjuSE0gdVBNTcUrXIk0MiZS/G2UikeZFq1sh5Z3UkNbQoCZBJHPPoD7fwHC/hBIeDdZtvN8++zTvEcraFgZxEJMkw7Lihg5efa1Q=

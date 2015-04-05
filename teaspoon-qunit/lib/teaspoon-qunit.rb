@@ -7,7 +7,11 @@ module Teaspoon
       # specify the framework name
       framework_name :qunit
 
-      # register available versions
+      # register developer versions
+      register_version "1.12.0-dev", "qunit/1.10.0.js", "teaspoon/qunit.js"
+      register_version "1.14.0-dev", "qunit/1.14.0.js", "teaspoon/qunit.js"
+
+      # register standard versions
       register_version "1.12.0", "qunit/1.10.0.js", "teaspoon-qunit.js"
       register_version "1.14.0", "qunit/1.14.0.js", "teaspoon-qunit.js"
 

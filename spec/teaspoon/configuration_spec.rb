@@ -167,11 +167,15 @@ describe Teaspoon::Configuration::Suite do
   subject { Teaspoon::Configuration::Suite.new &(@suite || proc{}) }
 
   it "has the default configuration" do
-    expect(subject.matcher).to eq("{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}")
+    expect(subject.matcher).to eq(
+      "{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}"
+    )
     expect(subject.helper).to eq("spec_helper")
-    expect(subject.javascripts).to eq(["jasmine/1.3.1", "teaspoon/jasmine"])
+    expect(subject.javascripts).to eq(["jasmine/1.3.1", "teaspoon/jasmine1"])
     expect(subject.stylesheets).to eq(["teaspoon"])
-    expect(subject.no_coverage).to eq([%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}])
+    expect(subject.no_coverage).to eq([
+      %r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}
+    ])
     expect(subject.expand_assets).to eq(true)
   end
 
@@ -215,16 +219,16 @@ describe Teaspoon::Configuration::Suite do
         @suite = proc{ |s| s.use_framework :qunit, "6.6.6" }
         expect{ subject }.to raise_error(
           Teaspoon::UnknownFrameworkVersion,
-          "Unknown framework. \"qunit[6.6.6]\" -- available 1.12.0, 1.14.0."
+          "Unknown framework. \"qunit[6.6.6]\" -- available 1.12.0-dev, 1.14.0-dev, 1.12.0, 1.14.0."
         )
       end
 
       it "shows an error when there are no javascripts configured" do
         @suite = proc{ |s| s.javascripts = [] }
         expect{ subject }.to raise_error(
-            Teaspoon::FrameworkUnspecified,
-            "Expected a framework to be configured using `suite.use_framework`."
-          )
+          Teaspoon::FrameworkUnspecified,
+          "Expected a framework to be configured using `suite.use_framework`."
+        )
       end
 
     end

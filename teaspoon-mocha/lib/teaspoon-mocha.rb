@@ -7,7 +7,11 @@ module Teaspoon
       # specify the framework name
       framework_name :mocha
 
-      # register available versions
+      # register developer versions
+      register_version "1.10.0-dev", "mocha/1.10.0.js", "teaspoon/mocha.js"
+      register_version "1.17.1-dev", "mocha/1.17.1.js", "teaspoon/mocha.js"
+
+      # register standard versions
       register_version "1.10.0", "mocha/1.10.0.js", "teaspoon-mocha.js"
       register_version "1.17.1", "mocha/1.17.1.js", "teaspoon-mocha.js"
 

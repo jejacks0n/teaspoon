@@ -7,7 +7,11 @@ module Teaspoon
       # specify the framework name
       framework_name :jasmine
 
-      # register available versions
+      # register developer versions
+      register_version "1.3.1-dev", "jasmine/1.3.1.js", "teaspoon/jasmine1.js"
+      register_version "2.2.0-dev", "jasmine/2.2.0.js", "teaspoon/jasmine2.js"
+
+      # register standard versions
       register_version "1.3.1", "jasmine/1.3.1.js", "teaspoon-jasmine1.js"
       register_version "2.2.0", "jasmine/2.2.0.js", "teaspoon-jasmine2.js"
 

@@ -40,7 +40,7 @@ Teaspoon.configure do |config|
     # Note: If no version is specified, the latest is assumed.
     #
     # Versions: <%= framework.versions.join(', ') %>
-    suite.use_framework :<%= framework.name %>
+    suite.use_framework :<%= framework.name %>, <%= version.inspect %>
 
     # Specify a file matcher as a regular expression and all matching files will be loaded when the suite is run. These
     # files need to be within an asset path. You can add asset paths using the `config.asset_paths`.

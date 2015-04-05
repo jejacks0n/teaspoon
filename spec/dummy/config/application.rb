@@ -2,11 +2,18 @@ require File.expand_path('../boot', __FILE__)
 
 require "action_controller/railtie"
 require "sprockets/railtie"
+begin
+  require "haml-rails"
+  require "coffee-rails"
+  require "sass-rails"
+  require "jquery-rails"
+rescue LoadError
+  # intentionally do nothing here, let the failure happen later.
+end
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
-require_relative "../../teaspoon_env"
 
 module Dummy
   class Application < Rails::Application
