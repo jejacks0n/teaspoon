@@ -1,3 +1,5 @@
+require 'teaspoon/exceptions'
+
 module Teaspoon
   module Generators
     class InstallGenerator < Rails::Generators::Base
@@ -9,33 +11,43 @@ module Teaspoon
                    type: :string,
                    aliases: "-t",
                    default: Teaspoon.frameworks.keys.first,
-                   desc:    "Specify which test framework to use (Available: #{Teaspoon.frameworks.keys.join(', ')})"
+                   desc: "Specify which test framework to use (Available: #{Teaspoon.frameworks.keys.join(', ')})"
+
+      class_option :version,
+                   type: :string,
+                   aliases: "-v",
+                   default: nil,
+                   desc: "Specify the framework version to use (Depends on the framework)"
 
       class_option :coffee,
                    type: :boolean,
                    aliases: "-c",
                    default: false,
-                   desc:    "Generate a CoffeeScript spec helper instead of Javascript"
+                   desc: "Generate a CoffeeScript spec helper instead of Javascript"
 
       class_option :no_comments,
                    type: :boolean,
                    aliases: ["-q", "no-comments"],
                    default: false,
-                   desc:    "Install the teaspoon_env.rb without comments"
+                   desc: "Install the teaspoon_env.rb without comments"
 
       class_option :partials,
                    type: :boolean,
                    aliases: "-p",
                    default: false,
-                   desc:    "Copy the boot and body partials"
+                   desc: "Copy the boot and body partials"
 
-      def verify_framework
-        framework.present?
+      def verify_framework_and_version
+        version.present?
       rescue
         if Teaspoon.frameworks.length == 0
           readme "MISSING_FRAMEWORK"
         else
-          say_status "Unknown framework -- available #{Teaspoon.frameworks.keys.join(', ')}.", :red
+          message = "Unknown framework."
+          message << " #{options[:framework]}"
+          message << "[#{options[:version]}]" unless options[:version].nil?
+          message << "\n  Available frameworks:\n  #{described_frameworks}"
+          say_status message, :red
         end
         exit(1)
       end
@@ -66,9 +78,15 @@ module Teaspoon
 
       private
 
+      def described_frameworks
+        Teaspoon.frameworks.map { |name, klass| "#{name}: versions[#{klass.new(suite).versions.join(', ')}]" }
+      end
+
       def framework
         @framework ||= begin
-          framework = Teaspoon.frameworks[options[:framework].to_sym].new(suite)
+          klass = Teaspoon.frameworks[options[:framework].to_sym]
+          raise Teaspoon::UnknownFramework unless klass
+          framework = klass.new(suite)
           source_paths
           @source_paths = framework.template_paths + @source_paths
           framework
@@ -77,6 +95,20 @@ module Teaspoon
 
       def suite
         @suite ||= Teaspoon::Configuration::Suite.new
+      end
+
+      def version
+        @version ||= begin
+          if options[:version]
+            if framework.versions.include?(options[:version])
+              options[:version]
+            else
+              raise Teaspoon::UnknownFrameworkVersion
+            end
+          else
+            framework.versions.last
+          end
+        end
       end
     end
   end
