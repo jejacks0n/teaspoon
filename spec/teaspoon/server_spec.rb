@@ -3,15 +3,14 @@ require "teaspoon/server"
 require "net/http"
 
 describe Teaspoon::Server do
-
-  subject { Teaspoon::Server.new }
-
   describe "#start" do
-
     let(:server) { double(start: nil) }
 
     before do
-      allow(Thread).to receive(:new) { |&b| @block = b; "_thread_" }
+      allow(Thread).to receive(:new) do |&b|
+        @block = b
+        "_thread_"
+      end
       allow(subject).to receive(:wait_until_started).and_return(nil)
     end
 
@@ -62,11 +61,9 @@ describe Teaspoon::Server do
         "Server failed to start. You may need to increase the timeout configuration."
       )
     end
-
   end
 
   describe "#responsive?" do
-
     let(:socket) { double(close: nil) }
 
     it "checks a local port to see if a server is running" do
@@ -75,23 +72,19 @@ describe Teaspoon::Server do
       expect(socket).to receive(:close)
       subject.responsive?
     end
-
   end
 
   describe "#url" do
-
     it "returns a url for the server that includes the port" do
       subject.port = 31337
       expect(subject.url).to eq("http://127.0.0.1:31337")
     end
-
   end
 
   describe "integration" do
-
     before do
       suite_config = proc { |c| c.javascripts = ["foo"] }
-      allow(Teaspoon.configuration).to receive(:suite_configs).and_return("foo" => {block: suite_config})
+      allow(Teaspoon.configuration).to receive(:suite_configs).and_return("foo" => { block: suite_config })
       allow(Teaspoon.configuration).to receive(:suppress_log).and_return(true)
     end
 
@@ -100,7 +93,5 @@ describe Teaspoon::Server do
       response = Net::HTTP.get_response(URI.parse("#{subject.url}/teaspoon/foo"))
       expect(response.code).to eq("200")
     end
-
   end
-
 end

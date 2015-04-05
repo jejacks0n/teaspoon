@@ -1,8 +1,7 @@
 begin
   require "selenium-webdriver"
 rescue LoadError
-  STDOUT.print("Could not find Selenium Webdriver. Install the selenium-webdriver gem.\n")
-  exit(1)
+  Teaspoon.abort("Could not find Selenium Webdriver. Install the selenium-webdriver gem.", 1)
 end
 
 module Teaspoon

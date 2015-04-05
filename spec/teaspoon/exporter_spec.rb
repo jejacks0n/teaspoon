@@ -2,11 +2,9 @@ require "spec_helper"
 require "teaspoon/exporter"
 
 describe Teaspoon::Exporter do
-
-  subject { Teaspoon::Exporter.new(:suite_name, "http://666.420.42.0:31337/url/to/teaspoon", "_output_path_") }
+  subject { described_class.new(:suite_name, "http://666.420.42.0:31337/url/to/teaspoon", "_output_path_") }
 
   describe "#initialize" do
-
     it "assigns @suite and @url" do
       expect(subject.instance_variable_get(:@suite)).to eq(:suite_name)
       expect(subject.instance_variable_get(:@url)).to eq("http://666.420.42.0:31337/url/to/teaspoon")
@@ -16,11 +14,9 @@ describe Teaspoon::Exporter do
       expected = File.join(File.expand_path("_output_path_"), "suite_name")
       expect(subject.instance_variable_get(:@output_path)).to eq(expected)
     end
-
   end
 
   describe "#export" do
-
     before do
       expect(Dir).to receive(:mktmpdir).and_yield("_temp_path_")
       allow(subject).to receive(:executable).and_return("/path/to/executable")
@@ -33,15 +29,16 @@ describe Teaspoon::Exporter do
     end
 
     it "executes the wget call and creates the export" do
-      `(exit 0)`
+      stub_exit_code(ExitCodes::SUCCESS)
       expect(Dir).to receive(:chdir).with("_temp_path_").and_yield
-      expect(subject).to receive(:`).with("/path/to/executable --convert-links --adjust-extension --page-requisites --span-hosts http://666.420.42.0:31337/url/to/teaspoon 2>&1")
+      opts = "--convert-links --adjust-extension --page-requisites --span-hosts"
+      expect(subject).to receive(:`).with("/path/to/executable #{opts} http://666.420.42.0:31337/url/to/teaspoon 2>&1")
       expect(subject).to receive(:create_export).with("_temp_path_/666.420.42.0:31337")
       subject.export
     end
 
     it "raises a Teaspoon::ExporterException if the command failed for some reason" do
-      `(exit 1)`
+      stub_exit_code(ExitCodes::EXCEPTION)
       expect(Dir).to receive(:chdir).with("_temp_path_").and_yield
       expect { subject.export }.to raise_error Teaspoon::ExporterException, "Unable to export suite_name suite."
     end
@@ -54,9 +51,8 @@ describe Teaspoon::Exporter do
     end
 
     describe "creating the export" do
-
       before do
-        `(exit 0)`
+        stub_exit_code(ExitCodes::SUCCESS)
         expect(Dir).to receive(:chdir).with("_temp_path_").and_yield
         expect(Dir).to receive(:chdir).with("_temp_path_/666.420.42.0:31337").and_yield
 
@@ -68,14 +64,16 @@ describe Teaspoon::Exporter do
       end
 
       it "updates the relative paths" do
-        expect(File).to receive(:read).with(".#{Teaspoon.configuration.mount_at}/suite_name.html").and_return('"../../path/to/asset')
+        expect(File).to receive(:read).with(".#{Teaspoon.configuration.mount_at}/suite_name.html").
+          and_return('"../../path/to/asset')
         expect(File).to receive(:write).with("index.html", '"../path/to/asset')
         subject.export
       end
 
       it "cleans up the old files" do
         allow(subject).to receive(:move_output)
-        expect(Dir).to receive(:[]).once.with("{.#{Teaspoon.configuration.mount_at},robots.txt.html}").and_return(["./teaspoon", "robots.txt.html"])
+        expect(Dir).to receive(:[]).once.with("{.#{Teaspoon.configuration.mount_at},robots.txt.html}").
+          and_return(["./teaspoon", "robots.txt.html"])
         expect(FileUtils).to receive(:rm_r).with(["./teaspoon", "robots.txt.html"])
         subject.export
       end
@@ -88,9 +86,6 @@ describe Teaspoon::Exporter do
         expect(FileUtils).to receive(:mv).with(["1", "2"], output_path, force: true)
         subject.export
       end
-
     end
-
   end
-
 end

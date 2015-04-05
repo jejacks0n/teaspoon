@@ -1,15 +1,13 @@
 require "spec_helper"
 
 describe Teaspoon::Suite do
-
-  let(:suite_config) { {block: proc { |c| c.javascripts = ['foo'] }} }
+  let(:suite_config) { { block: proc { |c| c.javascripts = ["foo"] } } }
 
   before do
     allow(Teaspoon.configuration).to receive(:suite_configs).and_return("default" => suite_config)
   end
 
   describe ".all" do
-
     before do
       Teaspoon::Suite.instance_variable_set(:@all, nil)
       suites = { "default" => suite_config, "foo" => suite_config }
@@ -23,11 +21,9 @@ describe Teaspoon::Suite do
       expect(result.first.name).to eq("default")
       expect(result.last.name).to eq("foo")
     end
-
   end
 
   describe ".resolve_spec_for" do
-
     it "return a hash with the suite name and path" do
       result = Teaspoon::Suite.resolve_spec_for("fixture_spec")
       expect(result[:suite]).to eq("default")
@@ -44,11 +40,9 @@ describe Teaspoon::Suite do
     it "returns false if the spec wasn't found" do
       expect(Teaspoon::Suite.resolve_spec_for("foo")).to be_falsey
     end
-
   end
 
   describe "#initialize" do
-
     it "uses default suite configuration" do
       expect(subject.name).to eq("default")
       expect(subject.config.helper).to eq("spec_helper")
@@ -61,11 +55,9 @@ describe Teaspoon::Suite do
       expect(subject.name).to eql("test")
       expect(subject.config.helper).to eq("helper_file")
     end
-
   end
 
   describe "#spec_files" do
-
     it "returns an array of hashes with the filename and the asset name" do
       file = Teaspoon::Engine.root.join("spec/javascripts/teaspoon/base/reporters/console_spec.js").to_s
       expect(subject).to receive(:glob).and_return([file])
@@ -76,11 +68,9 @@ describe Teaspoon::Suite do
       expect(subject).to receive(:glob).and_return(["/foo"])
       expect { subject.spec_files[0] }.to raise_error Teaspoon::AssetNotServable
     end
-
   end
 
   describe "#spec_assets" do
-
     it "returns an array of assets" do
       result = subject.spec_assets
       expect(result).to include("spec_helper.js?body=1")
@@ -107,20 +97,16 @@ describe Teaspoon::Suite do
       result = subject.spec_assets(true)
       expect(result.any? { |file| file =~ /body=1/ }).to eq(false)
     end
-
   end
 
   describe "#include_spec?" do
-
     it "returns true if the spec was found in the suite" do
       files = subject.send(:glob)
       expect(subject.include_spec?(files.first)).to eq(true)
     end
-
   end
 
   describe "#include_spec_for?" do
-
     it "returns the spec if an exact match was found" do
       files = subject.send(:glob)
       expect(subject.include_spec_for?(files.first)).to eq(files.first)
@@ -134,7 +120,5 @@ describe Teaspoon::Suite do
     it "returns false if a matching spec isn't found" do
       expect(subject.include_spec_for?("_not_a_match_")).to eq(false)
     end
-
   end
-
 end

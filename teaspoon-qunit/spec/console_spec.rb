@@ -36,7 +36,7 @@ feature "Running in the console", shell: true do
   end
 
   let(:version) do
-    Teaspoon.frameworks[:qunit]._versions.keys.select{ |k| k =~ /-dev$/ }.last
+    Teaspoon.frameworks[:qunit]._versions.keys.select { |k| k =~ /-dev$/ }.last
   end
 
   before do

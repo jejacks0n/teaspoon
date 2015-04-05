@@ -10,7 +10,7 @@ module Teaspoon
 
       @server = start_server
     rescue Teaspoon::ServerException => e
-      abort(e.message)
+      Teaspoon.abort(e.message, 1)
     end
 
     def options
@@ -31,7 +31,7 @@ module Teaspoon
       log(e.message)
       false
     rescue Teaspoon::Error => e
-      abort(e.message)
+      Teaspoon.abort(e.message, 1)
     end
 
     def execute_without_handling(execute_options = {})
@@ -118,13 +118,8 @@ module Teaspoon
       "#{parts.join('&')}" if parts.present?
     end
 
-    def log(str, force = false)
-      STDOUT.print("#{str}\n") if force || !Teaspoon.configuration.suppress_log
-    end
-
-    def abort(message = nil)
-      log(message, true) if message
-      exit(1)
+    def log(str)
+      STDOUT.print("#{str}\n") unless Teaspoon.configuration.suppress_log
     end
   end
 end

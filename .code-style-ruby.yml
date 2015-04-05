@@ -1,6 +1,8 @@
 AllCops:
   Exclude:
-    - spec/**/*
+    - spec/dummy/bin/**/*
+    - spec/dummy/config/**/*
+    - spec/dummy/Rakefile
     - tmp/**/*
 
 LineLength:

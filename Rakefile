@@ -24,7 +24,7 @@ load "rspec/rails/tasks/rspec.rake"
 namespace :spec do
   desc "Run the unit code examples"
   RSpec::Core::RakeTask.new(:unit) do |t|
-    file_list = FileList['spec/**/*_spec.rb']
+    file_list = FileList["spec/**/*_spec.rb"]
     %w(features).each do |exclude|
       file_list = file_list.exclude("spec/#{exclude}/**/*_spec.rb")
     end
@@ -61,9 +61,9 @@ task teaspoon: "app:teaspoon"
 #     task javascripts: :environment do
 #       env = Rails.application.assets
 #
-#       %w(teaspoon/jasmine.js teaspoon/jasmine2.js teaspoon/mocha.js teaspoon/qunit.js teaspoon/teaspoon.js).each do |path|
-#         asset = env.find_asset(path)
-#         asset.write_to(Teaspoon::Engine.root.join("app/assets/javascripts/#{path.gsub(/\//, '-')}"))
+#       %w(jasmine1.js jasmine2.js mocha.js qunit.js teaspoon.js).each do |path|
+#         asset = env.find_asset("teaspoon/"#{path}"")
+#         asset.write_to(Teaspoon::Engine.root.join("app/assets/javascripts/teaspoon-#{path}"))
 #       end
 #     end
 #   end

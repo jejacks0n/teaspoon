@@ -1,4 +1,4 @@
-require 'teaspoon/exceptions'
+require "teaspoon/exceptions"
 
 module Teaspoon
   module Generators
@@ -43,10 +43,8 @@ module Teaspoon
         if Teaspoon.frameworks.length == 0
           readme "MISSING_FRAMEWORK"
         else
-          message = "Unknown framework."
-          message << " #{options[:framework]}"
-          message << "[#{options[:version]}]" unless options[:version].nil?
-          message << "\n  Available frameworks:\n  #{described_frameworks}"
+          message = "Unknown framework: #{options[:framework]}#{options[:version].nil? ? "[#{options[:version]}]" : ''}"
+          message << "\n  Available: #{described_frameworks.join("\n             ")}"
           say_status message, :red
         end
         exit(1)
@@ -79,7 +77,9 @@ module Teaspoon
       private
 
       def described_frameworks
-        Teaspoon.frameworks.map { |name, klass| "#{name}: versions[#{klass.new(suite).versions.join(', ')}]" }
+        Teaspoon.frameworks.map do |name, klass|
+          "#{name}: versions[#{klass.new(suite).versions.join(', ')}]"
+        end
       end
 
       def framework

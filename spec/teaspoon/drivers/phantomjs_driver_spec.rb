@@ -1,9 +1,7 @@
 require "spec_helper"
 
 describe Teaspoon::Drivers::PhantomjsDriver do
-
   describe "#initialize" do
-
     it "assigns @options" do
       subject = Teaspoon::Drivers::PhantomjsDriver.new(foo: "bar")
       expect(subject.instance_variable_get(:@options)).to eq(["--foo=bar"])
@@ -22,13 +20,10 @@ describe Teaspoon::Drivers::PhantomjsDriver do
     it "raises a Teaspoon::UnknownDriverOptions exception if the options aren't understood" do
       expect { Teaspoon::Drivers::PhantomjsDriver.new(true) }.to raise_error(Teaspoon::UnknownDriverOptions)
     end
-
   end
 
   describe "#run_specs" do
-
     context "with phantomjs" do
-
       let(:runner) { double }
 
       before do
@@ -40,7 +35,7 @@ describe Teaspoon::Drivers::PhantomjsDriver do
         args = [
           "--foo",
           "--bar",
-          %{"#{Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.js").to_s}"},
+          Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.js").to_s.inspect,
           '"_url_"',
           180]
         expect(runner).to receive(:process).with("_line_")
@@ -49,18 +44,13 @@ describe Teaspoon::Drivers::PhantomjsDriver do
         subject.run_specs(runner, "_url_")
         @block.call("_line_")
       end
-
     end
 
     context "without phantomjs" do
-
       it "raises a MissingDependency exception" do
         expect(subject).to receive(:which).and_return(nil)
         expect { subject.run_specs(:default, "_url_") }.to raise_error Teaspoon::MissingDependency
       end
-
     end
-
   end
-
 end

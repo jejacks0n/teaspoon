@@ -1,60 +1,7 @@
 require "spec_helper"
 
-describe Teaspoon do
-
-  subject { Teaspoon }
-
-  it "has a configuration property" do
-    expect(subject.configuration).to be(Teaspoon::Configuration)
-  end
-
-  describe ".configure" do
-
-    it "yields configuration" do
-      config = nil
-      subject.configure { |c| config = c }
-      expect(config).to be(Teaspoon::Configuration)
-    end
-
-    it "sets configured to true" do
-      subject.configured = false
-      subject.configure { }
-      expect(subject.configured).to be_truthy
-    end
-
-    it "overrides configuration from ENV" do
-      expect(subject.configuration).to receive(:override_from_env).with(ENV)
-      subject.configure { }
-    end
-
-  end
-
-  describe ".setup" do
-
-    it "calls configure" do
-      block = proc{}
-      expect(subject).to receive(:configure).with(no_args) { |&arg| expect(arg).to eq(block) }
-      subject.setup(&block)
-    end
-
-  end
-
-  describe ".register_framework" do
-
-    it "keeps track of the registered frameworks" do
-      foo = Class.new(Teaspoon::Framework) { framework_name :foo }
-      subject.register_framework(foo)
-      expect(subject.frameworks[:foo]).to eq(foo)
-    end
-
-  end
-
-end
-
-
 describe Teaspoon::Configuration do
-
-  subject { Teaspoon::Configuration }
+  subject { described_class }
 
   before do
     @orig_root = subject.root
@@ -73,7 +20,7 @@ describe Teaspoon::Configuration do
 
   it "has the default configuration" do
     expect(subject.mount_at).to eq("/teaspoon")
-    expect(subject.root).to eq(Rails.root.join('..', '..'))
+    expect(subject.root).to eq(Rails.root.join("..", ".."))
     expect(subject.asset_paths).to include("spec/javascripts")
     expect(subject.asset_paths).to include("spec/javascripts/stylesheets")
     expect(subject.fixture_paths).to eq(["spec/javascripts/fixtures", "test/javascripts/fixtures"])
@@ -84,7 +31,7 @@ describe Teaspoon::Configuration do
     expect(subject.server).to be_nil
     expect(subject.server_port).to be_nil
     expect(subject.server_timeout).to eq(20)
-    expect(subject.formatters).to eq(['dot'])
+    expect(subject.formatters).to eq(["dot"])
     expect(subject.use_coverage).to be_nil
     expect(subject.fail_fast).to be_truthy
     expect(subject.suppress_log).to be_falsey
@@ -102,28 +49,25 @@ describe Teaspoon::Configuration do
   end
 
   it "allows defining suite configurations" do
-    subject.suite(:test_suite) { }
+    subject.suite(:test_suite) {}
     expect(subject.suite_configs["test_suite"][:block]).to be_a(Proc)
     expect(subject.suite_configs["test_suite"][:instance]).to be_a(Teaspoon::Configuration::Suite)
   end
 
   it "allows defining coverage configurations" do
-    subject.coverage(:test_coverage) { }
+    subject.coverage(:test_coverage) {}
     expect(subject.coverage_configs["test_coverage"][:block]).to be_a(Proc)
     expect(subject.coverage_configs["test_coverage"][:instance]).to be_a(Teaspoon::Configuration::Coverage)
   end
 
   describe ".root=" do
-
     it "forces the path provided into a Pathname" do
       subject.root = "/path"
       expect(subject.root).to be_a(Pathname)
     end
-
   end
 
   describe ".formatters" do
-
     it "returns the default dot formatter if nothing was set" do
       expect(subject.formatters).to eq(["dot"])
     end
@@ -132,11 +76,9 @@ describe Teaspoon::Configuration do
       subject.formatters = "dot,swayze_or_oprah"
       expect(subject.formatters).to eq(["dot", "swayze_or_oprah"])
     end
-
   end
 
   describe ".override_from_options" do
-
     it "allows overriding from options" do
       expect(subject).to receive(:fail_fast=).with(true)
       expect(subject).to receive(:driver_timeout=).with(123)
@@ -144,11 +86,9 @@ describe Teaspoon::Configuration do
 
       subject.send(:override_from_options, fail_fast: true, driver_timeout: 123, driver: "driver")
     end
-
   end
 
   describe ".override_from_env" do
-
     it "allows overriding from the env" do
       expect(subject).to receive(:fail_fast=).with(true)
       expect(subject).to receive(:driver_timeout=).with(123)
@@ -156,20 +96,15 @@ describe Teaspoon::Configuration do
 
       subject.send(:override_from_env, "FAIL_FAST" => "true", "DRIVER_TIMEOUT" => "123", "DRIVER" => "driver")
     end
-
   end
-
 end
 
-
 describe Teaspoon::Configuration::Suite do
-
-  subject { Teaspoon::Configuration::Suite.new &(@suite || proc{}) }
+  subject { described_class.new &(@suite || proc {}) }
 
   it "has the default configuration" do
-    expect(subject.matcher).to eq(
-      "{spec/javascripts,spec/dummy/app/assets/javascripts/specs}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}"
-    )
+    roots = "spec/javascripts,spec/dummy/app/assets/javascripts/specs"
+    expect(subject.matcher).to eq("{#{roots}}/**/*_spec.{js,js.coffee,coffee,js.coffee.erb}")
     expect(subject.helper).to eq("spec_helper")
     expect(subject.javascripts).to eq(["jasmine/1.3.1", "teaspoon/jasmine1"])
     expect(subject.stylesheets).to eq(["teaspoon"])
@@ -180,67 +115,60 @@ describe Teaspoon::Configuration::Suite do
   end
 
   it "accepts a block that can override defaults" do
-    @suite = proc{ |s| s.helper = "helper_file" }
+    @suite = proc { |s| s.helper = "helper_file" }
     expect(subject.helper).to eq("helper_file")
   end
 
   it "allows registering hooks" do
     expect(subject.hooks).to eq({})
     subject.hook {}
-    expect(subject.hooks['default'].length).to eq(1)
+    expect(subject.hooks["default"].length).to eq(1)
   end
 
   describe "specifying a framework" do
-
     it "allows specifying mocha with a version" do
-      @suite = proc{ |s| s.use_framework :mocha, "1.10.0" }
+      @suite = proc { |s| s.use_framework :mocha, "1.10.0" }
       expect(subject.javascripts).to eq(["mocha/1.10.0.js", "teaspoon-mocha.js"])
     end
 
     it "handles qunit specifically to set matcher and helper" do
-      @suite = proc{ |s| s.use_framework :qunit }
+      @suite = proc { |s| s.use_framework :qunit }
       expect(subject.javascripts).to eq(["qunit/1.14.0.js", "teaspoon-qunit.js"])
       expect(subject.matcher).to eq("{test/javascripts,app/assets}/**/*_test.{js,js.coffee,coffee}")
       expect(subject.helper).to eq("test_helper")
     end
 
     describe "exceptions" do
-
       it "shows an error for unknown frameworks" do
         allow(Teaspoon).to receive(:frameworks).and_return({})
-        @suite = proc{ |s| s.use_framework :foo }
-        expect{ subject }.to raise_error(
+        @suite = proc { |s| s.use_framework :foo }
+        expect { subject }.to raise_error(
           Teaspoon::UnknownFramework,
           "Unknown framework. \"foo\" has not yet been registered."
         )
       end
 
       it "shows an error for unknown versions" do
-        @suite = proc{ |s| s.use_framework :qunit, "6.6.6" }
-        expect{ subject }.to raise_error(
+        @suite = proc { |s| s.use_framework :qunit, "6.6.6" }
+        expect { subject }.to raise_error(
           Teaspoon::UnknownFrameworkVersion,
           "Unknown framework. \"qunit[6.6.6]\" -- available 1.12.0-dev, 1.14.0-dev, 1.12.0, 1.14.0."
         )
       end
 
       it "shows an error when there are no javascripts configured" do
-        @suite = proc{ |s| s.javascripts = [] }
-        expect{ subject }.to raise_error(
+        @suite = proc { |s| s.javascripts = [] }
+        expect { subject }.to raise_error(
           Teaspoon::FrameworkUnspecified,
           "Expected a framework to be configured using `suite.use_framework`."
         )
       end
-
     end
-
   end
-
 end
 
-
 describe Teaspoon::Configuration::Coverage do
-
-  subject { Teaspoon::Configuration::Coverage.new &(@coverage || proc{}) }
+  subject { described_class.new &(@coverage || proc{}) }
 
   it "has the default configuration" do
     expect(subject.reports).to eq(["text-summary"])
@@ -252,8 +180,7 @@ describe Teaspoon::Configuration::Coverage do
   end
 
   it "accepts a block that can override defaults" do
-    @coverage = proc{ |s| s.reports = "report_format" }
+    @coverage = proc { |s| s.reports = "report_format" }
     expect(subject.reports).to eq("report_format")
   end
-
 end

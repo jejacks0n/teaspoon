@@ -4,8 +4,7 @@ require "spec_helper"
 require "rack/test"
 
 describe Teaspoon::Instrumentation do
-
-  subject { Teaspoon::Instrumentation }
+  subject { described_class }
 
   let(:asset) { double(source: source, pathname: "path/to/instrument.js") }
   let(:source) { "function add(a, b) { return a + b } // ☃ " }
@@ -13,7 +12,6 @@ describe Teaspoon::Instrumentation do
   let(:env) { { "QUERY_STRING" => "instrument=true" } }
 
   describe ".add_to" do
-
     before do
       allow(Teaspoon::Instrumentation).to receive(:executable).and_return("/path/to/istanbul")
     end
@@ -51,18 +49,16 @@ describe Teaspoon::Instrumentation do
     end
 
     it "raises an exception if istanbul fails" do
-      `(exit 1)`
+      stub_exit_code(ExitCodes::EXCEPTION)
       allow_any_instance_of(subject).to receive(:`)
       allow_any_instance_of(subject).to receive(:instrument).and_call_original
       expect { subject.add_to(response, env) }.to raise_error(
         Teaspoon::DependencyFailure, "Could not generate instrumentation for instrument.js."
       )
     end
-
   end
 
   describe ".add?" do
-
     before do
       allow(Teaspoon::Instrumentation).to receive(:executable).and_return("/path/to/istanbul")
     end
@@ -93,11 +89,9 @@ describe Teaspoon::Instrumentation do
     it "doesn't if there's no asset" do
       expect(subject.add?([404, { "Content-Type" => "application/javascript" }, []], env)).to_not be(true)
     end
-
   end
 
   describe "integration" do
-
     let(:asset) { Rails.application.assets.find_asset("support/instrumented.coffee") }
 
     it "instruments a file" do
@@ -107,7 +101,5 @@ describe Teaspoon::Instrumentation do
       expect(headers).to include("Content-Type" => "application/javascript")
       expect(asset.source).to match(/var __cov_.+ = \(Function\('return this'\)\)\(\);/)
     end
-
   end
-
 end

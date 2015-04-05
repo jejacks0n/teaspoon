@@ -18,7 +18,7 @@ module Teaspoon
       require "teaspoon/exporter"
 
       Teaspoon.configuration.override_from_options(options)
-      Teaspoon::ExceptionHandling.add_rails_handling
+      Teaspoon::Engine::ExceptionHandling.add_rails_handling
     end
 
     def self.require_environment(override = nil)

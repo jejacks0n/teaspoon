@@ -10,9 +10,9 @@ module Teaspoon
       @options[:files] = opt_parser.parse!
 
       require_console
-      abort if Teaspoon::Console.new(@options).failures?
+      Teaspoon.abort if Teaspoon::Console.new(@options).failures?
     rescue Teaspoon::EnvironmentNotFound => e
-      abort("#{e.message}\nConsider using -r path/to/teaspoon_env\n")
+      Teaspoon.abort("#{e.message}\nConsider using -r path/to/teaspoon_env")
     end
 
     def opt_parser
@@ -104,13 +104,11 @@ module Teaspoon
       separator("Utility")
 
       @parser.on "-v", "--version", "Display the version." do
-        STDOUT.print("#{Teaspoon::VERSION}\n")
-        exit
+        Teaspoon.abort(Teaspoon::VERSION)
       end
 
       @parser.on "-h", "--help", "You're looking at it." do
-        STDOUT.print("#{@parser}\n")
-        exit
+        Teaspoon.abort(@parser)
       end
     end
 
@@ -126,11 +124,6 @@ module Teaspoon
 
     def require_console
       require "teaspoon/console"
-    end
-
-    def abort(message = nil)
-      STDOUT.print(message) if message
-      exit(1)
     end
   end
 end

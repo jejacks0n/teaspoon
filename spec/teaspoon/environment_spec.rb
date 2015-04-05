@@ -2,48 +2,43 @@ require "spec_helper"
 require "teaspoon/environment"
 
 describe Teaspoon::Environment do
-
-  subject { Teaspoon::Environment }
+  subject { described_class }
 
   describe ".load" do
-
     it "calls require_environment" do
       expect(subject).to receive(:require_environment)
       expect(subject).to receive(:rails_loaded?).and_return(true)
-      Teaspoon::Environment.load
+      described_class.load
     end
 
     it "raises if Rails can't be found" do
       expect(subject).to receive(:require_environment)
       expect(subject).to receive(:rails_loaded?).and_return(false)
-      expect{ Teaspoon::Environment.load }.to raise_error("Rails environment not found.")
+      expect { described_class.load }.to raise_error("Rails environment not found.")
     end
 
     it "configures teaspoon from options if the environment is ready" do
       expect(subject).to receive(:rails_loaded?).and_return(true)
       expect(Teaspoon.configuration).to receive(:override_from_options).with(foo: "bar")
-      Teaspoon::Environment.load(foo: "bar")
+      described_class.load(foo: "bar")
     end
-
   end
 
   describe ".require_environment" do
-
     before do
       allow(File).to receive(:exists?)
       allow(subject).to receive(:require_env)
       Teaspoon.configured = false
-      @orig_teaspoon_env = ENV['TEASPOON_ENV']
-      ENV['TEASPOON_ENV'] = nil
+      @orig_teaspoon_env = ENV["TEASPOON_ENV"]
+      ENV["TEASPOON_ENV"] = nil
     end
 
     after do
       Teaspoon.configured = true
-      ENV['TEASPOON_ENV'] = @orig_teaspoon_env
+      ENV["TEASPOON_ENV"] = @orig_teaspoon_env
     end
 
     describe "when loading with an override" do
-
       before do
         expect(subject).to receive(:require_env).and_call_original
       end
@@ -60,11 +55,9 @@ describe Teaspoon::Environment do
         subject.require_environment("../../_override_file_")
         expect(ENV["TEASPOON_ENV"]).to eq(expanded)
       end
-
     end
 
     describe "when loading from defaults" do
-
       it "looks for the standard files" do
         expect(File).to receive(:exists?).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd)).and_return(true)
         expect(subject).to receive(:require_env).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd))
@@ -83,23 +76,18 @@ describe Teaspoon::Environment do
       end
 
       it "raises if no env file was found" do
-        expect{ subject.require_environment }.to raise_error(Teaspoon::EnvironmentNotFound)
+        expect { subject.require_environment }.to raise_error(Teaspoon::EnvironmentNotFound)
       end
-
     end
-
   end
 
   describe ".standard_environments" do
-
     it "returns an array" do
       expect(subject.standard_environments).to eql(["spec/teaspoon_env.rb", "test/teaspoon_env.rb", "teaspoon_env.rb"])
     end
-
   end
 
   describe ".require_environment_from_engine?" do
-
     it "returns true if not run from within the console" do
       allow(subject).to receive(:console?).and_return(false)
       expect(subject.require_environment_from_engine?).to eql(true)
@@ -109,15 +97,11 @@ describe Teaspoon::Environment do
       allow(subject).to receive(:console?).and_return(true)
       expect(subject.require_environment_from_engine?).to eql(false)
     end
-
   end
 
   describe ".rails_loaded?" do
-
     it "returns a boolean based on if Rails is defined" do
       expect(subject.send(:rails_loaded?)).to eql(true)
     end
-
   end
-
 end

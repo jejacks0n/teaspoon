@@ -19,7 +19,8 @@ module Teaspoon
     cattr_accessor :mount_at, :root, :asset_paths, :fixture_paths, :asset_manifest
     @@mount_at       = "/teaspoon"
     @@root           = nil # will default to Rails.root
-    @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets", "test/javascripts", "test/javascripts/stylesheets"]
+    @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets",
+                        "test/javascripts", "test/javascripts/stylesheets"]
     @@fixture_paths  = ["spec/javascripts/fixtures", "test/javascripts/fixtures"]
     @@asset_manifest = ["teaspoon.css", "teaspoon-filterer.js", "teaspoon/*.js", "support/*.js"]
 

@@ -22,7 +22,7 @@ describe "Calling hooks" do
   end
 
   it "allows providing params" do
-    post("/teaspoon/default/with_params", { args: { message: "_teaspoon_hook_" } })
+    post("/teaspoon/default/with_params", args: { message: "_teaspoon_hook_" })
     expect(@expected).to eq('with_params: {"message":"_teaspoon_hook_"}')
   end
 end

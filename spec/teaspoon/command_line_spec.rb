@@ -8,19 +8,17 @@ module Kernel
     $VERBOSE = nil
     result = yield
     $VERBOSE = original_verbosity
-    return result
+    result
   end
 end
 
 describe Teaspoon::CommandLine do
-
-  subject { Teaspoon::CommandLine }
+  subject { described_class }
 
   let(:console) { double(failures?: false) }
   let(:parser) { double(parse!: ["file1", "file2"]) }
 
   describe "#initialize" do
-
     before do
       allow(Teaspoon::Console).to receive(:new).and_return(console)
       allow_any_instance_of(subject).to receive(:abort)
@@ -33,7 +31,7 @@ describe Teaspoon::CommandLine do
 
     it "aborts with a message on Teaspoon::EnvironmentNotFound" do
       expect(Teaspoon::Console).to receive(:new).and_raise(Teaspoon::EnvironmentNotFound)
-      expect_any_instance_of(subject).to receive(:abort).with("Teaspoon::EnvironmentNotFound\nConsider using -r path/to/teaspoon_env\n")
+      expect(Teaspoon).to receive(:abort).with("Teaspoon::EnvironmentNotFound\nConsider using -r path/to/teaspoon_env")
       subject.new
     end
 
@@ -44,22 +42,19 @@ describe Teaspoon::CommandLine do
     end
 
     it "aborts if Teaspoon::Console fails" do
-      expect_any_instance_of(subject).to receive(:abort)
+      expect(Teaspoon).to receive(:abort)
       expect(console).to receive(:failures?).and_return(true)
       subject.new
     end
 
     it "logs a message and exits on abort" do
-      expect(STDOUT).to receive(:print).with("Teaspoon::EnvironmentNotFound\nConsider using -r path/to/teaspoon_env\n")
+      expect(Teaspoon).to receive(:abort).with("Teaspoon::EnvironmentNotFound\nConsider using -r path/to/teaspoon_env")
       expect(Teaspoon::Console).to receive(:new).and_raise(Teaspoon::EnvironmentNotFound)
-      expect_any_instance_of(subject).to receive(:abort).and_call_original
-      expect { subject.new }.to raise_error(SystemExit)
+      subject.new
     end
-
   end
 
   describe "opt_parser" do
-
     before do
       @log = ""
       allow(STDOUT).to receive(:print) { |s| @log << s }
@@ -98,7 +93,7 @@ describe Teaspoon::CommandLine do
           -c, --[no-]color                 Enable/Disable color output.
           -e, --export [OUTPUT_PATH]       Exports the test suite as the full HTML (requires wget).
           -f, --format FORMATTERS          Specify formatters (comma separated)
-                                           #{Teaspoon::Formatters.known_formatters.map(&:cli_help).join("\n" + (" " * 43))}
+                                           #{Teaspoon::Formatters.known_formatters.map(&:cli_help).join("\n" + (' ' * 43))}
 
         **** Coverage ****
 
@@ -151,7 +146,5 @@ describe Teaspoon::CommandLine do
         expect(subject.new.instance_variable_get(:@options)[k]).to eq(false)
       end
     end
-
   end
-
 end

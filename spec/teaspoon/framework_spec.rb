@@ -1,11 +1,9 @@
 require "spec_helper"
 
 describe Teaspoon::Framework do
-
   subject { Class.new(Teaspoon::Framework) }
 
   describe "registering versions" do
-
     before do
       subject.framework_name "framework"
       subject.register_version "1.0.0", "framework/1.0.0", "teaspoon-framework"
@@ -32,11 +30,9 @@ describe Teaspoon::Framework do
       dependencies = subject.new("_suite_config_").javascripts_for
       expect(dependencies).to eq(["framework/2.0.0", "teaspoon-framework"])
     end
-
   end
 
   describe "adding asset paths" do
-
     before do
       subject.add_asset_path "/foo/bar"
     end
@@ -48,11 +44,9 @@ describe Teaspoon::Framework do
       expect(asset_paths[0]).to eq("/foo/bar")
       expect(asset_paths[1]).to include("/teaspoon/spec/teaspoon/assets")
     end
-
   end
 
   describe "adding custom install templates" do
-
     before do
       subject.add_template_path "/foo/bar"
     end
@@ -64,11 +58,9 @@ describe Teaspoon::Framework do
       expect(template_paths[0]).to eq("/foo/bar")
       expect(template_paths[1]).to include("/teaspoon/spec/teaspoon/templates")
     end
-
   end
 
   describe "customizing the installation further" do
-
     it "has a default of 'spec'" do
       install_path = subject.new("_suite_config_").install_path
       expect(install_path).to eq("spec")
@@ -82,7 +74,5 @@ describe Teaspoon::Framework do
     end
 
     it "allows providing a block that will be called within the install generator"
-
   end
-
 end

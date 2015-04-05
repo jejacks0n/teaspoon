@@ -4,13 +4,11 @@ require "teaspoon/exceptions"
 require "teaspoon/coverage"
 
 describe Teaspoon::Runner do
-
   before do
     allow(Teaspoon.configuration).to receive(:formatters).and_return([])
   end
 
   describe "#initialize" do
-
     it "sets @suite_name and @failure_count" do
       subject = Teaspoon::Runner.new(:foo)
       expect(subject.instance_variable_get(:@suite_name)).to eq(:foo)
@@ -30,11 +28,9 @@ describe Teaspoon::Runner do
       allow(Teaspoon.configuration).to receive(:formatters).and_return(["bar"])
       expect { Teaspoon::Runner.new(:foo) }.to raise_error Teaspoon::UnknownFormatter, "Unknown formatter: \"bar\""
     end
-
   end
 
   describe "#process" do
-
     let(:formatter) { double }
     let(:coverage) { double(generate_reports: nil, check_thresholds: nil) }
 
@@ -75,7 +71,6 @@ describe Teaspoon::Runner do
     end
 
     describe "with an exception" do
-
       it "notifies itself, and raises Teaspoon::RunnerException" do
         expect(subject).to receive(:on_exception).and_call_original
         expect { subject.process('{"_teaspoon":true,"type":"exception","message":"_message_"}') }.to raise_error(
@@ -83,11 +78,9 @@ describe Teaspoon::Runner do
           "_message_"
         )
       end
-
     end
 
     describe "with a result" do
-
       before do
         allow(Teaspoon::Coverage).to receive(:new).and_return(coverage)
       end
@@ -108,9 +101,6 @@ describe Teaspoon::Runner do
         subject.process('{"_teaspoon":true,"type":"result","coverage":"_coverage_"}')
         expect(subject.failure_count).to eq(1)
       end
-
     end
-
   end
-
 end

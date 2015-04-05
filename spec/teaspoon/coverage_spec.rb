@@ -2,9 +2,8 @@ require "spec_helper"
 require "teaspoon/coverage"
 
 describe Teaspoon::Coverage do
-
-  subject { Teaspoon::Coverage.new("_suite_", "default", data) }
-  let(:data) { {foo: "bar"} }
+  subject { described_class.new("_suite_", "default", data) }
+  let(:data) { { foo: "bar" } }
   let(:config) { double }
 
   before do
@@ -15,7 +14,6 @@ describe Teaspoon::Coverage do
   end
 
   describe "#initialize" do
-
     it "sets @suite_name" do
       expect(subject.instance_variable_get(:@suite_name)).to eq("_suite_")
     end
@@ -25,18 +23,16 @@ describe Teaspoon::Coverage do
     end
 
     it "gets the coverage configuration" do
-      expect_any_instance_of(Teaspoon::Coverage).to receive(:coverage_configuration).with("default")
-      Teaspoon::Coverage.new("_suite_", :default, data)
+      expect_any_instance_of(described_class).to receive(:coverage_configuration).with("default")
+      described_class.new("_suite_", :default, data)
     end
-
   end
 
   describe "#generate_reports" do
-
     let(:config) { double(reports: ["html", "text", "text-summary"], output_path: "output/path") }
 
     it "generates reports using istanbul and passes them to the block provided" do
-      `(exit 0)`
+      stub_exit_code(ExitCodes::SUCCESS)
       html_report = "/path/to/executable report --include=/temp_path/coverage.json --dir output/path/_suite_ html 2>&1"
       text1_report = "/path/to/executable report --include=/temp_path/coverage.json --dir output/path/_suite_ text 2>&1"
       text2_report = "/path/to/executable report --include=/temp_path/coverage.json --dir output/path/_suite_ text-summary 2>&1"
@@ -48,14 +44,12 @@ describe Teaspoon::Coverage do
     end
 
     it "raises a Teaspoon::DependencyFailure if the command doesn't exit cleanly" do
-      `(exit 1)`
+      stub_exit_code(ExitCodes::EXCEPTION)
       expect { subject.generate_reports }.to raise_error Teaspoon::DependencyFailure, "Could not generate coverage report for html"
     end
-
   end
 
   describe "#check_thresholds" do
-
     let(:config) { double(statements: 42, functions: 66.6, branches: 0, lines: 100) }
 
     it "does nothing if there are no threshold checks to make" do
@@ -65,7 +59,7 @@ describe Teaspoon::Coverage do
     end
 
     it "checks the coverage using istanbul and passes them to the block provided" do
-      `(exit 1)`
+      stub_exit_code(ExitCodes::EXCEPTION)
       check_coverage = "/path/to/executable check-coverage --statements=42 --functions=66.6 --branches=0 --lines=100 /temp_path/coverage.json 2>&1"
       expect(subject).to receive(:`).with(check_coverage).and_return("some mumbo jumbo\nERROR: _failure1_\nmore garbage\nERROR: _failure2_")
       subject.check_thresholds { |r| @result = r }
@@ -73,16 +67,14 @@ describe Teaspoon::Coverage do
     end
 
     it "doesn't call the callback if the exit status is 0" do
-      `(exit 0)`
+      stub_exit_code(ExitCodes::SUCCESS)
       expect(subject).to receive(:`).and_return("ERROR: _failure1_")
-      subject.check_thresholds { |r| @called = true }
+      subject.check_thresholds { @called = true }
       expect(@called).to be_falsey
     end
-
   end
 
   describe "integration" do
-
     let(:config) { double(reports: ["text", "text-summary"], output_path: "output/path") }
 
     before do
@@ -93,9 +85,9 @@ describe Teaspoon::Coverage do
       expect(subject).to receive(:`).and_call_original
 
       executable = Teaspoon::Instrumentation.executable
-      pending('needs istanbul to be installed') unless executable
+      pending("needs istanbul to be installed") unless executable
       subject.instance_variable_set(:@executable, executable)
-      subject.instance_variable_set(:@data, JSON.parse(IO.read(Teaspoon::Engine.root.join('spec/fixtures/coverage.json'))))
+      subject.instance_variable_set(:@data, JSON.parse(IO.read(Teaspoon::Engine.root.join("spec/fixtures/coverage.json"))))
     end
 
     it "generates coverage reports" do
@@ -112,7 +104,5 @@ describe Teaspoon::Coverage do
         -------------------------|-----------|-----------|-----------|-----------|
       RESULT
     end
-
   end
-
 end

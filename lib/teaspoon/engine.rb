@@ -10,7 +10,7 @@ module Teaspoon
       root to: "suite#index"
       match "/fixtures/*filename", to: "suite#fixtures", via: :get, as: "fixture"
       match "/:suite", to: "suite#show", via: :get, as: "suite", defaults: { suite: "default" }
-      match "/:suite/:hook", to: "suite#hook", via: :post, as: "suite_hook", defaults: { suite: "default", hook: "default" }
+      match "/:suite/:hook", to: "suite#hook", via: :post, defaults: { suite: "default", hook: "default" }
     end
 
     initializer :assets, group: :all do |app|
@@ -63,30 +63,30 @@ module Teaspoon
 
       app.routes.prepend { mount Teaspoon::Engine => mount_at, as: "teaspoon" }
     end
-  end
 
-  module ExceptionHandling
-    def self.add_rails_handling
-      return unless Teaspoon.configuration.driver == "phantomjs"
+    module ExceptionHandling
+      def self.add_rails_handling
+        return unless Teaspoon.configuration.driver == "phantomjs"
 
-      # debugging should be off to display errors in the suite_controller
-      # Rails.application.config.assets.debug = false
+        # debugging should be off to display errors in the suite_controller
+        # Rails.application.config.assets.debug = false
 
-      # we want rails to display exceptions
-      Rails.application.config.action_dispatch.show_exceptions = true
+        # we want rails to display exceptions
+        Rails.application.config.action_dispatch.show_exceptions = true
 
-      # override the render exception method in ActionDispatch to raise a javascript exception
-      render_exceptions_with_javascript
-    end
+        # override the render exception method in ActionDispatch to raise a javascript exception
+        render_exceptions_with_javascript
+      end
 
-    private
+      private
 
-    def self.render_exceptions_with_javascript
-      ActionDispatch::DebugExceptions.class_eval do
-        def render_exception(_env, exception)
-          message = "#{exception.class.name}: #{exception.message}"
-          body = "<script>throw Error(#{[message, exception.backtrace].join("\n").inspect})</script>"
-          [200, { "Content-Type" => "text/html;", "Content-Length" => body.bytesize.to_s }, [body]]
+      def self.render_exceptions_with_javascript
+        ActionDispatch::DebugExceptions.class_eval do
+          def render_exception(_env, exception)
+            message = "#{exception.class.name}: #{exception.message}"
+            body = "<script>throw Error(#{[message, exception.backtrace].join("\n").inspect})</script>"
+            [200, { "Content-Type" => "text/html;", "Content-Length" => body.bytesize.to_s }, [body]]
+          end
         end
       end
     end

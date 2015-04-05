@@ -1,21 +1,15 @@
 require "spec_helper"
 
 describe Teaspoon::Drivers::CapybaraWebkitDriver do
+  let(:runner) { double }
+  let(:document) { double(synchronize: nil) }
+  let(:session) { instance_double(Capybara::Session, visit: nil, evaluate_script: nil, document: document) }
+
+  before do
+    allow(Capybara::Session).to receive(:new).and_return(session)
+  end
 
   describe "#run_specs" do
-
-    let(:runner) { double }
-    let(:document) { double }
-    let(:session) { instance_double(Capybara::Session) }
-
-    before do
-      allow(subject).to receive(:session).and_return session
-      allow(session).to receive(:visit)
-      allow(session).to receive(:document).and_return(document)
-      allow(session).to receive(:evaluate_script)
-      allow(document).to receive(:synchronize).and_yield
-    end
-
     it "navigates to the correct url" do
       expect(session).to receive(:visit).with("_url_")
       subject.run_specs(runner, "_url_")
@@ -33,7 +27,5 @@ describe Teaspoon::Drivers::CapybaraWebkitDriver do
       expect(runner).to receive(:process).with("_line_\n")
       subject.run_specs(runner, "_url_")
     end
-
   end
-
 end

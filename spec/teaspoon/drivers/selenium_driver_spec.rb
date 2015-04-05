@@ -1,9 +1,15 @@
 require "spec_helper"
 
 describe Teaspoon::Drivers::SeleniumDriver do
+  let(:runner) { double }
+
+  before do
+    @driver = double(quit: nil, navigate: @navigate = double(to: nil), execute_script: nil)
+    allow(Selenium::WebDriver).to receive(:for).and_return(@driver)
+    allow(Selenium::WebDriver::Wait).to receive(:new).and_return(@wait = double(until: nil))
+  end
 
   describe "#initialize" do
-
     it "assigns @options" do
       subject = Teaspoon::Drivers::SeleniumDriver.new(foo: "bar")
       expect(subject.instance_variable_get(:@options)).to eq(foo: "bar")
@@ -21,19 +27,9 @@ describe Teaspoon::Drivers::SeleniumDriver do
     it "raises a Teaspoon::UnknownDriverOptions exception if the options aren't parseable" do
       expect { Teaspoon::Drivers::SeleniumDriver.new("{foo:bar}") }.to raise_error(Teaspoon::UnknownDriverOptions)
     end
-
   end
 
   describe "#run_specs" do
-
-    let(:runner) { double }
-
-    before do
-      @driver = double(quit: nil, navigate: @navigate = double(to: nil), execute_script: nil)
-      allow(Selenium::WebDriver).to receive(:for).and_return(@driver)
-      allow(Selenium::WebDriver::Wait).to receive(:new).and_return(@wait = double(until: nil))
-    end
-
     it "loads firefox for the webdriver" do
       expect(Selenium::WebDriver).to receive(:for).with(:firefox)
       subject.run_specs(runner, "_url_")
@@ -62,7 +58,5 @@ describe Teaspoon::Drivers::SeleniumDriver do
       subject.run_specs(runner, "_url_")
       @block.call
     end
-
   end
-
 end

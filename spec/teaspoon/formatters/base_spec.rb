@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe Teaspoon::Formatters::Base do
-
   let(:passing_spec) { double(passing?: true) }
   let(:pending_spec) { double(passing?: false, pending?: true) }
   let(:failing_spec) { double(passing?: false, pending?: false) }
@@ -13,7 +12,6 @@ describe Teaspoon::Formatters::Base do
   end
 
   describe "#initialize" do
-
     subject { Teaspoon::Formatters::Base.new(:foo, "_output_file_") }
 
     before do
@@ -41,11 +39,9 @@ describe Teaspoon::Formatters::Base do
       expect(File).to receive(:open).with("_output_file_", "w")
       subject
     end
-
   end
 
   describe "#runner" do
-
     let(:result) { double(total: 666) }
 
     it "sets @total_count" do
@@ -60,11 +56,9 @@ describe Teaspoon::Formatters::Base do
       expect(subject).to_not receive(:log_runner)
       subject.runner(result, false)
     end
-
   end
 
   describe "#suite" do
-
     it "sets @suite, and @last_suite to the result" do
       subject.suite(result)
       expect(subject.instance_variable_get(:@suite)).to eq(result)
@@ -78,11 +72,9 @@ describe Teaspoon::Formatters::Base do
       expect(subject).to_not receive(:log_suite)
       subject.suite(result, false)
     end
-
   end
 
   describe "#spec" do
-
     it "increments the run count" do
       subject.spec(failing_spec)
       expect(subject.run_count).to eq(1)
@@ -121,11 +113,9 @@ describe Teaspoon::Formatters::Base do
       subject.spec(failing_spec)
       expect(subject.instance_variable_get(:@stdout)).to eq("")
     end
-
   end
 
   describe "#error" do
-
     it "tracks the error" do
       subject.error(result)
       expect(subject.errors).to eq([result])
@@ -138,11 +128,9 @@ describe Teaspoon::Formatters::Base do
       expect(subject).to_not receive(:log_error)
       subject.error(result, false)
     end
-
   end
 
   describe "#exception" do
-
     it "calls #log_exception when appropriate" do
       expect(subject).to receive(:log_exception).with(result)
       subject.exception(result)
@@ -150,11 +138,9 @@ describe Teaspoon::Formatters::Base do
       expect(subject).to_not receive(:log_exception)
       subject.exception(result, false)
     end
-
   end
 
   describe "#console" do
-
     it "adds the string to @stdout" do
       subject.console("_message1_")
       subject.console("_message2_")
@@ -168,11 +154,9 @@ describe Teaspoon::Formatters::Base do
       expect(subject).to_not receive(:log_console)
       subject.console("_message_", false)
     end
-
   end
 
   describe "#result" do
-
     let(:result) { double(coverage: nil) }
 
     it "calls #log_result when appropriate" do
@@ -182,11 +166,9 @@ describe Teaspoon::Formatters::Base do
       expect(subject).to_not receive(:log_result)
       subject.result(result, false)
     end
-
   end
 
   describe "#coverage" do
-
     it "calls #log_coverage when appropriate" do
       expect(subject).to receive(:log_coverage).with("_message_")
       subject.coverage("_message_")
@@ -194,11 +176,9 @@ describe Teaspoon::Formatters::Base do
       expect(subject).to receive(:log_coverage).with("_message_")
       subject.coverage("_message_")
     end
-
   end
 
   describe "#threshold_failure" do
-
     it "calls #log_threshold_failure when appropriate" do
       expect(subject).to receive(:log_threshold_failure).with("_message_")
       subject.threshold_failure("_message_")
@@ -206,11 +186,9 @@ describe Teaspoon::Formatters::Base do
       expect(subject).to receive(:log_threshold_failure).with("_message_")
       subject.threshold_failure("_message_")
     end
-
   end
 
   describe "#complete" do
-
     it "calls #log_complete when appropriate" do
       expect(subject).to receive(:log_complete).with(42)
       subject.complete(42)
@@ -218,11 +196,9 @@ describe Teaspoon::Formatters::Base do
       expect(subject).to receive(:log_complete).with(0)
       subject.complete(0)
     end
-
   end
 
   describe "#log_spec" do
-
     it "calls #log_passing_spec on passing results" do
       expect(subject).to receive(:log_passing_spec).with(passing_spec)
       subject.send(:log_spec, passing_spec)
@@ -237,11 +213,9 @@ describe Teaspoon::Formatters::Base do
       expect(subject).to receive(:log_failing_spec).with(failing_spec)
       subject.send(:log_spec, failing_spec)
     end
-
   end
 
   describe "logging to file" do
-
     it "logs to a file" do
       handle = double(write: nil)
       expect(File).to receive(:open).with("_output_file_", "a").and_yield(handle)
@@ -253,7 +227,5 @@ describe Teaspoon::Formatters::Base do
       expect(File).to receive(:open).and_raise(IOError, "_io_error_message_")
       expect { subject.send(:log_to_file, "_str_", "_output_file_") }.to raise_error(Teaspoon::FileNotWritable, "_io_error_message_")
     end
-
   end
-
 end

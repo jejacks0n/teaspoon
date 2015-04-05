@@ -5,7 +5,6 @@ require "teaspoon/runner"
 require "teaspoon/exporter"
 
 describe Teaspoon::Console do
-
   let(:driver) { double(run_specs: 0) }
   let(:server) { double(start: nil, url: "http://url.com", responsive?: false) }
   let(:runner) { double(failure_count: 2) }
@@ -15,49 +14,43 @@ describe Teaspoon::Console do
     allow(Teaspoon::Server).to receive(:new).and_return(server)
     allow(Teaspoon::Runner).to receive(:new).and_return(runner)
 
-    allow_any_instance_of(Teaspoon::Console).to receive(:driver).and_return(driver)
-    allow_any_instance_of(Teaspoon::Console).to receive(:log)
+    allow_any_instance_of(described_class).to receive(:driver).and_return(driver)
+    allow_any_instance_of(described_class).to receive(:log)
   end
 
   describe "#initialize" do
-
     it "assigns @default_options" do
-      subject = Teaspoon::Console.new(foo: "bar")
+      subject = described_class.new(foo: "bar")
       expect(subject.instance_variable_get(:@default_options)).to eql(foo: "bar")
     end
 
     it "loads the environment" do
       expect(Teaspoon::Environment).to receive(:load)
-      Teaspoon::Console.new
+      described_class.new
     end
 
     it "starts the server" do
-      expect_any_instance_of(Teaspoon::Console).to receive(:log).with("Starting the Teaspoon server...")
-      expect_any_instance_of(Teaspoon::Console).to receive(:start_server) .and_call_original
+      expect_any_instance_of(described_class).to receive(:log).with("Starting the Teaspoon server...")
+      expect_any_instance_of(described_class).to receive(:start_server) .and_call_original
       expect(Teaspoon::Server).to receive(:new).and_return(server)
       expect(server).to receive(:start)
-      Teaspoon::Console.new
+      described_class.new
     end
 
     it "does not log a message about starting the server if one has already been started" do
       allow(server).to receive(:responsive?).and_return(true)
-      expect_any_instance_of(Teaspoon::Console).not_to receive(:log).with("Starting the Teaspoon server...")
-      Teaspoon::Console.new
+      expect_any_instance_of(described_class).not_to receive(:log).with("Starting the Teaspoon server...")
+      described_class.new
     end
-
 
     it "aborts (displaying a message) on Teaspoon::ServerException" do
-      expect(STDOUT).to receive(:print).with("_message_\n")
-      expect_any_instance_of(Teaspoon::Console).to receive(:log).and_call_original
-      expect_any_instance_of(Teaspoon::Console).to receive(:start_server).and_raise(Teaspoon::ServerException, "_message_")
-      expect_any_instance_of(Teaspoon::Console).to receive(:abort).with("_message_").and_call_original
-      expect{ Teaspoon::Console.new }.to raise_error(SystemExit)
+      expect(Teaspoon).to receive(:abort).with("_message_", 1)
+      expect_any_instance_of(described_class).to receive(:start_server).and_raise(Teaspoon::ServerException, "_message_")
+      described_class.new
     end
-
   end
 
   describe "#failures?" do
-
     it "calls #execute and returns the inverse of #executes return value" do
       expect(subject).to receive(:execute).and_return(false)
       expect(subject.failures?).to be_truthy
@@ -65,11 +58,9 @@ describe Teaspoon::Console do
       expect(subject).to receive(:execute).and_return(true)
       expect(subject.failures?).to be_falsey
     end
-
   end
 
   describe "#execute" do
-
     it "calls #execute_without_handling and returns its value" do
       expect(subject).to receive(:execute_without_handling).with(foo: "bar").and_return(true)
       expect(subject.execute(foo: "bar")).to be_truthy
@@ -82,7 +73,7 @@ describe Teaspoon::Console do
     end
 
     it "handles Teaspoon::Error exceptions" do
-      expect(subject).to receive(:abort).with("_unknown_error_")
+      expect(Teaspoon).to receive(:abort).with("_unknown_error_", 1)
       expect(subject).to receive(:execute_without_handling).and_raise(Teaspoon::Error, "_unknown_error_")
       subject.execute
     end
@@ -91,11 +82,9 @@ describe Teaspoon::Console do
       expect(subject).to receive(:execute_without_handling).and_raise(Teaspoon::Failure)
       expect(subject.execute).to be_falsey
     end
-
   end
 
   describe "#execute_without_handling" do
-
     before do
       allow(subject).to receive(:run_specs).and_return(0)
       allow(subject).to receive(:export)
@@ -122,7 +111,7 @@ describe Teaspoon::Console do
     end
 
     it "resolves the files if a directory was given" do
-      resolve_spec_for_output = ['test/javascripts/foo.coffee', 'test/javascripts/bar.coffee']
+      resolve_spec_for_output = ["test/javascripts/foo.coffee", "test/javascripts/bar.coffee"]
       expect(Teaspoon::Suite).to receive(:resolve_spec_for).with("full/path").and_return(suite: "foo", path: resolve_spec_for_output)
       subject.execute_without_handling(files: ["full/path"])
       expect(subject.send(:suites)).to eq(["foo"])
@@ -154,14 +143,12 @@ describe Teaspoon::Console do
       expect(subject).to receive(:export).with(:foo)
       subject.execute
     end
-
   end
 
   describe "#run_specs" do
-
     before do
       allow(Teaspoon.configuration).to receive(:fail_fast).and_return(false)
-      expect(Teaspoon.configuration).to receive(:suite_configs).and_return("_suite_" => proc{}, "suite_name" => proc{})
+      expect(Teaspoon.configuration).to receive(:suite_configs).and_return("_suite_" => proc {}, "suite_name" => proc {})
     end
 
     it "raises a Teaspoon::UnknownSuite exception when the suite isn't known" do
@@ -192,18 +179,16 @@ describe Teaspoon::Console do
       expect(subject).to receive(:driver).and_call_original
       expect { subject.run_specs(:suite_name) }.to raise_error Teaspoon::UnknownDriver
     end
-
   end
 
   describe "#export" do
-
     before do
-      expect(Teaspoon.configuration).to receive(:suite_configs).and_return("_suite_" => proc{}, "suite_name" => proc{})
+      expect(Teaspoon.configuration).to receive(:suite_configs).and_return("_suite_" => proc {}, "suite_name" => proc {})
       allow(Teaspoon::Exporter).to receive(:new).and_return(double(export: nil))
     end
 
     it "raises a Teaspoon::UnknownSuite exception when the suite isn't known" do
-      expect { subject.export("_unknown_") }.to raise_error Teaspoon::UnknownSuite
+      expect { subject.export("_unknown_") }.to raise_error(Teaspoon::UnknownSuite)
     end
 
     it "logs that the suite is being exported" do
@@ -218,7 +203,5 @@ describe Teaspoon::Console do
       expect(exporter).to receive(:export)
       subject.export("_suite_")
     end
-
   end
-
 end
