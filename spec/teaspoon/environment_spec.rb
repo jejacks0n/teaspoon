@@ -91,21 +91,9 @@ describe Teaspoon::Environment do
     end
   end
 
-  describe ".require_environment_from_engine?" do
-    it "returns true if not run from within the console" do
-      allow(subject).to receive(:console?).and_return(false)
-      expect(subject.require_environment_from_engine?).to eql(true)
-    end
-
-    it "returns false if run from within the console" do
-      allow(subject).to receive(:console?).and_return(true)
-      expect(subject.require_environment_from_engine?).to eql(false)
-    end
-  end
-
   describe ".rails_loaded?" do
     it "returns a boolean based on if Rails is defined" do
-      expect(subject.send(:rails_loaded?)).to eql(true)
+      expect(subject.send(:rails_loaded?)).to be_truthy
     end
   end
 end

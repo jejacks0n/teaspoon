@@ -15,9 +15,7 @@ module Teaspoon
 
     initializer :assets, group: :all do |app|
       begin
-        if Teaspoon::Environment.require_environment_from_engine?
-          Teaspoon::Environment.require_environment
-        end
+        Teaspoon::Environment.require_environment
       rescue Teaspoon::EnvironmentNotFound
         # it's ok for this to fail sometimes, like before the generator is run etc
       end
