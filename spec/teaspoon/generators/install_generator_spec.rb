@@ -66,7 +66,7 @@ describe Teaspoon::Generators::InstallGenerator do
     end
 
     describe "when version is specified" do
-      let(:options) { { version: '6.6.6' } }
+      let(:options) { { version: "6.6.6" } }
 
       it "exits with a message if the requested framework version is not available" do
         message = ""

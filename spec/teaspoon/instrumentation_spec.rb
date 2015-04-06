@@ -104,7 +104,7 @@ describe Teaspoon::Instrumentation do
     end
 
     it "hooks into sprockets" do
-      super_class = Class.new() do
+      super_class = Class.new do
         def call(_env)
           "_sprockets_env_"
         end

@@ -7,7 +7,7 @@ end
 module Teaspoon
   module Drivers
     class CapybaraWebkitDriver < Base
-      def initialize(_ = nil)
+      def initialize(_options = nil)
       end
 
       def run_specs(runner, url)
