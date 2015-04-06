@@ -1,8 +1,10 @@
+# :nocov:
 begin
   require "phantomjs"
 rescue LoadError
   # if we can't load phantomjs, assume the cli is installed and in the path
 end
+# :nocov:
 
 module Teaspoon
   module Drivers

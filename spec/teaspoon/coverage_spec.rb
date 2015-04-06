@@ -26,6 +26,13 @@ describe Teaspoon::Coverage do
       expect_any_instance_of(described_class).to receive(:coverage_configuration).with("default")
       described_class.new("_suite_", :default, data)
     end
+
+    it "raises an exception if the coverage config can't be found" do
+      expect { described_class.new("_suite_", :foo, data) }.to raise_error(
+        Teaspoon::UnknownCoverage,
+        "Unknown coverage configuration: expected \"foo\" to be a configured coverage."
+      )
+    end
   end
 
   describe "#generate_reports" do

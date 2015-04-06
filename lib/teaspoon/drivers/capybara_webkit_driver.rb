@@ -1,8 +1,10 @@
+# :nocov:
 begin
   require "capybara-webkit"
 rescue LoadError
   Teaspoon.abort("Could not find Capybara Webkit. Install the capybara-webkit gem.")
 end
+# :nocov:
 
 module Teaspoon
   module Drivers

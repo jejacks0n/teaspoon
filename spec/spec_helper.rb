@@ -1,5 +1,15 @@
 begin
   require "codeclimate-test-reporter"
+  SimpleCov.filters.clear
+  SimpleCov.add_filter { |src| !(src.filename =~ /^#{SimpleCov.root}/) unless src.filename =~ /teaspoon/ }
+  # filter the framework implementations
+  SimpleCov.add_filter("lib/teaspoon-(jasmine|mocha|qunit).rb")
+  # filter deprecation warnings, devkit tools, and our teaspoon envs
+  SimpleCov.add_filter("teaspoon/deprecated.rb")
+  SimpleCov.add_filter("devkit.rb")
+  SimpleCov.add_filter("teaspoon_env.rb")
+  # filter the controller, since it's tested elsewhere
+  SimpleCov.add_filter("suite_controller.rb")
   CodeClimate::TestReporter.start
 rescue LoadError
   puts "Not using codeclimate-test-reporter."
@@ -8,8 +18,6 @@ end
 ENV["RAILS_ENV"] ||= "test"
 ENV["RAILS_ROOT"] = File.expand_path("../dummy", __FILE__)
 require File.expand_path("../dummy/config/environment", __FILE__)
-
-load "teaspoon.rb"
 
 require "rspec/rails"
 require "capybara/rails"

@@ -1,8 +1,10 @@
+# :nocov:
 begin
   require "selenium-webdriver"
 rescue LoadError
   Teaspoon.abort("Could not find Selenium Webdriver. Install the selenium-webdriver gem.")
 end
+# :nocov:
 
 module Teaspoon
   module Drivers
