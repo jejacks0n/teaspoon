@@ -30,7 +30,8 @@ describe Teaspoon::Console do
     end
 
     it "starts the server" do
-      expect_any_instance_of(described_class).to receive(:log).with("Starting the Teaspoon server...")
+      expect(STDOUT).to receive(:print).with("Starting the Teaspoon server...\n")
+      expect_any_instance_of(described_class).to receive(:log).with("Starting the Teaspoon server...").and_call_original
       expect_any_instance_of(described_class).to receive(:start_server) .and_call_original
       expect(Teaspoon::Server).to receive(:new).and_return(server)
       expect(server).to receive(:start)

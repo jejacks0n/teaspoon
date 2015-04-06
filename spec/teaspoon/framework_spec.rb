@@ -17,6 +17,9 @@ describe Teaspoon::Framework do
 
     it "can describe itself" do
       expect(subject.description).to eq("framework[1.0.0, 2.0.0]")
+
+      name = subject.new("_suite_config_").name
+      expect(name).to eq(:framework)
     end
 
     it "can generate a list of dependencies for a given version" do
@@ -73,6 +76,11 @@ describe Teaspoon::Framework do
       expect(install_path).to eq("custom")
     end
 
-    it "allows providing a block that will be called within the install generator"
+    it "allows providing a block that will be called within the install generator" do
+      callback = proc {}
+      subject.install_to("path/to/install", &callback)
+
+      expect(subject.new("_suite_config_").install_callback).to eq(callback)
+    end
   end
 end

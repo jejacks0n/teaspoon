@@ -102,5 +102,16 @@ describe Teaspoon::Instrumentation do
       expect(headers).to include("Content-Type" => "application/javascript")
       expect(asset.source).to match(/var __cov_.+ = \(Function\('return this'\)\)\(\);/)
     end
+
+    it "hooks into sprockets" do
+      super_class = Class.new() do
+        def call(_env)
+          "_sprockets_env_"
+        end
+      end
+      middleware = Class.new(super_class) { include Teaspoon::SprocketsInstrumentation }
+      expect(described_class).to receive(:add_to).with("_sprockets_env_", "_env_")
+      middleware.new.call("_env_")
+    end
   end
 end

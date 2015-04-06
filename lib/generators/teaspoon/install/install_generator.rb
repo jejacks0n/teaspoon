@@ -1,4 +1,5 @@
 require "teaspoon/exceptions"
+require "rails/generators"
 
 module Teaspoon
   module Generators
@@ -25,11 +26,11 @@ module Teaspoon
                    default: false,
                    desc: "Generate a CoffeeScript spec helper instead of Javascript"
 
-      class_option :no_comments,
+      class_option :documentation,
                    type: :boolean,
-                   aliases: ["-q", "no-comments"],
-                   default: false,
-                   desc: "Install the teaspoon_env.rb without comments"
+                   aliases: ["-d"],
+                   default: true,
+                   desc: "Install the teaspoon_env.rb with comment documentation"
 
       class_option :partials,
                    type: :boolean,
@@ -39,19 +40,13 @@ module Teaspoon
 
       def verify_framework_and_version
         version.present?
+        framework
       rescue
-        if Teaspoon.frameworks.length == 0
-          readme "MISSING_FRAMEWORK"
-        else
-          message = "Unknown framework: #{options[:framework]}#{options[:version].nil? ? "[#{options[:version]}]" : ''}"
-          message << "\n  Available: #{described_frameworks.join("\n             ")}"
-          say_status message, :red
-        end
-        exit(1)
+        abort_with_message if behavior == :invoke
       end
 
       def copy_environment
-        source = options[:no_comments] ? "env.rb.tt" : "env_comments.rb.tt"
+        source = options[:documentation] ? "env_comments.rb.tt" : "env.rb.tt"
         template source, "#{framework.install_path}/teaspoon_env.rb"
       end
 
@@ -98,17 +93,23 @@ module Teaspoon
       end
 
       def version
-        @version ||= begin
-          if options[:version]
-            if framework.versions.include?(options[:version])
-              options[:version]
-            else
-              raise Teaspoon::UnknownFrameworkVersion.new(name: framework.name, version: options[:version])
-            end
-          else
-            framework.versions.last
-          end
+        @version ||= options[:version] ? determine_requested_version : framework.versions.last
+      end
+
+      def determine_requested_version
+        return options[:version] if framework.versions.include?(options[:version])
+        raise Teaspoon::UnknownFrameworkVersion.new(name: framework.name, version: options[:version])
+      end
+
+      def abort_with_message
+        if Teaspoon.frameworks.length == 0
+          readme "MISSING_FRAMEWORK"
+        else
+          message = "Unknown framework: #{options[:framework]}#{options[:version] ? "[#{options[:version]}]" : ''}"
+          message << "\n  Available: #{described_frameworks.join("\n             ")}"
+          say_status message, :red
         end
+        exit(1)
       end
     end
   end
