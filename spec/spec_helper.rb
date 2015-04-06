@@ -1,5 +1,6 @@
 begin
   require "codeclimate-test-reporter"
+  require "simplecov"
   SimpleCov.filters.clear
   SimpleCov.add_filter { |src| !(src.filename =~ /^#{SimpleCov.root}/) unless src.filename =~ /teaspoon/ }
   # filter the framework implementations
