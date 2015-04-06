@@ -53,7 +53,8 @@ describe Teaspoon::Instrumentation do
       allow_any_instance_of(subject).to receive(:`)
       allow_any_instance_of(subject).to receive(:instrument).and_call_original
       expect { subject.add_to(response, env) }.to raise_error(
-        Teaspoon::DependencyFailure, "Could not generate instrumentation for instrument.js."
+        Teaspoon::DependencyError,
+        "Unable to add instrumentation to instrument.js."
       )
     end
   end

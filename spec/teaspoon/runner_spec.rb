@@ -24,9 +24,12 @@ describe Teaspoon::Runner do
       expect(subject.instance_variable_get(:@formatters)[1]).to be_a(Teaspoon::Formatters::XmlFormatter)
     end
 
-    it "raises a Teaspoon::UnknownFormatter exception when a formatter isn't found" do
+    it "raises an exception when a formatter isn't found" do
       allow(Teaspoon.configuration).to receive(:formatters).and_return(["bar"])
-      expect { Teaspoon::Runner.new(:foo) }.to raise_error Teaspoon::UnknownFormatter, "Unknown formatter: \"bar\""
+      expect { Teaspoon::Runner.new(:foo) }.to raise_error(
+        Teaspoon::UnknownFormatter,
+        "Unknown formatter: expected \"bar\" to be a registered formatter."
+      )
     end
   end
 
@@ -71,10 +74,10 @@ describe Teaspoon::Runner do
     end
 
     describe "with an exception" do
-      it "notifies itself, and raises Teaspoon::RunnerException" do
+      it "notifies itself, and raises an exception" do
         expect(subject).to receive(:on_exception).and_call_original
         expect { subject.process('{"_teaspoon":true,"type":"exception","message":"_message_"}') }.to raise_error(
-          Teaspoon::RunnerException,
+          Teaspoon::RunnerError,
           "_message_"
         )
       end

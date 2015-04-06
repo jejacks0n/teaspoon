@@ -12,7 +12,7 @@ module Teaspoon
       Dir.mktmpdir do |temp_path|
         Dir.chdir(temp_path) do
           %x{#{executable} --convert-links --adjust-extension --page-requisites --span-hosts #{@url.shellescape} 2>&1}
-          raise Teaspoon::ExporterException, "Unable to export #{@suite} suite." unless $?.exitstatus == 0
+          raise Teaspoon::DependencyError.new("Unable to export #{@suite} suite.") unless $?.exitstatus == 0
           create_export(File.join(temp_path, @url.match(/^http:\/\/([^\/]+).*/)[1]))
         end
       end
@@ -24,7 +24,7 @@ module Teaspoon
       return @executable if @executable
       @executable = which("wget")
       return @executable unless @executable.blank?
-      raise Teaspoon::MissingDependency, "Could not find wget for exporting."
+      raise Teaspoon::MissingDependencyError.new("Unable to locate `wget` for exporter.")
     end
 
     def create_export(path)

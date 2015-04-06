@@ -25,7 +25,7 @@ module Teaspoon
       formatter = Teaspoon::Formatters.const_get("#{formatter.camelize}Formatter")
       formatter.new(@suite_name, output)
     rescue NameError
-      raise Teaspoon::UnknownFormatter, "Unknown formatter: \"#{formatter}\""
+      raise Teaspoon::UnknownFormatter.new(name: formatter)
     end
 
     def notify_formatters(event, result)
@@ -49,7 +49,7 @@ module Teaspoon
     end
 
     def on_exception(result)
-      raise Teaspoon::RunnerException, result.message
+      raise Teaspoon::RunnerError.new(result.message)
     end
 
     def on_result(result)

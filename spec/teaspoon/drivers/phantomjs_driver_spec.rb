@@ -3,22 +3,25 @@ require "spec_helper"
 describe Teaspoon::Drivers::PhantomjsDriver do
   describe "#initialize" do
     it "assigns @options" do
-      subject = Teaspoon::Drivers::PhantomjsDriver.new(foo: "bar")
+      subject = described_class.new(foo: "bar")
       expect(subject.instance_variable_get(:@options)).to eq(["--foo=bar"])
     end
 
     it "accepts a string for options" do
-      subject = Teaspoon::Drivers::PhantomjsDriver.new("--foo=bar --bar=baz")
+      subject = described_class.new("--foo=bar --bar=baz")
       expect(subject.instance_variable_get(:@options)).to eq(["--foo=bar", "--bar=baz"])
     end
 
     it "accepts an array for options" do
-      subject = Teaspoon::Drivers::PhantomjsDriver.new(["--foo=bar", "--bar=baz"])
+      subject = described_class.new(["--foo=bar", "--bar=baz"])
       expect(subject.instance_variable_get(:@options)).to eq(["--foo=bar", "--bar=baz"])
     end
 
-    it "raises a Teaspoon::UnknownDriverOptions exception if the options aren't understood" do
-      expect { Teaspoon::Drivers::PhantomjsDriver.new(true) }.to raise_error(Teaspoon::UnknownDriverOptions)
+    it "raises an exception if the options aren't understood" do
+      expect { described_class.new(true) }.to raise_error(
+        Teaspoon::DriverOptionsError,
+        "Malformed driver options: expected a valid string, array or hash."
+      )
     end
   end
 
@@ -26,30 +29,25 @@ describe Teaspoon::Drivers::PhantomjsDriver do
     context "with phantomjs" do
       let(:runner) { double }
 
-      before do
-        allow(subject).to receive(:run)
-      end
-
       it "calls #run and calls runner.process with each line of output" do
         subject.instance_variable_set(:@options, ["--foo", "--bar"])
-        args = [
-          "--foo",
-          "--bar",
-          Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.js").to_s.inspect,
-          '"_url_"',
-          180]
-        expect(runner).to receive(:process).with("_line_")
-        @block = nil
+        script = Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.js").to_s
+        args = ["--foo", "--bar", script.inspect, '"_url_"', 180]
+
         expect(subject).to receive(:run).with(*args) { |&b| @block = b }
+        expect(runner).to receive(:process).with("_line_")
         subject.run_specs(runner, "_url_")
         @block.call("_line_")
       end
     end
 
     context "without phantomjs" do
-      it "raises a MissingDependency exception" do
+      it "raises an exception" do
         expect(subject).to receive(:which).and_return(nil)
-        expect { subject.run_specs(:default, "_url_") }.to raise_error Teaspoon::MissingDependency
+        expect { subject.run_specs(:default, "_url_") }.to raise_error(
+          Teaspoon::MissingDependencyError,
+          "Unable to locate phantomjs. Install it or use the phantomjs gem."
+        )
       end
     end
   end

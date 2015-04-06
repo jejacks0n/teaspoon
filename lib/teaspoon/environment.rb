@@ -9,7 +9,7 @@ module Teaspoon
 
     def self.load(options = {})
       require_environment(options[:environment])
-      raise "Rails environment not found." unless rails_loaded?
+      Teaspoon.abort("Rails environment not found.", 1) unless rails_loaded?
 
       require "teaspoon"
       require "teaspoon/server"
@@ -34,8 +34,7 @@ module Teaspoon
         return require_env(file) if File.exists?(file)
       end
 
-      raise Teaspoon::EnvironmentNotFound,
-            "Unable to load Teaspoon environment in {#{standard_environments.join(', ')}}"
+      raise Teaspoon::EnvironmentNotFound.new(searched: standard_environments.join(", "))
     end
 
     def self.standard_environments

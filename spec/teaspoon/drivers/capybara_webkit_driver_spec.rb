@@ -22,8 +22,10 @@ describe Teaspoon::Drivers::CapybaraWebkitDriver do
 
     it "waits until it's done (checking Teaspoon.finished) and processes each line" do
       expect(document).to receive(:synchronize).with(180).and_yield
-      expect(session).to receive(:evaluate_script).with("window.Teaspoon && window.Teaspoon.finished").and_return(true)
-      expect(session).to receive(:evaluate_script).with("window.Teaspoon && window.Teaspoon.getMessages()").and_return(["_line_"])
+      expect(session).to receive(:evaluate_script).with("window.Teaspoon && window.Teaspoon.finished").
+        and_return(true)
+      expect(session).to receive(:evaluate_script).with("window.Teaspoon && window.Teaspoon.getMessages()").
+        and_return(["_line_"])
       expect(runner).to receive(:process).with("_line_\n")
       subject.run_specs(runner, "_url_")
     end

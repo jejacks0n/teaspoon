@@ -15,7 +15,7 @@ module Teaspoon
         when Array then @options = options
         when String then @options = options.split(" ")
         when Hash then @options = options.map { |k, v| "--#{k}=#{v}" }
-        else raise Teaspoon::UnknownDriverOptions, "Unknown driver options -- supply a string, array or hash"
+        else raise Teaspoon::DriverOptionsError.new(types: "string, array or hash")
         end
       end
 
@@ -49,7 +49,7 @@ module Teaspoon
         @executable = which("phantomjs")
         @executable = Phantomjs.path if @executable.blank? && defined?(::Phantomjs)
         return @executable unless @executable.blank?
-        raise Teaspoon::MissingDependency, "Could not find PhantomJS. Install phantomjs or try the phantomjs gem."
+        raise Teaspoon::MissingDependencyError.new("Unable to locate phantomjs. Install it or use the phantomjs gem.")
       end
 
       def script

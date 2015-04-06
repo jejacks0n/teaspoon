@@ -163,7 +163,7 @@ module Teaspoon
       def log_to_file(str, output_file)
         @_output_file = File.open(output_file, "a") { |f| f.write(str) }
       rescue IOError => e
-        raise Teaspoon::FileNotWritable, e.message
+        raise Teaspoon::FileWriteError.new(e.message)
       end
 
       def colorize(str, color_code)

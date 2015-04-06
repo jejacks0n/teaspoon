@@ -43,9 +43,12 @@ describe Teaspoon::Coverage do
       expect(@result).to eq("_text1_report_\n\n_text2_report_")
     end
 
-    it "raises a Teaspoon::DependencyFailure if the command doesn't exit cleanly" do
+    it "raises an exception if the command doesn't exit cleanly" do
       stub_exit_code(ExitCodes::EXCEPTION)
-      expect { subject.generate_reports }.to raise_error Teaspoon::DependencyFailure, "Could not generate coverage report for html"
+      expect { subject.generate_reports }.to raise_error(
+        Teaspoon::DependencyError,
+        "Unable to generate html coverage report."
+      )
     end
   end
 
@@ -60,8 +63,9 @@ describe Teaspoon::Coverage do
 
     it "checks the coverage using istanbul and passes them to the block provided" do
       stub_exit_code(ExitCodes::EXCEPTION)
-      check_coverage = "/path/to/executable check-coverage --statements=42 --functions=66.6 --branches=0 --lines=100 /temp_path/coverage.json 2>&1"
-      expect(subject).to receive(:`).with(check_coverage).and_return("some mumbo jumbo\nERROR: _failure1_\nmore garbage\nERROR: _failure2_")
+      opts = "--statements=42 --functions=66.6 --branches=0 --lines=100"
+      expect(subject).to receive(:`).with("/path/to/executable check-coverage #{opts} /temp_path/coverage.json 2>&1").
+        and_return("some mumbo jumbo\nERROR: _failure1_\nmore garbage\nERROR: _failure2_")
       subject.check_thresholds { |r| @result = r }
       expect(@result).to eq("_failure1_\n_failure2_")
     end
@@ -76,6 +80,8 @@ describe Teaspoon::Coverage do
 
   describe "integration" do
     let(:config) { double(reports: ["text", "text-summary"], output_path: "output/path") }
+    let(:coverage) { JSON.parse(IO.read(Teaspoon::Engine.root.join("spec/fixtures/coverage.json"))) }
+    let(:executable) { Teaspoon::Instrumentation.executable }
 
     before do
       Teaspoon::Instrumentation.instance_variable_set(:@executable, nil)
@@ -84,10 +90,9 @@ describe Teaspoon::Coverage do
       expect(subject).to receive(:input_path).and_call_original
       expect(subject).to receive(:`).and_call_original
 
-      executable = Teaspoon::Instrumentation.executable
       pending("needs istanbul to be installed") unless executable
       subject.instance_variable_set(:@executable, executable)
-      subject.instance_variable_set(:@data, JSON.parse(IO.read(Teaspoon::Engine.root.join("spec/fixtures/coverage.json"))))
+      subject.instance_variable_set(:@data, coverage)
     end
 
     it "generates coverage reports" do

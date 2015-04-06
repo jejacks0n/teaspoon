@@ -2,16 +2,6 @@ require "spec_helper"
 require "teaspoon/command_line"
 require "teaspoon/console"
 
-module Kernel
-  def suppress_warnings
-    original_verbosity = $VERBOSE
-    $VERBOSE = nil
-    result = yield
-    $VERBOSE = original_verbosity
-    result
-  end
-end
-
 describe Teaspoon::CommandLine do
   subject { described_class }
 
@@ -30,8 +20,12 @@ describe Teaspoon::CommandLine do
     end
 
     it "aborts with a message on Teaspoon::EnvironmentNotFound" do
-      expect(Teaspoon::Console).to receive(:new).and_raise(Teaspoon::EnvironmentNotFound)
-      expect(Teaspoon).to receive(:abort).with("Teaspoon::EnvironmentNotFound\nConsider using -r path/to/teaspoon_env")
+      expect(Teaspoon::Console).to receive(:new).
+        and_raise(Teaspoon::EnvironmentNotFound.new(searched: "path1, path2"))
+      expect(Teaspoon).to receive(:abort).with(
+        "Unable to locate environment; searched in [path1, path2]. "\
+        "Consider using --require=path/to/teaspoon_env.rb"
+      )
       subject.new
     end
 
@@ -46,15 +40,9 @@ describe Teaspoon::CommandLine do
       expect(console).to receive(:failures?).and_return(true)
       subject.new
     end
-
-    it "logs a message and exits on abort" do
-      expect(Teaspoon).to receive(:abort).with("Teaspoon::EnvironmentNotFound\nConsider using -r path/to/teaspoon_env")
-      expect(Teaspoon::Console).to receive(:new).and_raise(Teaspoon::EnvironmentNotFound)
-      subject.new
-    end
   end
 
-  describe "opt_parser" do
+  describe "#opt_parser" do
     before do
       @log = ""
       allow(STDOUT).to receive(:print) { |s| @log << s }

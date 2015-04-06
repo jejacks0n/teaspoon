@@ -53,7 +53,7 @@ module Teaspoon
     def instrument(input)
       result = %x{#{self.class.executable} instrument --embed-source #{input.shellescape}}
       return result if $?.exitstatus == 0
-      raise Teaspoon::DependencyFailure, "Could not generate instrumentation for #{File.basename(input)}."
+      raise Teaspoon::DependencyError.new("Unable to add instrumentation to #{File.basename(input)}.")
     end
   end
 

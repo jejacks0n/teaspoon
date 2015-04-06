@@ -85,7 +85,7 @@ module Teaspoon
       def framework
         @framework ||= begin
           klass = Teaspoon.frameworks[options[:framework].to_sym]
-          raise Teaspoon::UnknownFramework unless klass
+          raise Teaspoon::UnknownFramework.new(name: options[:framework]) unless klass
           framework = klass.new(suite)
           source_paths
           @source_paths = framework.template_paths + @source_paths
@@ -103,7 +103,7 @@ module Teaspoon
             if framework.versions.include?(options[:version])
               options[:version]
             else
-              raise Teaspoon::UnknownFrameworkVersion
+              raise Teaspoon::UnknownFrameworkVersion.new(name: framework.name, version: options[:version])
             end
           else
             framework.versions.last

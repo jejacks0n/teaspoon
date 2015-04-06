@@ -223,9 +223,13 @@ describe Teaspoon::Formatters::Base do
       subject.send(:log_to_file, "_str_", "_output_file_")
     end
 
-    it "raises a Teaspoon::FileNotWritable exception if the file can't be written to" do
-      expect(File).to receive(:open).and_raise(IOError, "_io_error_message_")
-      expect { subject.send(:log_to_file, "_str_", "_output_file_") }.to raise_error(Teaspoon::FileNotWritable, "_io_error_message_")
+    it "raises an exception if the file can't be written to" do
+      expect(File).to receive(:open).
+        and_raise(IOError, "_io_error_message_")
+      expect { subject.send(:log_to_file, "_str_", "_output_file_") }.to raise_error(
+        Teaspoon::FileWriteError,
+        "_io_error_message_"
+      )
     end
   end
 end

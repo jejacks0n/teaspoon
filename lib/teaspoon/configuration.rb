@@ -57,7 +57,7 @@ module Teaspoon
     @@suite_configs = { "default" => { block: proc {} } }
 
     def self.suite(name = :default, &block)
-      @@suite_configs[name.to_s] = { block: block, instance: Suite.new(&block) }
+      @@suite_configs[name.to_s] = { block: block, instance: Suite.new(name, &block) }
     end
 
     class Suite
@@ -65,7 +65,7 @@ module Teaspoon
                     :boot_partial, :body_partial,
                     :no_coverage, :hooks, :expand_assets
 
-      def initialize
+      def initialize(name = nil)
         @matcher       = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
         @helper        = "spec_helper"
         @javascripts   = []
@@ -82,9 +82,7 @@ module Teaspoon
         instance_eval(&default[:block]) if default
         if block_given?
           yield self
-          if @javascripts.length == 0
-            raise Teaspoon::FrameworkUnspecified, "Expected a framework to be configured using `suite.use_framework`."
-          end
+          raise Teaspoon::UnspecifiedFramework.new(name: name) if @javascripts.length == 0
         end
       end
 
@@ -93,10 +91,9 @@ module Teaspoon
         @javascripts = framework.javascripts_for(version)
         return if @javascripts
 
-        message = "Unknown framework. \"#{name}[#{version}]\" -- available #{framework.versions.join(', ')}."
-        raise Teaspoon::UnknownFrameworkVersion, message
+        raise Teaspoon::UnknownFrameworkVersion.new(name: name, version: version)
       rescue NameError
-        raise Teaspoon::UnknownFramework, "Unknown framework. \"#{name}\" has not yet been registered."
+        raise Teaspoon::UnknownFramework.new(name: name)
       end
       alias_method :use_framework=, :use_framework
 

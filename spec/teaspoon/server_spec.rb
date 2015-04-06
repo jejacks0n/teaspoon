@@ -35,7 +35,10 @@ describe Teaspoon::Server do
 
     it "rescues errors" do
       expect(Thread).to receive(:new).and_raise("OMG!")
-      expect { subject.start }.to raise_error("Cannot start server: OMG!")
+      expect { subject.start }.to raise_error(
+        Teaspoon::ServerError,
+        "Unable to start teaspoon server; OMG!."
+      )
     end
 
     it "creates a Rack::Server with the correct setting" do
@@ -53,12 +56,13 @@ describe Teaspoon::Server do
       @block.call
     end
 
-    it "raises a ServerException if the timeout fails" do
+    it "raises an exception if the timeout fails" do
       expect(subject).to receive(:wait_until_started).and_call_original
-      expect(Timeout).to receive(:timeout).with(Teaspoon.configuration.server_timeout.to_i).and_raise(Timeout::Error)
+      expect(Timeout).to receive(:timeout).with(Teaspoon.configuration.server_timeout.to_i).
+        and_raise(Timeout::Error)
       expect { subject.start }.to raise_error(
-        Teaspoon::ServerException,
-        "Server failed to start. You may need to increase the timeout configuration."
+        Teaspoon::ServerError,
+        "Unable to start teaspoon server; consider increasing the timeout with `config.server_timeout`."
       )
     end
   end

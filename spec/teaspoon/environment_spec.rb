@@ -11,10 +11,11 @@ describe Teaspoon::Environment do
       described_class.load
     end
 
-    it "raises if Rails can't be found" do
+    it "aborts if Rails can't be found" do
       expect(subject).to receive(:require_environment)
       expect(subject).to receive(:rails_loaded?).and_return(false)
-      expect { described_class.load }.to raise_error("Rails environment not found.")
+      expect(Teaspoon).to receive(:abort).with("Rails environment not found.", 1)
+      described_class.load
     end
 
     it "configures teaspoon from options if the environment is ready" do
@@ -76,7 +77,10 @@ describe Teaspoon::Environment do
       end
 
       it "raises if no env file was found" do
-        expect { subject.require_environment }.to raise_error(Teaspoon::EnvironmentNotFound)
+        expect { subject.require_environment }.to raise_error(
+          Teaspoon::EnvironmentNotFound,
+          "Unable to locate environment; searched in [spec/teaspoon_env.rb, test/teaspoon_env.rb, teaspoon_env.rb]."
+        )
       end
     end
   end

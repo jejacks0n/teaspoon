@@ -1,5 +1,5 @@
 module Teaspoon
-  def self.abort(message = nil, code = 0)
+  def self.abort(message = nil, code = 1)
     STDOUT.print("#{message}\n") if message
     exit(code)
   end

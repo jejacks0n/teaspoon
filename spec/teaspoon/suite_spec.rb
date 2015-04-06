@@ -66,7 +66,10 @@ describe Teaspoon::Suite do
 
     it "raises an exception if the file isn't servable (in an asset path)" do
       expect(subject).to receive(:glob).and_return(["/foo"])
-      expect { subject.spec_files[0] }.to raise_error Teaspoon::AssetNotServable
+      expect { subject.spec_files[0] }.to raise_error(
+        Teaspoon::AssetNotServableError,
+        "Unable to serve asset: expected \"/foo\" to be within a registered asset path."
+      )
     end
   end
 

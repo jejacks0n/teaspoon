@@ -1,7 +1,7 @@
 begin
   require "capybara-webkit"
 rescue LoadError
-  Teaspoon.abort("Could not find Capybara Webkit. Install the capybara-webkit gem.", 1)
+  Teaspoon.abort("Could not find Capybara Webkit. Install the capybara-webkit gem.")
 end
 
 module Teaspoon

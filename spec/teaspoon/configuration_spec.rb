@@ -100,7 +100,7 @@ describe Teaspoon::Configuration do
 end
 
 describe Teaspoon::Configuration::Suite do
-  subject { described_class.new &(@suite || proc {}) }
+  subject { described_class.new(:test, &(@suite || proc {})) }
 
   it "has the default configuration" do
     roots = "spec/javascripts,spec/dummy/app/assets/javascripts/specs"
@@ -144,7 +144,7 @@ describe Teaspoon::Configuration::Suite do
         @suite = proc { |s| s.use_framework :foo }
         expect { subject }.to raise_error(
           Teaspoon::UnknownFramework,
-          "Unknown framework. \"foo\" has not yet been registered."
+          "Unknown framework: expected \"foo\" to be a registered framework."
         )
       end
 
@@ -152,15 +152,15 @@ describe Teaspoon::Configuration::Suite do
         @suite = proc { |s| s.use_framework :qunit, "6.6.6" }
         expect { subject }.to raise_error(
           Teaspoon::UnknownFrameworkVersion,
-          "Unknown framework. \"qunit[6.6.6]\" -- available 1.12.0-dev, 1.14.0-dev, 1.12.0, 1.14.0."
+          "Unknown framework version: expected \"qunit\" to have version 6.6.6."
         )
       end
 
       it "shows an error when there are no javascripts configured" do
         @suite = proc { |s| s.javascripts = [] }
         expect { subject }.to raise_error(
-          Teaspoon::FrameworkUnspecified,
-          "Expected a framework to be configured using `suite.use_framework`."
+          Teaspoon::UnspecifiedFramework,
+          "Missing framework: expected \"test\" suite to configure one using `suite.use_framework`."
         )
       end
     end

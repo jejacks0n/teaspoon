@@ -9,8 +9,8 @@ module Teaspoon
       Teaspoon::Environment.load(options)
 
       @server = start_server
-    rescue Teaspoon::ServerException => e
-      Teaspoon.abort(e.message, 1)
+    rescue Teaspoon::ServerError => e
+      Teaspoon.abort(e.message)
     end
 
     def options
@@ -27,11 +27,11 @@ module Teaspoon
       execute_without_handling(options)
     rescue Teaspoon::Failure
       false
-    rescue Teaspoon::RunnerException => e
+    rescue Teaspoon::RunnerError => e
       log(e.message)
       false
     rescue Teaspoon::Error => e
-      Teaspoon.abort(e.message, 1)
+      Teaspoon.abort(e.message)
     end
 
     def execute_without_handling(execute_options = {})
@@ -48,9 +48,7 @@ module Teaspoon
     end
 
     def run_specs(suite)
-      unless Teaspoon.configuration.suite_configs[suite.to_s]
-        raise Teaspoon::UnknownSuite, "Unknown suite: \"#{suite}\""
-      end
+      raise Teaspoon::UnknownSuite.new(name: suite) unless Teaspoon.configuration.suite_configs[suite.to_s]
 
       log("Teaspoon running #{suite} suite at #{base_url_for(suite)}")
       runner = Teaspoon::Runner.new(suite)
@@ -60,9 +58,7 @@ module Teaspoon
     end
 
     def export(suite)
-      unless Teaspoon.configuration.suite_configs[suite.to_s]
-        raise Teaspoon::UnknownSuite, "Unknown suite: \"#{suite}\""
-      end
+      raise Teaspoon::UnknownSuite.new(name: suite) unless Teaspoon.configuration.suite_configs[suite.to_s]
 
       log("Teaspoon exporting #{suite} suite at #{base_url_for(suite)}")
       Teaspoon::Exporter.new(suite, url_for(suite, false), options[:export]).export
@@ -98,7 +94,7 @@ module Teaspoon
       klass = "#{Teaspoon.configuration.driver.to_s.camelize}Driver"
       @driver = Teaspoon::Drivers.const_get(klass).new(Teaspoon.configuration.driver_options)
     rescue NameError
-      raise Teaspoon::UnknownDriver, "Unknown driver: \"#{Teaspoon.configuration.driver}\""
+      raise Teaspoon::UnknownDriver.new(name: Teaspoon.configuration.driver)
     end
 
     def base_url_for(suite)

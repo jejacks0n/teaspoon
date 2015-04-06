@@ -37,17 +37,23 @@ describe Teaspoon::Exporter do
       subject.export
     end
 
-    it "raises a Teaspoon::ExporterException if the command failed for some reason" do
+    it "raises an exception if the command failed for some reason" do
       stub_exit_code(ExitCodes::EXCEPTION)
       expect(Dir).to receive(:chdir).with("_temp_path_").and_yield
-      expect { subject.export }.to raise_error Teaspoon::ExporterException, "Unable to export suite_name suite."
+      expect { subject.export }.to raise_error(
+        Teaspoon::DependencyError,
+        "Unable to export suite_name suite."
+      )
     end
 
-    it "raises a Teaspoon::MissingDependency if wget wasn't found" do
+    it "raises an exception if wget wasn't found" do
       expect(Dir).to receive(:chdir).with("_temp_path_").and_yield
       expect(subject).to receive(:executable).and_call_original
       expect(subject).to receive(:which).with("wget").and_return(nil)
-      expect { subject.export }.to raise_error Teaspoon::MissingDependency, "Could not find wget for exporting."
+      expect { subject.export }.to raise_error(
+        Teaspoon::MissingDependencyError,
+        "Unable to locate `wget` for exporter."
+      )
     end
 
     describe "creating the export" do

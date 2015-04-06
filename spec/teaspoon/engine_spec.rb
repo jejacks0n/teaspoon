@@ -64,7 +64,13 @@ describe Teaspoon::Engine do
 
       it "responds with a javascript tag that raises the error" do
         response = middleware.send(:render_exception, env, Exception.new("_message_"))
-        expect(response).to eq([200, { "Content-Type" => "text/html;", "Content-Length" => "54" }, ["<script>throw Error(\"Exception: _message_\\n\")</script>"]])
+        expect(response).to eq(
+          [
+            200,
+            { "Content-Type" => "text/html;", "Content-Length" => "54" },
+            ["<script>throw Error(\"Exception: _message_\\n\")</script>"]
+          ]
+        )
       end
     end
   end

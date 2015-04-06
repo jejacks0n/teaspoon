@@ -1,7 +1,7 @@
 begin
   require "selenium-webdriver"
 rescue LoadError
-  Teaspoon.abort("Could not find Selenium Webdriver. Install the selenium-webdriver gem.", 1)
+  Teaspoon.abort("Could not find Selenium Webdriver. Install the selenium-webdriver gem.")
 end
 
 module Teaspoon
@@ -12,11 +12,10 @@ module Teaspoon
         case options
         when Hash then @options = options
         when String then @options = JSON.parse(options)
-        else raise Teaspoon::UnknownDriverOptions, "Unknown driver options -- supply a hash or json string"
+        else raise Teaspoon::DriverOptionsError.new(types: "hash or json string")
         end
-
       rescue JSON::ParserError
-        raise Teaspoon::UnknownDriverOptions, "Malformed driver options -- supply a hash or json string"
+        raise Teaspoon::DriverOptionsError.new(types: "hash or json string")
       end
 
       def run_specs(runner, url)

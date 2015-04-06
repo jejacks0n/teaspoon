@@ -20,7 +20,7 @@ module Teaspoon
       end
       wait_until_started(thread)
     rescue => e
-      raise Teaspoon::ServerException, "Cannot start server: #{e.message}"
+      raise Teaspoon::ServerError.new(desc: e.message)
     end
 
     def responsive?
@@ -39,7 +39,7 @@ module Teaspoon
     def wait_until_started(thread)
       Timeout.timeout(Teaspoon.configuration.server_timeout.to_i) { thread.join(0.1) until responsive? }
     rescue Timeout::Error
-      raise Teaspoon::ServerException, "Server failed to start. You may need to increase the timeout configuration."
+      raise Timeout::Error.new("consider increasing the timeout with `config.server_timeout`")
     end
 
     def disable_logging
