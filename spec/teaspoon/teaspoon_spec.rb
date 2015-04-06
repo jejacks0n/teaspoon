@@ -39,9 +39,4 @@ describe Teaspoon do
       expect(subject.frameworks[:foo]).to eq(foo)
     end
   end
-
-  describe ".abort" do
-    it "logs a message if one was provided"
-    it "exits with the provided exit code"
-  end
 end
