@@ -5,14 +5,17 @@ describe Teaspoon::Environment do
   subject { described_class }
 
   describe ".load" do
+    before do
+      allow(subject).to receive(:load_rails)
+    end
+
     it "calls require_environment" do
-      expect(subject).to receive(:require_environment)
+      expect(subject).to receive(:load_rails)
       expect(subject).to receive(:rails_loaded?).and_return(true)
       described_class.load
     end
 
     it "aborts if Rails can't be found" do
-      expect(subject).to receive(:require_environment)
       expect(subject).to receive(:rails_loaded?).and_return(false)
       expect(Teaspoon).to receive(:abort).with("Rails environment not found.", 1)
       described_class.load

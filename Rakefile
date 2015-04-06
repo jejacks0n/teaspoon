@@ -10,6 +10,7 @@ end
 # Dummy App
 # -----------------------------------------------------------------------------
 APP_RAKEFILE = File.expand_path("../spec/dummy/Rakefile", __FILE__)
+ENV["TEASPOON_RAILS_ENV"] = File.expand_path("../spec/dummy/config/environment.rb", __FILE__)
 load "rails/tasks/engine.rake"
 begin
   Bundler::GemHelper.install_tasks

@@ -3,7 +3,7 @@ require "teaspoon/exceptions"
 module Teaspoon
   module Environment
     def self.load(options = {})
-      require_environment(options[:environment])
+      load_rails
       Teaspoon.abort("Rails environment not found.", 1) unless rails_loaded?
 
       require "teaspoon"
@@ -44,6 +44,11 @@ module Teaspoon
 
     def self.rails_loaded?
       !!defined?(Rails)
+    end
+
+    def self.load_rails
+      rails_env = ENV["TEASPOON_RAILS_ENV"] || File.expand_path("config/environment", Dir.pwd)
+      require rails_env
     end
   end
 end

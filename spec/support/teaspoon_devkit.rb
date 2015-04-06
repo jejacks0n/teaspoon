@@ -29,10 +29,12 @@ module Teaspoon
     end
 
     def run_teaspoon(opts = "")
+      set_rails_env
       run_simple("bundle exec teaspoon #{opts}", false)
     end
 
     def rake_teaspoon(envs = "")
+      set_rails_env
       run_simple("bundle exec rake teaspoon #{envs}", false)
     end
 
@@ -51,6 +53,11 @@ module Teaspoon
       output = output.gsub("'undefined' is not a function", "undefined is not a constructor")
       output = output.gsub(/Finished in [\d\.]+ seconds/, "Finished in 0.31337 seconds")
       output
+    end
+
+    def set_rails_env
+      boot_from = File.expand_path(current_dir + "/config/environment.rb", Dir.pwd)
+      set_env("TEASPOON_RAILS_ENV", boot_from)
     end
   end
 end
