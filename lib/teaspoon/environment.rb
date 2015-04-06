@@ -43,7 +43,7 @@ module Teaspoon
     end
 
     def self.rails_loaded?
-      defined?(Rails)
+      !!defined?(Rails)
     end
   end
 end
