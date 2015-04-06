@@ -90,7 +90,6 @@ describe Teaspoon::Generators::InstallGenerator do
       let(:options) { { documentation: false } }
 
       it "installs the env without documentation" do
-        puts subject.options
         expect(subject).to receive(:template).with("env.rb.tt", "spec/teaspoon_env.rb")
         subject.copy_environment
       end
