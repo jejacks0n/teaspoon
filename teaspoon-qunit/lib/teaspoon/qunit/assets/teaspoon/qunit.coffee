@@ -1,5 +1,6 @@
 #= require teaspoon/teaspoon
-#= require teaspoon/qunit/reporters/console
+#= require teaspoon/qunit/_namespace
+#= require teaspoon/qunit/responder
 #= require teaspoon/qunit/reporters/html
 
 unless QUnit?
@@ -9,11 +10,12 @@ class Teaspoon.Runner extends Teaspoon.Runner
 
   constructor: ->
     super
-    env.start()
+    QUnit.start()
 
 
   setup: ->
-    new (@getReporter())(env)
+    reporter = new (@getReporter())(QUnit) # TODO: remove QUnit
+    new Teaspoon.Qunit.Responder(QUnit, reporter)
 
 
 
@@ -44,7 +46,7 @@ class Teaspoon.Spec
 
   result: ->
     status = "failed"
-    status = "passed" unless @spec.failed
+    status = "passed" if @spec.failed == 0
     status: status
     skipped: false
 

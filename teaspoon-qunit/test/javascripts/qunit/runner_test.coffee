@@ -3,14 +3,20 @@ module "QUnit Teaspoon.Runner",
     QUnit.start = sinon.spy()
     Teaspoon.Runner.prototype.reportRunnerStarting = sinon.spy()
 
-test "constructor", 1, ->
+test "constructor tells QUnit to start", 1, ->
   new Teaspoon.Runner()
   ok(QUnit.start.called, "QUnit.start was called")
 
-test "#setup", ->
+test "#setup fetches the reporter", ->
   runner = new Teaspoon.Runner()
   runner.params = {grep: "foo"}
   reporter = ->
+    reportRunnerStarting: ->
+    reportRunnerResults: ->
+    reportSuiteStarting: ->
+    reportSuiteResults: ->
+    reportSpecStarting: ->
+    reportSpecResults: ->
   runner.getReporter = sinon.spy(-> reporter)
 
   runner.setup()

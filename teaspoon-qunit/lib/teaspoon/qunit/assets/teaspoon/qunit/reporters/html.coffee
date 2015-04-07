@@ -1,34 +1,5 @@
 class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.HTML
 
-  constructor: (env) ->
-    super
-    env.log(@reportSpecResults)
-    env.testDone(@reportSpecResults)
-    env.done(@reportRunnerResults)
-    @currentAssertions = []
-    @reportRunnerStarting()
-
-
-  reportRunnerStarting: ->
-    @total.exist = null
-    @setText("stats-duration", "...")
-
-
-  reportSpecResults: (spec) =>
-    unless typeof(spec.total) == "number"
-      @currentAssertions.push(spec)
-      return
-    spec.assertions = @currentAssertions
-    @currentAssertions = []
-    @reportSpecStarting(spec)
-    super(spec)
-
-
-  reportRunnerResults: (result) =>
-    @total.exist = @total.run = result.total
-    super
-
-
   readConfig: ->
     super
     QUnit.config.notrycatch = @config["use-catch"]
