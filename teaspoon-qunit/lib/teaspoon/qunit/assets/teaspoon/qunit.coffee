@@ -14,7 +14,7 @@ class Teaspoon.Runner extends Teaspoon.Runner
 
 
   setup: ->
-    reporter = new (@getReporter())(QUnit) # TODO: remove QUnit
+    reporter = new (@getReporter())()
     new Teaspoon.Qunit.Responder(QUnit, reporter)
 
 
