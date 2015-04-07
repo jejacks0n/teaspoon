@@ -107,7 +107,7 @@ module Teaspoon
     def suite_configuration
       config = Teaspoon.configuration.suite_configs[name]
       raise Teaspoon::UnknownSuite.new(name: name) unless config.present?
-      config[:instance] ||= Teaspoon::Configuration::Suite.new(&config[:block])
+      config[:instance] ||= Teaspoon::Configuration::Suite.new(name, &config[:block])
     end
 
     def specs_from_file
