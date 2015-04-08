@@ -1,4 +1,4 @@
-class Teaspoon.Jasmine.Responder
+class Teaspoon.Jasmine1.Responder
 
   constructor: (@reporter) ->
 
@@ -12,16 +12,12 @@ class Teaspoon.Jasmine.Responder
 
 
   reportSuiteResults: (suite) ->
-    @reporter.reportSuiteResults(
-      id: suite.id
-      description: suite.description
-      fullName: suite.getFullName()
-    )
+    @reporter.reportSuiteResults(new Teaspoon.Jasmine1.Suite(suite))
 
 
   reportSpecStarting: (spec) ->
-    @reporter.reportSpecStarting(spec)
+    @reporter.reportSpecStarting(new Teaspoon.Jasmine1.Spec(spec))
 
 
   reportSpecResults: (spec) ->
-    @reporter.reportSpecResults(spec)
+    @reporter.reportSpecResults(new Teaspoon.Jasmine1.Spec(spec))

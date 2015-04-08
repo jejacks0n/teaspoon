@@ -1,4 +1,4 @@
-describe "Teaspoon.Jasmine.Responder", ->
+describe "Teaspoon.Jasmine1.Responder", ->
 
   beforeEach ->
     @reportRunnerStartingDetails =
@@ -25,7 +25,7 @@ describe "Teaspoon.Jasmine.Responder", ->
       reportSuiteResults: ->
       reportSpecStarting: ->
       reportSpecResults: ->
-    @responder = new Teaspoon.Jasmine.Responder(@reporter)
+    @responder = new Teaspoon.Jasmine1.Responder(@reporter)
 
 
   describe "#reportRunnerStarting", ->
@@ -55,10 +55,9 @@ describe "Teaspoon.Jasmine.Responder", ->
 
       @responder.reportSuiteResults(@reportSuiteResultsDetails)
 
-      expect(@reporter.reportSuiteResults).toHaveBeenCalledWith
-        id: 0
-        description: "Jasmine 1 describe"
-        fullName: "Jasmine 1 describe"
+      suiteArg = @reporter.reportSuiteResults.calls[0].args[0]
+      expect(suiteArg).toEqual(jasmine.any(Teaspoon.Jasmine1.Suite))
+      expect(suiteArg.fullDescription).toEqual("Jasmine 1 describe")
 
 
   describe "#reportSpecStarting", ->
@@ -68,7 +67,9 @@ describe "Teaspoon.Jasmine.Responder", ->
 
       @responder.reportSpecStarting(@reportSpecStartingDetails)
 
-      expect(@reporter.reportSpecStarting).toHaveBeenCalledWith(@reportSpecStartingDetails)
+      specArg = @reporter.reportSpecStarting.calls[0].args[0]
+      expect(specArg).toEqual(jasmine.any(Teaspoon.Jasmine1.Spec))
+      expect(specArg.fullDescription).toEqual("Jasmine 1 describe has an it")
 
 
   describe "#reportSpecResults", ->
@@ -78,4 +79,6 @@ describe "Teaspoon.Jasmine.Responder", ->
 
       @responder.reportSpecResults(@reportSpecResultsDetails)
 
-      expect(@reporter.reportSpecResults).toHaveBeenCalledWith(@reportSpecResultsDetails)
+      specArg = @reporter.reportSpecResults.calls[0].args[0]
+      expect(specArg).toEqual(jasmine.any(Teaspoon.Jasmine1.Spec))
+      expect(specArg.fullDescription).toEqual("Jasmine 1 describe has an it")
