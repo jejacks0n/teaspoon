@@ -39,5 +39,10 @@ class Teaspoon.Jasmine1.Spec
 
 # Shim since core still initializes this class, but the argument
 # is the real spec object passed in from the responder.
+# TODO: remove and register spec class with core
 class Teaspoon.Spec
-  constructor: (spec) -> return spec
+  constructor: (spec) ->
+    return if spec instanceof Teaspoon.Jasmine1.Spec
+      spec
+    else
+      new Teaspoon.Jasmine1.Spec(spec)

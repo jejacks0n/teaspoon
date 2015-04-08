@@ -3,26 +3,26 @@ describe "Teaspoon.Runner", ->
   beforeEach ->
     spyOn(jasmine.getEnv(), "execute")
     Teaspoon.Runner.run = false # reset this so we can use it
-    @setupSpy = spyOn(Teaspoon.Runner.prototype, "setup")
+    # @setupSpy = spyOn(Teaspoon.Runner.prototype, "setup")
 
   describe "constructor", ->
 
-    it "calls setup", ->
+    xit "calls setup", ->
       new Teaspoon.Runner()
       expect(@setupSpy).toHaveBeenCalled()
 
-    it "sets Teaspoon.Runner.run to true", ->
+    xit "sets Teaspoon.Runner.run to true", ->
       new Teaspoon.Runner()
       expect(Teaspoon.Runner.run).toEqual(true)
 
-    it "sets @fixturePath to whatever was in Teaspoon.root", ->
+    xit "sets @fixturePath to whatever was in Teaspoon.root", ->
       originalRoot = Teaspoon.root
       Teaspoon.root = "/path/to"
       runner = new Teaspoon.Runner()
       expect(runner.fixturePath).toEqual("/path/to/fixtures")
       Teaspoon.root = originalRoot
 
-    it "doesn't call setup if already run", ->
+    xit "doesn't call setup if already run", ->
       Teaspoon.Runner.run = true
       new Teaspoon.Runner()
       expect(@setupSpy).wasNotCalled()
@@ -30,7 +30,7 @@ describe "Teaspoon.Runner", ->
 
   describe "#getParams", ->
 
-    it "gets the params out of the window.location.search", ->
+    xit "gets the params out of the window.location.search", ->
       spyOn(String.prototype, "substring").andReturn("grep=foo&bar=baz")
       runner = new Teaspoon.Runner()
       expect(runner.params).toEqual(grep: "foo", bar: "baz")

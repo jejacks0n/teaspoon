@@ -33,4 +33,4 @@ class Teaspoon.Jasmine1.Runner extends Teaspoon.Runner
 # Shim since core initializes the base class
 # TODO: register the runner to use with core
 class Teaspoon.Runner
-  constructor: -> new Teaspoon.Jasmine1.Runner
+  constructor: -> return new Teaspoon.Jasmine1.Runner
