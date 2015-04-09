@@ -1,7 +1,5 @@
 class Teaspoon.Jasmine1.Fixture extends Teaspoon.fixture
 
-  window.fixture = @
-
   @load: ->
     args = arguments
     throw "Teaspoon can't load fixtures outside of describe." unless @env().currentSuite || @env().currentSpec
