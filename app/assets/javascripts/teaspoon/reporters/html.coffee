@@ -114,7 +114,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     spec = new Teaspoon.Spec(spec)
     result = spec.result()
 
-    if result.skipped || result.status == "pending"
+    if result.skipped
       @updateStat("skipped", @total.skipped += 1)
       return
 
@@ -123,6 +123,8 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     if result.status == "passed"
       @updateStat("passes", @total.passes += 1)
       @reportView?.updateState("passed", elapsed)
+    else if result.status == "pending"
+      @reportView?.updateState("pending", elapsed)
     else
       @updateStat("failures", @total.failures += 1)
       @reportView?.updateState("failed", elapsed)

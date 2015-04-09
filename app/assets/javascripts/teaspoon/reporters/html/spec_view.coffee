@@ -40,7 +40,7 @@ class Teaspoon.Reporters.HTML.SpecView extends Teaspoon.Reporters.BaseView
     result = @spec.result()
     classes = ["state-#{state}"]
     classes.push("slow") if elapsed > Teaspoon.slow
-    @el.innerHTML += "<span>#{elapsed}ms</span>" unless state == "failed"
+    @el.innerHTML += "<span>#{elapsed}ms</span>" if state == "passed"
     @el.className = classes.join(" ")
-    @buildErrors() unless result.status == "passed"
+    @buildErrors() if result.status == "failed"
     @parentView.updateState?(state)
