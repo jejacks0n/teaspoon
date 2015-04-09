@@ -1,8 +1,11 @@
 class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.HTML
 
   reportRunnerResults: (runner) ->
-    # QUnit 1.14 doesn't provide the total until all tests are finished
-    @total.exist = @total.run = runner.total
+    version = Teaspoon.Qunit.version()
+    if version.major = 1 && version.minor < 16
+      # QUnit <= 1.15 doesn't provide the total until all tests are finished
+      # The .begin hook is broken
+      @total.exist = @total.run = runner.total
     super
 
 
@@ -12,8 +15,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.HTML
 
 
   envInfo: ->
-    "qunit #{_qunit_version || "[unknown version]"}"
-
+    "qunit #{Teaspoon.Qunit.rawVersion() || "[unknown version]"}"
 
 
 class Teaspoon.Reporters.HTML.SpecView extends Teaspoon.Reporters.HTML.SpecView

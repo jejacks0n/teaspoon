@@ -32,6 +32,7 @@ module "Teaspoon.Qunit.Responder",
       message: "1 == 1"
 
     @qunit =
+      begin: ->
       done: ->
       moduleStart: ->
       moduleDone: ->
@@ -48,15 +49,7 @@ module "Teaspoon.Qunit.Responder",
     @responder = new Teaspoon.Qunit.Responder(@qunit, @reporter)
 
 
-test "constructor reports the runner starting", 1, ->
-  sinon.stub(@reporter, "reportRunnerStarting")
-
-  new Teaspoon.Qunit.Responder(@qunit, @reporter)
-
-  ok(@reporter.reportRunnerStarting.calledWith(total: null), "reportRunnerStarting was called")
-
-
-test "constructor sets up test callbacks", 5, ->
+test "constructor sets up test callbacks", ->
   sinon.stub(@qunit, "done")
   sinon.stub(@qunit, "moduleStart")
   sinon.stub(@qunit, "moduleDone")
@@ -72,7 +65,41 @@ test "constructor sets up test callbacks", 5, ->
   ok(@qunit.log.calledWith(responder.assertionDone), "log hook was established")
 
 
-test "QUnit.done reports the runner finishing", 1, ->
+test "constructor reports the runner starting if QUnit version is <= 1.15.0", ->
+  sinon.stub(Teaspoon.Qunit, "rawVersion", -> "0.15.0")
+  sinon.stub(@qunit, "begin")
+  sinon.stub(@reporter, "reportRunnerStarting")
+
+  new Teaspoon.Qunit.Responder(@qunit, @reporter)
+
+  ok(!@qunit.begin.called, "begin hook was not established")
+  ok(@reporter.reportRunnerStarting.calledWith(total: null), "reportRunnerStarting was called")
+
+  Teaspoon.Qunit.rawVersion.restore()
+
+
+test "constructor sets up the begin callback if QUnit version is >= 1.16.0", ->
+  sinon.stub(Teaspoon.Qunit, "rawVersion", -> "0.16.0")
+  sinon.stub(@qunit, "begin")
+  sinon.stub(@reporter, "reportRunnerStarting")
+
+  responder = new Teaspoon.Qunit.Responder(@qunit, @reporter)
+
+  ok(@qunit.begin.calledWith(responder.runnerStarted), "begin hook was established")
+  ok(!@reporter.reportRunnerStarting.called, "reportRunnerStarting was not called")
+
+  Teaspoon.Qunit.rawVersion.restore()
+
+
+test "QUnit.begin reports the runner starting", ->
+  sinon.stub(@reporter, "reportRunnerStarting")
+
+  @responder.runnerStarted(@beginDetails)
+
+  ok(@reporter.reportRunnerStarting.calledWith(total: 42), "reportRunnerStarting was called")
+
+
+test "QUnit.done reports the runner finishing", ->
   sinon.stub(@reporter, "reportRunnerResults")
 
   @responder.runnerDone(@doneDetails)
@@ -80,7 +107,7 @@ test "QUnit.done reports the runner finishing", 1, ->
   ok(@reporter.reportRunnerResults.calledWith(@doneDetails), "reportRunnerResults was called")
 
 
-test "QUnit.moduleStart reports the suite starting", 2, ->
+test "QUnit.moduleStart reports the suite starting", ->
   sinon.stub(@reporter, "reportSuiteStarting")
 
   @responder.suiteStarted(@moduleStartedDetails)
@@ -90,7 +117,7 @@ test "QUnit.moduleStart reports the suite starting", 2, ->
   equal(suiteArg.description, "module1", "the suite has a description")
 
 
-test "QUnit.moduleDone reports the suite finishing", 2, ->
+test "QUnit.moduleDone reports the suite finishing", ->
   sinon.stub(@reporter, "reportSuiteResults")
 
   @responder.suiteDone(@moduleDoneDetails)
@@ -100,7 +127,7 @@ test "QUnit.moduleDone reports the suite finishing", 2, ->
   equal(suiteArg.description, "module1", "the suite has a description")
 
 
-test "QUnit.testDone reports the spec starting and finishing", 4, ->
+test "QUnit.testDone reports the spec starting and finishing", ->
   sinon.stub(@reporter, "reportSpecStarting")
   sinon.stub(@reporter, "reportSpecResults")
 
@@ -115,7 +142,7 @@ test "QUnit.testDone reports the spec starting and finishing", 4, ->
   ok(/test1/.test(specArg.description), "the test has a description")
 
 
-test "QUnit.testDone associates accumulated assertions", 2, ->
+test "QUnit.testDone associates accumulated assertions", ->
   sinon.stub(@reporter, "reportSpecResults")
 
   @responder.assertionDone(@logDetails)

@@ -1,7 +1,12 @@
 class Teaspoon.Qunit.Responder
 
   constructor: (qunit, @reporter) ->
-    @reporter.reportRunnerStarting(total: null)
+    version = Teaspoon.Qunit.version()
+    if version.major = 1 && version.minor > 15
+      qunit.begin(@runnerStarted)
+    else
+      # QUnit's .begin hook was broken
+      @reporter.reportRunnerStarting(total: null)
 
     qunit.done(@runnerDone)
     qunit.moduleStart(@suiteStarted)
@@ -10,6 +15,10 @@ class Teaspoon.Qunit.Responder
     qunit.log(@assertionDone)
 
     @assertions = []
+
+
+  runnerStarted: (runner) =>
+    @reporter.reportRunnerStarting(total: runner.totalTests)
 
 
   runnerDone: (runner) =>
