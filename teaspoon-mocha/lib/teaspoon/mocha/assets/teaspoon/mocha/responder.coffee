@@ -7,8 +7,8 @@ class Teaspoon.Mocha.Responder
     runner.on("suite", @suiteStarted)
     runner.on("suite end", @suiteDone)
     runner.on("test", @specStarted)
-    runner.on("pass", @specPassed)
     runner.on("fail", @specFailed)
+    runner.on("test end", @specFinished)
 
 
   runnerDone: =>
@@ -16,22 +16,23 @@ class Teaspoon.Mocha.Responder
 
 
   suiteStarted: (suite) =>
-    @reporter.reportSuiteStarting()
+    @reporter.reportSuiteStarting(new Teaspoon.Mocha.Suite(suite))
 
 
   suiteDone: (suite) =>
-    @reporter.reportSuiteResults()
+    @reporter.reportSuiteResults(new Teaspoon.Mocha.Suite(suite))
 
 
   specStarted: (spec) =>
-    @reporter.reportSpecStarting(spec)
+    @reporter.reportSpecStarting(new Teaspoon.Mocha.Spec(spec))
 
 
-  specPassed: (spec) =>
-    @reporter.reportSpecResults(spec)
+  specFinished: (spec) =>
+    spec = new Teaspoon.Mocha.Spec(spec)
+    @reporter.reportSpecResults(spec) unless spec.result().status == "failed"
 
 
-  specFailed: (specOrHook, err) =>
-    specOrHook.err = err
+  specFailed: (spec, err) =>
+    spec.err = err
 
-    @reporter.reportSpecResults(specOrHook)
+    @reporter.reportSpecResults(new Teaspoon.Mocha.Spec(spec))

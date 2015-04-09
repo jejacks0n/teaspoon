@@ -1,8 +1,8 @@
-describe "Mocha Teaspoon.Runner", ->
+describe "Teaspoon.Mocha.Runner", ->
 
   beforeEach ->
     @runSpy = mocha.run = sinon.spy()
-    @runner = new Teaspoon.Runner()
+    @runner = new Teaspoon.Mocha.Runner()
 
   describe "constructor", ->
 
