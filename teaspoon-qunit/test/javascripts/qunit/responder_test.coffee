@@ -56,10 +56,6 @@ test "constructor reports the runner starting", 1, ->
   ok(@reporter.reportRunnerStarting.calledWith(total: null), "reportRunnerStarting was called")
 
 
-# Usually we'd want to actually execute the QUnit hook stack to test
-# that the callbacks are set up properly, but QUnit doesn't provide
-# a nice abstraction on this (it's all defined globally on QUnit) so
-# that we can call only the callbacks we need. We'll mock instead.
 test "constructor sets up test callbacks", 5, ->
   sinon.spy(@qunit, "done")
   sinon.spy(@qunit, "moduleStart")
