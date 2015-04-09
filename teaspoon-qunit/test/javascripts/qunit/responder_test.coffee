@@ -49,7 +49,7 @@ module "Teaspoon.Qunit.Responder",
 
 
 test "constructor reports the runner starting", 1, ->
-  sinon.spy(@reporter, "reportRunnerStarting")
+  sinon.stub(@reporter, "reportRunnerStarting")
 
   new Teaspoon.Qunit.Responder(@qunit, @reporter)
 
@@ -57,11 +57,11 @@ test "constructor reports the runner starting", 1, ->
 
 
 test "constructor sets up test callbacks", 5, ->
-  sinon.spy(@qunit, "done")
-  sinon.spy(@qunit, "moduleStart")
-  sinon.spy(@qunit, "moduleDone")
-  sinon.spy(@qunit, "testDone")
-  sinon.spy(@qunit, "log")
+  sinon.stub(@qunit, "done")
+  sinon.stub(@qunit, "moduleStart")
+  sinon.stub(@qunit, "moduleDone")
+  sinon.stub(@qunit, "testDone")
+  sinon.stub(@qunit, "log")
 
   responder = new Teaspoon.Qunit.Responder(@qunit, @reporter)
 
@@ -73,46 +73,54 @@ test "constructor sets up test callbacks", 5, ->
 
 
 test "QUnit.done reports the runner finishing", 1, ->
-  sinon.spy(@reporter, "reportRunnerResults")
+  sinon.stub(@reporter, "reportRunnerResults")
 
   @responder.runnerDone(@doneDetails)
 
   ok(@reporter.reportRunnerResults.calledWith(@doneDetails), "reportRunnerResults was called")
 
 
-test "QUnit.moduleStart reports the suite starting", 1, ->
-  sinon.spy(@reporter, "reportSuiteStarting")
+test "QUnit.moduleStart reports the suite starting", 2, ->
+  sinon.stub(@reporter, "reportSuiteStarting")
 
   @responder.suiteStarted(@moduleStartedDetails)
 
-  ok(@reporter.reportSuiteStarting.calledWith(@moduleStartedDetails), "reportSuiteStarting was called")
+  suiteArg = @reporter.reportSuiteStarting.args[0][0]
+  ok(suiteArg instanceof Teaspoon.Qunit.Suite, "a suite instance is passed")
+  equal(suiteArg.description, "module1", "the suite has a description")
 
 
-test "QUnit.moduleDone reports the suite finishing", 1, ->
-  sinon.spy(@reporter, "reportSuiteResults")
+test "QUnit.moduleDone reports the suite finishing", 2, ->
+  sinon.stub(@reporter, "reportSuiteResults")
 
   @responder.suiteDone(@moduleDoneDetails)
 
-  ok(@reporter.reportSuiteResults.calledWith(@moduleDoneDetails), "reportSuiteResults was called")
+  suiteArg = @reporter.reportSuiteResults.args[0][0]
+  ok(suiteArg instanceof Teaspoon.Qunit.Suite, "a suite instance is passed")
+  equal(suiteArg.description, "module1", "the suite has a description")
 
 
-test "QUnit.testDone reports the spec starting and finishing", 2, ->
-  sinon.spy(@reporter, "reportSpecStarting")
-  sinon.spy(@reporter, "reportSpecResults")
+test "QUnit.testDone reports the spec starting and finishing", 4, ->
+  sinon.stub(@reporter, "reportSpecStarting")
+  sinon.stub(@reporter, "reportSpecResults")
 
   @responder.specDone(@testDoneDetails)
 
-  ok(@reporter.reportSpecStarting.calledWith(@testDoneDetails), "reportSpecStarting was called")
-  ok(@reporter.reportSpecResults.calledWith(@testDoneDetails), "reportSpecResults was called")
+  specArg = @reporter.reportSpecStarting.args[0][0]
+  ok(specArg instanceof Teaspoon.Qunit.Spec, "a test instance is passed")
+  ok(/test1/.test(specArg.description), "the test has a description")
+
+  specArg = @reporter.reportSpecResults.args[0][0]
+  ok(specArg instanceof Teaspoon.Qunit.Spec, "a test instance is passed")
+  ok(/test1/.test(specArg.description), "the test has a description")
 
 
-test "QUnit.testDone associates accumulated assertions", 1, ->
-  sinon.spy(@reporter, "reportSpecResults")
+test "QUnit.testDone associates accumulated assertions", 2, ->
+  sinon.stub(@reporter, "reportSpecResults")
 
   @responder.assertionDone(@logDetails)
   @responder.specDone(@testDoneDetails)
 
-  doneDetails = @testDoneDetails
-  doneDetails.assertions = [@logDetails]
-
-  ok(@reporter.reportSpecResults.calledWith(doneDetails), "reportSpecResults was called with assertions")
+  specArg = @reporter.reportSpecResults.args[0][0]
+  equal(specArg.spec.assertions.length, 1, "reportSpecResults was called with one assertion")
+  equal(specArg.spec.assertions[0], @logDetails, "reportSpecResults was called with reported assertions")

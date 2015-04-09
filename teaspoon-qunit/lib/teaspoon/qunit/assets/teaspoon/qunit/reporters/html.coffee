@@ -1,5 +1,11 @@
 class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.HTML
 
+  reportRunnerResults: (runner) ->
+    # QUnit 1.14 doesn't provide the total until all tests are finished
+    @total.exist = @total.run = runner.total
+    super
+
+
   readConfig: ->
     super
     QUnit.config.notrycatch = @config["use-catch"]

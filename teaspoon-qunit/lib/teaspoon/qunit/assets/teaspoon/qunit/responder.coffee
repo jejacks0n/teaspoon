@@ -17,11 +17,11 @@ class Teaspoon.Qunit.Responder
 
 
   suiteStarted: (suite) =>
-    @reporter.reportSuiteStarting(suite)
+    @reporter.reportSuiteStarting(new Teaspoon.Qunit.Suite(suite))
 
 
   suiteDone: (suite) =>
-    @reporter.reportSuiteResults(suite)
+    @reporter.reportSuiteResults(new Teaspoon.Qunit.Suite(suite))
 
 
   specDone: (spec) =>
@@ -30,6 +30,7 @@ class Teaspoon.Qunit.Responder
 
     # QUnit doesn't have details about the spec until it's finished. So we
     # wait until it's finished to report that it started.
+    spec = new Teaspoon.Qunit.Spec(spec)
     @reporter.reportSpecStarting(spec)
     @reporter.reportSpecResults(spec)
 
