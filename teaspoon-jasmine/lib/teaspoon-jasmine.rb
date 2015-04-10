@@ -12,9 +12,13 @@ module Teaspoon
                                 dependencies: ["teaspoon-jasmine1.js"],
                                 dev_deps: ["teaspoon/jasmine1.js"]
 
-      register_version "2.2.0", "jasmine/2.2.0.js",
-                                dependencies: ["teaspoon-jasmine2.js"],
-                                dev_deps: ["teaspoon/jasmine2.js"]
+      versions = ["2.0.3", "2.1.3", "2.2.0"]
+
+      versions.each do |version|
+        register_version version, "jasmine/#{version}.js",
+                                  dependencies: ["teaspoon-jasmine2.js"],
+                                  dev_deps: ["teaspoon/jasmine2.js"]
+      end
 
       # add asset paths
       add_asset_path File.expand_path("../teaspoon/jasmine/assets", __FILE__)

@@ -14,4 +14,4 @@ describe "Teaspoon.Jasmine2.Reporters.HTML", ->
   describe "#envInfo", ->
 
     it "returns jasmine version information", ->
-      expect(@reporter.envInfo()).toBe("jasmine 2.2.0")
+      expect(@reporter.envInfo()).toMatch(/jasmine \d+\.\d+\.\d+/)
