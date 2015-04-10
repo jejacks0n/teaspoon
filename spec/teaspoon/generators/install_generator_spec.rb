@@ -61,7 +61,7 @@ describe Teaspoon::Generators::InstallGenerator do
       expect { subject.verify_framework_and_version }.to raise_error(SystemExit)
       expect(message).to include(<<-HELP.strip_heredoc)
         Unknown framework: jasmine
-          Available: jasmine: versions[1.3.1-dev, 2.2.0-dev, 1.3.1, 2.2.0]
+          Available: jasmine: versions[1.3.1, 2.2.0]
       HELP
     end
 
@@ -74,7 +74,7 @@ describe Teaspoon::Generators::InstallGenerator do
         expect { subject.verify_framework_and_version }.to raise_error(SystemExit)
         expect(message).to include(<<-HELP.strip_heredoc)
         Unknown framework: jasmine[6.6.6]
-          Available: jasmine: versions[1.3.1-dev, 2.2.0-dev, 1.3.1, 2.2.0]
+          Available: jasmine: versions[1.3.1, 2.2.0]
         HELP
       end
     end

@@ -29,14 +29,14 @@ feature "Running in the console", shell: true do
 
       Failed examples:
 
-      teaspoon -s default --filter="undefined global failure"
+      teaspoon -s default --filter=" global failure"
       teaspoon -s default --filter="Integration tests allows failing specs"
       teaspoon -s default --filter="Integration tests allows erroring specs"
     OUTPUT
   end
 
   let(:version) do
-    Teaspoon.frameworks[:qunit]._versions.keys.select { |k| k =~ /-dev$/ }.last
+    Teaspoon.frameworks[:qunit]._versions.keys.last
   end
 
   before do

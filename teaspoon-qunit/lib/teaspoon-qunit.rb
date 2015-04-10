@@ -7,14 +7,13 @@ module Teaspoon
       # specify the framework name
       framework_name :qunit
 
-      version = ["1.12.0", "1.13.0", "1.14.0", "1.15.0", "1.16.0", "1.17.1", "1.18.0"]
+      # register standard versions
+      versions = ["1.12.0", "1.13.0", "1.14.0", "1.15.0", "1.16.0", "1.17.1", "1.18.0"]
 
-      version.each do |version|
-        # register developer versions
-        register_version "#{version}-dev", "qunit/#{version}.js", "teaspoon/qunit.js"
-
-        # register standard versions
-        register_version version, "qunit/#{version}.js", "teaspoon-qunit.js"
+      versions.each do |version|
+        register_version version, "qunit/#{version}.js",
+                                  dependencies: ["teaspoon-qunit.js"],
+                                  dev_deps: ["teaspoon/qunit.js"]
       end
 
       # add asset paths

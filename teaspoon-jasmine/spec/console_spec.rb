@@ -41,7 +41,7 @@ feature "Running in the console", shell: true do
   end
 
   let(:version) do
-    Teaspoon.frameworks[:jasmine]._versions.keys.select { |k| k =~ /-dev$/ }.last
+    Teaspoon.frameworks[:jasmine]._versions.keys.last
   end
 
   before do

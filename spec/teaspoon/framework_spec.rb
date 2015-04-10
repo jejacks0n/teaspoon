@@ -6,8 +6,8 @@ describe Teaspoon::Framework do
   describe "registering versions" do
     before do
       subject.framework_name "framework"
-      subject.register_version "1.0.0", "framework/1.0.0", "teaspoon-framework"
-      subject.register_version "2.0.0", "framework/2.0.0", "teaspoon-framework"
+      subject.register_version "1.0.0", "framework/1.0.0", dependencies: ["teaspoon-framework"]
+      subject.register_version "2.0.0", "framework/2.0.0", dependencies: ["teaspoon-framework"]
     end
 
     it "tracks the registered versions" do
@@ -28,10 +28,42 @@ describe Teaspoon::Framework do
     end
 
     it "can generate a list of dependencies for the preferred version" do
-      subject.register_version "2.0.0", "framework/2.0.0", "teaspoon-framework"
+      subject.register_version "2.0.0", "framework/2.0.0", dependencies: ["teaspoon-framework"]
 
       dependencies = subject.new("_suite_config_").javascripts_for
       expect(dependencies).to eq(["framework/2.0.0", "teaspoon-framework"])
+    end
+
+    it "supports development dependencies" do
+      subject.register_version "2.0.0", "framework/2.0.0", dev_deps: ["teaspoon-framework"]
+
+      dependencies = subject.new("_suite_config_").javascripts_for
+      expect(dependencies).to eq(["framework/2.0.0", "teaspoon-framework"])
+    end
+
+    context "when not development mode" do
+      before do
+        ENV.delete("TEASPOON_DEVELOPMENT")
+      end
+
+      after do
+        ENV["TEASPOON_DEVELOPMENT"] = "true"
+      end
+
+      it "uses non development dependencies" do
+        subject.register_version "2.0.0", "framework/2.0.0",
+                                 dependencies: ["teaspoon-framework"],
+                                 dev_deps: ["teaspoon/framework"]
+
+        dependencies = subject.new("_suite_config_").javascripts_for
+        expect(dependencies).to eq(["framework/2.0.0", "teaspoon-framework"])
+      end
+
+      it "errors with no standard dependencies" do
+        expect do
+          subject.register_version "2.0.0", "framework/2.0.0", dev_deps: ["teaspoon-framework"]
+        end.to raise_error(Teaspoon::UnspecifiedDependencies)
+      end
     end
   end
 

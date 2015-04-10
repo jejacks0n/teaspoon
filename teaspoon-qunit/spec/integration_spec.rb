@@ -37,7 +37,7 @@ feature "Running in the browser", browser: true do
 
       within("#teaspoon-report-failures") do
         expect(find("li.spec:nth-child(1)")).
-          to have_text("undefined global failure TypeError: foo is not a function")
+          to have_text("global failure TypeError: foo is not a function")
         expect(find("li.spec:nth-child(2)")).
           to have_text("Integration tests allows failing specs fails correctly")
       end

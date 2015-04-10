@@ -6,6 +6,7 @@ env:
   global:
     - TRAVIS=true
     - DISPLAY=:99.0
+    - TEASPOON_DEVELOPMENT=true
 notifications:
   slack:
     secure: C/awjHAPtddxoCowdxbLiJG7Ny2wpgYVko4Dtrp62K8nxXfs3MotzndJmfr1D9z1sCIy0T/ZjuSE0gdVBNTcUrXIk0MiZS/G2UikeZFq1sh5Z3UkNbQoCZBJHPPoD7fwHC/hBIeDdZtvN8++zTvEcraFgZxEJMkw7Lihg5efa1Q=

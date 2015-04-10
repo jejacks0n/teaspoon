@@ -25,6 +25,7 @@ end
 ENV["RAILS_ENV"] ||= "test"
 ENV["RAILS_ROOT"] = File.expand_path("../dummy", __FILE__)
 ENV["TEASPOON_RAILS_ENV"] = File.expand_path("../dummy/config/environment.rb", __FILE__)
+ENV["TEASPOON_DEVELOPMENT"] = "true"
 require File.expand_path("../dummy/config/environment", __FILE__)
 
 require "rspec/rails"

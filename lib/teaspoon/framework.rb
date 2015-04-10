@@ -20,7 +20,16 @@ module Teaspoon
       name.present? ? @_framework_name ||= name.to_sym : @_framework_name
     end
 
-    def self.register_version(version, *dependencies)
+    def self.register_version(version, js_runner, dependencies: [], dev_deps: [])
+      if ENV["TEASPOON_DEVELOPMENT"] && dev_deps.any?
+        dependencies = dev_deps
+      end
+
+      if dependencies.empty?
+        raise Teaspoon::UnspecifiedDependencies.new(framework: @_framework_name, version: version)
+      end
+
+      dependencies.unshift(js_runner)
       @_versions[version] = dependencies
       Teaspoon.configuration.asset_manifest += dependencies
     end

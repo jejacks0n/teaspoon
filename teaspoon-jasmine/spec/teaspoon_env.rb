@@ -6,13 +6,13 @@ Teaspoon.configure do |config|
   config.fixture_paths << Teaspoon::FIXTURE_PATH
 
   config.suite do |suite|
-    suite.use_framework :jasmine, "1.3.1-dev"
+    suite.use_framework :jasmine, "1.3.1"
     suite.matcher = "#{path}/jasmine1/**/*_spec.{js,js.coffee,coffee}"
     suite.helper = "jasmine1_helper"
   end
 
   config.suite :jasmine2 do |suite|
-    suite.use_framework :jasmine, "2.2.0-dev"
+    suite.use_framework :jasmine, "2.2.0"
     suite.matcher = "#{path}/jasmine2/**/*_spec.{js,js.coffee,coffee}"
     suite.helper = "jasmine2_helper"
   end

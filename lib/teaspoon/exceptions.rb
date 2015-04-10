@@ -64,6 +64,16 @@ module Teaspoon
     end
   end
 
+  class UnspecifiedDependencies < Teaspoon::Error
+    def initialize(msg = nil, framework:, version:)
+      msg ||= "Missing dependencies: expected framework \"#{framework}\" (#{version}) to specify the `dependencies` option when registering."
+      super(msg)
+    end
+
+    def available
+    end
+  end
+
   class UnknownSuite < Teaspoon::Error
     def initialize(msg = nil, name:)
       msg ||= "Unknown suite configuration: expected \"#{name}\" to be a configured suite."
