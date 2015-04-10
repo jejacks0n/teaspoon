@@ -20,7 +20,7 @@ class Teaspoon.Mocha.Spec
     @parents ||= []
     parent = @parent
     while parent
-      parent = new Teaspoon.Suite(parent)
+      parent = new Teaspoon.Mocha.Suite(parent)
       @parents.unshift(parent)
       parent = parent.parent
     @parents
@@ -32,9 +32,3 @@ class Teaspoon.Mocha.Spec
     status = "pending" if @spec.pending
     status: status
     skipped: @spec.state == "skipped"
-
-
-# Shim since core still initializes this class, but the argument
-# is the real spec object passed in from the responder.
-class Teaspoon.Spec
-  constructor: (spec) -> return spec

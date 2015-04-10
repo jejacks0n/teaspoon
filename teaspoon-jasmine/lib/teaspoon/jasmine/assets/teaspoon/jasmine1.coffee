@@ -7,3 +7,4 @@ unless jasmine?
 
 @Teaspoon ?= {}
 @Teaspoon.Jasmine1 ?= {}
+@Teaspoon.Jasmine1.Reporters ?= {}

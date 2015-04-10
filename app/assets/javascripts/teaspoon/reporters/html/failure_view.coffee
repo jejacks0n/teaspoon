@@ -1,3 +1,5 @@
+#= require teaspoon/reporters/html/base_view
+
 class Teaspoon.Reporters.HTML.FailureView extends Teaspoon.Reporters.BaseView
 
   constructor: (@spec) ->

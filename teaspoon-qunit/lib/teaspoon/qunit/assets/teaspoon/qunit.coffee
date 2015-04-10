@@ -15,3 +15,5 @@ unless QUnit?
   rawVersion: ->
     QUnit.version || _qunit_version
 }
+@Teaspoon.Qunit.Reporters ?= {}
+@Teaspoon.Qunit.Reporters.HTML ?= {}

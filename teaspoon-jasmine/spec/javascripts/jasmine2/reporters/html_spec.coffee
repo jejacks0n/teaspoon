@@ -1,8 +1,8 @@
-describe "Jasmine 2 Teaspoon.Reporters.HTML", ->
+describe "Teaspoon.Jasmine2.Reporters.HTML", ->
 
   beforeEach ->
     spyOn(Teaspoon.Reporters.HTML.prototype, "build")
-    @reporter = new Teaspoon.Reporters.HTML()
+    @reporter = new Teaspoon.Jasmine2.Reporters.HTML()
 
   describe "#readConfig", ->
 

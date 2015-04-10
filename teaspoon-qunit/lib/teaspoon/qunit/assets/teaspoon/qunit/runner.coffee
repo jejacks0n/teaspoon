@@ -1,3 +1,5 @@
+#= require teaspoon/runner
+
 class Teaspoon.Qunit.Runner extends Teaspoon.Runner
 
   constructor: ->
@@ -8,9 +10,3 @@ class Teaspoon.Qunit.Runner extends Teaspoon.Runner
   setup: ->
     reporter = new (@getReporter())()
     new Teaspoon.Qunit.Responder(QUnit, reporter)
-
-
-# Shim since core initializes the base class
-# TODO: register the runner to use with core
-class Teaspoon.Runner
-  constructor: -> new Teaspoon.Qunit.Runner

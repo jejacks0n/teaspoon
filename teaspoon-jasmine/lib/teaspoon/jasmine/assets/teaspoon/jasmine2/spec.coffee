@@ -34,9 +34,3 @@ class Teaspoon.Jasmine2.Spec
 
   status: ->
     if @spec.status == "disabled" then "passed" else @spec.status
-
-
-# Shim since core still initializes this class, but the argument
-# is the real spec object passed in from the responder.
-class Teaspoon.Spec
-  constructor: (spec) -> return spec

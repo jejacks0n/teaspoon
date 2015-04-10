@@ -1,4 +1,6 @@
-class Teaspoon.Mocha.Fixture extends Teaspoon.fixture
+#= require teaspoon/fixture
+
+class Teaspoon.Mocha.Fixture extends Teaspoon.Fixture
 
   @load: ->
     args = arguments
@@ -10,7 +12,3 @@ class Teaspoon.Mocha.Fixture extends Teaspoon.fixture
     args = arguments
     if window.env.started then super
     else beforeEach => fixture.__super__.constructor.set.apply(@, args)
-
-
-# TODO: Register fixture framework with core
-window.fixture = Teaspoon.Mocha.Fixture

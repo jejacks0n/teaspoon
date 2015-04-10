@@ -1,8 +1,4 @@
-# TODO: register framework-specific fixture lib with core
-# so that this base class doesn't have to reference the
-# lib via window.fixture
-
-class Teaspoon.fixture
+class Teaspoon.Fixture
 
   @cache: {}
   @el: null

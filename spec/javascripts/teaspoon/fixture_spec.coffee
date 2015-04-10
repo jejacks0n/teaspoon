@@ -1,4 +1,4 @@
-describe "Teaspoon.fixture", ->
+describe "Teaspoon.Fixture", ->
 
   beforeEach ->
     fixture.cache = {}

@@ -22,7 +22,7 @@ class Teaspoon.Jasmine1.Spec
     @parents ||= []
     parent = @parent
     while parent
-      parent = new Teaspoon.Suite(parent)
+      parent = new Teaspoon.Jasmine1.Suite(parent)
       @parents.unshift(parent)
       parent = parent.parent
     @parents
@@ -35,14 +35,3 @@ class Teaspoon.Jasmine1.Spec
     status = "pending" if @spec.pending
     status: status
     skipped: results.skipped
-
-
-# Shim since core still initializes this class, but the argument
-# is the real spec object passed in from the responder.
-# TODO: remove and register spec class with core
-class Teaspoon.Spec
-  constructor: (spec) ->
-    return if spec instanceof Teaspoon.Jasmine1.Spec
-      spec
-    else
-      new Teaspoon.Jasmine1.Spec(spec)

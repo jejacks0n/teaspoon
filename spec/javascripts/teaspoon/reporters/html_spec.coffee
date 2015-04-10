@@ -5,8 +5,8 @@ describe "Teaspoon.Reporters.HTML", ->
     @buildSpy = spyOn(Teaspoon.Reporters.HTML.prototype, "build")
     @readConfigSpy = spyOn(Teaspoon.Reporters.HTML.prototype, "readConfig")
     Teaspoon.params = grep: "foo"
-    @reporter = new Teaspoon.Reporters.HTML()
-    @jasmineSuite = {getFullName: -> "_full jasmine suite description_"}
+    @reporter = new Teaspoon.framework.Reporters.HTML()
+    @jasmineSuite = new Teaspoon.framework.Suite({getFullName: -> "_full jasmine suite description_"})
     @jasmineSpecResultsItems = [
       {message: "_jasmine_message1_", trace: {stack: "_jasmine_stack_trace1_"}, passed: -> false}
       {message: "_jasmine_message2_", trace: {stack: "_jasmine_stack_trace2_"}, passed: -> false}
@@ -15,13 +15,14 @@ describe "Teaspoon.Reporters.HTML", ->
       skipped: false
       passed: -> true
       getItems: => @jasmineSpecResultsItems
-    @jasmineSpec =
+    @jasmineSpec = new Teaspoon.framework.Spec(
       description: "_jasmine_description_"
       viewId: 42
       pending: false
-      suite: @jasmineSuite
+      suite: @jasmineSuite.suite
       getFullName: -> "_full jasmine description_"
       results: => @jasmineSpecResults
+    )
 
   afterEach ->
     Teaspoon.params = @originalParams
@@ -145,13 +146,13 @@ describe "Teaspoon.Reporters.HTML", ->
 
     it "creates a SpecView", ->
       @reporter.config["build-full-report"] = true
-      spy = spyOn(Teaspoon.Reporters.HTML, "SpecView")
+      spy = spyOn(Teaspoon.framework.Reporters.HTML, "SpecView")
       @reporter.reportSpecStarting(@jasmineSpec)
       expect(spy).toHaveBeenCalled()
 
     it "doesn't create the SpecView if we're not building the full report", ->
       @reporter.config["build-full-report"] = false
-      spy = spyOn(Teaspoon.Reporters.HTML, "SpecView")
+      spy = spyOn(Teaspoon.framework.Reporters.HTML, "SpecView")
       @reporter.reportSpecStarting(@jasmineSpec)
       expect(spy).wasNotCalled()
 
@@ -280,13 +281,13 @@ describe "Teaspoon.Reporters.HTML", ->
         expect(spy.argsForCall[0][0]).toBe("failed")
 
       it "creates a FailureView and appends it to the dom", ->
-        spy = spyOn(Teaspoon.Reporters.HTML, "FailureView").andReturn(appendTo: ->)
+        spy = spyOn(Teaspoon.framework.Reporters.HTML, "FailureView").andReturn(appendTo: ->)
         @reporter.updateStatus(@jasmineSpec)
         expect(spy).toHaveBeenCalled()
 
       it "doesn't create a FailureView if we're building the full report", ->
         @reporter.config["build-full-report"] = true
-        spy = spyOn(Teaspoon.Reporters.HTML, "FailureView").andReturn(appendTo: ->)
+        spy = spyOn(Teaspoon.framework.Reporters.HTML, "FailureView").andReturn(appendTo: ->)
         @reporter.updateStatus(@jasmineSpec)
         expect(spy).wasNotCalled()
 

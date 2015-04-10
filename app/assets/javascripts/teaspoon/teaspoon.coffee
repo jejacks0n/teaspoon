@@ -17,12 +17,15 @@ class @Teaspoon
   @messages:  []
 
   @execute: ->
+    unless Teaspoon.framework
+      throw "No framework registered. Expected a framework to register itself, but nothing has."
+
     if Teaspoon.defer
       Teaspoon.defer = false
       return
     Teaspoon.reload() if Teaspoon.started
     Teaspoon.started = true
-    new Teaspoon.Runner()
+    new (Teaspoon.resolveClass("Runner"))()
 
 
   @reload: ->
@@ -61,9 +64,27 @@ class @Teaspoon
     messages
 
 
+  @setFramework: (namespace) ->
+    Teaspoon.framework = namespace
+    window.fixture = Teaspoon.resolveClass("Fixture")
 
-class Teaspoon.Error extends Error
 
-  constructor: (message) ->
-    @name = "TeaspoonError"
-    @message = (message || "")
+  # This checks if a framework has overridden a core class and if we should
+  # load that instead of the core base class.
+  @resolveClass: (klass) ->
+    if framework_override = Teaspoon.checkNamespace(Teaspoon.framework, klass)
+      return framework_override
+    else if teaspoon_core = Teaspoon.checkNamespace(Teaspoon, klass)
+      return teaspoon_core
+
+    throw "Could not find the class you're looking for: #{klass}"
+
+
+  @checkNamespace: (root, klass) ->
+    namespaces = klass.split('.')
+    scope = root
+
+    for namespace, i in namespaces
+      return false if !(scope = scope[namespace])
+
+    return scope

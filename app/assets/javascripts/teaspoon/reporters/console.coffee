@@ -39,8 +39,7 @@ class Teaspoon.Reporters.Console
         level: index
 
 
-  reportSpecResults: (spec) ->
-    @spec = new Teaspoon.Spec(spec)
+  reportSpecResults: (@spec) ->
     result = @spec.result()
     return if result.skipped
     @reportSuites()

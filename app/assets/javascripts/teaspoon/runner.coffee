@@ -20,13 +20,17 @@ class Teaspoon.Runner
 
   getReporter: ->
     if @params["reporter"]
-      Teaspoon.Reporters[@params["reporter"]]
+      @findReporter(@params["reporter"])
     else
       if window.navigator.userAgent.match(/PhantomJS/)
-        Teaspoon.Reporters.Console
+        @findReporter("Console")
       else
-        Teaspoon.Reporters.HTML
+        @findReporter("HTML")
 
 
   setup: ->
     # left for subclasses to implement
+
+
+  findReporter: (type) ->
+    Teaspoon.resolveClass("Reporters.#{type}")

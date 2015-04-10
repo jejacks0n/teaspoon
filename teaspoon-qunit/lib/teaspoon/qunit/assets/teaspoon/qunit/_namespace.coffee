@@ -1,2 +1,0 @@
-@Teaspoon ?= {}
-@Teaspoon.Qunit ?= {}

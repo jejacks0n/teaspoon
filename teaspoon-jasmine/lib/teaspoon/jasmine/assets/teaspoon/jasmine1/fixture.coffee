@@ -1,4 +1,6 @@
-class Teaspoon.Jasmine1.Fixture extends Teaspoon.fixture
+#= require teaspoon/fixture
+
+class Teaspoon.Jasmine1.Fixture extends Teaspoon.Fixture
 
   @load: ->
     args = arguments
@@ -25,7 +27,3 @@ class Teaspoon.Jasmine1.Fixture extends Teaspoon.fixture
 
 
   @env: -> window.jasmine.getEnv()
-
-
-# TODO: Register fixture framework with core
-window.fixture = Teaspoon.Jasmine1.Fixture

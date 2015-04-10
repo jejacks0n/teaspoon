@@ -1,4 +1,6 @@
-class Teaspoon.Reporters.Console extends Teaspoon.Reporters.Console
+#= require teaspoon/reporters/console
+
+class Teaspoon.Jasmine2.Reporters.Console extends Teaspoon.Reporters.Console
 
   reportRunnerStarting: ->
     @currentAssertions = []

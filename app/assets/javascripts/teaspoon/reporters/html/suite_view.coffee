@@ -1,3 +1,5 @@
+#= require teaspoon/reporters/html/base_view
+
 class Teaspoon.Reporters.HTML.SuiteView extends Teaspoon.Reporters.BaseView
 
   viewId = 0
@@ -6,7 +8,7 @@ class Teaspoon.Reporters.HTML.SuiteView extends Teaspoon.Reporters.BaseView
     @views = @reporter.views
     @suite.viewId = viewId += 1
     @views.suites[@suite.viewId] = @
-    @suite = new Teaspoon.Suite(@suite)
+    @suite = new (Teaspoon.resolveClass("Suite"))(@suite)
     super
 
 
@@ -23,7 +25,7 @@ class Teaspoon.Reporters.HTML.SuiteView extends Teaspoon.Reporters.BaseView
     if parent.viewId
       @views.suites[parent.viewId]
     else
-      view = new Teaspoon.Reporters.HTML.SuiteView(parent, @reporter)
+      view = new (Teaspoon.resolveClass("Reporters.HTML.SuiteView"))(parent, @reporter)
       @views.suites[view.suite.viewId] = view
 
 

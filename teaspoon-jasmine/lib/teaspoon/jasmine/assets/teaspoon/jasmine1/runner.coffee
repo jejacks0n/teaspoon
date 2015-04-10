@@ -1,3 +1,5 @@
+#= require teaspoon/runner
+
 class Teaspoon.Jasmine1.Runner extends Teaspoon.Runner
 
   constructor: ->
@@ -28,9 +30,3 @@ class Teaspoon.Jasmine1.Runner extends Teaspoon.Runner
     jasmine.getFixtures().fixturesPath = @fixturePath
     jasmine.getStyleFixtures().fixturesPath = @fixturePath
     jasmine.getJSONFixtures().fixturesPath = @fixturePath
-
-
-# Shim since core initializes the base class
-# TODO: register the runner to use with core
-class Teaspoon.Runner
-  constructor: -> return new Teaspoon.Jasmine1.Runner

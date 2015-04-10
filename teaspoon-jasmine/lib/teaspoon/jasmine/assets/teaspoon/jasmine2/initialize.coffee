@@ -1,3 +1,5 @@
+Teaspoon.setFramework(Teaspoon.Jasmine2)
+
 # Jasmine 2 runs the spec filter when the #it block are evaluated. This
 # means we need to set the filter upon page load, instead of when the
 # runner is initialized. Since Jasmine is loaded into the page first, then

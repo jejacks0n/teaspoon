@@ -22,7 +22,7 @@ describe "Teaspoon.Jasmine1.Runner", ->
       if window.navigator.userAgent.match(/PhantomJS/)
         @reporterSpy = spyOn(Teaspoon.Reporters, "Console").andReturn(@instance)
       else
-        @reporterSpy = spyOn(Teaspoon.Reporters, "HTML").andReturn(@instance)
+        @reporterSpy = spyOn(Teaspoon.Jasmine1.Reporters, "HTML").andReturn(@instance)
       @addReporterSpy = spyOn(@env, "addReporter")
 
     it "sets the updateInterval", ->

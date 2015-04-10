@@ -1,10 +1,6 @@
 #= require teaspoon/reporters/html/base_view
 #= require_self
-#= require teaspoon/reporters/html/progress_view
-#= require teaspoon/reporters/html/spec_view
-#= require teaspoon/reporters/html/failure_view
-#= require teaspoon/reporters/html/suite_view
-#= require teaspoon/reporters/html/template
+#= require_tree ./html
 
 class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
 
@@ -61,8 +57,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
 
 
   reportSpecStarting: (spec) ->
-    spec = new Teaspoon.Spec(spec)
-    @reportView = new Teaspoon.Reporters.HTML.SpecView(spec, @) if @config["build-full-report"]
+    @reportView = new (Teaspoon.resolveClass("Reporters.HTML.SpecView"))(spec, @) if @config["build-full-report"]
     @specStart = new Teaspoon.Date().getTime()
 
 
@@ -75,7 +70,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
   buildLayout: ->
     el = @createEl("div")
     el.id = "teaspoon-interface"
-    el.innerHTML = Teaspoon.Reporters.HTML.template()
+    el.innerHTML = (Teaspoon.resolveClass("Reporters.HTML")).template()
     document.body.appendChild(el)
 
 
@@ -111,7 +106,6 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
 
 
   updateStatus: (spec) ->
-    spec = new Teaspoon.Spec(spec)
     result = spec.result()
 
     if result.skipped
@@ -128,7 +122,8 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     else
       @updateStat("failures", @total.failures += 1)
       @reportView?.updateState("failed", elapsed)
-      new Teaspoon.Reporters.HTML.FailureView(spec).appendTo(@findEl("report-failures")) unless @config["build-full-report"]
+      unless @config["build-full-report"]
+        new (Teaspoon.resolveClass("Reporters.HTML.FailureView"))(spec).appendTo(@findEl("report-failures"))
       @setStatus("failed")
 
 

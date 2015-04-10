@@ -22,9 +22,9 @@ describe "Teaspoon.Jasmine2.Runner", ->
     beforeEach ->
       @runner.params = {grep: "foo"}
       if window.navigator.userAgent.match(/PhantomJS/)
-        @reporterSpy = spyOn(Teaspoon.Reporters, "Console").and.returnValue(@instance)
+        @reporterSpy = spyOn(Teaspoon.Jasmine2.Reporters, "Console").and.returnValue(@instance)
       else
-        @reporterSpy = spyOn(Teaspoon.Reporters, "HTML").and.returnValue(@instance)
+        @reporterSpy = spyOn(Teaspoon.Jasmine2.Reporters, "HTML").and.returnValue(@instance)
       @addReporterSpy = spyOn(@env, "addReporter")
 
     it "adds the reporter to the env", ->

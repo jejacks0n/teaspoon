@@ -48,11 +48,11 @@ describe "Teaspoon.Runner", ->
       runner = new Teaspoon.Runner()
       runner.params = {}
       spyOn(String.prototype, 'match').andReturn(0)
-      expect(runner.getReporter()).toBe(Teaspoon.Reporters.HTML)
+      expect(runner.getReporter()).toBe(Teaspoon.framework.Reporters.HTML)
 
     it "allows setting the param", ->
       runner = new Teaspoon.Runner()
       runner.params = {reporter: "Console"}
       expect(runner.getReporter()).toBe(Teaspoon.Reporters.Console)
       runner.params = {reporter: "HTML"}
-      expect(runner.getReporter()).toBe(Teaspoon.Reporters.HTML)
+      expect(runner.getReporter()).toBe(Teaspoon.framework.Reporters.HTML)

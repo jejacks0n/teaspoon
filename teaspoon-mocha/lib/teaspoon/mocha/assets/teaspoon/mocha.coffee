@@ -7,3 +7,4 @@ unless mocha?
 
 @Teaspoon ?= {}
 @Teaspoon.Mocha ?= {}
+@Teaspoon.Mocha.Reporters ?= {}

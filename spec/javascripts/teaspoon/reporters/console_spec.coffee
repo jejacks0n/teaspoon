@@ -15,7 +15,7 @@ describe "Teaspoon.Reporters.Console", ->
 
     @reporter = new Teaspoon.Reporters.Console()
     @reporter.spec = @spec
-    @normalizeSpy = spyOn(Teaspoon, "Spec").andReturn(@spec)
+    @normalizeSpy = spyOn(Teaspoon.framework, "Spec").andReturn(@spec)
 
 
   describe "constructor", ->
@@ -56,12 +56,12 @@ describe "Teaspoon.Reporters.Console", ->
   describe "#reportSpecResults", ->
 
     it "normalizes the spec", ->
-      @reporter.reportSpecResults()
+      @reporter.reportSpecResults(new Teaspoon.framework.Spec())
       expect(@normalizeSpy).toHaveBeenCalled()
 
     it "logs the information", ->
       spy = spyOn(@reporter, "log")
-      @reporter.reportSpecResults()
+      @reporter.reportSpecResults(new Teaspoon.framework.Spec())
       expect(spy).toHaveBeenCalledWith
         type:    "spec"
         suite:   "_suite_name_"
@@ -76,7 +76,7 @@ describe "Teaspoon.Reporters.Console", ->
         @spec.result = -> {status: "pending", skipped: false}
 
       it "tracks that it was pending", ->
-        @reporter.reportSpecResults()
+        @reporter.reportSpecResults(new Teaspoon.framework.Spec())
         expect(@trackSpy).toHaveBeenCalled()
 
     describe "skipped tests", ->
@@ -87,7 +87,7 @@ describe "Teaspoon.Reporters.Console", ->
         @spec.result = -> {status: "pending", skipped: true}
 
       it "doesn't report the suite or log the results", ->
-        @reporter.reportSpecResults()
+        @reporter.reportSpecResults(new Teaspoon.framework.Spec())
         expect(@reportSuitesSpy).not.toHaveBeenCalled()
         expect(@logSpy).not.toHaveBeenCalled()
 
@@ -98,7 +98,7 @@ describe "Teaspoon.Reporters.Console", ->
         @spec.result = -> {status: "failed", skipped: false}
 
       it "tracks the failure", ->
-        @reporter.reportSpecResults()
+        @reporter.reportSpecResults(new Teaspoon.framework.Spec())
         expect(@trackSpy).toHaveBeenCalled()
 
 

@@ -22,7 +22,7 @@ describe "Teaspoon", ->
     beforeEach ->
       Teaspoon.defer = false
       spyOn(Teaspoon, "reload")
-      @spy = spyOn(Teaspoon, "Runner")
+      @spy = spyOn(Teaspoon.framework, "Runner")
 
     it "allows deferring (thus not instantiating the runner)", ->
       Teaspoon.defer = true
