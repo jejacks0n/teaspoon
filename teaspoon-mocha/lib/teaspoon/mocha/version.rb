@@ -1,5 +1,5 @@
 module Teaspoon
   module Mocha
-    VERSION = "1.17.1"
+    VERSION = "2.2.4"
   end
 end

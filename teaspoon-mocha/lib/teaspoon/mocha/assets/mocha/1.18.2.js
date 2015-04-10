@@ -1,4 +1,4 @@
-;_mocha_version = "1.17.1";
+;_mocha_version = "1.18.2";
 ;(function(){
 
 // CommonJS require()
@@ -916,32 +916,32 @@ module.exports = function(suite){
      * Execute before running tests.
      */
 
-    context.before = function(fn){
-      suites[0].beforeAll(fn);
+    context.before = function(name, fn){
+      suites[0].beforeAll(name, fn);
     };
 
     /**
      * Execute after running tests.
      */
 
-    context.after = function(fn){
-      suites[0].afterAll(fn);
+    context.after = function(name, fn){
+      suites[0].afterAll(name, fn);
     };
 
     /**
      * Execute before each test case.
      */
 
-    context.beforeEach = function(fn){
-      suites[0].beforeEach(fn);
+    context.beforeEach = function(name, fn){
+      suites[0].beforeEach(name, fn);
     };
 
     /**
      * Execute after each test case.
      */
 
-    context.afterEach = function(fn){
-      suites[0].afterEach(fn);
+    context.afterEach = function(name, fn){
+      suites[0].afterEach(name, fn);
     };
 
     /**
@@ -1138,32 +1138,32 @@ module.exports = function(suite){
      * Execute before running tests.
      */
 
-    context.before = function(fn){
-      suites[0].beforeAll(fn);
+    context.before = function(name, fn){
+      suites[0].beforeAll(name, fn);
     };
 
     /**
      * Execute after running tests.
      */
 
-    context.after = function(fn){
-      suites[0].afterAll(fn);
+    context.after = function(name, fn){
+      suites[0].afterAll(name, fn);
     };
 
     /**
      * Execute before each test case.
      */
 
-    context.beforeEach = function(fn){
-      suites[0].beforeEach(fn);
+    context.beforeEach = function(name, fn){
+      suites[0].beforeEach(name, fn);
     };
 
     /**
      * Execute after each test case.
      */
 
-    context.afterEach = function(fn){
-      suites[0].afterEach(fn);
+    context.afterEach = function(name, fn){
+      suites[0].afterEach(name, fn);
     };
 
     /**
@@ -1264,32 +1264,32 @@ module.exports = function(suite){
      * Execute before each test case.
      */
 
-    context.setup = function(fn){
-      suites[0].beforeEach(fn);
+    context.setup = function(name, fn){
+      suites[0].beforeEach(name, fn);
     };
 
     /**
      * Execute after each test case.
      */
 
-    context.teardown = function(fn){
-      suites[0].afterEach(fn);
+    context.teardown = function(name, fn){
+      suites[0].afterEach(name, fn);
     };
 
     /**
      * Execute before the suite.
      */
 
-    context.suiteSetup = function(fn){
-      suites[0].beforeAll(fn);
+    context.suiteSetup = function(name, fn){
+      suites[0].beforeAll(name, fn);
     };
 
     /**
      * Execute after the suite.
      */
 
-    context.suiteTeardown = function(fn){
-      suites[0].afterAll(fn);
+    context.suiteTeardown = function(name, fn){
+      suites[0].afterAll(name, fn);
     };
 
     /**
@@ -1721,8 +1721,9 @@ Mocha.prototype.run = function(fn){
   if (this.files.length) this.loadFiles();
   var suite = this.suite;
   var options = this.options;
+  options.files = this.files;
   var runner = new exports.Runner(suite);
-  var reporter = new this._reporter(runner);
+  var reporter = new this._reporter(runner, options);
   runner.ignoreLeaks = false !== options.ignoreLeaks;
   runner.asyncOnly = options.asyncOnly;
   if (options.grep) runner.grep(options.grep, options.invert);
@@ -2587,7 +2588,7 @@ var statsTemplate = '<ul id="mocha-stats">'
  * @api public
  */
 
-function HTML(runner, root) {
+function HTML(runner) {
   Base.call(this, runner);
 
   var self = this
@@ -2605,8 +2606,7 @@ function HTML(runner, root) {
     , stack = [report]
     , progress
     , ctx
-
-  root = root || document.getElementById('mocha');
+    , root = document.getElementById('mocha');
 
   if (canvas.getContext) {
     var ratio = window.devicePixelRatio || 1;
@@ -4284,16 +4284,6 @@ Runnable.prototype.run = function(fn){
 
   if (ctx) ctx.runnable(this);
 
-  // timeout
-  if (this.async) {
-    if (ms) {
-      this.timer = setTimeout(function(){
-        done(new Error('timeout of ' + ms + 'ms exceeded'));
-        self.timedOut = true;
-      }, ms);
-    }
-  }
-
   // called multiple times
   function multiple(err) {
     if (emitted) return;
@@ -4314,8 +4304,10 @@ Runnable.prototype.run = function(fn){
   // for .resetTimeout()
   this.callback = done;
 
-  // async
+  // explicit async with `done` argument
   if (this.async) {
+    this.resetTimeout();
+
     try {
       this.fn.call(ctx, function(err){
         if (err instanceof Error || toString.call(err) === "[object Error]") return done(err);
@@ -4332,13 +4324,25 @@ Runnable.prototype.run = function(fn){
     return done(new Error('--async-only option in use without declaring `done()`'));
   }
 
-  // sync
+  // sync or promise-returning
   try {
-    if (!this.pending) this.fn.call(ctx);
-    this.duration = new Date - start;
-    fn();
+    if (this.pending) {
+      done();
+    } else {
+      callFn(this.fn);
+    }
   } catch (err) {
-    fn(err);
+    done(err);
+  }
+
+  function callFn(fn) {
+    var result = fn.call(ctx);
+    if (result && typeof result.then === 'function') {
+      self.resetTimeout();
+      result.then(function(){ done() }, done);
+    } else {
+      done();
+    }
   }
 };
 
@@ -5160,9 +5164,15 @@ Suite.prototype.bail = function(bail){
  * @api private
  */
 
-Suite.prototype.beforeAll = function(fn){
+Suite.prototype.beforeAll = function(title, fn){
   if (this.pending) return this;
-  var hook = new Hook('"before all" hook', fn);
+  if ('function' === typeof title) {
+    fn = title;
+    title = fn.name;
+  }
+  title = '"before all" hook' + (title ? ': ' + title : '');
+
+  var hook = new Hook(title, fn);
   hook.parent = this;
   hook.timeout(this.timeout());
   hook.slow(this.slow());
@@ -5180,9 +5190,15 @@ Suite.prototype.beforeAll = function(fn){
  * @api private
  */
 
-Suite.prototype.afterAll = function(fn){
+Suite.prototype.afterAll = function(title, fn){
   if (this.pending) return this;
-  var hook = new Hook('"after all" hook', fn);
+  if ('function' === typeof title) {
+    fn = title;
+    title = fn.name;
+  }
+  title = '"after all" hook' + (title ? ': ' + title : '');
+
+  var hook = new Hook(title, fn);
   hook.parent = this;
   hook.timeout(this.timeout());
   hook.slow(this.slow());
@@ -5200,9 +5216,15 @@ Suite.prototype.afterAll = function(fn){
  * @api private
  */
 
-Suite.prototype.beforeEach = function(fn){
+Suite.prototype.beforeEach = function(title, fn){
   if (this.pending) return this;
-  var hook = new Hook('"before each" hook', fn);
+  if ('function' === typeof title) {
+    fn = title;
+    title = fn.name;
+  }
+  title = '"before each" hook' + (title ? ': ' + title : '');
+
+  var hook = new Hook(title, fn);
   hook.parent = this;
   hook.timeout(this.timeout());
   hook.slow(this.slow());
@@ -5220,9 +5242,15 @@ Suite.prototype.beforeEach = function(fn){
  * @api private
  */
 
-Suite.prototype.afterEach = function(fn){
+Suite.prototype.afterEach = function(title, fn){
   if (this.pending) return this;
-  var hook = new Hook('"after each" hook', fn);
+  if ('function' === typeof title) {
+    fn = title;
+    title = fn.name;
+  }
+  title = '"after each" hook' + (title ? ': ' + title : '');
+
+  var hook = new Hook(title, fn);
   hook.parent = this;
   hook.timeout(this.timeout());
   hook.slow(this.slow());

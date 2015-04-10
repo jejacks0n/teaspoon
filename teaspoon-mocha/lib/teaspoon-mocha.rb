@@ -8,7 +8,7 @@ module Teaspoon
       framework_name :mocha
 
       # register standard versions
-      versions = ["1.10.0", "1.17.1"]
+      versions = ["1.10.0", "1.17.1", "1.18.2", "1.19.0", "2.0.1", "2.1.0", "2.2.4"]
 
       versions.each do |version|
         register_version version, "mocha/#{version}.js",

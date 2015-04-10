@@ -15,7 +15,7 @@ feature "Installation", shell: true do
       create  spec/javascripts/spec_helper.js
     OUTPUT
 
-    check_file_content("spec/teaspoon_env.rb", Regexp.new(%{suite.use_framework :mocha, "1.17.1"}))
+    check_file_content("spec/teaspoon_env.rb", /suite\.use_framework :mocha, "\d+\.\d+\.\d+"/)
     check_file_content("spec/javascripts/spec_helper.js", Regexp.new("require support/your-support-file"))
   end
 
@@ -29,7 +29,7 @@ feature "Installation", shell: true do
       create  spec/javascripts/spec_helper.coffee
     OUTPUT
 
-    check_file_content("spec/teaspoon_env.rb", Regexp.new(%{suite.use_framework :mocha, "1.17.1"}))
+    check_file_content("spec/teaspoon_env.rb", /suite\.use_framework :mocha, "\d+\.\d+\.\d+"/)
     check_file_content("spec/javascripts/spec_helper.coffee", Regexp.new("require support/your-support-file"))
   end
 end
