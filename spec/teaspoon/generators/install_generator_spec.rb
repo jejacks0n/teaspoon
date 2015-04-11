@@ -59,10 +59,8 @@ describe Teaspoon::Generators::InstallGenerator do
       expect(Teaspoon.frameworks).to receive(:[]).and_return(nil)
       expect(subject).to receive(:say_status).with(kind_of(String), :red) { |msg| message = msg }
       expect { subject.verify_framework_and_version }.to raise_error(SystemExit)
-      expect(message).to include(<<-HELP.strip_heredoc)
-        Unknown framework: jasmine
-          Available: jasmine: versions[1.3.1, 2.2.0]
-      HELP
+      expect(message).to include("Unknown framework: jasmine")
+      expect(message).to match(/Available: jasmine: versions\[(\d+\.\d+\.\d+,?\s?)+]/)
     end
 
     describe "when version is specified" do
@@ -72,10 +70,8 @@ describe Teaspoon::Generators::InstallGenerator do
         message = ""
         expect(subject).to receive(:say_status).with(kind_of(String), :red) { |msg| message = msg }
         expect { subject.verify_framework_and_version }.to raise_error(SystemExit)
-        expect(message).to include(<<-HELP.strip_heredoc)
-        Unknown framework: jasmine[6.6.6]
-          Available: jasmine: versions[1.3.1, 2.2.0]
-        HELP
+        expect(message).to include("Unknown framework: jasmine[6.6.6]")
+        expect(message).to match(/Available: jasmine: versions\[(\d+\.\d+\.\d+,?\s?)+]/)
       end
     end
   end

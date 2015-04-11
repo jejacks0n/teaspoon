@@ -45,3 +45,20 @@ describe "Teaspoon", ->
       expect(@xhr.open).toHaveBeenCalledWith("POST", "/teaspoon/default/foo", false)
       expect(@xhr.setRequestHeader).toHaveBeenCalledWith("Content-Type", "application/json")
       expect(@xhr.send).toHaveBeenCalledWith('{"args":{"bar":"baz"}}')
+
+
+  describe ".resolveClass", ->
+
+    it "finds a class, preferring the framework namespace, falling back on Teaspoon", ->
+      Teaspoon.Some = {}
+      Teaspoon.Some.Namespace = {}
+
+      expect(Teaspoon.resolveClass("Some.Namespace")).toEqual(Teaspoon.Some.Namespace)
+
+      Teaspoon.framework.Some = {}
+      Teaspoon.framework.Some.Namespace = {}
+
+      expect(Teaspoon.resolveClass("Some.Namespace")).toEqual(Teaspoon.framework.Some.Namespace)
+
+    it "throws an error if it can't find the requested class", ->
+      expect(-> Teaspoon.resolveClass("Nope")).toThrow("Could not find the class you're looking for: Nope")
