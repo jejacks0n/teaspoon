@@ -1,3 +1,19 @@
 #!/usr/bin/env rake
+
+begin
+  require "bundler/setup"
+rescue LoadError
+  puts "You must `gem install bundler` and `bundle install` to run rake tasks"
+end
+
 require "teaspoon-devkit"
-load File.join(Teaspoon::RAKEFILE)
+
+Teaspoon.load_teaspoon_tasks
+
+Teaspoon.setup_framework_tasks(
+  framework: :qunit,
+  framework_name: "QUnit",
+  framework_root: __dir__,
+  framework_const: Teaspoon::Qunit::Framework,
+  compile_assets: ["qunit.js"]
+)

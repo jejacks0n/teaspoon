@@ -1,3 +1,19 @@
 #!/usr/bin/env rake
+
+begin
+  require "bundler/setup"
+rescue LoadError
+  puts "You must `gem install bundler` and `bundle install` to run rake tasks"
+end
+
 require "teaspoon-devkit"
-load File.join(Teaspoon::RAKEFILE)
+
+Teaspoon.load_teaspoon_tasks
+
+Teaspoon.setup_framework_tasks(
+  framework: :jasmine,
+  framework_name: "Jasmine",
+  framework_root: __dir__,
+  framework_const: Teaspoon::Jasmine::Framework,
+  compile_assets: ["jasmine1.js", "jasmine2.js"]
+)

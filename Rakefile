@@ -1,6 +1,8 @@
 #!/usr/bin/env rake
 require "fileutils"
 
+frameworks = [:jasmine, :mocha, :qunit]
+
 begin
   require "bundler/setup"
 rescue LoadError
@@ -31,21 +33,6 @@ namespace :spec do
     end
     t.pattern = file_list
   end
-
-  desc "Run the code examples in teaspoon-jasmine/spec"
-  RSpec::Core::RakeTask.new(:jasmine) do |t|
-    t.pattern = "../teaspoon-jasmine/spec/**/*_spec.rb"
-  end
-
-  desc "Run the code examples in teaspoon-mocha/spec"
-  RSpec::Core::RakeTask.new(:mocha) do |t|
-    t.pattern = "../teaspoon-mocha/spec/**/*_spec.rb"
-  end
-
-  desc "Run the code examples in teaspoon-qunit/spec"
-  RSpec::Core::RakeTask.new(:qunit) do |t|
-    t.pattern = "../teaspoon-qunit/spec/**/*_spec.rb"
-  end
 end
 
 # Teaspoon
@@ -53,36 +40,33 @@ end
 desc "Run the javascript specs"
 task teaspoon: "app:teaspoon"
 
-# namespace :teaspoon do
-#   desc "Builds Teaspoon into the distribution ready bundle"
-#   task build: "build:javascripts"
-#
-#   namespace :build do
-#     desc "Compile coffeescripts into javacripts"
-#     task javascripts: :environment do
-#       env = Rails.application.assets
-#
-#       %w(jasmine1.js jasmine2.js mocha.js qunit.js teaspoon.js).each do |path|
-#         asset = env.find_asset("teaspoon/"#{path}"")
-#         asset.write_to(Teaspoon::Engine.root.join("app/assets/javascripts/teaspoon-#{path}"))
-#       end
-#     end
-#   end
-# end
+namespace :teaspoon do
+  desc "Builds Teaspoon into the distribution ready bundle"
+  task build: "build:javascripts"
+
+  namespace :build do
+    desc "Builds all frameworks into the distribution ready bundles"
+    compile_tasks = frameworks.inject([]) do |tasks, framework|
+      tasks + ["teaspoon:#{framework}:build"]
+    end
+    task javascripts: compile_tasks
+  end
+end
 
 # Default
 # -----------------------------------------------------------------------------
 Rake::Task["default"].prerequisites.clear
 Rake::Task["default"].clear
 
-task default: [
-  # core
-  :spec,
-  :teaspoon,
-  # teaspoon-jasmine
-  "spec:jasmine",
-  # teaspoon-mocha
-  "spec:mocha",
-  # teaspoon-qunit
-  "spec:qunit",
-]
+default_tasks = [:spec, :teaspoon]
+frameworks.each do |framework|
+  default_tasks << "teaspoon:#{framework}:spec"
+end
+
+task default: default_tasks
+
+if Teaspoon.loaded_from_teaspoon_root?
+  frameworks.each do |framework|
+    load File.expand_path("teaspoon-#{framework}/Rakefile", __dir__)
+  end
+end
