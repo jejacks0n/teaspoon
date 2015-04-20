@@ -76,8 +76,8 @@ describe Teaspoon::Suite do
   describe "#spec_assets" do
     it "returns an array of assets" do
       result = subject.spec_assets
-      expect(result).to include("spec_helper.js?body=1")
-      expect(result).to include("teaspoon/reporters/console_spec.js?body=1")
+      expect(result).to include("spec_helper.self.js?body=1")
+      expect(result).to include("teaspoon/reporters/console_spec.self.js?body=1")
     end
 
     it "returns just a file if one was requested" do
@@ -90,9 +90,9 @@ describe Teaspoon::Suite do
       allow(subject).to receive(:no_coverage).and_return([%r{support/}, "spec_helper.coffee"])
       subject.instance_variable_set(:@options, coverage: true)
       result = subject.spec_assets(true)
-      expect(result).to include("support/json2.js?body=1")
-      expect(result).to include("spec_helper.js?body=1")
-      expect(result).to include("drivers/phantomjs/runner.js?body=1&instrument=1")
+      expect(result).to include("support/json2.self.js?body=1")
+      expect(result).to include("spec_helper.self.js?body=1")
+      expect(result).to include("drivers/phantomjs/runner.self.js?body=1&instrument=1")
     end
 
     it "returns only the top level assets in the asset tree if config/expand_assets is set to false" do

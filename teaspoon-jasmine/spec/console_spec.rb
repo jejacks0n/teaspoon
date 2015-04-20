@@ -6,7 +6,7 @@ feature "Running in the console", shell: true do
       Starting the Teaspoon server...
       Teaspoon running default suite at http://127.0.0.1:31337/teaspoon/default
       TypeError: undefined is not a constructor (evaluating 'foo()')
-        # integration/spec_helper.js:12
+        # integration/spec_helper.self.js:12
     OUTPUT
   end
 
@@ -28,7 +28,7 @@ feature "Running in the console", shell: true do
            Failure/Error: Expected true to be false.
 
         2) Integration tests allows erroring specs
-           Failure/Error: ReferenceError: Can't find variable: foo in http://127.0.0.1:31337/assets/integration/first_spec.js?body=1 (line 7)
+           Failure/Error: ReferenceError: Can't find variable: foo in http://127.0.0.1:31337/assets/integration/first_spec.self.js?body=1 (line 7)
 
       Finished in 0.31337 seconds
       6 examples, 2 failures, 2 pending
