@@ -1,7 +1,4 @@
 (function() {
-  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
-
   this.Teaspoon = (function() {
     function Teaspoon() {}
 
@@ -24,6 +21,9 @@
     Teaspoon.messages = [];
 
     Teaspoon.execute = function() {
+      if (!Teaspoon.framework) {
+        throw "No framework registered. Expected a framework to register itself, but nothing has.";
+      }
       if (Teaspoon.defer) {
         Teaspoon.defer = false;
         return;
@@ -32,7 +32,7 @@
         Teaspoon.reload();
       }
       Teaspoon.started = true;
-      return new Teaspoon.Runner();
+      return new (Teaspoon.resolveClass("Runner"))();
     };
 
     Teaspoon.reload = function() {
@@ -51,7 +51,7 @@
     };
 
     Teaspoon.resolveDependenciesFromParams = function(all) {
-      var dep, deps, file, i, j, len, len1, parts, path, paths;
+      var dep, deps, file, j, k, len, len1, parts, path, paths;
       if (all == null) {
         all = [];
       }
@@ -59,15 +59,15 @@
       if ((paths = Teaspoon.location.search.match(/[\?&]file(\[\])?=[^&\?]*/gi)) === null) {
         return all;
       }
-      for (i = 0, len = paths.length; i < len; i++) {
-        path = paths[i];
+      for (j = 0, len = paths.length; j < len; j++) {
+        path = paths[j];
         parts = decodeURIComponent(path.replace(/\+/g, " ")).match(/\/(.+)\.(js|js.coffee|coffee)$/i);
         if (parts === null) {
           continue;
         }
         file = parts[1].substr(parts[1].lastIndexOf("/") + 1);
-        for (j = 0, len1 = all.length; j < len1; j++) {
-          dep = all[j];
+        for (k = 0, len1 = all.length; k < len1; k++) {
+          dep = all[k];
           if (dep.indexOf(file) >= 0) {
             deps.push(dep);
           }
@@ -94,21 +94,37 @@
       return messages;
     };
 
+    Teaspoon.setFramework = function(namespace) {
+      Teaspoon.framework = namespace;
+      return window.fixture = Teaspoon.resolveClass("Fixture");
+    };
+
+    Teaspoon.resolveClass = function(klass) {
+      var framework_override, teaspoon_core;
+      if (framework_override = Teaspoon.checkNamespace(Teaspoon.framework, klass)) {
+        return framework_override;
+      } else if (teaspoon_core = Teaspoon.checkNamespace(Teaspoon, klass)) {
+        return teaspoon_core;
+      }
+      throw "Could not find the class you're looking for: " + klass;
+    };
+
+    Teaspoon.checkNamespace = function(root, klass) {
+      var i, j, len, namespace, namespaces, scope;
+      namespaces = klass.split('.');
+      scope = root;
+      for (i = j = 0, len = namespaces.length; j < len; i = ++j) {
+        namespace = namespaces[i];
+        if (!(scope = scope[namespace])) {
+          return false;
+        }
+      }
+      return scope;
+    };
+
     return Teaspoon;
 
   })();
-
-  Teaspoon.Error = (function(superClass) {
-    extend(Error, superClass);
-
-    function Error(message) {
-      this.name = "TeaspoonError";
-      this.message = message || "";
-    }
-
-    return Error;
-
-  })(Error);
 
 }).call(this);
 (function() {
@@ -139,17 +155,21 @@
 
     Runner.prototype.getReporter = function() {
       if (this.params["reporter"]) {
-        return Teaspoon.Reporters[this.params["reporter"]];
+        return this.findReporter(this.params["reporter"]);
       } else {
         if (window.navigator.userAgent.match(/PhantomJS/)) {
-          return Teaspoon.Reporters.Console;
+          return this.findReporter("Console");
         } else {
-          return Teaspoon.Reporters.HTML;
+          return this.findReporter("HTML");
         }
       }
     };
 
     Runner.prototype.setup = function() {};
+
+    Runner.prototype.findReporter = function(type) {
+      return Teaspoon.resolveClass("Reporters." + type);
+    };
 
     return Runner;
 
@@ -159,18 +179,18 @@
 (function() {
   var slice = [].slice;
 
-  Teaspoon.fixture = (function() {
+  Teaspoon.Fixture = (function() {
     var addContent, cleanup, create, load, loadComplete, preload, putContent, set, xhr, xhrRequest;
 
-    fixture.cache = {};
+    Fixture.cache = {};
 
-    fixture.el = null;
+    Fixture.el = null;
 
-    fixture.$el = null;
+    Fixture.$el = null;
 
-    fixture.json = [];
+    Fixture.json = [];
 
-    fixture.preload = function() {
+    Fixture.preload = function() {
       var i, len, results, url, urls;
       urls = 1 <= arguments.length ? slice.call(arguments, 0) : [];
       results = [];
@@ -181,7 +201,7 @@
       return results;
     };
 
-    fixture.load = function() {
+    Fixture.load = function() {
       var append, i, index, j, len, results, url, urls;
       urls = 2 <= arguments.length ? slice.call(arguments, 0, i = arguments.length - 1) : (i = 0, []), append = arguments[i++];
       if (append == null) {
@@ -199,7 +219,7 @@
       return results;
     };
 
-    fixture.set = function() {
+    Fixture.set = function() {
       var append, html, htmls, i, index, j, len, results;
       htmls = 2 <= arguments.length ? slice.call(arguments, 0, i = arguments.length - 1) : (i = 0, []), append = arguments[i++];
       if (append == null) {
@@ -217,12 +237,12 @@
       return results;
     };
 
-    fixture.cleanup = function() {
+    Fixture.cleanup = function() {
       return cleanup();
     };
 
-    function fixture() {
-      Teaspoon.fixture.load.apply(window, arguments);
+    function Fixture() {
+      window.fixture.load.apply(window, arguments);
     }
 
     xhr = null;
@@ -236,7 +256,7 @@
       if (preload == null) {
         preload = false;
       }
-      if (cached = Teaspoon.fixture.cache[url]) {
+      if (cached = window.fixture.cache[url]) {
         return loadComplete(url, cached.type, cached.content, append, preload);
       }
       value = null;
@@ -253,12 +273,12 @@
     };
 
     loadComplete = function(url, type, content, append, preload) {
-      Teaspoon.fixture.cache[url] = {
+      window.fixture.cache[url] = {
         type: type,
         content: content
       };
       if (type.match(/application\/json;/)) {
-        return fixture.json[fixture.json.push(JSON.parse(content)) - 1];
+        return Fixture.json[Fixture.json.push(JSON.parse(content)) - 1];
       }
       if (preload) {
         return content;
@@ -268,7 +288,7 @@
       } else {
         putContent(content);
       }
-      return Teaspoon.fixture.el;
+      return window.fixture.el;
     };
 
     set = function(content, append) {
@@ -282,35 +302,35 @@
     putContent = function(content) {
       cleanup();
       create();
-      return Teaspoon.fixture.el.innerHTML = content;
+      return window.fixture.el.innerHTML = content;
     };
 
     addContent = function(content) {
-      if (!Teaspoon.fixture.el) {
+      if (!window.fixture.el) {
         create();
       }
-      return Teaspoon.fixture.el.innerHTML += content;
+      return window.fixture.el.innerHTML += content;
     };
 
     create = function() {
       var ref;
-      Teaspoon.fixture.el = document.createElement("div");
+      window.fixture.el = document.createElement("div");
       if (typeof window.$ === 'function') {
-        Teaspoon.fixture.$el = $(Teaspoon.fixture.el);
+        window.fixture.$el = $(window.fixture.el);
       }
-      Teaspoon.fixture.el.id = "teaspoon-fixtures";
-      return (ref = document.body) != null ? ref.appendChild(Teaspoon.fixture.el) : void 0;
+      window.fixture.el.id = "teaspoon-fixtures";
+      return (ref = document.body) != null ? ref.appendChild(window.fixture.el) : void 0;
     };
 
     cleanup = function() {
       var base, ref, ref1;
-      (base = Teaspoon.fixture).el || (base.el = document.getElementById("teaspoon-fixtures"));
-      if ((ref = Teaspoon.fixture.el) != null) {
+      (base = window.fixture).el || (base.el = document.getElementById("teaspoon-fixtures"));
+      if ((ref = window.fixture.el) != null) {
         if ((ref1 = ref.parentNode) != null) {
-          ref1.removeChild(Teaspoon.fixture.el);
+          ref1.removeChild(window.fixture.el);
         }
       }
-      return Teaspoon.fixture.el = null;
+      return window.fixture.el = null;
     };
 
     xhrRequest = function(url, callback) {
@@ -337,7 +357,7 @@
       return xhr.send();
     };
 
-    return fixture;
+    return Fixture;
 
   })();
 
@@ -509,11 +529,53 @@
       return this.buildFilters();
     };
 
+    HTML.prototype.reportRunnerStarting = function(runner) {
+      this.total.exist = runner.total || 0;
+      if (this.total.exist) {
+        return this.setText("stats-duration", "...");
+      }
+    };
+
+    HTML.prototype.reportRunnerResults = function() {
+      if (!this.total.run) {
+        return;
+      }
+      this.setText("stats-duration", this.elapsedTime());
+      if (!this.total.failures) {
+        this.setStatus("passed");
+      }
+      this.setText("stats-passes", this.total.passes);
+      this.setText("stats-failures", this.total.failures);
+      if (this.total.run < this.total.exist) {
+        this.total.skipped = this.total.exist - this.total.run;
+        this.total.run = this.total.exist;
+      }
+      this.setText("stats-skipped", this.total.skipped);
+      return this.updateProgress();
+    };
+
+    HTML.prototype.reportSuiteStarting = function(suite) {};
+
+    HTML.prototype.reportSuiteResults = function(suite) {};
+
+    HTML.prototype.reportSpecStarting = function(spec) {
+      if (this.config["build-full-report"]) {
+        this.reportView = new (Teaspoon.resolveClass("Reporters.HTML.SpecView"))(spec, this);
+      }
+      return this.specStart = new Teaspoon.Date().getTime();
+    };
+
+    HTML.prototype.reportSpecResults = function(spec) {
+      this.total.run += 1;
+      this.updateProgress();
+      return this.updateStatus(spec);
+    };
+
     HTML.prototype.buildLayout = function() {
       var el;
       el = this.createEl("div");
       el.id = "teaspoon-interface";
-      el.innerHTML = Teaspoon.Reporters.HTML.template();
+      el.innerHTML = (Teaspoon.resolveClass("Reporters.HTML")).template();
       return document.body.appendChild(el);
     };
 
@@ -549,45 +611,6 @@
       return this.setHtml("filter-list", "<li>" + (this.filters.join("</li><li>")), true);
     };
 
-    HTML.prototype.reportRunnerStarting = function(runner) {
-      this.total.exist = runner.total || (typeof runner.specs === "function" ? runner.specs().length : void 0) || 0;
-      if (this.total.exist) {
-        return this.setText("stats-duration", "...");
-      }
-    };
-
-    HTML.prototype.reportSpecStarting = function(spec) {
-      spec = new Teaspoon.Spec(spec);
-      if (this.config["build-full-report"]) {
-        this.reportView = new Teaspoon.Reporters.HTML.SpecView(spec, this);
-      }
-      return this.specStart = new Teaspoon.Date().getTime();
-    };
-
-    HTML.prototype.reportSpecResults = function(spec) {
-      this.total.run += 1;
-      this.updateProgress();
-      return this.updateStatus(spec);
-    };
-
-    HTML.prototype.reportRunnerResults = function() {
-      if (!this.total.run) {
-        return;
-      }
-      this.setText("stats-duration", this.elapsedTime());
-      if (!this.total.failures) {
-        this.setStatus("passed");
-      }
-      this.setText("stats-passes", this.total.passes);
-      this.setText("stats-failures", this.total.failures);
-      if (this.total.run < this.total.exist) {
-        this.total.skipped = this.total.exist - this.total.run;
-        this.total.run = this.total.exist;
-      }
-      this.setText("stats-skipped", this.total.skipped);
-      return this.updateProgress();
-    };
-
     HTML.prototype.elapsedTime = function() {
       return (((new Teaspoon.Date().getTime() - this.start) / 1000).toFixed(3)) + "s";
     };
@@ -600,10 +623,9 @@
     };
 
     HTML.prototype.updateStatus = function(spec) {
-      var elapsed, ref, ref1, result;
-      spec = new Teaspoon.Spec(spec);
+      var elapsed, ref, ref1, ref2, result;
       result = spec.result();
-      if (result.skipped || result.status === "pending") {
+      if (result.skipped) {
         this.updateStat("skipped", this.total.skipped += 1);
         return;
       }
@@ -611,13 +633,15 @@
       if (result.status === "passed") {
         this.updateStat("passes", this.total.passes += 1);
         return (ref = this.reportView) != null ? ref.updateState("passed", elapsed) : void 0;
+      } else if (result.status === "pending") {
+        return (ref1 = this.reportView) != null ? ref1.updateState("pending", elapsed) : void 0;
       } else {
         this.updateStat("failures", this.total.failures += 1);
-        if ((ref1 = this.reportView) != null) {
-          ref1.updateState("failed", elapsed);
+        if ((ref2 = this.reportView) != null) {
+          ref2.updateState("failed", elapsed);
         }
         if (!this.config["build-full-report"]) {
-          new Teaspoon.Reporters.HTML.FailureView(spec).appendTo(this.findEl("report-failures"));
+          new (Teaspoon.resolveClass("Reporters.HTML.FailureView"))(spec).appendTo(this.findEl("report-failures"));
         }
         return this.setStatus("failed");
       }
@@ -721,6 +745,35 @@
   var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
+  Teaspoon.Reporters.HTML.FailureView = (function(superClass) {
+    extend(FailureView, superClass);
+
+    function FailureView(spec) {
+      this.spec = spec;
+      FailureView.__super__.constructor.apply(this, arguments);
+    }
+
+    FailureView.prototype.build = function() {
+      var error, html, i, len, ref;
+      FailureView.__super__.build.call(this, "spec");
+      html = "<h1 class=\"teaspoon-clearfix\"><a href=\"" + this.spec.link + "\">" + (this.htmlSafe(this.spec.fullDescription)) + "</a></h1>";
+      ref = this.spec.errors();
+      for (i = 0, len = ref.length; i < len; i++) {
+        error = ref[i];
+        html += "<div><strong>" + (this.htmlSafe(error.message)) + "</strong><br/>" + (this.htmlSafe(error.stack || "Stack trace unavailable")) + "</div>";
+      }
+      return this.el.innerHTML = html;
+    };
+
+    return FailureView;
+
+  })(Teaspoon.Reporters.BaseView);
+
+}).call(this);
+(function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
   Teaspoon.Reporters.HTML.ProgressView = (function(superClass) {
     extend(ProgressView, superClass);
 
@@ -752,27 +805,10 @@
 
   })(Teaspoon.Reporters.BaseView);
 
-  Teaspoon.Reporters.HTML.SimpleProgressView = (function(superClass) {
-    extend(SimpleProgressView, superClass);
-
-    function SimpleProgressView() {
-      return SimpleProgressView.__super__.constructor.apply(this, arguments);
-    }
-
-    SimpleProgressView.prototype.build = function() {
-      this.el = this.createEl("div", "simple-progress");
-      return this.el.innerHTML = "<em id=\"teaspoon-progress-percent\">0%</em>\n<span id=\"teaspoon-progress-span\" class=\"teaspoon-indicator\"></span>";
-    };
-
-    SimpleProgressView.prototype.update = function(total, run) {
-      var percent;
-      percent = total ? Math.ceil((run * 100) / total) : 0;
-      return this.setHtml("progress-percent", percent + "%");
-    };
-
-    return SimpleProgressView;
-
-  })(Teaspoon.Reporters.HTML.ProgressView);
+}).call(this);
+(function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
 
   Teaspoon.Reporters.HTML.RadialProgressView = (function(superClass) {
     extend(RadialProgressView, superClass);
@@ -826,6 +862,33 @@
   var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
+  Teaspoon.Reporters.HTML.SimpleProgressView = (function(superClass) {
+    extend(SimpleProgressView, superClass);
+
+    function SimpleProgressView() {
+      return SimpleProgressView.__super__.constructor.apply(this, arguments);
+    }
+
+    SimpleProgressView.prototype.build = function() {
+      this.el = this.createEl("div", "simple-progress");
+      return this.el.innerHTML = "<em id=\"teaspoon-progress-percent\">0%</em>\n<span id=\"teaspoon-progress-span\" class=\"teaspoon-indicator\"></span>";
+    };
+
+    SimpleProgressView.prototype.update = function(total, run) {
+      var percent;
+      percent = total ? Math.ceil((run * 100) / total) : 0;
+      return this.setHtml("progress-percent", percent + "%");
+    };
+
+    return SimpleProgressView;
+
+  })(Teaspoon.Reporters.HTML.ProgressView);
+
+}).call(this);
+(function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
   Teaspoon.Reporters.HTML.SpecView = (function(superClass) {
     var viewId;
 
@@ -860,7 +923,7 @@
       if (parent.viewId) {
         return this.views.suites[parent.viewId];
       } else {
-        view = new Teaspoon.Reporters.HTML.SuiteView(parent, this.reporter);
+        view = new (Teaspoon.resolveClass("Reporters.HTML.SuiteView"))(parent, this.reporter);
         return this.views.suites[view.suite.viewId] = view;
       }
     };
@@ -885,46 +948,17 @@
       if (elapsed > Teaspoon.slow) {
         classes.push("slow");
       }
-      if (state !== "failed") {
+      if (state === "passed") {
         this.el.innerHTML += "<span>" + elapsed + "ms</span>";
       }
       this.el.className = classes.join(" ");
-      if (result.status !== "passed") {
+      if (result.status === "failed") {
         this.buildErrors();
       }
       return typeof (base = this.parentView).updateState === "function" ? base.updateState(state) : void 0;
     };
 
     return SpecView;
-
-  })(Teaspoon.Reporters.BaseView);
-
-}).call(this);
-(function() {
-  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
-
-  Teaspoon.Reporters.HTML.FailureView = (function(superClass) {
-    extend(FailureView, superClass);
-
-    function FailureView(spec) {
-      this.spec = spec;
-      FailureView.__super__.constructor.apply(this, arguments);
-    }
-
-    FailureView.prototype.build = function() {
-      var error, html, i, len, ref;
-      FailureView.__super__.build.call(this, "spec");
-      html = "<h1 class=\"teaspoon-clearfix\"><a href=\"" + this.spec.link + "\">" + (this.htmlSafe(this.spec.fullDescription)) + "</a></h1>";
-      ref = this.spec.errors();
-      for (i = 0, len = ref.length; i < len; i++) {
-        error = ref[i];
-        html += "<div><strong>" + (this.htmlSafe(error.message)) + "</strong><br/>" + (this.htmlSafe(error.stack || "Stack trace unavailable")) + "</div>";
-      }
-      return this.el.innerHTML = html;
-    };
-
-    return FailureView;
 
   })(Teaspoon.Reporters.BaseView);
 
@@ -946,7 +980,7 @@
       this.views = this.reporter.views;
       this.suite.viewId = viewId += 1;
       this.views.suites[this.suite.viewId] = this;
-      this.suite = new Teaspoon.Suite(this.suite);
+      this.suite = new (Teaspoon.resolveClass("Suite"))(this.suite);
       SuiteView.__super__.constructor.apply(this, arguments);
     }
 
@@ -966,7 +1000,7 @@
       if (parent.viewId) {
         return this.views.suites[parent.viewId];
       } else {
-        view = new Teaspoon.Reporters.HTML.SuiteView(parent, this.reporter);
+        view = new (Teaspoon.resolveClass("Reporters.HTML.SuiteView"))(parent, this.reporter);
         return this.views.suites[view.suite.viewId] = view;
       }
     };
@@ -1019,6 +1053,21 @@
       });
     };
 
+    Console.prototype.reportRunnerResults = function() {
+      this.log({
+        type: "result",
+        elapsed: ((new Teaspoon.Date().getTime() - this.start.getTime()) / 1000).toFixed(5),
+        coverage: window.__coverage__
+      });
+      return Teaspoon.finished = true;
+    };
+
+    Console.prototype.reportSuiteStarting = function(suite) {};
+
+    Console.prototype.reportSuiteResults = function(suite) {};
+
+    Console.prototype.reportSpecStarting = function(spec) {};
+
     Console.prototype.reportSuites = function() {
       var i, index, len, ref, results, suite;
       ref = this.spec.getParents();
@@ -1038,9 +1087,9 @@
       return results;
     };
 
-    Console.prototype.reportSpecResults = function(spec) {
+    Console.prototype.reportSpecResults = function(spec1) {
       var result;
-      this.spec = new Teaspoon.Spec(spec);
+      this.spec = spec1;
       result = this.spec.result();
       if (result.skipped) {
         return;
@@ -1095,15 +1144,6 @@
       return results;
     };
 
-    Console.prototype.reportRunnerResults = function() {
-      this.log({
-        type: "result",
-        elapsed: ((new Teaspoon.Date().getTime() - this.start.getTime()) / 1000).toFixed(5),
-        coverage: window.__coverage__
-      });
-      return Teaspoon.finished = true;
-    };
-
     Console.prototype.log = function(obj) {
       if (obj == null) {
         obj = {};
@@ -1118,65 +1158,93 @@
 
 }).call(this);
 (function() {
-  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    hasProp = {}.hasOwnProperty;
+  var base, base1;
 
-  Teaspoon.Reporters.Console = (function(superClass) {
-    extend(Console, superClass);
+  if (typeof mocha === "undefined" || mocha === null) {
+    throw new Teaspoon.Error('Mocha not found -- use `suite.use_framework :mocha` and adjust or remove the `suite.javascripts` directive.');
+  }
 
-    function Console(runner) {
-      this.reportSpecResults = bind(this.reportSpecResults, this);
-      Console.__super__.constructor.apply(this, arguments);
-      this.reportRunnerStarting(runner);
-      runner.on("fail", this.reportSpecResults);
-      runner.on("test end", this.reportSpecResults);
-      runner.on("end", this.reportRunnerResults);
-    }
+  if (this.Teaspoon == null) {
+    this.Teaspoon = {};
+  }
 
-    Console.prototype.reportSpecResults = function(spec, err) {
-      if (err) {
-        spec.err = err;
-        if (spec.type === "hook") {
-          this.reportSpecResults(spec);
-        }
-        return;
-      }
-      return Console.__super__.reportSpecResults.apply(this, arguments);
-    };
+  if ((base = this.Teaspoon).Mocha == null) {
+    base.Mocha = {};
+  }
 
-    return Console;
-
-  })(Teaspoon.Reporters.Console);
+  if ((base1 = this.Teaspoon.Mocha).Reporters == null) {
+    base1.Reporters = {};
+  }
 
 }).call(this);
 (function() {
-  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  Teaspoon.Reporters.HTML = (function(superClass) {
-    extend(HTML, superClass);
+  Teaspoon.Mocha.Fixture = (function(superClass) {
+    extend(Fixture, superClass);
 
-    function HTML(runner) {
-      this.reportSpecResults = bind(this.reportSpecResults, this);
-      HTML.__super__.constructor.apply(this, arguments);
-      this.reportRunnerStarting(runner);
-      runner.on("fail", this.reportSpecResults);
-      runner.on("test end", this.reportSpecResults);
-      runner.on("end", this.reportRunnerResults);
+    function Fixture() {
+      return Fixture.__super__.constructor.apply(this, arguments);
     }
 
-    HTML.prototype.reportSpecResults = function(spec, err) {
-      if (err) {
-        spec.err = err;
-        if (spec.type === "hook") {
-          this.reportSpecResults(spec);
-        }
-        return;
+    Fixture.load = function() {
+      var args;
+      args = arguments;
+      if (window.env.started) {
+        return Fixture.__super__.constructor.load.apply(this, arguments);
+      } else {
+        return beforeEach((function(_this) {
+          return function() {
+            return fixture.__super__.constructor.load.apply(_this, args);
+          };
+        })(this));
       }
-      this.reportSpecStarting(spec);
-      return HTML.__super__.reportSpecResults.apply(this, arguments);
+    };
+
+    Fixture.set = function() {
+      var args;
+      args = arguments;
+      if (window.env.started) {
+        return Fixture.__super__.constructor.set.apply(this, arguments);
+      } else {
+        return beforeEach((function(_this) {
+          return function() {
+            return fixture.__super__.constructor.set.apply(_this, args);
+          };
+        })(this));
+      }
+    };
+
+    return Fixture;
+
+  })(Teaspoon.Fixture);
+
+}).call(this);
+(function() {
+  Teaspoon.setFramework(Teaspoon.Mocha);
+
+  window.env = mocha.setup("bdd");
+
+}).call(this);
+(function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Teaspoon.Mocha.Reporters.HTML = (function(superClass) {
+    extend(HTML, superClass);
+
+    function HTML() {
+      return HTML.__super__.constructor.apply(this, arguments);
+    }
+
+    HTML.prototype.reportSpecResults = function(spec) {
+      if (spec.pending) {
+        if (this.config["build-full-report"]) {
+          this.reportView = new Teaspoon.Mocha.Reporters.HTML.SpecView(spec, this);
+        }
+      }
+      return HTML.__super__.reportSpecResults.call(this, spec);
     };
 
     HTML.prototype.envInfo = function() {
@@ -1187,7 +1255,12 @@
 
   })(Teaspoon.Reporters.HTML);
 
-  Teaspoon.Reporters.HTML.SpecView = (function(superClass) {
+}).call(this);
+(function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
+
+  Teaspoon.Mocha.Reporters.HTML.SpecView = (function(superClass) {
     extend(SpecView, superClass);
 
     function SpecView() {
@@ -1204,31 +1277,82 @@
 
 }).call(this);
 (function() {
-  var env,
-    extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+  var bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+  Teaspoon.Mocha.Responder = (function() {
+    function Responder(runner) {
+      this.specFailed = bind(this.specFailed, this);
+      this.specFinished = bind(this.specFinished, this);
+      this.specStarted = bind(this.specStarted, this);
+      this.suiteDone = bind(this.suiteDone, this);
+      this.suiteStarted = bind(this.suiteStarted, this);
+      this.runnerDone = bind(this.runnerDone, this);
+      this.reporter.reportRunnerStarting({
+        total: runner.total
+      });
+      runner.on("end", this.runnerDone);
+      runner.on("suite", this.suiteStarted);
+      runner.on("suite end", this.suiteDone);
+      runner.on("test", this.specStarted);
+      runner.on("fail", this.specFailed);
+      runner.on("test end", this.specFinished);
+    }
+
+    Responder.prototype.runnerDone = function() {
+      return this.reporter.reportRunnerResults();
+    };
+
+    Responder.prototype.suiteStarted = function(suite) {
+      return this.reporter.reportSuiteStarting(new Teaspoon.Mocha.Suite(suite));
+    };
+
+    Responder.prototype.suiteDone = function(suite) {
+      return this.reporter.reportSuiteResults(new Teaspoon.Mocha.Suite(suite));
+    };
+
+    Responder.prototype.specStarted = function(spec) {
+      return this.reporter.reportSpecStarting(new Teaspoon.Mocha.Spec(spec));
+    };
+
+    Responder.prototype.specFinished = function(spec) {
+      spec = new Teaspoon.Mocha.Spec(spec);
+      if (spec.result().status !== "failed") {
+        return this.reporter.reportSpecResults(spec);
+      }
+    };
+
+    Responder.prototype.specFailed = function(spec, err) {
+      spec.err = err;
+      return this.reporter.reportSpecResults(new Teaspoon.Mocha.Spec(spec));
+    };
+
+    return Responder;
+
+  })();
+
+}).call(this);
+(function() {
+  var extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
-  if (typeof mocha === "undefined" || mocha === null) {
-    throw new Teaspoon.Error('Mocha not found -- use `suite.use_framework :mocha` and adjust or remove the `suite.javascripts` directive.');
-  }
-
-  Teaspoon.Runner = (function(superClass) {
+  Teaspoon.Mocha.Runner = (function(superClass) {
     extend(Runner, superClass);
 
     function Runner() {
       Runner.__super__.constructor.apply(this, arguments);
-      env.run();
-      env.started = true;
+      window.env.run();
+      window.env.started = true;
       afterEach(function() {
-        return Teaspoon.fixture.cleanup();
+        return Teaspoon.Mocha.Fixture.cleanup();
       });
     }
 
     Runner.prototype.setup = function() {
       var reporter;
-      reporter = this.getReporter();
-      return env.setup({
-        reporter: reporter
+      reporter = new (this.getReporter())();
+      Teaspoon.Mocha.Responder.prototype.reporter = reporter;
+      return window.env.setup({
+        reporter: Teaspoon.Mocha.Responder
       });
     };
 
@@ -1236,7 +1360,9 @@
 
   })(Teaspoon.Runner);
 
-  Teaspoon.Spec = (function() {
+}).call(this);
+(function() {
+  Teaspoon.Mocha.Spec = (function() {
     function Spec(spec) {
       this.spec = spec;
       this.fullDescription = this.spec.fullTitle();
@@ -1263,7 +1389,7 @@
       this.parents || (this.parents = []);
       parent = this.parent;
       while (parent) {
-        parent = new Teaspoon.Suite(parent);
+        parent = new Teaspoon.Mocha.Suite(parent);
         this.parents.unshift(parent);
         parent = parent.parent;
       }
@@ -1289,7 +1415,9 @@
 
   })();
 
-  Teaspoon.Suite = (function() {
+}).call(this);
+(function() {
+  Teaspoon.Mocha.Suite = (function() {
     function Suite(suite) {
       var ref;
       this.suite = suite;
@@ -1303,48 +1431,5 @@
     return Suite;
 
   })();
-
-  Teaspoon.fixture = (function(superClass) {
-    extend(fixture, superClass);
-
-    function fixture() {
-      return fixture.__super__.constructor.apply(this, arguments);
-    }
-
-    window.fixture = fixture;
-
-    fixture.load = function() {
-      var args;
-      args = arguments;
-      if (env.started) {
-        return fixture.__super__.constructor.load.apply(this, arguments);
-      } else {
-        return beforeEach((function(_this) {
-          return function() {
-            return fixture.__super__.constructor.load.apply(_this, args);
-          };
-        })(this));
-      }
-    };
-
-    fixture.set = function() {
-      var args;
-      args = arguments;
-      if (env.started) {
-        return fixture.__super__.constructor.set.apply(this, arguments);
-      } else {
-        return beforeEach((function(_this) {
-          return function() {
-            return fixture.__super__.constructor.set.apply(_this, args);
-          };
-        })(this));
-      }
-    };
-
-    return fixture;
-
-  })(Teaspoon.fixture);
-
-  env = mocha.setup("bdd");
 
 }).call(this);
