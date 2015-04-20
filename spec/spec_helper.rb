@@ -38,6 +38,7 @@ Dir[File.expand_path("../support/**/*.rb", __FILE__)].each { |f| require f }
 
 RSpec.configure do |config|
   config.order = "random"
+  config.color = true
   config.include Teaspoon::Devkit
   config.include ExitCodes
   config.include Rack::Test::Methods
