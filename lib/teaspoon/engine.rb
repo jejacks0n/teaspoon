@@ -55,8 +55,9 @@ module Teaspoon
 
     def self.prepend_routes(app)
       mount_at = Teaspoon.configuration.mount_at
+      catchall = Teaspoon.configuration.catchall || "routing_error"
 
-      return if app.routes.recognize_path(mount_at)[:action] != "routing_error" rescue nil
+      return if app.routes.recognize_path(mount_at)[:action] != catchall rescue nil
       require Teaspoon::Engine.root.join("app/controllers/teaspoon/suite_controller")
 
       app.routes.prepend { mount Teaspoon::Engine => mount_at, as: "teaspoon" }
