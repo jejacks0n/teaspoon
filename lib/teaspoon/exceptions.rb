@@ -35,8 +35,8 @@ module Teaspoon
   end
 
   class UnknownDriver < Teaspoon::Error
-    def initialize(msg = nil, name:)
-      msg ||= "Unknown driver: expected \"#{name}\" to be a registered driver."
+    def initialize(msg = nil, name:, available:)
+      msg ||= "Unknown driver: expected \"#{name}\" to be a registered driver. Available drivers are #{available}"
       super(msg)
     end
 

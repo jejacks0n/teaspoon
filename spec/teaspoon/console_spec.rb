@@ -183,15 +183,6 @@ describe Teaspoon::Console do
         Teaspoon::Failure
       )
     end
-
-    it "raises an exception when an unknown driver is being used" do
-      expect(Teaspoon.configuration).to receive(:driver).twice.and_return(:foo)
-      expect(subject).to receive(:driver).and_call_original
-      expect { subject.run_specs(:suite_name) }.to raise_error(
-        Teaspoon::UnknownDriver,
-        "Unknown driver: expected \"foo\" to be a registered driver."
-      )
-    end
   end
 
   describe "#export" do

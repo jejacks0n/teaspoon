@@ -9,6 +9,10 @@ describe Teaspoon::Drivers::CapybaraWebkitDriver do
     allow(Capybara::Session).to receive(:new).and_return(session)
   end
 
+  it "can be fetched" do
+    expect(Teaspoon::Drivers.fetch(:capybara_webkit)).to eq(Teaspoon::Drivers::CapybaraWebkitDriver)
+  end
+
   describe "#run_specs" do
     it "navigates to the correct url" do
       expect(session).to receive(:visit).with("_url_")

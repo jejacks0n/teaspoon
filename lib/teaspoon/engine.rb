@@ -64,7 +64,7 @@ module Teaspoon
 
     module ExceptionHandling
       def self.add_rails_handling
-        return unless Teaspoon.configuration.driver == "phantomjs"
+        return unless using_phantomjs?
 
         # debugging should be off to display errors in the suite_controller
         # Rails.application.config.assets.debug = false
@@ -77,6 +77,10 @@ module Teaspoon
       end
 
       private
+
+      def self.using_phantomjs?
+        Teaspoon::Drivers.fetch(Teaspoon.configuration.driver) == Teaspoon::Drivers::PhantomjsDriver
+      end
 
       def self.render_exceptions_with_javascript
         ActionDispatch::DebugExceptions.class_eval do

@@ -25,7 +25,7 @@ describe Teaspoon::Configuration do
     expect(subject.asset_paths).to include("spec/javascripts/stylesheets")
     expect(subject.fixture_paths).to eq(["spec/javascripts/fixtures", "test/javascripts/fixtures"])
 
-    expect(subject.driver).to eq("phantomjs")
+    expect(subject.driver).to eq(:phantomjs)
     expect(subject.driver_options).to be_nil
     expect(subject.driver_timeout).to eq(180)
     expect(subject.server).to be_nil

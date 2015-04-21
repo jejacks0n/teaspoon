@@ -10,6 +10,10 @@ describe Teaspoon::Drivers::SeleniumDriver do
     allow(Selenium::WebDriver::Wait).to receive(:new).and_return(wait)
   end
 
+  it "can be fetched" do
+    expect(Teaspoon::Drivers.fetch(:selenium)).to eq(Teaspoon::Drivers::SeleniumDriver)
+  end
+
   describe "#initialize" do
     it "assigns @options" do
       subject = described_class.new(foo: "bar")

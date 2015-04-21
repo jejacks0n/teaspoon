@@ -90,10 +90,8 @@ module Teaspoon
 
     def driver
       return @driver if @driver
-      klass = "#{Teaspoon.configuration.driver.to_s.camelize}Driver"
-      @driver = Teaspoon::Drivers.const_get(klass).new(Teaspoon.configuration.driver_options)
-    rescue NameError
-      raise Teaspoon::UnknownDriver.new(name: Teaspoon.configuration.driver)
+      driver = Teaspoon::Drivers.fetch(Teaspoon.configuration.driver)
+      @driver = driver.new(Teaspoon.configuration.driver_options)
     end
 
     def base_url_for(suite)

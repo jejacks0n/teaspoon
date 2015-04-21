@@ -1,6 +1,10 @@
 require "spec_helper"
 
 describe Teaspoon::Drivers::PhantomjsDriver do
+  it "can be fetched" do
+    expect(Teaspoon::Drivers.fetch(:phantomjs)).to eq(Teaspoon::Drivers::PhantomjsDriver)
+  end
+
   describe "#initialize" do
     it "assigns @options" do
       subject = described_class.new(foo: "bar")
