@@ -9,7 +9,7 @@ module Teaspoon
     end
 
     def self.fetch(name)
-      @@drivers[name.to_sym] or raise Teaspoon::UnknownDriver.new(name: name, available: @@drivers.keys)
+      @@drivers[name.to_s.underscore.to_sym] or raise Teaspoon::UnknownDriver.new(name: name, available: @@drivers.keys)
     end
   end
 end

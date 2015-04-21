@@ -16,6 +16,10 @@ describe Teaspoon::Drivers do
       expect(Teaspoon::Drivers.fetch("my_driver")).to eq(my_driver)
     end
 
+    it "converts dashes to underscores for backwards compatibility" do
+      expect(Teaspoon::Drivers.fetch("my-driver")).to eq(my_driver)
+    end
+
     it "raises an exception when an unknown driver is being used" do
       expect { Teaspoon::Drivers.fetch("bad_driver") }.to raise_error(
         Teaspoon::UnknownDriver,
