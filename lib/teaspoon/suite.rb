@@ -75,8 +75,8 @@ module Teaspoon
     end
 
     def asset_url(asset)
-      params = "?body=1"
-      params << "&instrument=1" if instrument_file?(asset.pathname.to_s)
+      params = ""
+      params << "?body=1&instrument=1" if instrument_file?(asset.pathname.to_s)
       "#{asset.logical_path}#{params}"
     end
 
