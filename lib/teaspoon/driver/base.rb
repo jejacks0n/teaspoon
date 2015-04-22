@@ -1,11 +1,11 @@
-require "teaspoon/registerable"
+require "teaspoon/registry"
 
 module Teaspoon
   module Driver
     class Base
     end
 
-    extend Teaspoon::Registerable
+    extend Teaspoon::Registry
 
     not_found_in_registry Teaspoon::UnknownDriver
   end

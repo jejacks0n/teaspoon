@@ -1,5 +1,5 @@
 module Teaspoon
-  module Registerable
+  module Registry
     def self.extended(host)
       host.instance_variable_set(:@registry, {})
     end

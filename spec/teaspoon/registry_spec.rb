@@ -1,10 +1,9 @@
 require "spec_helper"
-# require "teaspoon/driver/base"
 
-describe Teaspoon::Registerable do
+describe Teaspoon::Registry do
   subject do
     Class.new do
-      extend Teaspoon::Registerable
+      extend Teaspoon::Registry
     end
   end
 
@@ -62,7 +61,7 @@ describe Teaspoon::Registerable do
       subject do
         ex_klass = exception_klass
         Class.new do
-          extend Teaspoon::Registerable
+          extend Teaspoon::Registry
 
           not_found_in_registry ex_klass
         end
