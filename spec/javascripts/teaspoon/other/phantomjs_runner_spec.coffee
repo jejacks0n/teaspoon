@@ -1,5 +1,5 @@
 #= require_self
-#= require drivers/phantomjs/runner
+#= require driver/phantomjs/runner
 
 # stub out phantomjs
 window.phantom = {exit: ->}

@@ -94,6 +94,16 @@ module Teaspoon
     end
   end
 
+  class NotFoundInRegistry < Teaspoon::Error
+    def initialize(msg = nil, name:, available:)
+      msg ||= "Unknown configuration: expected \"#{name}\" to be registered. Available options are #{available}"
+      super(msg)
+    end
+
+    def available
+    end
+  end
+
   # general running errors
 
   class RunnerError < Teaspoon::Error

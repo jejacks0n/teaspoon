@@ -1,16 +1,12 @@
 require "spec_helper"
 
-describe Teaspoon::Drivers::CapybaraWebkitDriver do
+describe Teaspoon::Driver.fetch(:capybara_webkit) do
   let(:runner) { double }
   let(:document) { double(synchronize: nil) }
   let(:session) { instance_double(Capybara::Session, visit: nil, evaluate_script: nil, document: document) }
 
   before do
     allow(Capybara::Session).to receive(:new).and_return(session)
-  end
-
-  it "can be fetched" do
-    expect(Teaspoon::Drivers.fetch(:capybara_webkit)).to eq(Teaspoon::Drivers::CapybaraWebkitDriver)
   end
 
   describe "#run_specs" do

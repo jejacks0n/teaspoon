@@ -1,10 +1,15 @@
-module Teaspoon
-  module Drivers
-    class CapybaraWebkitDriver < Base
-      register_driver :capybara_webkit
+# :nocov:
+begin
+  require "capybara-webkit"
+rescue LoadError
+  Teaspoon.abort("Could not find Capybara Webkit. Install the capybara-webkit gem.")
+end
+# :nocov:
 
+module Teaspoon
+  module Driver
+    class CapybaraWebkit < Base
       def initialize(_options = nil)
-        load_driver
       end
 
       def run_specs(runner, url)
@@ -24,16 +29,6 @@ module Teaspoon
       def session
         @session ||= Capybara::Session.new(:webkit)
       end
-
-      # :nocov:
-      def load_driver
-        begin
-          require "capybara-webkit"
-        rescue LoadError
-          Teaspoon.abort("Could not find Capybara Webkit. Install the capybara-webkit gem.")
-        end
-      end
-      # :nocov:
     end
   end
 end

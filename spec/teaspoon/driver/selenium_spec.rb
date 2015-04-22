@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Teaspoon::Drivers::SeleniumDriver do
+describe Teaspoon::Driver.fetch(:selenium) do
   let(:runner) { double }
   let(:wait) { double(until: nil) }
   let(:driver) { double(quit: nil, navigate: @navigate = double(to: nil), execute_script: nil) }
@@ -8,10 +8,6 @@ describe Teaspoon::Drivers::SeleniumDriver do
   before do
     allow(Selenium::WebDriver).to receive(:for).and_return(driver)
     allow(Selenium::WebDriver::Wait).to receive(:new).and_return(wait)
-  end
-
-  it "can be fetched" do
-    expect(Teaspoon::Drivers.fetch(:selenium)).to eq(Teaspoon::Drivers::SeleniumDriver)
   end
 
   describe "#initialize" do

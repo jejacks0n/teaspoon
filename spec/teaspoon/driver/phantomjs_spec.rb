@@ -1,9 +1,6 @@
 require "spec_helper"
 
-describe Teaspoon::Drivers::PhantomjsDriver do
-  it "can be fetched" do
-    expect(Teaspoon::Drivers.fetch(:phantomjs)).to eq(Teaspoon::Drivers::PhantomjsDriver)
-  end
+describe Teaspoon::Driver.fetch(:phantomjs) do
 
   describe "#initialize" do
     it "assigns @options" do
@@ -35,7 +32,7 @@ describe Teaspoon::Drivers::PhantomjsDriver do
 
       it "calls #run and calls runner.process with each line of output" do
         subject.instance_variable_set(:@options, ["--foo", "--bar"])
-        script = Teaspoon::Engine.root.join("lib/teaspoon/drivers/phantomjs/runner.js").to_s
+        script = Teaspoon::Engine.root.join("lib/teaspoon/driver/phantomjs/runner.js").to_s
         args = ["--foo", "--bar", script.inspect, '"_url_"', 180]
 
         expect(subject).to receive(:run).with(*args) { |&b| @block = b }

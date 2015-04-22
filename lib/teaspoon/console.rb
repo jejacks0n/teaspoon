@@ -90,7 +90,7 @@ module Teaspoon
 
     def driver
       return @driver if @driver
-      driver = Teaspoon::Drivers.fetch(Teaspoon.configuration.driver)
+      driver = Teaspoon::Driver.fetch(Teaspoon.configuration.driver)
       @driver = driver.new(Teaspoon.configuration.driver_options)
     end
 

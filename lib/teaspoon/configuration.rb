@@ -1,8 +1,8 @@
 require "singleton"
+require "teaspoon/driver/base"
 
 module Teaspoon
   autoload :Formatters, "teaspoon/formatters/base"
-  autoload :Drivers,    "teaspoon/drivers/base"
 
   class Configuration
     include Singleton

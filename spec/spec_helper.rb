@@ -41,6 +41,7 @@ RSpec.configure do |config|
   config.color = true
   config.include Teaspoon::Devkit
   config.include ExitCodes
+  config.include LoadableFiles
   config.include Rack::Test::Methods
 
   config.before(:each, shell: true) do

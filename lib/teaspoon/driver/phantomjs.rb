@@ -1,13 +1,17 @@
-module Teaspoon
-  module Drivers
-    class PhantomjsDriver < Base
-      register_driver :phantomjs
+# :nocov:
+begin
+  require "phantomjs"
+rescue LoadError
+  # if we can't load phantomjs, assume the cli is installed and in the path
+end
+# :nocov:
 
+module Teaspoon
+  module Driver
+    class Phantomjs < Base
       include Teaspoon::Utility
 
       def initialize(options = nil)
-        load_driver
-
         options ||= []
         case options
         when Array then @options = options
@@ -53,16 +57,6 @@ module Teaspoon
       def script
         File.expand_path("../phantomjs/runner.js", __FILE__)
       end
-
-      # :nocov:
-      def load_driver
-        begin
-          require "phantomjs"
-        rescue LoadError
-          # if we can't load phantomjs, assume the cli is installed and in the path
-        end
-      end
-      # :nocov:
     end
   end
 end

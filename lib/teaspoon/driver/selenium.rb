@@ -1,11 +1,15 @@
+# :nocov:
+begin
+  require "selenium-webdriver"
+rescue LoadError
+  Teaspoon.abort("Could not find Selenium Webdriver. Install the selenium-webdriver gem.")
+end
+# :nocov:
+
 module Teaspoon
-  module Drivers
-    class SeleniumDriver < Base
-      register_driver :selenium
-
+  module Driver
+    class Selenium < Base
       def initialize(options = nil)
-        load_driver
-
         options ||= {}
         case options
         when Hash then @options = options
@@ -17,10 +21,10 @@ module Teaspoon
       end
 
       def run_specs(runner, url)
-        driver = Selenium::WebDriver.for(driver_options[:client_driver])
+        driver = ::Selenium::WebDriver.for(driver_options[:client_driver])
         driver.navigate.to(url)
 
-        Selenium::WebDriver::Wait.new(driver_options).until do
+        ::Selenium::WebDriver::Wait.new(driver_options).until do
           done = driver.execute_script("return window.Teaspoon && window.Teaspoon.finished")
           driver.execute_script("return window.Teaspoon && window.Teaspoon.getMessages() || []").each do |line|
             runner.process("#{line}\n")
@@ -41,16 +45,6 @@ module Teaspoon
           message: "Timed out"
         ).merge(@options)
       end
-
-      # :nocov:
-      def load_driver
-        begin
-          require "selenium-webdriver"
-        rescue LoadError
-          Teaspoon.abort("Could not find Selenium Webdriver. Install the selenium-webdriver gem.")
-        end
-      end
-      # :nocov:
     end
   end
 end
