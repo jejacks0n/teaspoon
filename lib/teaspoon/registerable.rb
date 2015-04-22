@@ -1,21 +1,23 @@
 module Teaspoon
   module Registerable
-    @@registry = {}
+    def self.extended(host)
+      host.instance_variable_set(:@registry, {})
+    end
 
     def not_found_in_registry(klass)
-      @@not_found_exception = klass
+      @not_found_exception = klass
     end
 
     def register(name, constant, path)
-      @@registry[normalize_name(name)] = proc {
+      @registry[normalize_name(name)] = proc {
         require path
         constant.constantize
       }
     end
 
     def fetch(name)
-      if !(driver = @@registry[normalize_name(name)])
-        raise not_found_exception.new(name: name, available: @@registry.keys)
+      if !(driver = @registry[normalize_name(name)])
+        raise not_found_exception.new(name: name, available: @registry.keys)
       end
       
       driver.call
@@ -32,7 +34,7 @@ module Teaspoon
     end
 
     def not_found_exception
-      @@not_found_exception || Teaspoon::NotFoundInRegistry
+      @not_found_exception || Teaspoon::NotFoundInRegistry
     end
   end
 end
