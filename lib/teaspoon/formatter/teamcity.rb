@@ -1,6 +1,8 @@
+require "teaspoon/formatter/base"
+
 module Teaspoon
-  module Formatters
-    class TeamcityFormatter < Base
+  module Formatter
+    class Teamcity < Base
       def initialize(*args)
         log("enteredTheMatrix timestamp='#{Time.now.to_json.gsub('"', '')}'")
         super

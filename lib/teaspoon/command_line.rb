@@ -1,7 +1,7 @@
 require "optparse"
 require "teaspoon/version"
 require "teaspoon/exceptions"
-require "teaspoon/formatters/base"
+require "teaspoon/formatter/base"
 
 module Teaspoon
   class CommandLine
@@ -90,7 +90,7 @@ module Teaspoon
 
       opt :formatters, "-f", "--format FORMATTERS",
           "Specify formatters (comma separated)",
-          *Teaspoon::Formatters.known_formatters.map(&:cli_help)
+          *formatter_details
     end
 
     def opts_for_coverage
@@ -124,6 +124,12 @@ module Teaspoon
 
     def require_console
       require "teaspoon/console"
+    end
+
+    def formatter_details
+      Teaspoon::Formatter.available.map do |name, options|
+        "  #{name}#{' (default)' if options[:default]} - #{options[:description]}"
+      end
     end
   end
 end

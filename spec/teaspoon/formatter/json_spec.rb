@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Teaspoon::Formatters::JsonFormatter do
+describe Teaspoon::Formatter.fetch(:json) do
   let(:hash) { { original_json: "_original_json_" } }
   let(:result) { double(hash) }
 

@@ -84,4 +84,17 @@ describe Teaspoon::Registry do
       expect(subject.equal?(:capybara_webkit, :phantomjs)).to equal(false)
     end
   end
+
+  describe ".available" do
+    it "lists the registered options with any arbitrary data passed to #register" do
+      subject.register(:his_driver,"","my_driver", extra: "data", default: true)
+      subject.register(:her_driver,"","my_driver")
+
+      expect(subject.available).to eq({
+        my_driver: {},
+        his_driver: {extra: "data", default: true},
+        her_driver: {}
+      })
+    end
+  end
 end

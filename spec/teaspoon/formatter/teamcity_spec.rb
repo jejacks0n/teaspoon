@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Teaspoon::Formatters::TeamcityFormatter do
+describe Teaspoon::Formatter.fetch(:teamcity) do
   let(:suite) { double(label: "_suite_") }
   let(:passing_spec) { double(passing?: true, description: "_passing_[desc]\rip|'o\n_") }
   let(:pending_spec) { double(passing?: false, pending?: true, description: "_pending_[desc]_") }

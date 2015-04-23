@@ -1,8 +1,9 @@
 # encoding: utf-8
+require "teaspoon/formatter/dot"
 
 module Teaspoon
-  module Formatters
-    class SnowdayFormatter < DotFormatter
+  module Formatter
+    class Snowday < Dot
       protected
 
       def log_spec(result)

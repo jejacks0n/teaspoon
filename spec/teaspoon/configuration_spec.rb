@@ -31,7 +31,7 @@ describe Teaspoon::Configuration do
     expect(subject.server).to be_nil
     expect(subject.server_port).to be_nil
     expect(subject.server_timeout).to eq(20)
-    expect(subject.formatters).to eq(["dot"])
+    expect(subject.formatters).to eq([:dot])
     expect(subject.use_coverage).to be_nil
     expect(subject.fail_fast).to be_truthy
     expect(subject.suppress_log).to be_falsey
@@ -69,7 +69,7 @@ describe Teaspoon::Configuration do
 
   describe ".formatters" do
     it "returns the default dot formatter if nothing was set" do
-      expect(subject.formatters).to eq(["dot"])
+      expect(subject.formatters).to eq([:dot])
     end
 
     it "returns an array of formatters if they were comma separated" do

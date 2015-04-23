@@ -16,20 +16,10 @@ describe Teaspoon::Runner do
     end
 
     it "instantiates formatters based on configuration" do
-      allow(Teaspoon.configuration).to receive(:formatters).and_return(["dot", "xml"])
-      Teaspoon::Formatters::XmlFormatter = Class.new do
-        def initialize(_suite_name = :default, _output_file = nil) end
-      end
-      expect(subject.instance_variable_get(:@formatters)[0]).to be_a(Teaspoon::Formatters::DotFormatter)
-      expect(subject.instance_variable_get(:@formatters)[1]).to be_a(Teaspoon::Formatters::XmlFormatter)
-    end
+      allow(Teaspoon.configuration).to receive(:formatters).and_return(["dot", "pride"])
 
-    it "raises an exception when a formatter isn't found" do
-      allow(Teaspoon.configuration).to receive(:formatters).and_return(["bar"])
-      expect { Teaspoon::Runner.new(:foo) }.to raise_error(
-        Teaspoon::UnknownFormatter,
-        "Unknown formatter: expected \"bar\" to be a registered formatter."
-      )
+      expect(subject.instance_variable_get(:@formatters)[0]).to be_a(Teaspoon::Formatter::Dot)
+      expect(subject.instance_variable_get(:@formatters)[1]).to be_a(Teaspoon::Formatter::Pride)
     end
   end
 

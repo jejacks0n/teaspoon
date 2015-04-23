@@ -1,8 +1,9 @@
+require "teaspoon/formatter/base"
 require "cgi"
 
 module Teaspoon
-  module Formatters
-    class JunitFormatter < Base
+  module Formatter
+    class Junit < Base
       protected
 
       def log_runner(result)

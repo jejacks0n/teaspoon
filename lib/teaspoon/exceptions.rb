@@ -45,8 +45,8 @@ module Teaspoon
   end
 
   class UnknownFormatter < Teaspoon::Error
-    def initialize(msg = nil, name:)
-      msg ||= "Unknown formatter: expected \"#{name}\" to be a registered formatter."
+    def initialize(msg = nil, name:, available:)
+      msg ||= "Unknown formatter: expected \"#{name}\" to be a registered formatter. Available formatters are #{available}"
       super(msg)
     end
 

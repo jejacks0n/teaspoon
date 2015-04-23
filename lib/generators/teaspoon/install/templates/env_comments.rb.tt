@@ -121,8 +121,8 @@ Teaspoon.configure do |config|
   # Specify the formatters to use when outputting the results.
   # Note: Output files can be specified by using `"junit>/path/to/output.xml"`.
   #
-  # Available: <%= Teaspoon::Formatters.known_formatters.map(&:name).join(", ") %>
-  #config.formatters = ["<%= Teaspoon::Formatters.known_formatters.select(&:default?).first.name %>"]
+  # Available: <%= Teaspoon::Formatter.available.keys.map{|f| ":#{f}"}.join(", ") %>
+  #config.formatters = [:<%= Teaspoon::Formatter.default %>]
 
   # Specify if you want color output from the formatters.
   #config.color = true

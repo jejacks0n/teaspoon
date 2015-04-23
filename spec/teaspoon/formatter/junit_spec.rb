@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Teaspoon::Formatters::JunitFormatter do
+describe Teaspoon::Formatter.fetch(:junit) do
   let(:passing_spec) { double(passing?: true, suite: "_suite_name_", label: "_passing_label_") }
   let(:pending_spec) { double(passing?: false, pending?: true, suite: "_suite_name_", label: "_pending_label_") }
   let(:failing_spec) { double(passing?: false, pending?: false, suite: "_suite&name_", label: "_failing&label_", message: "_failure_message_") }

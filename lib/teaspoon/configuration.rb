@@ -1,9 +1,8 @@
 require "singleton"
 require "teaspoon/driver/base"
+require "teaspoon/formatter/base"
 
 module Teaspoon
-  autoload :Formatters, "teaspoon/formatters/base"
-
   class Configuration
     include Singleton
 
@@ -37,7 +36,7 @@ module Teaspoon
     @@server_timeout = 20
     @@fail_fast      = true
 
-    @@formatters     = ["dot"]
+    @@formatters     = [Teaspoon::Formatter.default]
     @@color          = true
     @@suppress_log   = false
 

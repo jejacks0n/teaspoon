@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Teaspoon::Formatters::TapYFormatter do
+describe Teaspoon::Formatter.fetch(:tap_y) do
   let(:passing_spec) { double(passing?: true, label: "_passing_label_") }
   let(:pending_spec) { double(passing?: false, pending?: true, label: "_pending_label_", message: "_message_") }
   let(:failing_spec) { double(passing?: false, pending?: false, label: "_failing_label_", message: "_message_", link: "_link_") }

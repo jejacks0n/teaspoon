@@ -1,8 +1,9 @@
 require "yaml"
+require "teaspoon/formatter/base"
 
 module Teaspoon
-  module Formatters
-    class TapYFormatter < Base
+  module Formatter
+    class TapY < Base
       protected
 
       def log_runner(result)

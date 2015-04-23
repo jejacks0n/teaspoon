@@ -1,6 +1,8 @@
+require "teaspoon/formatter/base"
+
 module Teaspoon
-  module Formatters
-    class JsonFormatter < Base
+  module Formatter
+    class Json < Base
       protected
 
       def log_runner(result)

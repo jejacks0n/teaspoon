@@ -1,6 +1,8 @@
+require "teaspoon/formatter/base"
+
 module Teaspoon
-  module Formatters
-    class TapFormatter < Base
+  module Formatter
+    class Tap < Base
       protected
 
       def log_runner(_result)

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Teaspoon::Formatters::TapFormatter do
+describe Teaspoon::Formatter.fetch(:tap) do
   let(:passing_spec) { double(passing?: true, description: "_passing_desc_") }
   let(:pending_spec) { double(passing?: false, pending?: true, description: "_pending_desc_") }
   let(:failing_spec) { double(passing?: false, pending?: false, description: "_failing_desc_", message: "_failure_message_") }

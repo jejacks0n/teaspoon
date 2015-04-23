@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Teaspoon::Formatters::DocumentationFormatter do
+describe Teaspoon::Formatter.fetch(:documentation) do
   let(:suite) { double(label: "_suite_", level: @level || 0) }
   let(:passing_spec) { double(passing?: true, label: "_passing_") }
   let(:pending_spec) { double(passing?: false, pending?: true, label: "_pending_", description: "_description_") }

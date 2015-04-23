@@ -1,5 +1,5 @@
 module Teaspoon
-  module Formatters
+  module Formatter
     module ReportModule
       RED = 31
       GREEN = 32

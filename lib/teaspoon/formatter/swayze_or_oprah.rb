@@ -1,6 +1,8 @@
+require "teaspoon/formatter/base"
+
 module Teaspoon
-  module Formatters
-    class SwayzeOrOprahFormatter < Base
+  module Formatter
+    class SwayzeOrOprah < Base
       protected
 
       def log_result(_result)

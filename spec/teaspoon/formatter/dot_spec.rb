@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Teaspoon::Formatters::DotFormatter do
+describe Teaspoon::Formatter.fetch(:dot) do
   let(:passing_spec) { double(passing?: true) }
   let(:pending_spec) { double(passing?: false, pending?: true, description: "_description_") }
   let(:failing_spec) { double(passing?: false, pending?: false, description: "_description_", message: "_message_", link: "_link_") }

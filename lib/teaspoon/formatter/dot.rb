@@ -1,8 +1,9 @@
-require "teaspoon/formatters/modules/report_module"
+require "teaspoon/formatter/base"
+require "teaspoon/formatter/modules/report_module"
 
 module Teaspoon
-  module Formatters
-    class DotFormatter < Base
+  module Formatter
+    class Dot < Base
       include ReportModule
 
       protected

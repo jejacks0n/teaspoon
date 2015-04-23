@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Teaspoon::Formatters::PrideFormatter do
+describe Teaspoon::Formatter.fetch(:pride) do
   let(:passing_spec) { double(passing?: true) }
   let(:pending_spec) { double(passing?: false, pending?: true) }
   let(:failing_spec) { double(passing?: false, pending?: false) }

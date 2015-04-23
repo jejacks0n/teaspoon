@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Teaspoon::Formatters::SnowdayFormatter do
+describe Teaspoon::Formatter.fetch(:snowday) do
   let(:passing_spec) { double(passing?: true) }
   let(:pending_spec) { double(passing?: false, pending?: true) }
   let(:failing_spec) { double(passing?: false, pending?: false) }

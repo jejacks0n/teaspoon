@@ -1,6 +1,8 @@
+require "teaspoon/formatter/dot"
+
 module Teaspoon
-  module Formatters
-    class PrideFormatter < DotFormatter
+  module Formatter
+    class Pride < Dot
       PI_3 = Math::PI / 3
 
       def initialize(*args)

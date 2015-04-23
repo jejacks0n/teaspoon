@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Teaspoon::Formatters::Base do
+describe Teaspoon::Formatter::Base do
   let(:passing_spec) { double(passing?: true) }
   let(:pending_spec) { double(passing?: false, pending?: true) }
   let(:failing_spec) { double(passing?: false, pending?: false) }
@@ -12,7 +12,7 @@ describe Teaspoon::Formatters::Base do
   end
 
   describe "#initialize" do
-    subject { Teaspoon::Formatters::Base.new(:foo, "_output_file_") }
+    subject { Teaspoon::Formatter::Base.new(:foo, "_output_file_") }
 
     before do
       allow(File).to receive(:open)

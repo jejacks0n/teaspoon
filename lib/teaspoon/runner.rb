@@ -22,10 +22,7 @@ module Teaspoon
 
     def resolve_formatter(formatter)
       formatter, output = formatter.to_s.split(">")
-      formatter = Teaspoon::Formatters.const_get("#{formatter.camelize}Formatter")
-      formatter.new(@suite_name, output)
-    rescue NameError
-      raise Teaspoon::UnknownFormatter.new(name: formatter)
+      Teaspoon::Formatter.fetch(formatter).new(@suite_name, output)
     end
 
     def notify_formatters(event, result)

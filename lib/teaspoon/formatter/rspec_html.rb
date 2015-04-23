@@ -1,8 +1,9 @@
 require "erb"
+require "teaspoon/formatter/base"
 
 module Teaspoon
-  module Formatters
-    class RspecHtmlFormatter < Base
+  module Formatter
+    class RspecHtml < Base
       def initialize(*args)
         super
         @suite_start_template = template Templates::SUITE_START

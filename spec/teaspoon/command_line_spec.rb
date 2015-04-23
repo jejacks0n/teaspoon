@@ -81,7 +81,7 @@ describe Teaspoon::CommandLine do
           -c, --[no-]color                 Enable/Disable color output.
           -e, --export [OUTPUT_PATH]       Exports the test suite as the full HTML (requires wget).
           -f, --format FORMATTERS          Specify formatters (comma separated)
-                                           #{Teaspoon::Formatters.known_formatters.map(&:cli_help).join("\n" + (' ' * 43))}
+                                           #{subject.new.send(:formatter_details).join("\n" + (' ' * 43))}
 
         **** Coverage ****
 

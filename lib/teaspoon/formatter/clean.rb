@@ -1,6 +1,8 @@
+require "teaspoon/formatter/dot"
+
 module Teaspoon
-  module Formatters
-    class CleanFormatter < DotFormatter
+  module Formatter
+    class Clean < Dot
       private
 
       def log_failed_examples
