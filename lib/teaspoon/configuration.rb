@@ -28,7 +28,7 @@ module Teaspoon
     cattr_accessor :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :fail_fast,
                    :formatters, :color, :suppress_log,
                    :use_coverage
-    @@driver         = :phantomjs
+    @@driver         = Teaspoon::Driver.default
     @@driver_options = nil
     @@driver_timeout = 180
     @@server         = nil

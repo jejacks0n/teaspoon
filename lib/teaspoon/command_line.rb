@@ -1,6 +1,7 @@
 require "optparse"
 require "teaspoon/version"
 require "teaspoon/exceptions"
+require "teaspoon/driver/base"
 require "teaspoon/formatter/base"
 
 module Teaspoon
@@ -40,9 +41,7 @@ module Teaspoon
 
       opt :driver, "-d", "--driver DRIVER",
           "Specify driver:",
-          "  phantomjs (default)",
-          "  selenium",
-          "  capybara_webkit"
+          *driver_details
 
       opt :driver_options, "--driver-options OPTIONS",
           "Specify driver-specific options to pass into the driver.",
@@ -129,6 +128,12 @@ module Teaspoon
     def formatter_details
       Teaspoon::Formatter.available.map do |name, options|
         "  #{name}#{' (default)' if options[:default]} - #{options[:description]}"
+      end
+    end
+
+    def driver_details
+      Teaspoon::Driver.available.map do |name, options|
+        "  #{name}#{' (default)' if options[:default]}"
       end
     end
   end

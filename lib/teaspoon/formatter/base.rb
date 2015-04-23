@@ -1,16 +1,12 @@
 require "teaspoon/registry"
+require "teaspoon/registry/has_default"
 
 module Teaspoon
   module Formatter
     extend Teaspoon::Registry
+    extend Teaspoon::Registry::HasDefault
 
     not_found_in_registry Teaspoon::UnknownFormatter
-
-    def self.default
-      available.find do |formatter,options|
-        options[:default]
-      end.first
-    end
 
     class Base
       attr_accessor :total_count, :run_count, :passes, :pendings, :failures, :errors
