@@ -6,6 +6,8 @@ rescue LoadError
 end
 # :nocov:
 
+require "teaspoon/driver/base"
+
 module Teaspoon
   module Driver
     class Selenium < Base

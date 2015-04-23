@@ -48,19 +48,22 @@ describe Teaspoon::Generators::InstallGenerator do
     end
 
     it "exits with some help text when there's no frameworks" do
-      expect(Teaspoon.frameworks).to receive(:[]).and_return(nil)
-      expect(Teaspoon.frameworks).to receive(:length).and_return(0)
+      expect(Teaspoon::Framework).to receive(:fetch).and_raise
+      expect(Teaspoon::Framework).to receive(:available).and_return({})
       expect(subject).to receive(:readme).with("MISSING_FRAMEWORK")
       expect { subject.verify_framework_and_version }.to raise_error(SystemExit)
     end
 
-    it "exits with a message if the requested framework is not available" do
-      message = ""
-      expect(Teaspoon.frameworks).to receive(:[]).and_return(nil)
-      expect(subject).to receive(:say_status).with(kind_of(String), :red) { |msg| message = msg }
-      expect { subject.verify_framework_and_version }.to raise_error(SystemExit)
-      expect(message).to include("Unknown framework: jasmine")
-      expect(message).to match(/Available: jasmine: versions\[(\d+\.\d+\.\d+,?\s?)+\]/)
+    describe "when the requested framework is not available" do
+      let(:options) { { framework: "unknown" } }
+
+      it "exits with a message" do
+        message = ""
+        expect(subject).to receive(:say_status).with(kind_of(String), :red) { |msg| message = msg }
+        expect { subject.verify_framework_and_version }.to raise_error(SystemExit)
+        expect(message).to include("Unknown framework: unknown")
+        expect(message).to match(/Available: jasmine: versions\[(\d+\.\d+\.\d+,?\s?)+\]/)
+      end
     end
 
     describe "when version is specified" do

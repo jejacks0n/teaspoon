@@ -1,8 +1,8 @@
 require "optparse"
 require "teaspoon/version"
 require "teaspoon/exceptions"
-require "teaspoon/driver/base"
-require "teaspoon/formatter/base"
+require "teaspoon/driver"
+require "teaspoon/formatter"
 
 module Teaspoon
   class CommandLine

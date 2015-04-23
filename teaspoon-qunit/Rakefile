@@ -14,6 +14,6 @@ Teaspoon.setup_framework_tasks(
   framework: :qunit,
   framework_name: "QUnit",
   framework_root: __dir__,
-  framework_const: Teaspoon::Qunit::Framework,
+  framework_const: Teaspoon::Framework.fetch(:qunit),
   compile_assets: ["qunit.js"]
 )

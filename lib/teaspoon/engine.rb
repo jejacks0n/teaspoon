@@ -39,8 +39,9 @@ module Teaspoon
         assets.paths << Teaspoon.configuration.root.join(path).to_s
       end
 
-      Teaspoon.frameworks.values.each do |framework|
-        assets.paths += framework.asset_paths
+      # TODO: This breaks lazy loading of frameworks. Another way to avoid this?
+      Teaspoon::Framework.available.keys.each do |framework|
+        assets.paths += Teaspoon::Framework.fetch(framework).asset_paths
       end
     end
 

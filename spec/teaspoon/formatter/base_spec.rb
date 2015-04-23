@@ -1,4 +1,5 @@
 require "spec_helper"
+require "teaspoon/formatter/base"
 
 describe Teaspoon::Formatter::Base do
   let(:passing_spec) { double(passing?: true) }

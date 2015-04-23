@@ -15,8 +15,8 @@ module Teaspoon
   # loading / configuration errors
 
   class UnknownFramework < Teaspoon::Error
-    def initialize(msg = nil, name:)
-      msg ||= "Unknown framework: expected \"#{name}\" to be a registered framework."
+    def initialize(msg = nil, name:, available:)
+      msg ||= "Unknown framework: expected \"#{name}\" to be a registered framework. Available frameworks are #{available}"
       super(msg)
     end
 

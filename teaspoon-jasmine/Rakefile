@@ -14,6 +14,6 @@ Teaspoon.setup_framework_tasks(
   framework: :jasmine,
   framework_name: "Jasmine",
   framework_root: __dir__,
-  framework_const: Teaspoon::Jasmine::Framework,
+  framework_const: Teaspoon::Framework.fetch(:jasmine),
   compile_assets: ["jasmine1.js", "jasmine2.js"]
 )

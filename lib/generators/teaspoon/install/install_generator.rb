@@ -11,8 +11,8 @@ module Teaspoon
       class_option :framework,
                    type: :string,
                    aliases: "-t",
-                   default: Teaspoon.frameworks.keys.first,
-                   desc: "Specify which test framework to use (Available: #{Teaspoon.frameworks.keys.join(', ')})"
+                   default: Teaspoon::Framework.default,
+                   desc: "Specify which test framework to use (Available: #{Teaspoon::Framework.available.keys.join(', ')})"
 
       class_option :version,
                    type: :string,
@@ -72,16 +72,15 @@ module Teaspoon
       private
 
       def described_frameworks
-        Teaspoon.frameworks.map do |name, klass|
-          "#{name}: versions[#{klass.new(suite).versions.join(', ')}]"
+        Teaspoon::Framework.available.map do |framework, options|
+          klass = Teaspoon::Framework.fetch(framework)
+          "#{framework}: versions[#{klass.new(suite).versions.join(', ')}]"
         end
       end
 
       def framework
         @framework ||= begin
-          klass = Teaspoon.frameworks[options[:framework].to_sym]
-          raise Teaspoon::UnknownFramework.new(name: options[:framework]) unless klass
-          framework = klass.new(suite)
+          framework = Teaspoon::Framework.fetch(options[:framework]).new(suite)
           source_paths
           @source_paths = framework.template_paths + @source_paths
           framework
@@ -102,7 +101,7 @@ module Teaspoon
       end
 
       def abort_with_message
-        if Teaspoon.frameworks.length == 0
+        if Teaspoon::Framework.available.empty?
           readme "MISSING_FRAMEWORK"
         else
           message = "Unknown framework: #{options[:framework]}#{options[:version] ? "[#{options[:version]}]" : ''}"

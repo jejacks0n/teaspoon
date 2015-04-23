@@ -141,15 +141,6 @@ describe Teaspoon::Configuration::Suite do
     end
 
     describe "exceptions" do
-      it "shows an error for unknown frameworks" do
-        allow(Teaspoon).to receive(:frameworks).and_return({})
-        @suite = proc { |s| s.use_framework :foo }
-        expect { subject }.to raise_error(
-          Teaspoon::UnknownFramework,
-          "Unknown framework: expected \"foo\" to be a registered framework."
-        )
-      end
-
       it "shows an error for unknown versions" do
         @suite = proc { |s| s.use_framework :qunit, "6.6.6" }
         expect { subject }.to raise_error(

@@ -1,6 +1,6 @@
 require "singleton"
-require "teaspoon/driver/base"
-require "teaspoon/formatter/base"
+require "teaspoon/driver"
+require "teaspoon/formatter"
 
 module Teaspoon
   class Configuration
@@ -86,13 +86,11 @@ module Teaspoon
       end
 
       def use_framework(name, version = nil)
-        framework = Teaspoon.frameworks[name.to_sym].new(self)
+        framework = Teaspoon::Framework.fetch(name).new(self)
         @javascripts = framework.javascripts_for(version)
         return if @javascripts
 
         raise Teaspoon::UnknownFrameworkVersion.new(name: name, version: version)
-      rescue NameError
-        raise Teaspoon::UnknownFramework.new(name: name)
       end
       alias_method :use_framework=, :use_framework
 
@@ -167,12 +165,5 @@ module Teaspoon
     yield @@configuration
     @@configured = true
     @@configuration.override_from_env(ENV)
-  end
-
-  mattr_reader :frameworks
-  @@frameworks = {}
-
-  def self.register_framework(klass)
-    @@frameworks[klass.framework_name] = klass
   end
 end

@@ -36,7 +36,7 @@ feature "Running in the console", shell: true do
   end
 
   let(:version) do
-    Teaspoon.frameworks[:qunit]._versions.keys.last
+    Teaspoon::Framework.fetch(:qunit)._versions.keys.last
   end
 
   before do

@@ -31,12 +31,4 @@ describe Teaspoon do
       subject.setup(&block)
     end
   end
-
-  describe ".register_framework" do
-    it "keeps track of the registered frameworks" do
-      foo = Class.new(Teaspoon::Framework) { framework_name :foo }
-      subject.register_framework(foo)
-      expect(subject.frameworks[:foo]).to eq(foo)
-    end
-  end
 end
