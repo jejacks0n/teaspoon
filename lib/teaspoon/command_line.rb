@@ -1,6 +1,7 @@
 require "optparse"
 require "teaspoon/version"
 require "teaspoon/exceptions"
+require "teaspoon/utility"
 require "teaspoon/driver"
 require "teaspoon/formatter"
 
