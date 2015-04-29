@@ -1,12 +1,57 @@
-### Unreleased
+### 1.0.0 (unreleased)
 
-### 0.9.1
+#### Upgrade Steps
+
+- Change your Gemfile to use "teaspoon-framework" instead of "teaspoon".
+  eg: If you are using Mocha, this would be "gem 'teaspoon-mocha'"
+
+- Rename teaspoon_env.rb to teaspoon.rb.
+
+- Update your coverage configuration.
+  If you use Teaspoon to generate coverage reports with Istanbul, and you use the `suite.no_coverage` to exclude files from coverage, you'll need to migrate that configuration into the `config.coverage` blocks. So if you have:
+
+  ```ruby
+  suite.no_coverage += /my_file.js/
+  ```
+
+  You should move this into the `coverage` block:
+
+  ```ruby
+  config.coverage do |coverage|
+    coverage.ignore += /my_file.js/
+  end
+  ```
+
+  This means that you can no longer exclude things at the suite level. If you had multiple suites with different `no_coverage` configurations, you'll now need to create multiple coverage blocks and specify the coverage you want when using the CLI.
+  eg: teaspoon --coverage=[coverage_name]
+
+
+#### Enhancements
+
+* Break frameworks out into individual gems (eg teaspoon-mocha)
+* Frameworks (eg mocha, jasmine) can now be registered with core
+* Formatters (eg dot, documentation) can now be registered with core
+* Drivers (eg phantomjs, selenium) can now be registered with core
+* Support for Jasmine 2.0
+* Support for Mocha 2.0
+* Improved abstractions around how framework events are handled (via responders)
+* Can now specify framework version when installing
+* Backfill support for old versions of frameworks
+* Lots of refactors to clean things up
+
+#### Bug Fixes
+
+* Fix files excluded from coverage for RequireJS
+* Fix double teaspoon hook (#332)
+
+
+### 0.9.1 (3/2/15)
 
 * Fixes an issue where suite view was failing
 * CI/Linux stability improvement (alphanumeric ordering of spec files)
 
 
-### 0.9.0
+### 0.9.0 (2/24/15)
 
 #### Enhancements
 
@@ -26,7 +71,7 @@
 * Direct support for Angular
 
 
-### 0.8.0
+### 0.8.0 (4/18/14)
 
 Configuration has changed considerably, and deprecation warnings have been provided. In general it's probably best to remove your /initializers/teaspoon.rb and reinstall using the generator. Configuration is now consolidated into spec/teaspoon_env.rb. **This can cause a stack level too deep exception unless the teaspoon_env.rb file properly wraps the loading of rails in a `defined?(Rails)` check.**
 
