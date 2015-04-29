@@ -146,4 +146,11 @@ module Teaspoon
       super(msg)
     end
   end
+
+  class IstanbulNotFoundError < Teaspoon::Error
+    def initialize(msg = nil)
+      msg ||= "You requested coverage reports, but Teaspoon cannot find the istanbul binary. Run: npm install -g istanbul"
+      super(msg)
+    end
+  end
 end

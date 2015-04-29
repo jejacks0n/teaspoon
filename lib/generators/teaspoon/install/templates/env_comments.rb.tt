@@ -143,9 +143,14 @@ Teaspoon.configure do |config|
   # - with the rake task: rake teaspoon USE_COVERAGE=[coverage_name]
   # - with the cli: teaspoon --coverage=[coverage_name]
 
-  # Specify that you always want a coverage configuration to be used.
+  # Specify that you always want a coverage configuration to be used. Otherwise, specify that you want coverage
+  # on the CLI.
+  # Set this to "true" or the name of your coverage config.
   #config.use_coverage = nil
 
+  # You can have multiple coverage configs by passing a name to config.coverage.
+  # e.g. config.coverage :ci do |coverage|
+  # The default coverage config name is :default.
   config.coverage do |coverage|
     # Which coverage reports Istanbul should generate. Correlates directly to what Istanbul supports.
     #

@@ -94,6 +94,13 @@ describe Teaspoon::Runner do
         subject.process('{"_teaspoon":true,"type":"result","coverage":"_coverage_"}')
         expect(subject.failure_count).to eq(1)
       end
+
+      it "raises an exception when istanbul cannot be found if coverage is requested" do
+        expect(Teaspoon.configuration).to receive(:use_coverage).and_return("_config_")
+        expect(Teaspoon::Instrumentation).to receive(:executable).and_return(nil)
+
+        expect { subject.process('{"_teaspoon":true,"type":"result","coverage":"_coverage_"}') }.to raise_error(Teaspoon::IstanbulNotFoundError)
+      end
     end
   end
 end
