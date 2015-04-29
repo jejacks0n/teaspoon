@@ -1,10 +1,18 @@
 module Teaspoon
   class Coverage
-    def initialize(suite_name, config_name, data)
+    def self.configuration(name = Teaspoon.configuration.use_coverage)
+      name = normalize_config_name(name)
+      config = Teaspoon.configuration.coverage_configs[name]
+
+      raise Teaspoon::UnknownCoverage.new(name: name) unless config.present?
+      config[:instance] ||= Teaspoon::Configuration::Coverage.new(&config[:block])
+    end
+
+    def initialize(suite_name, data)
       @suite_name = suite_name
       @data = data
       @executable = Teaspoon::Instrumentation.executable
-      @config = coverage_configuration(normalize_config_name(config_name))
+      @config = self.class.configuration
     end
 
     def generate_reports(&block)
@@ -31,10 +39,9 @@ module Teaspoon
 
     private
 
-    def coverage_configuration(name)
-      config = Teaspoon.configuration.coverage_configs[name]
-      raise Teaspoon::UnknownCoverage.new(name: name) unless config.present?
-      config[:instance] ||= Teaspoon::Configuration::Coverage.new(&config[:block])
+    def self.normalize_config_name(name)
+      return "default" if name == true
+      name.to_s
     end
 
     def input_path(&block)
@@ -57,11 +64,6 @@ module Teaspoon
         threshold = @config.send(:"#{assert}")
         "--#{assert}=#{threshold}" if threshold
       end.compact
-    end
-
-    def normalize_config_name(name)
-      return "default" if name == true
-      name.to_s
     end
   end
 end

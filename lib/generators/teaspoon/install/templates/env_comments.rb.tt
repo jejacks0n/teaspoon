@@ -53,10 +53,6 @@ Teaspoon.configure do |config|
     # Partial to be rendered in the body tag of the runner. You can define your own to create a custom body structure.
     suite.body_partial = <%= suite.body_partial.inspect %>
 
-    # Assets to be ignored when generating coverage reports. Accepts an array of filenames or regular expressions. The
-    # default excludes assets from vendor, gems and support libraries.
-    #suite.no_coverage = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
-
     # Hooks allow you to use `Teaspoon.hook("fixtures")` before, after, or during your spec run. This will make a
     # synchronous Ajax request to the server that will call all of the blocks you've defined for that hook name.
     #suite.hook :fixtures, proc{ }
@@ -160,6 +156,10 @@ Teaspoon.configure do |config|
     # The path that the coverage should be written to - when there's an artifact to write to disk.
     # Note: Relative to `config.root`.
     #coverage.output_path = "coverage"
+
+    # Assets to be ignored when generating coverage reports. Accepts an array of filenames or regular expressions. The
+    # default excludes assets from vendor, gems and support libraries.
+    #coverage.ignore = [%r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
 
     # Various thresholds requirements can be defined, and those thresholds will be checked at the end of a run. If any
     # aren't met the run will fail with a message. Thresholds can be defined as a percentage (0-100), or nil.

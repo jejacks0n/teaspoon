@@ -2,15 +2,37 @@ require "spec_helper"
 require "teaspoon/coverage"
 
 describe Teaspoon::Coverage do
-  subject { described_class.new("_suite_", "default", data) }
+  subject { described_class.new("_suite_", data) }
   let(:data) { { foo: "bar" } }
   let(:config) { double }
 
   before do
     allow(Teaspoon::Instrumentation).to receive(:executable).and_return("/path/to/executable")
+    allow(Teaspoon.configuration).to receive(:use_coverage).and_return(true)
     allow(subject).to receive(:`).and_return("")
     allow(subject).to receive(:input_path).and_yield("/temp_path/coverage.json")
     subject.instance_variable_set(:@config, config)
+  end
+
+  describe ".configuration" do
+    it "defaults to the configuration defined in Teaspoon.configuration.use_coverage" do
+      expect(Teaspoon.configuration.coverage_configs).to receive(:[]).with("default").and_return(instance: double)
+
+      described_class.configuration
+    end
+
+    it "allows true in place of :default" do
+      expect(Teaspoon.configuration.coverage_configs).to receive(:[]).with("default").and_return(instance: double)
+
+      described_class.configuration(true)
+    end
+
+    it "raises an exception if the coverage config can't be found" do
+      expect { described_class.configuration(:foo) }.to raise_error(
+        Teaspoon::UnknownCoverage,
+        "Unknown coverage configuration: expected \"foo\" to be a configured coverage."
+      )
+    end
   end
 
   describe "#initialize" do
@@ -20,23 +42,6 @@ describe Teaspoon::Coverage do
 
     it "finds the executable from instrumentation" do
       expect(subject.instance_variable_get(:@executable)).to eq("/path/to/executable")
-    end
-
-    it "gets the coverage configuration" do
-      expect_any_instance_of(described_class).to receive(:coverage_configuration).with("default")
-      described_class.new("_suite_", :default, data)
-    end
-
-    it "allows true in place of :default" do
-      expect_any_instance_of(described_class).to receive(:coverage_configuration).with("default")
-      described_class.new("_suite_", true, data)
-    end
-
-    it "raises an exception if the coverage config can't be found" do
-      expect { described_class.new("_suite_", :foo, data) }.to raise_error(
-        Teaspoon::UnknownCoverage,
-        "Unknown coverage configuration: expected \"foo\" to be a configured coverage."
-      )
     end
   end
 

@@ -90,6 +90,33 @@ describe Teaspoon::Instrumentation do
     it "doesn't if there's no asset" do
       expect(subject.add?([404, { "Content-Type" => "application/javascript" }, []], env)).to_not be(true)
     end
+
+    describe "with ignored files" do
+      def ignore(paths)
+        config = Teaspoon::Configuration::Coverage.new do |coverage|
+          coverage.ignore = paths
+        end
+        allow(Teaspoon::Coverage).to receive(:configuration).and_return(config)
+      end
+
+      it "doesn't include the file" do
+        ignore(["path/to"])
+
+        expect(subject.add?(response, "QUERY_STRING" => "instrument=true")).to be(false)
+      end
+
+      it "works with regular expressions" do
+        ignore([/path\/to/])
+
+        expect(subject.add?(response, "QUERY_STRING" => "instrument=true")).to be(false)
+      end
+
+      it "works if the files are not an array" do
+        ignore("path/to")
+
+        expect(subject.add?(response, "QUERY_STRING" => "instrument=true")).to be(false)
+      end
+    end
   end
 
   describe "integration" do

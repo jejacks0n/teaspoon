@@ -108,9 +108,6 @@ describe Teaspoon::Configuration::Suite do
     expect(subject.helper).to eq("spec_helper")
     expect(subject.javascripts).to eq(["jasmine/1.3.1", "teaspoon/jasmine1"])
     expect(subject.stylesheets).to eq(["teaspoon"])
-    expect(subject.no_coverage).to eq([
-      %r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}
-    ])
     expect(subject.expand_assets).to eq(true)
   end
 
@@ -158,6 +155,16 @@ describe Teaspoon::Configuration::Suite do
       end
     end
   end
+
+  describe "deprecations" do
+    describe "no_coverage=" do
+      it "deprecates with no backwards compatibility" do
+        expect(Teaspoon).to receive(:dep).with("suite.no_coverage has been removed in Teaspoon 1.0. Please use coverage.ignore instead. https://github.com/modeset/teaspoon/blob/master/CHANGELOG.md")
+
+        subject.no_coverage = [/excluded.js/]
+      end
+    end
+  end
 end
 
 describe Teaspoon::Configuration::Coverage do
@@ -166,6 +173,9 @@ describe Teaspoon::Configuration::Coverage do
   it "has the default configuration" do
     expect(subject.reports).to eq(["text-summary"])
     expect(subject.output_path).to eq("coverage")
+    expect(subject.ignore).to eq([
+      %r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}
+    ])
     expect(subject.statements).to be_nil
     expect(subject.functions).to be_nil
     expect(subject.branches).to be_nil
