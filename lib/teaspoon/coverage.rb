@@ -4,7 +4,7 @@ module Teaspoon
       @suite_name = suite_name
       @data = data
       @executable = Teaspoon::Instrumentation.executable
-      @config = coverage_configuration(config_name.to_s)
+      @config = coverage_configuration(normalize_config_name(config_name))
     end
 
     def generate_reports(&block)
@@ -57,6 +57,11 @@ module Teaspoon
         threshold = @config.send(:"#{assert}")
         "--#{assert}=#{threshold}" if threshold
       end.compact
+    end
+
+    def normalize_config_name(name)
+      return "default" if name == true
+      name.to_s
     end
   end
 end
