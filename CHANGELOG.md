@@ -41,7 +41,7 @@
 
 #### Bug Fixes
 
-* Fix files excluded from coverage for RequireJS
+* Fix files excluded from coverage for RequireJS (@davestevens)
 * Fix double teaspoon hook (#332)
 
 
@@ -59,7 +59,7 @@
 * Provide QUnit tests with a default `equal` message
 * Support cli reusing running Rails server
 * Add support for Capybara Webkit
-* Better support for RequireJS and more consistent coverage configuration (@davestevens)
+* Better support for RequireJS
 * Add RSpec HTML formatter
 
 #### Bug Fixes
