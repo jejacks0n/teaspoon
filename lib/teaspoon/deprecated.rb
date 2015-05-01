@@ -77,6 +77,12 @@ teaspoon coverage directive has changed and is now more flexible, define coverag
           "normalize_js_extension method instead.", :normalize_asset_path
         )
       end
+
+      def no_coverage(*)
+        Teaspoon.dep("suite.no_coverage has been removed in Teaspoon 1.0. Please use coverage.ignore instead. https://github.com/modeset/teaspoon/blob/master/CHANGELOG.md")
+        []
+      end
+      alias_method :no_coverage=, :no_coverage
     end
   end
 end

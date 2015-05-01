@@ -96,12 +96,6 @@ module Teaspoon
       def hook(group = :default, &block)
         @hooks[group.to_s] << block
       end
-
-      def no_coverage(*)
-        Teaspoon.dep("suite.no_coverage has been removed in Teaspoon 1.0. Please use coverage.ignore instead. https://github.com/modeset/teaspoon/blob/master/CHANGELOG.md")
-        []
-      end
-      alias_method :no_coverage=, :no_coverage
     end
 
     # coverage configurations
