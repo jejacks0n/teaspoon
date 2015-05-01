@@ -57,7 +57,6 @@ module Teaspoon
     def resolve_coverage(data)
       return unless Teaspoon.configuration.use_coverage
       raise Teaspoon::IstanbulNotFoundError unless Teaspoon::Instrumentation.executable
-      return unless data.present?
 
       coverage = Teaspoon::Coverage.new(@suite_name, data)
       coverage.generate_reports { |msg| notify_formatters("coverage", msg) }
