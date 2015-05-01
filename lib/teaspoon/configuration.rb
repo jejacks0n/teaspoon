@@ -62,7 +62,7 @@ module Teaspoon
     class Suite
       attr_accessor :matcher, :helper, :javascripts, :stylesheets,
                     :boot_partial, :body_partial,
-                    :no_coverage, :hooks, :expand_assets
+                    :hooks, :expand_assets
 
       def initialize(name = nil)
         @matcher       = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
@@ -73,7 +73,6 @@ module Teaspoon
         @boot_partial  = "boot"
         @body_partial  = "body"
 
-        @no_coverage   = [%r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
         @hooks         = Hash.new { |h, k| h[k] = [] }
         @expand_assets = true
 
@@ -97,6 +96,12 @@ module Teaspoon
       def hook(group = :default, &block)
         @hooks[group.to_s] << block
       end
+
+      def no_coverage(*)
+        Teaspoon.dep("suite.no_coverage has been removed in Teaspoon 1.0. Please use coverage.ignore instead. https://github.com/modeset/teaspoon/blob/master/CHANGELOG.md")
+        []
+      end
+      alias_method :no_coverage=, :no_coverage
     end
 
     # coverage configurations
@@ -109,12 +114,13 @@ module Teaspoon
     end
 
     class Coverage
-      attr_accessor :reports, :output_path,
+      attr_accessor :reports, :output_path, :ignore,
                     :statements, :functions, :branches, :lines
 
       def initialize
         @reports      = ["text-summary"]
         @output_path  = "coverage"
+        @ignore       = [%r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}]
 
         @statements   = nil
         @functions    = nil

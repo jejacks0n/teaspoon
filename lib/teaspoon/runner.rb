@@ -59,7 +59,7 @@ module Teaspoon
       raise Teaspoon::IstanbulNotFoundError unless Teaspoon::Instrumentation.executable
       return unless data.present?
 
-      coverage = Teaspoon::Coverage.new(@suite_name, Teaspoon.configuration.use_coverage, data)
+      coverage = Teaspoon::Coverage.new(@suite_name, data)
       coverage.generate_reports { |msg| notify_formatters("coverage", msg) }
       coverage.check_thresholds do |msg|
         notify_formatters("threshold_failure", msg)

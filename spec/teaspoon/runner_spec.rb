@@ -84,8 +84,8 @@ describe Teaspoon::Runner do
       end
 
       it "resolves coverage" do
-        expect(Teaspoon.configuration).to receive(:use_coverage).twice.and_return("_config_")
-        expect(Teaspoon::Coverage).to receive(:new).with(:default, "_config_", "_coverage_").and_return(coverage)
+        expect(Teaspoon.configuration).to receive(:use_coverage).and_return("_config_")
+        expect(Teaspoon::Coverage).to receive(:new).with(:default, "_coverage_").and_return(coverage)
         expect(coverage).to receive(:generate_reports).and_yield("_generated_reports_")
         expect(coverage).to receive(:check_thresholds).and_yield("_threshold_failures_")
         expect(subject).to receive(:notify_formatters).once.with("coverage", "_generated_reports_")

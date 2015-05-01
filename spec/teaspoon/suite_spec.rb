@@ -74,9 +74,11 @@ describe Teaspoon::Suite do
   end
 
   describe "#spec_assets" do
+    subject { described_class.new(coverage: true) }
+
     it "returns an array of assets" do
       result = subject.spec_assets
-      expect(result).to include("spec_helper.self.js?body=1")
+      expect(result).to include("spec_helper.self.js?body=1&instrument=1")
       expect(result).to include("teaspoon/reporters/console_spec.self.js?body=1")
     end
 
@@ -87,11 +89,11 @@ describe Teaspoon::Suite do
     end
 
     it "returns the asset tree (all dependencies resolved) if we want coverage" do
-      allow(subject).to receive(:no_coverage).and_return([%r{support/}, "spec_helper.coffee"])
-      subject.instance_variable_set(:@options, coverage: true)
       result = subject.spec_assets(true)
-      expect(result).to include("support/json2.self.js?body=1")
-      expect(result).to include("spec_helper.self.js?body=1")
+
+      expect(result).to include("teaspoon/reporters/console_spec.self.js?body=1") # Specs do not get instrumentation
+      expect(result).to include("support/json2.self.js?body=1&instrument=1")
+      expect(result).to include("spec_helper.self.js?body=1&instrument=1")
       expect(result).to include("driver/phantomjs/runner.self.js?body=1&instrument=1")
     end
 
@@ -99,13 +101,6 @@ describe Teaspoon::Suite do
       allow(subject.config).to receive(:expand_assets).and_return(false)
       result = subject.spec_assets(true)
       expect(result.any? { |file| file =~ /body=1/ }).to eq(false)
-    end
-  end
-
-  describe "#include_spec?" do
-    it "returns true if the spec was found in the suite" do
-      files = subject.send(:glob)
-      expect(subject.include_spec?(files.first)).to eq(true)
     end
   end
 
