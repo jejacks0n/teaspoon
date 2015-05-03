@@ -16,7 +16,10 @@ module Teaspoon
 
   class UnknownFramework < Teaspoon::Error
     def initialize(msg = nil, name:, available:)
-      msg ||= "Unknown framework: expected \"#{name}\" to be a registered framework. Available frameworks are #{available}"
+      msg ||= "Unknown framework: expected \"#{name}\" to be a registered framework. Available frameworks are #{available}."
+      if available.blank?
+        msg += " Do you need to update your Gemfile to use the teaspoon-#{name} gem? If you are upgrading, please see https://github.com/modeset/teaspoon/blob/master/CHANGELOG.md"
+      end
       super(msg)
     end
 
