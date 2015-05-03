@@ -58,6 +58,7 @@
 
 * Fix files excluded from coverage for RequireJS (@davestevens)
 * Fix double teaspoon hook (#332)
+* Instrument files when config.expand_assets is false (#357)
 
 
 ### 0.9.1 (3/2/15)
