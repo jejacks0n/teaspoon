@@ -24,6 +24,20 @@
   This means that you can no longer exclude things at the suite level. If you had multiple suites with different `no_coverage` configurations, you'll now need to create multiple coverage blocks and specify the coverage you want when using the CLI.
   eg: teaspoon --coverage=[coverage_name]
 
+- **Ensure suite.javascripts and suite.stylesheets are appending asset**
+  If you use `suite.javascripts` or `suite.stylesheets`, make sure you're appending assets into the array instead of assigning the array.
+
+  eg: In Teaspoon 0.9.1, you might have:
+
+  ```ruby
+  suite.javascripts = ["jasmine/1.3.1", "teaspoon-jasmine", "custom-js-file"]
+  ```
+
+  This will fail as "jasmine/1.3.1" and "teaspoon-jasmine" no longer exist. Teaspoon will automatically add the framework assets to the array for you, so you should append assets instead:
+
+  ```ruby
+  suite.javascripts += ["custom-js-file"]
+  ```
 
 #### Enhancements
 
