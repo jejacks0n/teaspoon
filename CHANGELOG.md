@@ -3,7 +3,7 @@
 #### Upgrade Steps
 
 - Change your Gemfile to use "teaspoon-framework" instead of "teaspoon".
-  eg: If you are using Mocha, this would be "gem 'teaspoon-mocha'"
+  eg: If you are using Mocha, this would be `gem 'teaspoon-mocha'`
 
 - Update your coverage configuration.
   If you use Teaspoon to generate coverage reports with Istanbul, and you use the `suite.no_coverage` to exclude files from coverage, you'll need to migrate that configuration into the `config.coverage` blocks. So if you have:
