@@ -24,7 +24,7 @@
   This means that you can no longer exclude things at the suite level. If you had multiple suites with different `no_coverage` configurations, you'll now need to create multiple coverage blocks and specify the coverage you want when using the CLI.
   eg: teaspoon --coverage=[coverage_name]
 
-- **Ensure suite.javascripts and suite.stylesheets are appending asset**
+- **Ensure suite.javascripts and suite.stylesheets are appending asset**<br>
   If you use `suite.javascripts` or `suite.stylesheets`, make sure you're appending assets into the array instead of assigning the array.
 
   eg: In Teaspoon 0.9.1, you might have:
