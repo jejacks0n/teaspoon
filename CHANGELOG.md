@@ -39,6 +39,8 @@
   suite.javascripts += ["custom-js-file"]
   ```
 
+  Likewise for `suite.stylesheets`.
+
 #### Enhancements
 
 * Break frameworks out into individual gems (eg teaspoon-mocha)
