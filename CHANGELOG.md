@@ -51,6 +51,7 @@
 * Support for Mocha 2.0
 * Improved abstractions around how framework events are handled (via responders)
 * Can now specify framework version when installing
+* Adds `rake teaspoon:info` to show Teaspoon and framework versions
 * Backfill support for old versions of frameworks
 * Lots of refactors to clean things up
 
