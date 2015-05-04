@@ -27,8 +27,7 @@ module Teaspoon
         copy_file "test_helper#{ext}", "test/javascripts/test_helper#{ext}"
       end
 
-      # modify default configuration
-      def initialize(config)
+      def self.modify_config(config)
         config.matcher = "{test/javascripts,app/assets}/**/*_test.{js,js.coffee,coffee}"
         config.helper  = "test_helper"
       end

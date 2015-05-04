@@ -41,7 +41,7 @@ feature "Running in the console", shell: true do
   end
 
   let(:version) do
-    Teaspoon::Framework.fetch(:mocha)._versions.keys.last
+    Teaspoon::Framework.fetch(:mocha).versions.last
   end
 
   before do

@@ -74,13 +74,13 @@ module Teaspoon
       def described_frameworks
         Teaspoon::Framework.available.map do |framework, options|
           klass = Teaspoon::Framework.fetch(framework)
-          "#{framework}: versions[#{klass.new(suite).versions.join(', ')}]"
+          "#{framework}: versions[#{klass.versions.join(', ')}]"
         end
       end
 
       def framework
         @framework ||= begin
-          framework = Teaspoon::Framework.fetch(options[:framework]).new(suite)
+          framework = Teaspoon::Framework.fetch(options[:framework])
           source_paths
           @source_paths = framework.template_paths + @source_paths
           framework
@@ -88,7 +88,11 @@ module Teaspoon
       end
 
       def suite
-        @suite ||= Teaspoon::Configuration::Suite.new
+        @suite ||= begin
+          config = Teaspoon::Configuration::Suite.new
+          framework.modify_config(config)
+          config
+        end
       end
 
       def version

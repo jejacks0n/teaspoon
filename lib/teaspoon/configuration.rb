@@ -85,7 +85,9 @@ module Teaspoon
       end
 
       def use_framework(name, version = nil)
-        framework = Teaspoon::Framework.fetch(name).new(self)
+        framework = Teaspoon::Framework.fetch(name)
+        framework.modify_config(self)
+
         @javascripts = framework.javascripts_for(version)
         return if @javascripts
 

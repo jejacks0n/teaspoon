@@ -1,7 +1,13 @@
 require "spec_helper"
 
 describe Teaspoon::Framework::Base do
-  subject { Class.new(Teaspoon::Framework::Base) }
+  subject do
+    Class.new(Teaspoon::Framework::Base) do
+      def self.modify_config(config)
+        config.matcher = "new_matcher.js"
+      end
+    end
+  end
 
   describe "registering versions" do
     before do
@@ -11,34 +17,28 @@ describe Teaspoon::Framework::Base do
     end
 
     it "tracks the registered versions" do
-      versions = subject.new("_suite_config_").versions
-      expect(versions).to eq(["1.0.0", "2.0.0"])
+      expect(subject.versions).to eq(["1.0.0", "2.0.0"])
     end
 
     it "can describe itself" do
       expect(subject.description).to eq("framework[1.0.0, 2.0.0]")
-
-      name = subject.new("_suite_config_").name
-      expect(name).to eq(:framework)
+      expect(subject.name).to eq(:framework)
     end
 
     it "can generate a list of dependencies for a given version" do
-      dependencies = subject.new("_suite_config_").javascripts_for("1.0.0")
-      expect(dependencies).to eq(["framework/1.0.0", "teaspoon-framework"])
+      expect(subject.javascripts_for("1.0.0")).to eq(["framework/1.0.0", "teaspoon-framework"])
     end
 
     it "can generate a list of dependencies for the preferred version" do
       subject.register_version "2.0.0", "framework/2.0.0", dependencies: ["teaspoon-framework"]
 
-      dependencies = subject.new("_suite_config_").javascripts_for
-      expect(dependencies).to eq(["framework/2.0.0", "teaspoon-framework"])
+      expect(subject.javascripts_for).to eq(["framework/2.0.0", "teaspoon-framework"])
     end
 
     it "supports development dependencies" do
       subject.register_version "2.0.0", "framework/2.0.0", dev_deps: ["teaspoon-framework"]
 
-      dependencies = subject.new("_suite_config_").javascripts_for
-      expect(dependencies).to eq(["framework/2.0.0", "teaspoon-framework"])
+      expect(subject.javascripts_for).to eq(["framework/2.0.0", "teaspoon-framework"])
     end
 
     context "when not development mode" do
@@ -55,8 +55,7 @@ describe Teaspoon::Framework::Base do
                                  dependencies: ["teaspoon-framework"],
                                  dev_deps: ["teaspoon/framework"]
 
-        dependencies = subject.new("_suite_config_").javascripts_for
-        expect(dependencies).to eq(["framework/2.0.0", "teaspoon-framework"])
+        expect(subject.javascripts_for).to eq(["framework/2.0.0", "teaspoon-framework"])
       end
 
       it "errors with no standard dependencies" do
@@ -89,7 +88,7 @@ describe Teaspoon::Framework::Base do
     it "tracks specified template paths" do
       subject.add_template_path File.expand_path("../../templates", __FILE__)
 
-      template_paths = subject.new("_suite_config_").template_paths
+      template_paths = subject.template_paths
       expect(template_paths[0]).to eq("/foo/bar")
       expect(template_paths[1]).to include("/teaspoon/spec/teaspoon/templates")
     end
@@ -97,14 +96,14 @@ describe Teaspoon::Framework::Base do
 
   describe "customizing the installation further" do
     it "has a default of 'spec'" do
-      install_path = subject.new("_suite_config_").install_path
+      install_path = subject.install_path
       expect(install_path).to eq("spec")
     end
 
     it "allows specifying an install path" do
       subject.install_to "custom"
 
-      install_path = subject.new("_suite_config_").install_path
+      install_path = subject.install_path
       expect(install_path).to eq("custom")
     end
 
@@ -112,7 +111,15 @@ describe Teaspoon::Framework::Base do
       callback = proc {}
       subject.install_to("path/to/install", &callback)
 
-      expect(subject.new("_suite_config_").install_callback).to eq(callback)
+      expect(subject.install_callback).to eq(callback)
+    end
+
+    it "allows a framework to modify the suite configuration" do
+      config = Teaspoon::Configuration::Suite.new
+
+      subject.modify_config(config)
+
+      expect(config.matcher).to eq("new_matcher.js")
     end
   end
 end

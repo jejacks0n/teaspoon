@@ -44,7 +44,7 @@ describe Teaspoon::Generators::InstallGenerator do
 
   describe "#verify_framework_and_version" do
     it "finds the framework" do
-      expect(subject.verify_framework_and_version).to be_a(Teaspoon::Jasmine::Framework)
+      expect(subject.verify_framework_and_version).to eq(Teaspoon::Jasmine::Framework)
     end
 
     it "exits with some help text when there's no frameworks" do
@@ -106,7 +106,7 @@ describe Teaspoon::Generators::InstallGenerator do
   describe "#install_framework_files" do
     it "calls through to the frameworks install callback to allow it to do what it wants" do
       called = false
-      expect_any_instance_of(Teaspoon::Jasmine::Framework).to receive(:install_callback).
+      expect(Teaspoon::Jasmine::Framework).to receive(:install_callback).
         and_return(proc { called = true })
       subject.install_framework_files
       expect(called).to be_truthy
