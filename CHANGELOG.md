@@ -56,6 +56,7 @@
 * Can now specify framework version when installing
 * Adds `rake teaspoon:info` to show Teaspoon and framework versions
 * Backfill support for old versions of frameworks
+* Fail faster when teaspoon_env.rb cannot be found
 * Lots of refactors to clean things up
 
 #### Bug Fixes

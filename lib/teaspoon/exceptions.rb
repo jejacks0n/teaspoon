@@ -7,7 +7,7 @@ module Teaspoon
 
   class EnvironmentNotFound < Teaspoon::Error
     def initialize(msg = nil, searched:)
-      msg ||= "Unable to locate environment; searched in [#{searched}]."
+      msg ||= "Unable to locate environment; searched in [#{searched}]. Have you run the installer?"
       super(msg)
     end
   end

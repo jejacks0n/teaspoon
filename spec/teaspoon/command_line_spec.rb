@@ -23,7 +23,7 @@ describe Teaspoon::CommandLine do
       expect(Teaspoon::Console).to receive(:new).
         and_raise(Teaspoon::EnvironmentNotFound.new(searched: "path1, path2"))
       expect(Teaspoon).to receive(:abort).with(
-        "Unable to locate environment; searched in [path1, path2]. "\
+        "Unable to locate environment; searched in [path1, path2]. Have you run the installer? "\
         "Consider using --require=path/to/teaspoon_env.rb"
       )
       subject.new

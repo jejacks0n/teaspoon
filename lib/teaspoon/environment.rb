@@ -17,26 +17,31 @@ module Teaspoon
     end
 
     def self.require_environment(override = nil)
+      require_env(find_env(override))
+    end
+
+    def self.check_env!(override = nil)
+      find_env(override)
+    end
+
+    private
+
+    def self.find_env(override = nil)
       override ||= ENV["TEASPOON_ENV"]
-      if override
-        override = File.expand_path(override, Dir.pwd)
-        ENV["TEASPOON_ENV"] = override
-        return require_env(override)
-      end
+      env_files = override ? [override] : standard_environments
 
-      standard_environments.each do |filename|
+      env_files.each do |filename|
         file = File.expand_path(filename, Dir.pwd)
-        return require_env(file) if File.exists?(file)
+        ENV["TEASPOON_ENV"] = file if override
+        return file if File.exists?(file)
       end
 
-      raise Teaspoon::EnvironmentNotFound.new(searched: standard_environments.join(", "))
+      raise Teaspoon::EnvironmentNotFound.new(searched: env_files.join(", "))
     end
 
     def self.standard_environments
       ["spec/teaspoon_env.rb", "test/teaspoon_env.rb", "teaspoon_env.rb"]
     end
-
-    private
 
     def self.require_env(file)
       ::Kernel.load(file)

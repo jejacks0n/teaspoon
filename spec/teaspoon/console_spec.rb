@@ -24,6 +24,11 @@ describe Teaspoon::Console do
       expect(subject.instance_variable_get(:@default_options)).to eql(foo: "bar")
     end
 
+    it "ensures an env file exists" do
+      expect(Teaspoon::Environment).to receive(:check_env!)
+      described_class.new
+    end
+
     it "loads the environment" do
       expect(Teaspoon::Environment).to receive(:load)
       described_class.new
