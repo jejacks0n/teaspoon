@@ -51,7 +51,7 @@ If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), chec
 
 ## Installation
 
-Add the framework-specific Teaspoon gem to your Gemfile. In most cases you'll want to restrict it to the `:development, :test` groups. The available gems are "teaspoon-jasmine", "teaspoon-mocha" and "teaspoon-qunit". If you're unsure which framework you'd like to use, we think Jasmine is a good starting place.
+Add the framework-specific Teaspoon gem to your Gemfile. In most cases you'll want to restrict it to the `:development, :test` groups. The available gems are `teaspoon-jasmine`, `teaspoon-mocha` and `teaspoon-qunit`. If you're unsure which framework you'd like to use, we think Jasmine is a good starting place.
 
 ```ruby
 group :development, :test do
