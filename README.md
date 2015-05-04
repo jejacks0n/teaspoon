@@ -37,7 +37,6 @@ If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), chec
 
 ## Table of Contents
 
-0. [Status](#status)
 1. [Installation](#installation)
 2. [Usage](#usage)
 3. [Writing Specs](#writing-specs)
@@ -50,53 +49,23 @@ If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), chec
 10. [CI Support](#ci-support)
 
 
-## Status
-
-Teaspoon is currently being restructured as we push towards 1.0. The last stable series before 1.0 is 0.9. We'll continue to release fixes under 0.9.x, but will not ship improvements until 1.0 has been cut. For 1.0, we are extracting framework-specific logic into constituent libraries, adding Jasmine 2 support, simplifying configuration, refactoring for the long-term, and more.
-
-If you want to use the master branch, you'll need to specify the framework adapter you intend to use within your Gemfile:
-
-```ruby
-gem 'teaspoon-mocha', github: 'modeset/teaspoon'
-```
-
-On master, there is no longer a default framework. If you used Jasmine as the default previously, you'll need to be explicit:
-
-```ruby
-gem 'teaspoon-jasmine', github: 'modeset/teaspoon'
-```
-
-Feedback welcome!
-
-
 ## Installation
 
-Add it to your Gemfile. In most cases you'll want to restrict it to the `:development, :test` groups.
+Add the framework-specific Teaspoon gem to your Gemfile. In most cases you'll want to restrict it to the `:development, :test` groups. The available gems are "teaspoon-jasmine", "teaspoon-mocha" and "teaspoon-qunit". If you're unsure which framework you'd like to use, we think Jasmine is a good starting place.
 
 ```ruby
 group :development, :test do
-  gem "teaspoon"
+  gem "teaspoon-jasmine"
 end
 ```
 
-Run the install generator to get the environment file and a basic spec helper. You can tell the generator which framework you want to use, or if you want a CoffeeScript spec helper. Run the install generator with the `--help` flag for a list of available options.
+Run the install generator to get the environment file and a basic spec helper. If you want a CoffeeScript spec helper, you can tell the generator. Run the install generator with the `--help` flag for a list of available options.
 
 ```
-rails generate teaspoon:install --framework=mocha --coffee
+rails generate teaspoon:install --coffee
 ```
 
 To run Teaspoon headless you'll need PhantomJS, Selenium Webdriver or Capybara Webkit. We recommend PhantomJS, which you can install with homebrew, npm or [as a download](http://phantomjs.org/download.html).
-
-### Upgrading
-
-As of version 0.8.0 there are some changes to how configuration and loading works, which might cause some confusion. For this we're sorry, but it'll be better in the long run. While we know that considerable changes like these can be a pain, they're not made frivolously, and they set the groundwork for what we can all build on and contribute to. We appreciate your tolerance and willingness to help us fix anything that we missed.
-
-:heart:
-
-1. backup your `spec/teaspoon_env.rb` file.
-2. run the install generator to get the new `teaspoon_env.rb`.
-3. migrate your old settings into the new file, noting the changes that might exist.
-4. move all settings that you had in `config/initializers/teaspoon.rb` into `spec/teaspoon_env.rb` and delete the initializer.
 
 
 ## Usage
@@ -154,7 +123,7 @@ bundle exec teaspoon --help
 
 Depending on which framework you use this can differ, and there's an expectation that you have a certain level of familiarity with your chosen test framework.
 
-Teaspoon supports [Jasmine 1.3](http://pivotal.github.com/jasmine), [Mocha](https://github.com/mochajs/mocha) and [QUnit](http://qunitjs.com). And since it's possible to use the asset pipeline, feel free to use the `= require` directive throughout your specs and spec helpers.
+Teaspoon supports [Jasmine](http://pivotal.github.com/jasmine), [Mocha](https://github.com/mochajs/mocha) and [QUnit](http://qunitjs.com). And since it's possible to use the asset pipeline, feel free to use the `= require` directive throughout your specs and spec helpers.
 
 Here's a basic spec written in Javascript using Jasmine:
 
@@ -385,11 +354,13 @@ When you install Teaspoon a `teaspoon_env.rb` file is generated that contains go
 
 ## Test Frameworks
 
-[Jasmine](http://pivotal.github.com/jasmine) is used by default unless you specify otherwise. We've been using Jasmine for a long time, and have been pretty happy with it. It lacks a few important things that could be in a test framework, so we've done a little bit of work to make that nicer. Like adding pending spec support.
+[Jasmine](http://pivotal.github.com/jasmine) is one of the first BDD-style frameworks. We've been using Jasmine for a long time, and have been pretty happy with it. It lacks a few important things that could be in a test framework, so we've done a little bit of work to make that nicer. Like adding pending spec support.
 
 [Mocha](http://visionmedia.github.com/mocha) came up while we were working on Teaspoon -- we read up about it and thought it was a pretty awesome library with some really great approaches to some of the things that some of us browser types should consider more often, so we included it and added support for it. We encourage you to give it a try. Read more about [Using Mocha](https://github.com/modeset/teaspoon/wiki/Using-Mocha) with Teaspoon.
 
 [QUnit](http://qunitjs.com) We're not sure about how many people use QUnit, but we like jQuery, so we added it. Read more about [Using QUnit](https://github.com/modeset/teaspoon/wiki/Using-QUnit) with Teaspoon.
+
+If you'd like to see what frameworks and versions Teaspoon supports, you can run `rake teaspoon:info`. The results of this will be restricted by what framework gems you have included in your Gemfile.
 
 
 ## Support Libraries
@@ -454,7 +425,7 @@ Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)
 
 Copyright 2014 [Mode Set](https://github.com/modeset)
 
-All licenses for the [bundled Javascript libraries](https://github.com/modeset/teaspoon/tree/master/vendor/assets/javascripts) are included (MIT/BSD).
+All licenses for the bundled Javascript libraries are included (MIT/BSD).
 
 
 ## Make Code Not War

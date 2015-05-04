@@ -6,6 +6,9 @@
   Change your Gemfile to use "teaspoon-framework" instead of "teaspoon".<br>
   eg: If you are using Mocha, this would be `gem 'teaspoon-mocha'`
 
+  If you had Teaspoon locked at a specific version, kill the version. You'll now need to reference the version of the framework, instead of the version of Teaspoon.<br>
+  eg: If your Gemfile has `gem 'teaspoon', '0.9.1'` and you're using Mocha, you'll want your Gemfile to reference the latest version of Mocha: `gem 'teaspoon-mocha', '2.2.4'`. The teaspoon-mocha gem contains previous versions of Mocha, so even if you're not using version 2.2.4 of Mocha in your `teaspoon_env.rb`, still reference the latest version in your Gemfile and the older version should still work.
+
 - **Update your coverage configuration in teaspoon_env.rb**<br>
   If you use Teaspoon to generate coverage reports with Istanbul, and you use the `suite.no_coverage` to exclude files from coverage, you'll need to migrate that configuration into the `config.coverage` blocks. So if you have:
 
