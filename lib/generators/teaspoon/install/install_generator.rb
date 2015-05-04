@@ -110,7 +110,7 @@ module Teaspoon
         else
           message = "Unknown framework: #{options[:framework]}#{options[:version] ? "[#{options[:version]}]" : ''}"
           message << "\n  Available: #{described_frameworks.join("\n             ")}"
-          say_status message, :red
+          say_status message, nil, :red
         end
         exit(1)
       end
