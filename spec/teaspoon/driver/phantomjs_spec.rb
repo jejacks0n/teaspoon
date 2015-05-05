@@ -43,8 +43,19 @@ describe Teaspoon::Driver.fetch(:phantomjs) do
     end
 
     context "without phantomjs" do
+      before do
+        allow(subject).to receive(:which).and_return(nil)
+      end
+
+      it "checks for the Phantomjs gem" do
+        stub_const("Phantomjs", double(path: '/path/to/phantomjs'))
+
+        expect(::Phantomjs).to receive(:path)
+        expect(::IO).to receive(:popen)
+        expect { subject.run_specs(:default, "_url_") }.not_to raise_error
+      end
+
       it "raises an exception" do
-        expect(subject).to receive(:which).and_return(nil)
         expect { subject.run_specs(:default, "_url_") }.to raise_error(
           Teaspoon::MissingDependencyError,
           "Unable to locate phantomjs. Install it or use the phantomjs gem."
