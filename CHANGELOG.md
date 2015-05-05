@@ -1,3 +1,11 @@
+### Unreleased
+
+### 1.0.1 (5/5/15)
+
+#### Bug Fixes
+
+* Fix constant scoping for Phantomjs (#359)
+
 ### 1.0.0 (5/4/15)
 
 #### Upgrade Steps
