@@ -1,4 +1,4 @@
-### 1.0.0 (unreleased)
+### 1.0.0 (5/4/15)
 
 #### Upgrade Steps
 
