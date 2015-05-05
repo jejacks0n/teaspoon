@@ -4,7 +4,7 @@
 //
 // PhantomJS (Teaspoons default driver) doesn't have support for Function.prototype.bind, which has caused confusion.
 // Use this polyfill to avoid the confusion.
-//= require support/bind-poly
+//= require support/phantomjs-shims
 //
 // You can require your own javascript files here. By default this will include everything in application, however you
 // may get better load performance if you require the specific files that are being used in the test that tests them.
