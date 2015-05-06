@@ -2,7 +2,8 @@
 
 #### Bug Fixes
 
-* Prefer a more robust phantomjs polyfill (#360)
+* Use a more robust phantomjs polyfill (#360)
+* Revive support for 1.9.3 (#361)
 
 
 ### 1.0.1 (5/5/15)
