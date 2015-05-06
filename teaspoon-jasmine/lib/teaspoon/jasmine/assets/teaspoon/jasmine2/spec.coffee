@@ -1,9 +1,9 @@
-class Teaspoon.Jasmine2.Spec
+class Teaspoon.Jasmine2.Spec extends Teaspoon.Spec
 
   constructor: (@spec) ->
     @fullDescription = @spec.fullName
     @description = @spec.description
-    @link = "?grep=#{encodeURIComponent(@fullDescription)}"
+    @link = @filterUrl(@fullDescription)
     @parent = @spec.parent
     @suiteName = @parent.fullName
     @viewId = @spec.id

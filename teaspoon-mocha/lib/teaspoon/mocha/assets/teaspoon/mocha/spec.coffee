@@ -1,9 +1,9 @@
-class Teaspoon.Mocha.Spec
+class Teaspoon.Mocha.Spec extends Teaspoon.Spec
 
   constructor: (@spec) ->
     @fullDescription = @spec.fullTitle()
     @description = @spec.title
-    @link = "?grep=#{encodeURIComponent(@fullDescription)}"
+    @link = @filterUrl(@fullDescription)
     @parent = @spec.parent
     @suiteName = @parent.fullTitle()
     @viewId = @spec.viewId

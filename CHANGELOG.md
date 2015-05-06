@@ -1,5 +1,10 @@
 ### Unreleased
 
+#### Bug Fixes
+
+* Retain file filter when navigating to specs (#327)
+
+
 ### 1.0.2 (5/5/15)
 
 #### Bug Fixes
