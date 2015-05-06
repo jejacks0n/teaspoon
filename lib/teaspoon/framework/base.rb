@@ -20,7 +20,10 @@ module Teaspoon
           name.present? ? @_framework_name ||= name.to_sym : @_framework_name
         end
 
-        def register_version(version, js_runner, dependencies: [], dev_deps: [])
+        def register_version(version, js_runner, options = {})
+          dependencies = options[:dependencies] || []
+          dev_deps = options[:dev_deps] || []
+
           if ENV["TEASPOON_DEVELOPMENT"] && dev_deps.any?
             dependencies = dev_deps
           end

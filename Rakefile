@@ -67,6 +67,6 @@ task default: default_tasks
 
 if Teaspoon.loaded_from_teaspoon_root?
   frameworks.each do |framework|
-    load File.expand_path("teaspoon-#{framework}/Rakefile", __dir__)
+    load File.expand_path("teaspoon-#{framework}/Rakefile", File.expand_path(File.dirname(__FILE__)))
   end
 end

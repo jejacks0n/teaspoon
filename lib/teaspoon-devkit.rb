@@ -21,8 +21,14 @@ module Teaspoon
     end
   end
 
-  def self.setup_framework_tasks(framework:, framework_name:, framework_const:, framework_root:, compile_assets:)
+  def self.setup_framework_tasks(options)
     extend Rake::DSL
+
+    framework = options[:framework]
+    framework_name = options[:framework_name]
+    framework_const = options[:framework_const]
+    framework_root = options[:framework_root]
+    compile_assets = options[:compile_assets]
 
     namespace :teaspoon do
       namespace framework do

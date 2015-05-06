@@ -13,7 +13,7 @@ Teaspoon.load_teaspoon_tasks
 Teaspoon.setup_framework_tasks(
   framework: :mocha,
   framework_name: "Mocha",
-  framework_root: __dir__,
+  framework_root: File.expand_path(File.dirname(__FILE__)),
   framework_const: Teaspoon::Framework.fetch(:mocha),
   compile_assets: ["mocha.js"]
 )
