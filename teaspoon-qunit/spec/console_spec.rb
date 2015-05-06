@@ -40,7 +40,10 @@ feature "Running in the console", shell: true do
   end
 
   before do
-    teaspoon_test_app("gem 'teaspoon-qunit', path: '#{Teaspoon::DEV_PATH}'")
+    teaspoon_test_app(<<-GEMFILE)
+      gem 'teaspoon', path: '#{Teaspoon::DEV_PATH}'
+      gem 'teaspoon-qunit', path: '#{Teaspoon::DEV_PATH}'
+    GEMFILE
     install_teaspoon("--coffee --version=#{version}")
     copy_integration_files("test", File.expand_path("../../test", __FILE__), "test")
   end

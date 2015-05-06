@@ -2,7 +2,10 @@ require_relative "./spec_helper"
 
 feature "Installation", shell: true do
   before do
-    teaspoon_test_app("gem 'teaspoon-jasmine', path: '#{Teaspoon::DEV_PATH}'")
+    teaspoon_test_app(<<-GEMFILE)
+      gem 'teaspoon', path: '#{Teaspoon::DEV_PATH}'
+      gem 'teaspoon-jasmine', path: '#{Teaspoon::DEV_PATH}'
+    GEMFILE
   end
 
   it "installs the expected files" do
