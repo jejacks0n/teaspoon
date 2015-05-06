@@ -1,5 +1,7 @@
 ### Unreleased
 
+### 1.0.2 (5/5/15)
+
 #### Bug Fixes
 
 * Use a more robust phantomjs polyfill (#360)
