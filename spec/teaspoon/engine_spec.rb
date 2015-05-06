@@ -58,7 +58,7 @@ describe Teaspoon::Engine do
         subject.add_rails_handling
       end
 
-      let(:middleware) { ActionDispatch::DebugExceptions.new(app, nil) }
+      let(:middleware) { ActionDispatch::DebugExceptions.new(app) }
       let(:app) { double(:app) }
       let(:env) { double(:env, "[]" => []) }
 

@@ -1,5 +1,9 @@
 rvm:
-  - 2.1.2
+  - ruby-1
+  - ruby-2
+gemfile:
+  - gemfiles/rails_3.gemfile
+  - gemfiles/rails_4.gemfile
 before_script:
   - sh -e /etc/init.d/xvfb start && npm install -g istanbul
 env:

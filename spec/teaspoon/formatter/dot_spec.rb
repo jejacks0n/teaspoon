@@ -41,7 +41,7 @@ describe Teaspoon::Formatter.fetch(:dot) do
 
     it "logs the error" do
       subject.error(result)
-      expect(@log).to eq("\e[31m_message_\e[0m\n\e[36m  # path/file.js?foo=true:42 -- notAnAnonFunc\e[0m\n\n")
+      expect(@log).to eq("\e[31m_message_\e[0m\n\e[36m  # path/file.js:42 -- notAnAnonFunc\e[0m\n\n")
     end
   end
 

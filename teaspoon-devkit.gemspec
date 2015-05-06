@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.files       = Dir["{spec}/**/*"] + ["Rakefile", "MIT.LICENSE", "README.md"]
 
   # dummy app dependencies
-  s.add_dependency "rails", [">= 4.2.0"]
+  s.add_dependency "rails", [">= 3.2.5"]
   s.add_dependency "coffee-rails"
   s.add_dependency "sass-rails"
   s.add_dependency "haml-rails"
@@ -27,10 +27,9 @@ Gem::Specification.new do |s|
   s.add_dependency "rspec-rails"
   s.add_dependency "capybara"
   s.add_dependency "aruba"
+  s.add_dependency "appraisal"
 
   # for local bundle installs
   s.add_dependency "jbuilder"
   s.add_dependency "sdoc"
-  s.add_dependency "byebug"
-  s.add_dependency "web-console"
 end
