@@ -17,14 +17,19 @@ describe "Teaspoon.Mocha.Spec", ->
   describe "constructor", ->
 
     it "has the expected properties", ->
+      originalParams = Teaspoon.params
+      Teaspoon.params.file = "spec.js"
+
       spec = new Teaspoon.Mocha.Spec(@mockSpec)
       expect(spec.fullDescription).to.be("_full mocha description_")
       expect(spec.description).to.be("_mocha_description_")
-      expect(spec.link).to.be("?grep=_full%20mocha%20description_")
+      expect(spec.link).to.be("?grep=_full%20mocha%20description_&file=spec.js")
       expect(spec.parent).to.be(@mockSuite)
       expect(spec.suiteName).to.be("_full mocha name_")
       expect(spec.viewId).to.be(420)
       expect(spec.pending).to.be(false)
+
+      Teaspoon.params = originalParams
 
 
   describe "#errors", ->

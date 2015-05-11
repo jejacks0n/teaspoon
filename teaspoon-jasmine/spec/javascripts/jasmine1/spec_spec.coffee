@@ -22,14 +22,19 @@ describe "Teaspoon.Jasmine1.Spec", ->
   describe "constructor", ->
 
     it "has the expected properties", ->
+      originalParams = Teaspoon.params
+      Teaspoon.params.file = "spec.js"
+
       spec = new Teaspoon.Jasmine1.Spec(@mockSpec)
       expect(spec.fullDescription).toBe("_full jasmine description_")
       expect(spec.description).toBe("_jasmine_description_")
-      expect(spec.link).toBe("?grep=_full%20jasmine%20description_")
+      expect(spec.link).toBe("?grep=_full%20jasmine%20description_&file=spec.js")
       expect(spec.parent).toBe(@mockSuite)
       expect(spec.suiteName).toBe("_full jasmine name_")
       expect(spec.viewId).toBe(42)
       expect(spec.pending).toBe(false)
+
+      Teaspoon.params = originalParams
 
 
   describe "#errors", ->

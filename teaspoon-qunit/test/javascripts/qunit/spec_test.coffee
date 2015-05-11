@@ -16,14 +16,19 @@ module "Teaspoon.Qunit.Spec",
       assertions: @mockAssertions
 
 test "constructor", 7, ->
+  originalParams = Teaspoon.params
+  Teaspoon.params.file = "spec.js"
+
   spec = new Teaspoon.Qunit.Spec(@mockSpec)
   ok(spec.fullDescription == "_full qunit name_ _description_", "sets fullDescription")
   ok(spec.description == "_description_ (1, 2, 3)", "sets description")
-  ok(spec.link == "?grep=_full%20qunit%20name_%3A%20_description_", "sets link")
+  ok(spec.link == "?grep=_full%20qunit%20name_%3A%20_description_&file=spec.js", "sets link")
   ok(spec.parent.description == "_full qunit name_", "builds a parent suite")
   ok(spec.suiteName == "_full qunit name_", "sets suiteName")
   ok(spec.viewId == 420, "sets viewId")
   ok(spec.pending == false, "sets pending to false") # no pending support
+
+  Teaspoon.params = originalParams
 
 test "#errors", 5, ->
   errors = new Teaspoon.Qunit.Spec(@mockSpec).errors()

@@ -1,9 +1,9 @@
-class Teaspoon.Qunit.Spec
+class Teaspoon.Qunit.Spec extends Teaspoon.Spec
 
   constructor: (@spec) ->
     @fullDescription = "#{@spec.module} #{@spec.name}"
     @description = "#{@spec.name} (#{@spec.failed}, #{@spec.passed}, #{@spec.total})"
-    @link = "?grep=#{encodeURIComponent("#{@spec.module}: #{@spec.name}")}"
+    @link = @filterUrl("#{@spec.module}: #{@spec.name}")
     @parent = if @spec.module then new Teaspoon.Qunit.Suite({description: @spec.module}) else null
     @suiteName = @spec.module
     @viewId = @spec.viewId

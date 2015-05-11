@@ -1,7 +1,11 @@
 #= require_self
+#= require_tree ./mixins
+#= require teaspoon/utility
 #= require teaspoon/runner
 #= require teaspoon/fixture
 #= require teaspoon/hook
+#= require teaspoon/spec
+#= require teaspoon/suite
 #= require teaspoon/reporters/html
 #= require teaspoon/reporters/console
 
