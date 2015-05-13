@@ -13,10 +13,14 @@ module Teaspoon
 
     def teaspoon_test_app(gem = "", local = !ENV["TRAVIS"])
       set_env("TEASPOON_ENV", nil)
-      unset_bundler_env_vars
 
       # create the rails application
-      run_simple("bundle exec rails new testapp --skip-bundle --skip-activerecord")
+      run_simple("bundle exec rails new testapp --skip-bundle --skip-activerecord -O")
+
+      # Unsetting bundler vars AFTER creating the new Rails app so that the BUNDLE_GEMFILE
+      # env var will get picked up and the right version of Rails is set by Appraisal
+      unset_bundler_env_vars
+
       cd("testapp")
 
       # append teaspoon to the gemfile and bundle

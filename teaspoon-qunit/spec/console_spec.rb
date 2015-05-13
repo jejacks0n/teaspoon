@@ -2,29 +2,29 @@ require_relative "./spec_helper"
 
 feature "Running in the console", shell: true do
   let(:expected_loading_output) do
-    <<-OUTPUT.strip_heredoc
+    Regexp.new(<<-OUTPUT.strip_heredoc)
       Starting the Teaspoon server...
-      Teaspoon running default suite at http://127.0.0.1:31337/teaspoon/default
+      Teaspoon running default suite at http://127\\.0\\.0\\.1:31337/teaspoon/default
     OUTPUT
   end
 
   let(:expected_testing_output) do
-    <<-OUTPUT.strip_heredoc
+    Regexp.new(<<-OUTPUT.strip_heredoc)
       FFFit can log to the console
-      ..
+      \\.\\.
 
       Failures:
 
-        1)  global failure (1, 0, 1)
-           Failure/Error: TypeError: undefined is not a constructor (evaluating 'foo()')
+        1\\)  global failure \\(1, 0, 1\\)
+           Failure/Error: TypeError: undefined is not a constructor \\(evaluating 'foo\\(\\)'\\)
 
-        2) Integration tests allows failing specs (1, 0, 1)
+        2\\) Integration tests allows failing specs \\(1, 0, 1\\)
            Failure/Error: fails correctly
 
-        3) Integration tests allows erroring specs (1, 0, 1)
+        3\\) Integration tests allows erroring specs \\(1, 0, 1\\)
            Failure/Error: errors correctly
 
-      Finished in 0.31337 seconds
+      Finished in 0\\.31337 seconds
       5 examples, 3 failures
 
       Failed examples:
@@ -51,15 +51,15 @@ feature "Running in the console", shell: true do
   it "runs successfully using the CLI" do
     run_teaspoon("--no-color")
 
-    expect(teaspoon_output).to include(expected_loading_output)
-    expect(teaspoon_output).to include(expected_testing_output)
+    expect(teaspoon_output).to match(expected_loading_output)
+    expect(teaspoon_output).to match(expected_testing_output)
   end
 
   it "runs successfully using the rake task" do
     rake_teaspoon("COLOR=false")
 
-    expect(teaspoon_output).to include(expected_loading_output)
-    expect(teaspoon_output).to include(expected_testing_output)
+    expect(teaspoon_output).to match(expected_loading_output)
+    expect(teaspoon_output).to match(expected_testing_output)
   end
 
   it "can display coverage information" do

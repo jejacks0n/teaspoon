@@ -142,7 +142,7 @@ module Teaspoon
       end
 
       def filename(file)
-        file.gsub(%r(^http://127.0.0.1:\d+/assets/), "").gsub(/[\?|&]?body=1/, "")
+        URI(file).path.sub(%r(^/assets/), "")
       end
     end
   end
