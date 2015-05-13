@@ -72,11 +72,12 @@ describe Teaspoon::Framework::Base do
     end
 
     it "tracks specified template paths" do
-      subject.add_asset_path File.expand_path("../../assets", __FILE__)
+      assets = File.expand_path("../../assets", __FILE__)
+      subject.add_asset_path assets
 
       asset_paths = subject.asset_paths
       expect(asset_paths[0]).to eq("/foo/bar")
-      expect(asset_paths[1]).to include("/teaspoon/spec/teaspoon/assets")
+      expect(asset_paths[1]).to include(assets)
     end
   end
 
@@ -86,11 +87,12 @@ describe Teaspoon::Framework::Base do
     end
 
     it "tracks specified template paths" do
-      subject.add_template_path File.expand_path("../../templates", __FILE__)
+      templates = File.expand_path("../../templates", __FILE__)
+      subject.add_template_path templates
 
       template_paths = subject.template_paths
       expect(template_paths[0]).to eq("/foo/bar")
-      expect(template_paths[1]).to include("/teaspoon/spec/teaspoon/templates")
+      expect(template_paths[1]).to include(templates)
     end
   end
 
