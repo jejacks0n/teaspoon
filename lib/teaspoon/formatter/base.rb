@@ -1,6 +1,8 @@
 module Teaspoon
   module Formatter
     class Base
+      RESERVED_PARAMS = ["body", "instrument"]
+
       attr_accessor :total_count, :run_count, :passes, :pendings, :failures, :errors
 
       def initialize(suite_name = :default, output_file = nil)
@@ -142,7 +144,14 @@ module Teaspoon
       end
 
       def filename(file)
-        URI(file).path.sub(%r(^/assets/), "")
+        uri = URI(file)
+        params = uri.query.split("&").reject do |param|
+          RESERVED_PARAMS.include?(param.split("=").first)
+        end
+
+        filename = uri.path.sub(%r(^/assets/), "")
+        filename += "?#{params.join("&")}" if params.any?
+        filename
       end
     end
   end

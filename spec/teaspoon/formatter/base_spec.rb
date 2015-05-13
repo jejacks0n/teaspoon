@@ -1,5 +1,6 @@
 require "spec_helper"
 require "teaspoon/formatter/base"
+require "teaspoon/formatter/modules/report_module"
 
 describe Teaspoon::Formatter::Base do
   let(:passing_spec) { double(passing?: true) }
@@ -128,6 +129,43 @@ describe Teaspoon::Formatter::Base do
 
       expect(subject).to_not receive(:log_error)
       subject.error(result, false)
+    end
+
+    describe "printing file details" do
+      let(:formatter) do
+        Class.new(described_class) do
+          include Teaspoon::Formatter::ReportModule
+        end.new
+      end
+
+      def mock_result(file)
+        trace = [
+          {
+            "file" => "http://127.0.0.1:31337/assets/path/#{file}",
+            "line" => 42,
+            "function" => "notAnAnonFunc"
+          }
+        ]
+        double(message: "_message_", trace: trace)
+      end
+
+      it "strips out special query params" do
+        formatter.error(mock_result("file.js?body=true&foo=true&instrument=1"))
+
+        expect(@log).to eq("\e[31m_message_\e[0m\n\e[36m  # path/file.js?foo=true:42 -- notAnAnonFunc\e[0m\n\n")
+      end
+
+      it "doesn't care about ordering of params" do
+        formatter.error(mock_result("file.js?foo=true&body=true&instrument=1"))
+
+        expect(@log).to eq("\e[31m_message_\e[0m\n\e[36m  # path/file.js?foo=true:42 -- notAnAnonFunc\e[0m\n\n")
+      end
+
+      it "doesn't include params if there are none" do
+        formatter.error(mock_result("file.js?body=true&instrument=1"))
+
+        expect(@log).to eq("\e[31m_message_\e[0m\n\e[36m  # path/file.js:42 -- notAnAnonFunc\e[0m\n\n")
+      end
     end
   end
 
