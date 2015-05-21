@@ -64,7 +64,7 @@ describe Teaspoon::Coverage do
       stub_exit_code(ExitCodes::EXCEPTION)
       expect { subject.generate_reports }.to raise_error(
         Teaspoon::DependencyError,
-        "Unable to generate html coverage report."
+        /Unable to generate html coverage report/
       )
     end
   end

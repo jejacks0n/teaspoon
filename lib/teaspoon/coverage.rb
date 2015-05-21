@@ -56,7 +56,7 @@ module Teaspoon
       output_path = File.join(@config.output_path, @suite_name)
       result = %x{#{@executable} report --include=#{input.shellescape} --dir #{output_path} #{format} 2>&1}
       return result.gsub("Done", "").gsub("Using reporter [#{format}]", "").strip if $?.exitstatus == 0
-      raise Teaspoon::DependencyError.new("Unable to generate #{format} coverage report.")
+      raise Teaspoon::DependencyError.new("Unable to generate #{format} coverage report:\n#{result}")
     end
 
     def threshold_args
