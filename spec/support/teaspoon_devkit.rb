@@ -15,7 +15,7 @@ module Teaspoon
       set_env("TEASPOON_ENV", nil)
 
       # create the rails application
-      run_simple("bundle exec rails new testapp --skip-bundle --skip-activerecord -O")
+      run_simple("bundle exec rails new testapp --skip-bundle --skip-activerecord -O --skip-javascript --skip-gemfile")
 
       # Unsetting bundler vars AFTER creating the new Rails app so that the BUNDLE_GEMFILE
       # env var will get picked up and the right version of Rails is set by Appraisal
@@ -23,9 +23,16 @@ module Teaspoon
 
       cd("testapp")
 
-      # append teaspoon to the gemfile and bundle
+      # append to the gemfile base dependencies and teaspoon and bundle
+      append_to_file("Gemfile", %{\ngem "rails"\n})
+      # coffee-rails is needed because we are using Teaspoon dev deps which are CS files
+      append_to_file("Gemfile", %{\ngem "coffee-rails"\n})
       append_to_file("Gemfile", %{\n#{gem}\n})
       run_simple("bundle install#{local ? ' --local' : ''}")
+
+      # create an application.js because there is no way to tell rails not to include it
+      # in the layout, and we don't want the default generated application.js
+      touch_file("app/assets/javascripts/application.js")
     end
 
     def install_teaspoon(opts = "")
