@@ -3,6 +3,7 @@
 #### Bug Fixes
 
 * Retain file filter when navigating to specs (#327)
+* Provide details when Istanbul fails (#368)
 
 
 ### 1.0.2 (5/5/15)
