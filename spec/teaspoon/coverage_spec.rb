@@ -62,9 +62,11 @@ describe Teaspoon::Coverage do
 
     it "raises an exception if the command doesn't exit cleanly" do
       stub_exit_code(ExitCodes::EXCEPTION)
+      allow(subject).to receive(:`).and_return("Results could not be generated.")
+
       expect { subject.generate_reports }.to raise_error(
         Teaspoon::DependencyError,
-        /Unable to generate html coverage report/
+        "Unable to generate html coverage report:\nResults could not be generated."
       )
     end
   end
