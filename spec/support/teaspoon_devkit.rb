@@ -24,7 +24,7 @@ module Teaspoon
       cd("testapp")
 
       # append to the gemfile base dependencies and teaspoon and bundle
-      append_to_file("Gemfile", %{\ngem "rails"\n})
+      append_to_file("Gemfile", %{\ngem "rails", "#{Rails.version}"\n})
       # coffee-rails is needed because we are using Teaspoon dev deps which are CS files
       append_to_file("Gemfile", %{\ngem "coffee-rails"\n})
       append_to_file("Gemfile", %{\n#{gem}\n})
