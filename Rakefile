@@ -61,6 +61,7 @@ Rake::Task["default"].clear
 default_tasks = [:spec, :teaspoon]
 frameworks.each do |framework|
   default_tasks << "teaspoon:#{framework}:spec"
+  default_tasks << "teaspoon:#{framework}:jsspec"
 end
 
 task default: default_tasks

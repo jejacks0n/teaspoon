@@ -14,6 +14,7 @@ Teaspoon.setup_framework_tasks(
   framework: :mocha,
   framework_name: "Mocha",
   framework_root: File.expand_path(File.dirname(__FILE__)),
+  framework_env: File.expand_path("spec/teaspoon_env.rb", File.dirname(__FILE__)),
   framework_const: Teaspoon::Framework.fetch(:mocha),
   compile_assets: ["mocha.js"]
 )

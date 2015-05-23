@@ -28,6 +28,7 @@ module Teaspoon
     framework_name = options[:framework_name]
     framework_const = options[:framework_const]
     framework_root = options[:framework_root]
+    framework_env = options[:framework_env]
     compile_assets = options[:compile_assets]
 
     namespace :teaspoon do
@@ -36,9 +37,20 @@ module Teaspoon
         RSpec::Core::RakeTask.new(:spec) do |t|
           t.pattern = File.expand_path("spec/**/*_spec.rb", framework_root)
         end
-      end
 
-      namespace framework do
+        desc "Run the #{framework_name} javascript tests"
+        task :jsspec do
+          rails_env = File.expand_path("spec/dummy/config/environment.rb", DEV_PATH)
+          cmd = "TEASPOON_DEVELOPMENT=true TEASPOON_RAILS_ENV=#{rails_env} TEASPOON_ENV=#{framework_env} rake teaspoon"
+
+          # we shell out to another command so that it creates a pristine runtime environment
+          IO.popen(cmd).each do |line|
+            STDOUT.print(line)
+          end.close
+
+          exit(1) unless $?.success?
+        end
+
         desc "Builds Teaspoon #{framework_name} into the distribution ready bundle"
         task build: "#{framework}:build:javascripts"
 
@@ -61,7 +73,7 @@ module Teaspoon
       Rake::Task["default"].prerequisites.clear
       Rake::Task["default"].clear
 
-      task default: "teaspoon:#{framework}:spec"
+      task default: ["teaspoon:#{framework}:spec", "teaspoon:#{framework}:jsspec"]
     end
   end
 end
