@@ -41,7 +41,7 @@ module Teaspoon
         desc "Run the #{framework_name} javascript tests"
         task :jsspec do
           rails_env = File.expand_path("spec/dummy/config/environment.rb", DEV_PATH)
-          cmd = "TEASPOON_DEVELOPMENT=true TEASPOON_RAILS_ENV=#{rails_env} TEASPOON_ENV=#{framework_env} rake teaspoon"
+          cmd = "rake teaspoon TEASPOON_DEVELOPMENT=true TEASPOON_RAILS_ENV=#{rails_env} TEASPOON_ENV=#{framework_env}"
 
           # we shell out to another command so that it creates a pristine runtime environment
           IO.popen(cmd).each do |line|
