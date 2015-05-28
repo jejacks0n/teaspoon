@@ -53,7 +53,14 @@ module Teaspoon
 
     def self.load_rails
       rails_env = ENV["TEASPOON_RAILS_ENV"] || File.expand_path("config/environment", Dir.pwd)
-      require rails_env
+
+      # Try to load rails, assume teaspoon_env will do it if the expected
+      # environment isn't found.
+      if File.exists?(rails_env)
+        require rails_env
+      else
+        require_environment
+      end
     end
   end
 end
