@@ -5,6 +5,7 @@
 * Retain file filter when navigating to specs (#327)
 * Provide details when Istanbul fails (#368)
 * Fix support for barebones Rails app (#372)
+* Fix pending count and nested styles (#373)
 
 
 ### 1.0.2 (5/5/15)
