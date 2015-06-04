@@ -29,15 +29,15 @@
 - **Update your Gemfile**<br>
   Change your Gemfile to use `teaspoon-jasmine` instead of `teaspoon`, if you're using Jasmine. If you're using Mocha, this would be `teaspoon-mocha`. Use `teaspoon-qunit` for QUnit.<br>
   eg: For Jasmine:
-  ```
+  ```ruby
   gem 'teaspoon-jasmine'
   ```
   For Mocha:
-  ```
+  ```ruby
   gem 'teaspoon-mocha'
   ```
   For QUnit:
-  ```
+  ```ruby
   gem 'teaspoon-qunit'
   ```
 
