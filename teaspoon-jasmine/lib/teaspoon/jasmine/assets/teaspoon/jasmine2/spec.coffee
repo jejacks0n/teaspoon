@@ -29,7 +29,7 @@ class Teaspoon.Jasmine2.Spec extends Teaspoon.Spec
 
   result: ->
     status: @status()
-    skipped: @spec.status == "disabled"
+    skipped: @spec.status == "disabled" || @pending
 
 
   status: ->

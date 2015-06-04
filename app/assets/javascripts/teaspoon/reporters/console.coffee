@@ -41,42 +41,55 @@ class Teaspoon.Reporters.Console
 
   reportSpecResults: (@spec) ->
     result = @spec.result()
-    return if result.skipped
+
+    if result.status == "pending"
+      @trackPending(@spec)
+    else if result.status == "failed"
+      @trackFailed(@spec)
+    else if result.skipped
+      @trackDisabled(@spec)
+    else
+      @trackPassed(@spec)
+
+
+  trackPending: (spec) ->
     @reportSuites()
-    switch result.status
-      when "pending" then @trackPending()
-      when "failed" then @trackFailure()
-      else
-        @log
-          type:    "spec"
-          suite:   @spec.suiteName
-          label:   @spec.description
-          status:  result.status
-          skipped: result.skipped
-
-
-  trackPending: ->
-    result = @spec.result()
+    result = spec.result()
     @log
       type:    "spec"
-      suite:   @spec.suiteName
-      label:   @spec.description
+      suite:   spec.suiteName
+      label:   spec.description
       status:  result.status
       skipped: result.skipped
 
 
-  trackFailure: ->
-    result = @spec.result()
-    for error in @spec.errors()
+  trackFailed: (spec) ->
+    @reportSuites()
+    result = spec.result()
+    for error in spec.errors()
       @log
         type:    "spec"
-        suite:   @spec.suiteName
-        label:   @spec.description
+        suite:   spec.suiteName
+        label:   spec.description
         status:  result.status
         skipped: result.skipped
-        link:    @spec.fullDescription
+        link:    spec.fullDescription
         message: error.message
         trace:   error.stack || error.message || "Stack Trace Unavailable"
+
+
+  trackDisabled: (spec) -> # noop
+
+
+  trackPassed: (spec, result) ->
+    @reportSuites()
+    result = spec.result()
+    @log
+      type:    "spec"
+      suite:   spec.suiteName
+      label:   spec.description
+      status:  result.status
+      skipped: result.skipped
 
 
   log: (obj = {}) ->

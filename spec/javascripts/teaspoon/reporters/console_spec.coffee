@@ -73,7 +73,7 @@ describe "Teaspoon.Reporters.Console", ->
 
       beforeEach ->
         @trackSpy = spyOn(@reporter, "trackPending")
-        @spec.result = -> {status: "pending", skipped: false}
+        @spec.result = -> {status: "pending", skipped: true}
 
       it "tracks that it was pending", ->
         @reporter.reportSpecResults(new Teaspoon.framework.Spec())
@@ -84,7 +84,7 @@ describe "Teaspoon.Reporters.Console", ->
       beforeEach ->
         @reportSuitesSpy = spyOn(@reporter, "reportSuites")
         @logSpy = spyOn(@reporter, "log")
-        @spec.result = -> {status: "pending", skipped: true}
+        @spec.result = -> {status: "passed", skipped: true}
 
       it "doesn't report the suite or log the results", ->
         @reporter.reportSpecResults(new Teaspoon.framework.Spec())
@@ -94,7 +94,7 @@ describe "Teaspoon.Reporters.Console", ->
     describe "failing tests", ->
 
       beforeEach ->
-        @trackSpy = spyOn(@reporter, "trackFailure")
+        @trackSpy = spyOn(@reporter, "trackFailed")
         @spec.result = -> {status: "failed", skipped: false}
 
       it "tracks the failure", ->
@@ -104,12 +104,11 @@ describe "Teaspoon.Reporters.Console", ->
 
   describe "#trackPending", ->
     beforeEach ->
-      @reporter.spec = @spec
       @spec.result = -> {status: "pending", skipped: false}
 
     it "logs the status as 'pending'", ->
       spy = spyOn(@reporter, "log")
-      @reporter.trackPending()
+      @reporter.trackPending(@spec)
       expect(spy).toHaveBeenCalledWith
         type:    "spec"
         suite:   "_suite_name_"
@@ -118,14 +117,13 @@ describe "Teaspoon.Reporters.Console", ->
         skipped: false
 
 
-  describe "#trackFailure", ->
+  describe "#trackFailed", ->
     beforeEach ->
-      @reporter.spec = @spec
       @spec.result = -> {status: "failed", skipped: false}
 
     it "logs the status as 'failed'", ->
       spy = spyOn(@reporter, "log")
-      @reporter.trackFailure()
+      @reporter.trackFailed(@spec)
       expect(spy).toHaveBeenCalledWith
         type:    "spec"
         suite:   "_suite_name_"

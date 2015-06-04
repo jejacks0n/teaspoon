@@ -34,7 +34,7 @@ feature "Running in the browser", browser: true do
         within("#teaspoon-stats") do
           expect(find("li:nth-child(1)")).to have_text("passes: 2")
           expect(find("li:nth-child(2)")).to have_text("failures: 2")
-          expect(find("li:nth-child(3)")).to have_text("skipped: 0")
+          expect(find("li:nth-child(3)")).to have_text("skipped: 1")
         end
 
         within("#teaspoon-report-failures") do
@@ -107,7 +107,7 @@ feature "Running in the browser", browser: true do
         within("#teaspoon-stats") do
           expect(find("li:nth-child(1)")).to have_text("passes: 2")
           expect(find("li:nth-child(2)")).to have_text("failures: 2")
-          expect(find("li:nth-child(3)")).to have_text("skipped: 0")
+          expect(find("li:nth-child(3)")).to have_text("skipped: 2")
         end
 
         within("#teaspoon-report-failures") do

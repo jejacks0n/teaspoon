@@ -43,8 +43,8 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     @setStatus("passed") unless @total.failures
     @setText("stats-passes", @total.passes)
     @setText("stats-failures", @total.failures)
-    if @total.run < @total.exist
-      @total.skipped = @total.exist - @total.run
+    if @total.run < @total.exist # For frameworks that don't "run" skipped specs
+      @total.skipped = @total.exist - @total.run + @total.skipped
       @total.run = @total.exist
     @setText("stats-skipped", @total.skipped)
     @updateProgress()
@@ -65,6 +65,7 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
     @total.run += 1
     @updateProgress()
     @updateStatus(spec)
+    delete @reportView
 
 
   buildLayout: ->
@@ -106,25 +107,22 @@ class Teaspoon.Reporters.HTML extends Teaspoon.Reporters.BaseView
 
 
   updateStatus: (spec) ->
+    elapsed = new Teaspoon.Date().getTime() - @specStart
+    @reportView?.updateState(spec, elapsed)
+
     result = spec.result()
 
-    if result.skipped
+    if result.status == "pending"
       @updateStat("skipped", @total.skipped += 1)
-      return
-
-    elapsed = new Teaspoon.Date().getTime() - @specStart
-
-    if result.status == "passed"
-      @updateStat("passes", @total.passes += 1)
-      @reportView?.updateState("passed", elapsed)
-    else if result.status == "pending"
-      @reportView?.updateState("pending", elapsed)
-    else
+    else if result.status == "failed"
       @updateStat("failures", @total.failures += 1)
-      @reportView?.updateState("failed", elapsed)
       unless @config["build-full-report"]
         new (Teaspoon.resolveClass("Reporters.HTML.FailureView"))(spec).appendTo(@findEl("report-failures"))
       @setStatus("failed")
+    else if result.skipped
+      @updateStat("skipped", @total.skipped += 1)
+    else
+      @updateStat("passes", @total.passes += 1)
 
 
   updateProgress: ->

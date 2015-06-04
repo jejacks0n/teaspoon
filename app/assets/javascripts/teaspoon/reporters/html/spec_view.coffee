@@ -38,11 +38,46 @@ class Teaspoon.Reporters.HTML.SpecView extends Teaspoon.Reporters.BaseView
     @append(div)
 
 
-  updateState: (state, elapsed) ->
-    result = @spec.result()
-    classes = ["state-#{state}"]
-    classes.push("slow") if elapsed > Teaspoon.slow
-    @el.innerHTML += "<span>#{elapsed}ms</span>" if state == "passed"
-    @el.className = classes.join(" ")
-    @buildErrors() if result.status == "failed"
-    @parentView.updateState?(state)
+  updateState: (spec, elapsed) ->
+    result = spec.result()
+    @clearClasses()
+
+    if result.status == "pending"
+      @updatePending(spec, elapsed)
+    else if result.status == "failed"
+      @updateFailed(spec, elapsed)
+    else if result.skipped
+      @updateDisabled(spec, elapsed)
+    else
+      @updatePassed(spec, elapsed)
+
+
+  updatePassed: (spec, elapsed) ->
+    @addStatusClass("passed")
+    @addClass("slow") if elapsed > Teaspoon.slow
+    @el.innerHTML += "<span>#{elapsed}ms</span>"
+
+
+  updateFailed: (spec, elapsed) ->
+    @addStatusClass("failed")
+    @buildErrors()
+    @parentView.updateState?("failed")
+
+
+  updatePending: (spec, elapsed) ->
+    @addStatusClass("pending")
+
+
+  updateDisabled: (spec, elapsed) -> # noop
+
+
+  clearClasses: ->
+    @el.className = ""
+
+
+  addStatusClass: (status) ->
+    @addClass("state-#{status}")
+
+
+  addClass: (name) ->
+    @el.className += " #{name}"

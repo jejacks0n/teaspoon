@@ -73,7 +73,7 @@ describe "Teaspoon.Jasmine2.Spec", ->
       it "returns the expected object", ->
         @mockSpec.status = "pending"
         spec = new Teaspoon.Jasmine2.Spec(@mockSpec)
-        expect(spec.result()).toEqual({status: "pending", skipped: false})
+        expect(spec.result()).toEqual({status: "pending", skipped: true})
 
     describe "failing", ->
 

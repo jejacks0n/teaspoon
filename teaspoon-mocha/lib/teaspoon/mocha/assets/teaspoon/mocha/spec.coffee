@@ -30,5 +30,6 @@ class Teaspoon.Mocha.Spec extends Teaspoon.Spec
     status = "failed"
     status = "passed" if @spec.state == "passed" || @spec.state == "skipped"
     status = "pending" if @spec.pending
+
     status: status
-    skipped: @spec.state == "skipped"
+    skipped: @spec.state == "skipped" || @pending

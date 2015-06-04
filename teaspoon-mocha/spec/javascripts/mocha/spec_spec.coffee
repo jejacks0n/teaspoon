@@ -66,7 +66,7 @@ describe "Teaspoon.Mocha.Spec", ->
       it "returns the expected object", ->
         @mockSpec.pending = true
         spec = new Teaspoon.Mocha.Spec(@mockSpec)
-        expect(spec.result()).to.eql({status: "pending", skipped: false})
+        expect(spec.result()).to.eql({status: "pending", skipped: true})
 
     describe "failing", ->
 

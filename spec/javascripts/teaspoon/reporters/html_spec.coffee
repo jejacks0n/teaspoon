@@ -246,6 +246,12 @@ describe "Teaspoon.Reporters.HTML", ->
       @setStatusSpy = spyOn(@reporter, "setStatus")
       @findElSpy = spyOn(@reporter, "findEl").andReturn(appendChild: ->)
 
+    it "calls updateState on the view", ->
+      @reporter.reportView = updateState: ->
+      spy = spyOn(@reporter.reportView, "updateState")
+      @reporter.updateStatus(@jasmineSpec)
+      expect(spy.argsForCall[0][0]).toBe(@jasmineSpec)
+
     describe "skipped", ->
 
       it "updates the statistic", ->
@@ -259,12 +265,6 @@ describe "Teaspoon.Reporters.HTML", ->
         @reporter.updateStatus(@jasmineSpec)
         expect(@updateStatSpy).toHaveBeenCalledWith("passes", 1)
 
-      it "calls updateState on the view", ->
-        @reporter.reportView = updateState: ->
-        spy = spyOn(@reporter.reportView, "updateState")
-        @reporter.updateStatus(@jasmineSpec)
-        expect(spy.argsForCall[0][0]).toBe("passed")
-
     describe "failure", ->
 
       beforeEach ->
@@ -273,12 +273,6 @@ describe "Teaspoon.Reporters.HTML", ->
       it "updates the statistic", ->
         @reporter.updateStatus(@jasmineSpec)
         expect(@updateStatSpy).toHaveBeenCalledWith("failures", 1)
-
-      it "calls updateState on the view", ->
-        @reporter.reportView = updateState: ->
-        spy = spyOn(@reporter.reportView, "updateState")
-        @reporter.updateStatus(@jasmineSpec)
-        expect(spy.argsForCall[0][0]).toBe("failed")
 
       it "creates a FailureView and appends it to the dom", ->
         spy = spyOn(Teaspoon.framework.Reporters.HTML, "FailureView").andReturn(appendTo: ->)
