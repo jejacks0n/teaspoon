@@ -27,8 +27,19 @@
 #### Upgrade Steps
 
 - **Update your Gemfile**<br>
-  Change your Gemfile to use "teaspoon-framework" instead of "teaspoon".<br>
-  eg: If you are using Mocha, this would be `gem 'teaspoon-mocha'`
+  Change your Gemfile to use `teaspoon-jasmine` instead of `teaspoon`, if you're using Jasmine. If you're using Mocha, this would be `teaspoon-mocha`. Use `teaspoon-qunit` for QUnit.<br>
+  eg: For Jasmine:
+  ```
+  gem 'teaspoon-jasmine'
+  ```
+  For Mocha:
+  ```
+  gem 'teaspoon-mocha'
+  ```
+  For QUnit:
+  ```
+  gem 'teaspoon-qunit'
+  ```
 
   If you had Teaspoon locked at a specific version, kill the version. You'll now need to reference the version of the framework, instead of the version of Teaspoon.<br>
   eg: If your Gemfile has `gem 'teaspoon', '0.9.1'` and you're using Mocha, you'll want your Gemfile to reference the latest version of Mocha: `gem 'teaspoon-mocha', '2.2.4'`. The teaspoon-mocha gem contains previous versions of Mocha, so even if you're not using version 2.2.4 of Mocha in your `teaspoon_env.rb`, still reference the latest version in your Gemfile and the older version should still work.
