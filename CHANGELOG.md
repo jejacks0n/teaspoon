@@ -6,6 +6,7 @@
 * Provide details when Istanbul fails (#368)
 * Fix support for barebones Rails app (#372)
 * Fix pending count and nested styles (#373)
+* Fix total count in Jasmine 2 (#378)
 
 
 ### 1.0.2 (5/5/15)
