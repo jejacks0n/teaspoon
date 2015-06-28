@@ -31,7 +31,7 @@ module Teaspoon
       env_files = override ? [override] : standard_environments
 
       env_files.each do |filename|
-        file = File.expand_path(filename, Dir.pwd)
+        file = File.expand_path(filename, Rails.root)
         ENV["TEASPOON_ENV"] = file if override
         return file if File.exists?(file)
       end
@@ -52,7 +52,7 @@ module Teaspoon
     end
 
     def self.load_rails
-      rails_env = ENV["TEASPOON_RAILS_ENV"] || File.expand_path("config/environment", Dir.pwd)
+      rails_env = ENV["TEASPOON_RAILS_ENV"] || File.expand_path("config/environment", Rails.root)
 
       # Try to load rails, assume teaspoon_env will do it if the expected
       # environment isn't found.
