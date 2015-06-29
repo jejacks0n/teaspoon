@@ -8,8 +8,7 @@ describe "Teaspoon.Jasmine2.Reporters.HTML", ->
 
     it "sets jasmine.CATCH_EXCEPTIONS", ->
       @reporter.readConfig()
-      expect(jasmine.CATCH_EXCEPTIONS).toBe(@reporter.config["use-catch"])
-
+      expect(jasmine.getEnv().catchingExceptions()).toBe(@reporter.config["use-catch"])
 
   describe "#envInfo", ->
 
