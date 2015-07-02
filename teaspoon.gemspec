@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
 
   s.files       = Dir["{app,lib,bin}/**/*"] + ["MIT.LICENSE", "README.md", "CHANGELOG.md"]
-  s.test_files  = `git ls-files -- {spec}/*`.split("\n")
   s.executables = ["teaspoon"]
 
   s.add_dependency "railties", [">= 3.2.5", "< 5"]
