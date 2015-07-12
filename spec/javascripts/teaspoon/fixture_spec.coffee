@@ -78,6 +78,24 @@ describe "Teaspoon.Fixture", ->
       fixture.set("_content3_", false)
       expect(document.getElementById("teaspoon-fixtures").innerHTML).toBe("_content3_")
 
+    it "supports invalid HTML", ->
+      fixture.set("<td>Row</td>")
+      expect(document.getElementById("teaspoon-fixtures").innerHTML).toBe("<td>Row</td>")
+
+    describe "without jQuery", ->
+      jQ = null
+
+      beforeEach ->
+        jQ = window.$
+        window.$ = undefined
+
+      afterEach ->
+        window.$ = jQ
+
+      it "does not support invalid HTML", ->
+        fixture.set("<td>Row</td>")
+        expect(document.getElementById("teaspoon-fixtures").innerHTML).toBe("Row")
+
 
   describe "@preload", ->
 
