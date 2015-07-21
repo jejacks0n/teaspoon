@@ -84,7 +84,7 @@ teaspoon coverage directive has changed and is now more flexible, define coverag
       end
       alias_method :no_coverage=, :no_coverage
 
-      def use_framework=(name, version = nil)
+      def use_framework=(name, _version = nil)
         Teaspoon.dep("suite.use_framework= is deprecated, use suite.use_framework instead.")
         use_framework(*name)
       end
