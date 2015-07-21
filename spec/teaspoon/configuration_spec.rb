@@ -170,6 +170,14 @@ describe Teaspoon::Configuration::Suite do
         subject.no_coverage = [/excluded.js/]
       end
     end
+
+    describe "use_framework=" do
+      it "deprecates with no backwards compatibility" do
+        expect(Teaspoon).to receive(:dep).with("suite.use_framework= is deprecated, use suite.use_framework instead.")
+
+        subject.use_framework = :jasmine, "1.3.1"
+      end
+    end
   end
 end
 
