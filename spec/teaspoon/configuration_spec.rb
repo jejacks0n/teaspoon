@@ -129,12 +129,6 @@ describe Teaspoon::Configuration::Suite do
       expect(subject.javascripts[1]).to match(/teaspoon[-|\/]mocha\.js/)
     end
 
-    it "allows specifying framework with a version using use_framework=" do
-      @suite = proc { |s| s.use_framework = :mocha, "1.10.0" }
-      expect(subject.javascripts[0]).to match(/mocha\/\d+\.\d+\.\d+\.js/)
-      expect(subject.javascripts[1]).to match(/teaspoon[-|\/]mocha\.js/)
-    end
-
     it "handles qunit specifically to set matcher and helper" do
       @suite = proc { |s| s.use_framework :qunit }
       expect(subject.javascripts[0]).to match(/qunit\/\d+\.\d+\.\d+\.js/)
@@ -172,10 +166,14 @@ describe Teaspoon::Configuration::Suite do
     end
 
     describe "use_framework=" do
-      it "deprecates with no backwards compatibility" do
+      it "deprecates with backwards compatibility" do
         expect(Teaspoon).to receive(:dep).with("suite.use_framework= is deprecated, use suite.use_framework instead.")
+        expect(subject).to receive(:use_framework).with(:mocha, "1.10.0").and_call_original
 
-        subject.use_framework = :jasmine, "1.3.1"
+        subject.use_framework = :mocha, "1.10.0"
+
+        expect(subject.javascripts[0]).to match(/mocha\/\d+\.\d+\.\d+\.js/)
+        expect(subject.javascripts[1]).to match(/teaspoon[-|\/]mocha\.js/)
       end
     end
   end
