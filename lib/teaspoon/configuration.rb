@@ -93,7 +93,6 @@ module Teaspoon
 
         raise Teaspoon::UnknownFrameworkVersion.new(name: name, version: version)
       end
-      alias_method :use_framework=, :use_framework
 
       def hook(group = :default, &block)
         @hooks[group.to_s] << block
