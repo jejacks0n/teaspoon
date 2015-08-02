@@ -1,4 +1,5 @@
 #= require support/json2
+#= require jquery
 
 window.passing = true
 window.failing = false

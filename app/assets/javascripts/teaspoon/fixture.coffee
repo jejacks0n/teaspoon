@@ -63,18 +63,22 @@ class Teaspoon.Fixture
 
   putContent = (content) =>
     cleanup()
-    create()
-    window.fixture.el.innerHTML = content
+    addContent(content)
 
 
   addContent = (content) =>
     create() unless window.fixture.el
-    window.fixture.el.innerHTML += content
+
+    if jQueryAvailable()
+      parsed = $($.parseHTML(content, document, true))
+      window.fixture.el.appendChild(parsed[i]) for i in [0...parsed.length]
+    else
+      window.fixture.el.innerHTML += content
 
 
   create = =>
     window.fixture.el = document.createElement("div")
-    window.fixture.$el = $(window.fixture.el) if typeof(window.$) == 'function'
+    window.fixture.$el = $(window.fixture.el) if jQueryAvailable()
     window.fixture.el.id = "teaspoon-fixtures"
     document.body?.appendChild(window.fixture.el)
 
@@ -98,3 +102,7 @@ class Teaspoon.Fixture
     xhr.onreadystatechange = callback
     xhr.open("GET", "#{Teaspoon.root}/fixtures/#{url}", false)
     xhr.send()
+
+
+  jQueryAvailable = ->
+    typeof(window.$) == 'function'
