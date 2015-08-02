@@ -47,12 +47,11 @@ RSpec.configure do |config|
   config.before(:each, shell: true) do
     @dirs = [ENV["ARUBA_PATH"]] if ENV["ARUBA_PATH"]
     @aruba_timeout_seconds = 180
-    clean_current_dir
+    setup_aruba
   end
 
   config.after(:each, shell: true) do
     restore_env
-    clean_current_dir
   end
 
   config.before(:each, browser: true) do

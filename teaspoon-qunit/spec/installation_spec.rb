@@ -18,8 +18,8 @@ feature "Installation", shell: true do
       create  test/javascripts/test_helper.js
     OUTPUT
 
-    check_file_content("test/teaspoon_env.rb", /suite\.use_framework :qunit, "\d+\.\d+\.\d+"/)
-    check_file_content("test/javascripts/test_helper.js", Regexp.new("require support/your-support-file"))
+    expect("test/teaspoon_env.rb").to have_file_content(/suite\.use_framework :qunit, "\d+\.\d+\.\d+"/)
+    expect("test/javascripts/test_helper.js").to have_file_content(Regexp.new("require support/your-support-file"))
   end
 
   it "can install coffeescript and the teaspoon_env without comments" do
@@ -32,7 +32,7 @@ feature "Installation", shell: true do
       create  test/javascripts/test_helper.coffee
     OUTPUT
 
-    check_file_content("test/teaspoon_env.rb", /suite\.use_framework :qunit, "\d+\.\d+\.\d+"/)
-    check_file_content("test/javascripts/test_helper.coffee", Regexp.new("require support/your-support-file"))
+    expect("test/teaspoon_env.rb").to have_file_content(/suite\.use_framework :qunit, "\d+\.\d+\.\d+"/)
+    expect("test/javascripts/test_helper.coffee").to have_file_content(Regexp.new("require support/your-support-file"))
   end
 end

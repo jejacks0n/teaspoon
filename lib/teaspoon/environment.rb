@@ -28,7 +28,7 @@ module Teaspoon
 
     def self.find_env(override = nil)
       override ||= ENV["TEASPOON_ENV"]
-      env_files = override ? [override] : standard_environments
+      env_files = override && !override.empty? ? [override] : standard_environments
 
       env_files.each do |filename|
         file = File.expand_path(filename, Dir.pwd)

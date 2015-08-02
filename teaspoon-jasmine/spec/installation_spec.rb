@@ -18,8 +18,8 @@ feature "Installation", shell: true do
       create  spec/javascripts/spec_helper.js
     OUTPUT
 
-    check_file_content("spec/teaspoon_env.rb", /suite\.use_framework :jasmine, "\d+\.\d+\.\d+"/)
-    check_file_content("spec/javascripts/spec_helper.js", Regexp.new("require support/your-support-file"))
+    expect("spec/teaspoon_env.rb").to have_file_content(/suite\.use_framework :jasmine, "\d+\.\d+\.\d+"/)
+    expect("spec/javascripts/spec_helper.js").to have_file_content(Regexp.new("require support/your-support-file"))
   end
 
   it "can install coffeescript and the teaspoon_env without comments" do
@@ -32,7 +32,7 @@ feature "Installation", shell: true do
       create  spec/javascripts/spec_helper.coffee
     OUTPUT
 
-    check_file_content("spec/teaspoon_env.rb", /suite\.use_framework :jasmine, "\d+\.\d+\.\d+"/)
-    check_file_content("spec/javascripts/spec_helper.coffee", Regexp.new("require support/your-support-file"))
+    expect("spec/teaspoon_env.rb").to have_file_content(/suite\.use_framework :jasmine, "\d+\.\d+\.\d+"/)
+    expect("spec/javascripts/spec_helper.coffee").to have_file_content(Regexp.new("require support/your-support-file"))
   end
 end

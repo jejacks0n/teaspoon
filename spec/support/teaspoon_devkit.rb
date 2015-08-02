@@ -12,16 +12,14 @@ module Teaspoon
     include Aruba::Api
 
     def teaspoon_test_app(gem = "", local = !ENV["TRAVIS"])
-      set_env("TEASPOON_ENV", nil)
+      set_environment_variable("TEASPOON_ENV", nil)
 
-      # create the rails application
+      # Create the Rails application, which uses the version of Rails defined
+      # in the Appraisal Gemfile. Then, no longer use the Appraisal Gemfile
+      # and use the application one instead.
       run_simple("bundle exec rails new testapp --skip-bundle --skip-activerecord -O --skip-javascript --skip-gemfile")
-
-      # Unsetting bundler vars AFTER creating the new Rails app so that the BUNDLE_GEMFILE
-      # env var will get picked up and the right version of Rails is set by Appraisal
-      unset_bundler_env_vars
-
       cd("testapp")
+      set_environment_variable("BUNDLE_GEMFILE", expand_path("Gemfile"))
 
       # append to the gemfile base dependencies and teaspoon and bundle
       append_to_file("Gemfile", %{\ngem "rails", "#{Rails.version}"\n})
@@ -32,7 +30,7 @@ module Teaspoon
 
       # create an application.js because there is no way to tell rails not to include it
       # in the layout, and we don't want the default generated application.js
-      touch_file("app/assets/javascripts/application.js")
+      touch("app/assets/javascripts/application.js")
     end
 
     def install_teaspoon(opts = "")
@@ -51,7 +49,7 @@ module Teaspoon
 
     def copy_integration_files(suffix, from, to = "spec")
       sources = Dir[File.join(from, "javascripts", "integration", "**/*")]
-      dest = File.join(current_dir, File.join(to, "javascripts/integration"))
+      dest = expand_path(File.join(to, 'javascripts/integration'))
       FileUtils::mkdir_p(dest)
       sources.each do |source|
         spec = File.join(dest, File.basename(source).gsub("_integration", "_#{suffix}"))
@@ -67,8 +65,8 @@ module Teaspoon
     end
 
     def set_rails_env
-      boot_from = File.expand_path(current_dir + "/config/environment.rb", Dir.pwd)
-      set_env("TEASPOON_RAILS_ENV", boot_from)
+      boot_from = expand_path("config/environment.rb")
+      set_environment_variable("TEASPOON_RAILS_ENV", boot_from)
     end
   end
 end
