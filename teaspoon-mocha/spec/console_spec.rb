@@ -74,10 +74,10 @@ feature "Running in the console", shell: true do
 
     expect(teaspoon_output).to include(<<-COVERAGE.strip_heredoc)
       =============================== Coverage summary ===============================
-      Statements   : 75% ( 3/4 )
+      Statements   : 92.86% ( 13/14 )
       Branches     : 100% ( 0/0 )
-      Functions    : 50% ( 1/2 )
-      Lines        : 75% ( 3/4 )
+      Functions    : 80% ( 4/5 )
+      Lines        : 92.86% ( 13/14 )
       ================================================================================
     COVERAGE
   end
