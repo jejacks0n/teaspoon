@@ -115,7 +115,7 @@ module Teaspoon
       def initialize
         @reports      = ["text-summary"]
         @output_path  = "coverage"
-        @ignore       = [%r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{%r{(?m)^(?=.*_helper)((?!spec_helper).)*$}}]
+        @ignore       = [%r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{(?m)^(?=.*_helper)((?!spec_helper).)*$}]
 
         @statements   = nil
         @functions    = nil
