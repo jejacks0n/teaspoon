@@ -116,6 +116,20 @@ describe Teaspoon::Instrumentation do
 
         expect(subject.add?(response, "QUERY_STRING" => "instrument=true")).to be(false)
       end
+      
+      context 'with default ignored files' do
+        it "does not ignore spec_helper file" do
+          asset = double(source: source, pathname: "path/to/spec_helper.js")
+          
+          expect(subject.add?(response, "QUERY_STRING" => "instrument=true")).to be(true)
+        end
+        
+        it "does ignore any other helper than spec helper" do
+          asset = double(source: source, pathname: "path/to/other_helper.js")
+        
+          expect(subject.add?(response, "QUERY_STRING" => "instrument=true")).to be(false)
+        end
+      end
     end
   end
 
