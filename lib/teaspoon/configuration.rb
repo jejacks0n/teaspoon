@@ -116,7 +116,7 @@ module Teaspoon
         @reports      = ["text-summary"]
         @output_path  = "coverage"
         @ignore       = [
-          %r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, 
+          %r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/},
           %r{/support/}, %r{(?m)^(?=.*_helper)((?!spec_helper).)*$}
         ]
 
