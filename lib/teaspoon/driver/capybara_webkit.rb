@@ -11,18 +11,22 @@ require "teaspoon/driver/base"
 module Teaspoon
   module Driver
     class CapybaraWebkit < Base
+      class TeaspoonNotFinishedError < StandardError; end
       def initialize(_options = nil)
       end
 
       def run_specs(runner, url)
         session.visit(url)
 
-        session.document.synchronize(Teaspoon.configuration.driver_timeout.to_i) do
+        timeout = Teaspoon.configuration.driver_timeout.to_i
+        session.document.synchronize(timeout, errors: [TeaspoonNotFinishedError]) do
           done = session.evaluate_script("window.Teaspoon && window.Teaspoon.finished")
           (session.evaluate_script("window.Teaspoon && window.Teaspoon.getMessages()") || []).each do |line|
             runner.process("#{line}\n")
           end
-          done
+          unless done
+            raise TeaspoonNotFinishedError
+          end
         end
       end
 

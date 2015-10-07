@@ -4,6 +4,7 @@ describe Teaspoon::Driver.fetch(:capybara_webkit) do
   let(:runner) { double }
   let(:document) { double(synchronize: nil) }
   let(:session) { instance_double(Capybara::Session, visit: nil, evaluate_script: nil, document: document) }
+  let(:error) { Teaspoon::Driver::CapybaraWebkit::TeaspoonNotFinishedError }
 
   before do
     allow(Capybara::Session).to receive(:new).and_return(session)
@@ -16,12 +17,17 @@ describe Teaspoon::Driver.fetch(:capybara_webkit) do
     end
 
     it "waits for the specs to complete setting the timeout" do
-      expect(document).to receive(:synchronize).with(180).and_yield
+      expect(document).to receive(:synchronize).with(180, errors: [error]) do |_timeout, _opts, &block|
+        begin
+          block.call
+        rescue error
+        end
+      end
       subject.run_specs(runner, "_url_")
     end
 
     it "waits until it's done (checking Teaspoon.finished) and processes each line" do
-      expect(document).to receive(:synchronize).with(180).and_yield
+      expect(document).to receive(:synchronize).with(180, errors: [error]).and_yield
       expect(session).to receive(:evaluate_script).with("window.Teaspoon && window.Teaspoon.finished").
         and_return(true)
       expect(session).to receive(:evaluate_script).with("window.Teaspoon && window.Teaspoon.getMessages()").
