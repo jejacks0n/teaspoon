@@ -62,3 +62,22 @@ describe "Teaspoon", ->
 
     it "throws an error if it can't find the requested class", ->
       expect(-> Teaspoon.resolveClass("Nope")).toThrow("Could not find the class you're looking for: Nope")
+
+
+  describe ".log", ->
+
+    it "does not error if console.log does not exist", ->
+      originalLog = window.console.log
+      window.console.log = undefined
+
+      expect(-> Teaspoon.log('__spec_results__')).not.toThrow();
+
+      window.console.log = originalLog
+
+    it "does not error if console does not exist", ->
+      originalConsole = window.console
+      window.console = undefined
+
+      expect(-> Teaspoon.log('__spec_results__')).not.toThrow();
+
+      window.console = originalConsole

@@ -57,7 +57,7 @@ class @Teaspoon
 
   @log: ->
     Teaspoon.messages.push(arguments[0])
-    try console.log(arguments...)
+    try console?.log?(arguments...)
     catch e
       throw new Error("Unable to use console.log for logging")
 
