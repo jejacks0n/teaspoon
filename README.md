@@ -329,6 +329,31 @@ All files           |     93.75 |        75 |     94.12 |     93.65 |
 --------------------+-----------+-----------+-----------+-----------+
 ```
 
+### Caveats
+
+In order to provide accurate coverage and best performance, it is recommended that you require the implementation file directly from the spec file. For example:
+
+```js
+//= require "my_class"
+describe("MyClass", function() { ... });
+```
+
+It is **not** recommended that you require the entirety of your assets from within your spec helper:
+
+***spec_helper.js***
+```js
+//= require "application"
+```
+
+If you must require `application` from your spec helper and you have `expand_assets` configuration set to `false`, you'll need to exclude the spec helper from ignored coverage files:
+
+***teaspoon_env.rb***
+```ruby
+config.coverage do |coverage|
+  coverage.ignore = coverage.ignore.reject { |matcher| matcher.match('/spec_helper.') }
+end
+```
+
 ### Thresholds
 
 Teaspoon allows defining coverage threshold requirements. If a threshold is not met, it will cause a test run failure.
