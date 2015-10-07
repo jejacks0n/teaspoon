@@ -40,6 +40,7 @@ RSpec.configure do |config|
   config.order = "random"
   config.color = true
   config.include Teaspoon::Devkit
+  config.include Teaspoon::Helpers
   config.include ExitCodes
   config.include LoadableFiles
   config.include Rack::Test::Methods

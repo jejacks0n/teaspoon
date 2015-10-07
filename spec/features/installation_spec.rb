@@ -8,7 +8,7 @@ feature "Installation", shell: true do
   it "errors with the expected message" do
     run_simple("bundle exec rails generate teaspoon:install --trace", false)
 
-    assert_exit_status(1)
+    expect(last_command_started).to have_exit_status(1)
     expect(all_output).to include(<<-OUTPUT.strip_heredoc)
       ******************************************************************************
       Error: There don't seem to be any frameworks registered within Teaspoon yet.
