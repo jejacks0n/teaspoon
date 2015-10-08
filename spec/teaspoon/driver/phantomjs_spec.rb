@@ -27,6 +27,11 @@ describe Teaspoon::Driver.fetch(:phantomjs) do
   end
 
   describe "#run_specs" do
+    before do
+      # Stub phantom
+      allow(::IO).to receive(:popen) { `(exit 0)` }
+    end
+
     context "with phantomjs" do
       let(:runner) { double }
 
@@ -59,6 +64,19 @@ describe Teaspoon::Driver.fetch(:phantomjs) do
         expect { subject.run_specs(:default, "_url_") }.to raise_error(
           Teaspoon::MissingDependencyError,
           "Unable to locate phantomjs. Install it or use the phantomjs gem."
+        )
+      end
+    end
+
+    context "with a broken phantomjs" do
+      before do
+        allow(::IO).to receive(:popen) { `(exit 1)` }
+      end
+
+      it "raises an exception" do
+        expect { subject.run_specs(:default, "_url_") }.to raise_error(
+          Teaspoon::DependencyError,
+          "Failed to use phantomjs, which exited with status code: 1"
         )
       end
     end

@@ -33,6 +33,10 @@ module Teaspoon
 
       def run(*args, &block)
         IO.popen([executable, *args].join(" ")) { |io| io.each(&block) }
+
+        unless $?.success?
+          raise Teaspoon::DependencyError.new("Failed to use phantomjs, which exited with status code: #{$?.exitstatus}")
+        end
       end
 
       def driver_options(url)
