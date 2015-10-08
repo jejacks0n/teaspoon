@@ -80,7 +80,7 @@
       var e;
       Teaspoon.messages.push(arguments[0]);
       try {
-        return console.log.apply(console, arguments);
+        return typeof console !== "undefined" && console !== null ? typeof console.log === "function" ? console.log.apply(console, arguments) : void 0 : void 0;
       } catch (_error) {
         e = _error;
         throw new Error("Unable to use console.log for logging");
@@ -220,7 +220,7 @@
   var slice = [].slice;
 
   Teaspoon.Fixture = (function() {
-    var addContent, cleanup, create, load, loadComplete, preload, putContent, set, xhr, xhrRequest;
+    var addContent, cleanup, create, jQueryAvailable, load, loadComplete, preload, putContent, set, xhr, xhrRequest;
 
     Fixture.cache = {};
 
@@ -231,19 +231,19 @@
     Fixture.json = [];
 
     Fixture.preload = function() {
-      var i, len, results, url, urls;
+      var j, len, results, url, urls;
       urls = 1 <= arguments.length ? slice.call(arguments, 0) : [];
       results = [];
-      for (i = 0, len = urls.length; i < len; i++) {
-        url = urls[i];
+      for (j = 0, len = urls.length; j < len; j++) {
+        url = urls[j];
         results.push(preload(url));
       }
       return results;
     };
 
     Fixture.load = function() {
-      var append, i, index, j, len, results, url, urls;
-      urls = 2 <= arguments.length ? slice.call(arguments, 0, i = arguments.length - 1) : (i = 0, []), append = arguments[i++];
+      var append, index, j, k, len, results, url, urls;
+      urls = 2 <= arguments.length ? slice.call(arguments, 0, j = arguments.length - 1) : (j = 0, []), append = arguments[j++];
       if (append == null) {
         append = false;
       }
@@ -252,7 +252,7 @@
         append = false;
       }
       results = [];
-      for (index = j = 0, len = urls.length; j < len; index = ++j) {
+      for (index = k = 0, len = urls.length; k < len; index = ++k) {
         url = urls[index];
         results.push(load(url, append || index > 0));
       }
@@ -260,8 +260,8 @@
     };
 
     Fixture.set = function() {
-      var append, html, htmls, i, index, j, len, results;
-      htmls = 2 <= arguments.length ? slice.call(arguments, 0, i = arguments.length - 1) : (i = 0, []), append = arguments[i++];
+      var append, html, htmls, index, j, k, len, results;
+      htmls = 2 <= arguments.length ? slice.call(arguments, 0, j = arguments.length - 1) : (j = 0, []), append = arguments[j++];
       if (append == null) {
         append = false;
       }
@@ -270,7 +270,7 @@
         append = false;
       }
       results = [];
-      for (index = j = 0, len = htmls.length; j < len; index = ++j) {
+      for (index = k = 0, len = htmls.length; k < len; index = ++k) {
         html = htmls[index];
         results.push(set(html, append || index > 0));
       }
@@ -341,21 +341,30 @@
 
     putContent = function(content) {
       cleanup();
-      create();
-      return window.fixture.el.innerHTML = content;
+      return addContent(content);
     };
 
     addContent = function(content) {
+      var i, j, parsed, ref, results;
       if (!window.fixture.el) {
         create();
       }
-      return window.fixture.el.innerHTML += content;
+      if (jQueryAvailable()) {
+        parsed = $($.parseHTML(content, document, true));
+        results = [];
+        for (i = j = 0, ref = parsed.length; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
+          results.push(window.fixture.el.appendChild(parsed[i]));
+        }
+        return results;
+      } else {
+        return window.fixture.el.innerHTML += content;
+      }
     };
 
     create = function() {
       var ref;
       window.fixture.el = document.createElement("div");
-      if (typeof window.$ === 'function') {
+      if (jQueryAvailable()) {
         window.fixture.$el = $(window.fixture.el);
       }
       window.fixture.el.id = "teaspoon-fixtures";
@@ -395,6 +404,10 @@
       xhr.onreadystatechange = callback;
       xhr.open("GET", Teaspoon.root + "/fixtures/" + url, false);
       return xhr.send();
+    };
+
+    jQueryAvailable = function() {
+      return typeof window.$ === 'function';
     };
 
     return Fixture;
@@ -980,6 +993,9 @@
     SpecView.prototype.buildParent = function() {
       var parent, view;
       parent = this.spec.parent;
+      if (!parent) {
+        return this.reporter;
+      }
       if (parent.viewId) {
         return this.views.suites[parent.viewId];
       } else {
