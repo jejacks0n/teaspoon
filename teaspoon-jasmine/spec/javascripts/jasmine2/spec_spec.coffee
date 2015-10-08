@@ -24,7 +24,7 @@ describe "Teaspoon.Jasmine2.Spec", ->
       originalParams = Teaspoon.params
       Teaspoon.params.file = "spec.js"
 
-      spec = new Teaspoon.Jasmine2.Spec(@mockSpec, @mockSuite)
+      spec = new Teaspoon.Jasmine2.Spec(@mockSpec)
       expect(spec.fullDescription).toBe("_full jasmine description_")
       expect(spec.description).toBe("_jasmine_description_")
       expect(spec.link).toBe("?grep=_full%20jasmine%20description_&file=spec.js")
@@ -35,11 +35,18 @@ describe "Teaspoon.Jasmine2.Spec", ->
 
       Teaspoon.params = originalParams
 
+    it "it does not set suite details if a spec is being focused (fit) because it doesn't contain a suite", ->
+      @mockSpec.parent = undefined
+
+      spec = new Teaspoon.Jasmine2.Spec(@mockSpec)
+      expect(spec.parent).toBe(undefined)
+      expect(spec.suiteName).toBe(undefined)
+
 
   describe "#errors", ->
 
     it "returns the expected object", ->
-      spec = new Teaspoon.Jasmine2.Spec(@mockSpec, @mockSuite)
+      spec = new Teaspoon.Jasmine2.Spec(@mockSpec)
       expect(spec.errors()).toEqual([{message: "_jasmine_message1_", stack: "_jasmine_stack_trace1_"}, {message: "_jasmine_message2_", stack: "_jasmine_stack_trace2_"}])
       @mockPassedSpecs.push(@mockFailedSpecs.splice(0, 1)[0])
       spec = new Teaspoon.Jasmine2.Spec(@mockSpec)

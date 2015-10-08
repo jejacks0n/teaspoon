@@ -22,6 +22,7 @@ class Teaspoon.Reporters.HTML.SpecView extends Teaspoon.Reporters.BaseView
 
   buildParent: ->
     parent = @spec.parent
+    return @reporter unless parent
     if parent.viewId
       @views.suites[parent.viewId]
     else

@@ -5,7 +5,8 @@ class Teaspoon.Jasmine2.Spec extends Teaspoon.Spec
     @description = @spec.description
     @link = @filterUrl(@fullDescription)
     @parent = @spec.parent
-    @suiteName = @parent.fullName
+    # spec may not have a parent if it's being focused
+    @suiteName = @parent.fullName if @parent
     @viewId = @spec.id
     @pending = @spec.status == "pending"
 
