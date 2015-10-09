@@ -1,5 +1,5 @@
 module Teaspoon
   module Jasmine
-    VERSION = "2.2.0"
+    VERSION = "2.3.4"
   end
 end

@@ -78,7 +78,7 @@ feature "Running in the browser", browser: true do
     before do
       path = File.expand_path("../../spec/javascripts", __FILE__)
       set_teaspoon_suite do |c|
-        c.use_framework :jasmine, "2.2.0"
+        c.use_framework :jasmine, "2.3.4"
         c.matcher = "#{path}/**/*_integration.{js,js.coffee,coffee}"
         c.helper = "jasmine2_helper"
       end

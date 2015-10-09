@@ -2,11 +2,27 @@
 
 #### Bug Fixes
 
+
+### 1.1.0
+
+#### Enhancements
+
+* Support invalid HTML in fixtures (#387)
+* Configurable JavaScript extensions via suite.js_extensions (#418)
+* Fail build when Phantomjs fails (b34c4)
+* Add new versions of test frameworks to the latest minor versions
+
+#### Bug Fixes
+
 * Retain file filter when navigating to specs (#327)
 * Provide details when Istanbul fails (#368)
 * Fix support for barebones Rails app (#372)
 * Fix pending count and nested styles (#373)
 * Fix total count in Jasmine 2 (#378)
+* Deprecate and fix suite.use_framework= (#394)
+* Fix capybara-webkit synchronization (#403)
+* Fix reporting in IE8 (97cf6)
+* Fix Jasmine's "fit" (f5e2a)
 
 
 ### 1.0.2 (5/5/15)
