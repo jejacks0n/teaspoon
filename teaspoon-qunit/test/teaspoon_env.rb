@@ -6,7 +6,7 @@ Teaspoon.configure do |config|
   config.fixture_paths << Teaspoon::FIXTURE_PATH
 
   config.suite do |suite|
-    suite.use_framework :qunit, "1.18.0"
+    suite.use_framework :qunit, "1.19.0"
     suite.matcher = "#{path}/**/*_test.{js,js.coffee,coffee}"
   end
 end
