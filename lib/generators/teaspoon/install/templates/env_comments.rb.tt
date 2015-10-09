@@ -68,6 +68,9 @@ Teaspoon.configure do |config|
     # into a single file. Similar to Rails' asset `debug: true` and `config.assets.debug = true` options. By default, 
     # Teaspoon expands all assets to provide more valuable stack traces that reference individual source files.
     #suite.expand_assets = true
+
+    # Non-.js file extensions Teaspoon should consider JavaScript files
+    #suite.js_extensions = [/(\.js)?.coffee/, /(\.js)?.es6/, ".es6.js"]
   end
 
   # Example suite. Since we're just filtering to files already within the root test/javascripts, these files will also

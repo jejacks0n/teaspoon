@@ -109,6 +109,7 @@ describe Teaspoon::Configuration::Suite do
     expect(subject.javascripts).to eq(["jasmine/1.3.1", "teaspoon/jasmine1"])
     expect(subject.stylesheets).to eq(["teaspoon"])
     expect(subject.expand_assets).to eq(true)
+    expect(subject.js_extensions).to eq([/(\.js)?\.coffee/, /(\.js)?\.es6/, ".es6.js"])
   end
 
   it "accepts a block that can override defaults" do
