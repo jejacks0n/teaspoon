@@ -2,6 +2,8 @@
 
 #### Bug Fixes
 
+* Fix teaspoon cli environment checking
+
 
 ### 1.1.0
 
