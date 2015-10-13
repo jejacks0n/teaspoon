@@ -145,8 +145,13 @@ module Teaspoon
 
       def filename(file)
         uri = URI(file)
-        params = uri.query.split("&").reject do |param|
-          RESERVED_PARAMS.include?(param.split("=").first)
+
+        if uri.query
+          params = uri.query.split("&").reject do |param|
+            RESERVED_PARAMS.include?(param.split("=").first)
+          end
+        else
+          params = []
         end
 
         filename = uri.path.sub(%r(^/assets/), "")
