@@ -56,6 +56,9 @@ module Teaspoon
           "Sets server to use with Rack.",
           "  e.g. webrick, thin"
 
+      opt :server_host, "--server-host HOST",
+          "Sets the server to use a specific host."
+
       opt :server_port, "--server-port PORT",
           "Sets the server to use a specific port."
 

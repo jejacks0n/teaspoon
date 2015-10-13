@@ -25,13 +25,14 @@ module Teaspoon
 
     # console runner specific
 
-    cattr_accessor :driver, :driver_options, :driver_timeout, :server, :server_port, :server_timeout, :fail_fast,
+    cattr_accessor :driver, :driver_options, :driver_timeout, :server, :server_host, :server_port, :server_timeout, :fail_fast,
                    :formatters, :color, :suppress_log,
                    :use_coverage
     @@driver         = Teaspoon::Driver.default
     @@driver_options = nil
     @@driver_timeout = 180
     @@server         = nil
+    @@server_host    = nil
     @@server_port    = nil
     @@server_timeout = 20
     @@fail_fast      = true

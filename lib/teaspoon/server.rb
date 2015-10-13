@@ -4,9 +4,10 @@ require "webrick"
 
 module Teaspoon
   class Server
-    attr_accessor :port
+    attr_accessor :port, :host
 
     def initialize
+      @host = Teaspoon.configuration.server_host || "127.0.0.1"
       @port = Teaspoon.configuration.server_port || find_available_port
     end
 
@@ -24,14 +25,14 @@ module Teaspoon
     end
 
     def responsive?
-      TCPSocket.new("127.0.0.1", port).close
+      TCPSocket.new(host, port).close
       true
     rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
       false
     end
 
     def url
-      "http://127.0.0.1:#{port}"
+      "http://#{host}:#{port}"
     end
 
     protected
@@ -54,6 +55,7 @@ module Teaspoon
     def rack_options
       {
         app: Rails.application,
+        Host: host,
         Port: port,
         environment: "test",
         AccessLog: [],
@@ -63,7 +65,7 @@ module Teaspoon
     end
 
     def find_available_port
-      server = TCPServer.new("127.0.0.1", 0)
+      server = TCPServer.new(host, 0)
       server.addr[1]
     ensure
       server.close if server

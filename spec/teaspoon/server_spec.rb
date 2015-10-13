@@ -44,6 +44,7 @@ describe Teaspoon::Server do
     it "creates a Rack::Server with the correct setting" do
       expected_opts = {
         app: Rails.application,
+        Host: subject.host,
         Port: subject.port,
         environment: "test",
         AccessLog: [],
@@ -76,12 +77,26 @@ describe Teaspoon::Server do
       expect(socket).to receive(:close)
       subject.responsive?
     end
+
+    it "checks a port in a given host to see if a server is running" do
+      subject.host = "0.0.0.0"
+      subject.port = 31337
+      expect(TCPSocket).to receive(:new).with("0.0.0.0", 31337).and_return(socket)
+      expect(socket).to receive(:close)
+      subject.responsive?
+    end
   end
 
   describe "#url" do
     it "returns a url for the server that includes the port" do
       subject.port = 31337
       expect(subject.url).to eq("http://127.0.0.1:31337")
+    end
+
+    it "returns a url for the server that includes the host" do
+      subject.host = "0.0.0.0"
+      subject.port = 31337
+      expect(subject.url).to eq("http://0.0.0.0:31337")
     end
   end
 
