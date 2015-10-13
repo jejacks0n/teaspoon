@@ -66,6 +66,7 @@ describe Teaspoon::CommandLine do
               --driver-timeout SECONDS     Sets the timeout for the driver to wait before exiting.
               --server SERVER              Sets server to use with Rack.
                                              e.g. webrick, thin
+              --server-host HOST           Sets the server to use a specific host.
               --server-port PORT           Sets the server to use a specific port.
               --server-timeout SECONDS     Sets the timeout that the server must start within.
           -F, --[no-]fail-fast             Abort after the first failing suite.
@@ -107,6 +108,7 @@ describe Teaspoon::CommandLine do
         driver_options: ["driver-options", "_driver_options_"],
         driver_timeout: ["driver-timeout", "_driver_timeout_"],
         server: ["server", "_server_"],
+        server_host: ["server-host", "_server_host_"],
         server_port: ["server-port", "_server_port_"],
         server_timeout: ["server-timeout", "_server_timeout_"],
         suite: ["suite", "_suite_"],

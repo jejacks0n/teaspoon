@@ -29,6 +29,7 @@ describe Teaspoon::Configuration do
     expect(subject.driver_options).to be_nil
     expect(subject.driver_timeout).to eq(180)
     expect(subject.server).to be_nil
+    expect(subject.server_host).to be_nil
     expect(subject.server_port).to be_nil
     expect(subject.server_timeout).to eq(20)
     expect(subject.formatters).to eq([:dot])
