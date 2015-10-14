@@ -350,7 +350,7 @@
         create();
       }
       if (jQueryAvailable()) {
-        parsed = $($.parseHTML(content, document, true));
+        parsed = jQuery(jQuery.parseHTML(content, document, true));
         results = [];
         for (i = j = 0, ref = parsed.length; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
           results.push(window.fixture.el.appendChild(parsed[i]));
@@ -365,7 +365,7 @@
       var ref;
       window.fixture.el = document.createElement("div");
       if (jQueryAvailable()) {
-        window.fixture.$el = $(window.fixture.el);
+        window.fixture.$el = jQuery(window.fixture.el);
       }
       window.fixture.el.id = "teaspoon-fixtures";
       return (ref = document.body) != null ? ref.appendChild(window.fixture.el) : void 0;
@@ -407,7 +407,7 @@
     };
 
     jQueryAvailable = function() {
-      return typeof window.$ === 'function';
+      return typeof window.jQuery === 'function';
     };
 
     return Fixture;
