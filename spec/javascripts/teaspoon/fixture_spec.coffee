@@ -86,11 +86,11 @@ describe "Teaspoon.Fixture", ->
       jQ = null
 
       beforeEach ->
-        jQ = window.$
-        window.$ = undefined
+        jQ = window.jQuery
+        window.jQuery = undefined
 
       afterEach ->
-        window.$ = jQ
+        window.jQuery = jQ
 
       it "does not support invalid HTML", ->
         fixture.set("<td>Row</td>")
