@@ -2,7 +2,7 @@ class Teaspoon.Fixture
 
   @cache: {}
   @el: null
-  @$el: null # will only be defined if window.$ is defined.
+  @$el: null # will only be defined if window.jQuery is defined.
   @json: []
 
   # Public API
@@ -70,7 +70,7 @@ class Teaspoon.Fixture
     create() unless window.fixture.el
 
     if jQueryAvailable()
-      parsed = $($.parseHTML(content, document, true))
+      parsed = jQuery(jQuery.parseHTML(content, document, true))
       window.fixture.el.appendChild(parsed[i]) for i in [0...parsed.length]
     else
       window.fixture.el.innerHTML += content
@@ -78,7 +78,7 @@ class Teaspoon.Fixture
 
   create = =>
     window.fixture.el = document.createElement("div")
-    window.fixture.$el = $(window.fixture.el) if jQueryAvailable()
+    window.fixture.$el = jQuery(window.fixture.el) if jQueryAvailable()
     window.fixture.el.id = "teaspoon-fixtures"
     document.body?.appendChild(window.fixture.el)
 
@@ -105,4 +105,4 @@ class Teaspoon.Fixture
 
 
   jQueryAvailable = ->
-    typeof(window.$) == 'function'
+    typeof(window.jQuery) == 'function'
