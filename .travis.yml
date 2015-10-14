@@ -1,3 +1,5 @@
+sudo: false
+cache: bundler
 rvm:
   - ruby-1
   - ruby-2
