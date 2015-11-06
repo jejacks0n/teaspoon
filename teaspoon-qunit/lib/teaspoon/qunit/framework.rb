@@ -7,7 +7,7 @@ module Teaspoon
       framework_name :qunit
 
       # register standard versions
-      versions = ["1.12.0", "1.13.0", "1.14.0", "1.15.0", "1.16.0", "1.17.1", "1.18.0", "1.19.0"]
+      versions = ["1.12.0", "1.13.0", "1.14.0", "1.15.0", "1.16.0", "1.17.1", "1.18.0", "1.19.0", "1.20.0"]
 
       versions.each do |version|
         register_version version, "qunit/#{version}.js",
