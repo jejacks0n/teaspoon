@@ -70,6 +70,14 @@ module Teaspoon
     end
 
     if !loaded_from_teaspoon_root?
+      Rake::Task["release"].clear
+    end
+
+    desc "Build and push teaspoon-#{framework} to Rubygems\n"
+    task "release" => ["build", "release:guard_clean", "release:rubygem_push"] do
+    end
+
+    if !loaded_from_teaspoon_root?
       Rake::Task["default"].prerequisites.clear
       Rake::Task["default"].clear
 
