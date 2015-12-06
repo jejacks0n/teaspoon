@@ -13,9 +13,12 @@ module Teaspoon
       @data = data
       @executable = Teaspoon::Instrumentation.executable
       @config = self.class.configuration
+
+      raise Teaspoon::CoverageResultsNotFoundError unless @data
     end
 
     def generate_reports(&block)
+
       input_path do |input|
         results = []
         @config.reports.each do |format|

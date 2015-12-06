@@ -43,6 +43,13 @@ describe Teaspoon::Coverage do
     it "finds the executable from instrumentation" do
       expect(subject.instance_variable_get(:@executable)).to eq("/path/to/executable")
     end
+
+    it "raises an exception without data" do
+      expect { described_class.new("_suite_", nil) }.to raise_error(
+        Teaspoon::CoverageResultsNotFoundError,
+        "You requested coverage reports, but no results were found. Are all files being ignored in your coverage config? If you have expand_assets set to false, you will need to remove spec_helper from the ignore list."
+      )
+    end
   end
 
   describe "#generate_reports" do

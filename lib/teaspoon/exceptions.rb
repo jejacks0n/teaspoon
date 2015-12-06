@@ -151,4 +151,11 @@ module Teaspoon
       super(msg)
     end
   end
+
+  class CoverageResultsNotFoundError < Teaspoon::Error
+    def initialize(msg = nil)
+      msg ||= "You requested coverage reports, but no results were found. Are all files being ignored in your coverage config? If you have expand_assets set to false, you will need to remove spec_helper from the ignore list."
+      super(msg)
+    end
+  end
 end
