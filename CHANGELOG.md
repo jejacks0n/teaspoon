@@ -3,6 +3,13 @@
 #### Bug Fixes
 
 
+### 1.1.2
+
+#### Bug Fixes
+
+* Fix for sprockets_rails 3.0.0 change to precompile rules
+
+
 ### 1.1.1
 
 #### Bug Fixes
