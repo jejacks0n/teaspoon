@@ -9,7 +9,7 @@ gemfile:
   - gemfiles/rails_5.gemfile
 matrix:
   exclude:
-    - rvm: ruby-1
+    - rvm: 1.9.3
       gemfile: gemfiles/rails_5.gemfile
 before_script:
   - sh -e /etc/init.d/xvfb start && npm install -g istanbul
