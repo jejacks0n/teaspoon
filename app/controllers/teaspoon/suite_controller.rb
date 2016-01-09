@@ -1,6 +1,10 @@
 class Teaspoon::SuiteController < ActionController::Base
-  before_filter :check_env
-  before_filter :prepend_fixture_paths
+  def self.before(*args)
+    respond_to?(:before_action) ? before_action(*args) : before_filter(*args)
+  end
+
+  before :check_env
+  before :prepend_fixture_paths
 
   layout false
 
@@ -14,8 +18,8 @@ class Teaspoon::SuiteController < ActionController::Base
 
   def hook
     hooks = Teaspoon::Suite.new(params).hooks[params[:hook].to_s]
-    hooks.each { |hook| hook.call(params[:args]) }
-    render nothing: true
+    hooks.each { |hook| hook.call(hook_params(params[:args])) }
+    head(:success)
   end
 
   def fixtures
@@ -32,5 +36,10 @@ class Teaspoon::SuiteController < ActionController::Base
     Teaspoon.configuration.fixture_paths.each do |path|
       prepend_view_path Teaspoon.configuration.root.join(path)
     end
+  end
+
+  def hook_params(params)
+    return params.permit!.to_h if params.respond_to?(:permit!)
+    params
   end
 end

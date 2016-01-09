@@ -1,11 +1,18 @@
 sudo: false
 cache: bundler
 rvm:
-  - ruby-1
-  - ruby-2
+  - 1.9.3
+  - 2.3.0
 gemfile:
   - gemfiles/rails_3.gemfile
   - gemfiles/rails_4.gemfile
+  - gemfiles/rails_5.gemfile
+matrix:
+  exclude:
+    - rvm: 1.9.3
+      gemfile: gemfiles/rails_4.gemfile
+    - rvm: 1.9.3
+      gemfile: gemfiles/rails_5.gemfile
 before_script:
   - sh -e /etc/init.d/xvfb start && npm install -g istanbul
 env:

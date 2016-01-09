@@ -106,7 +106,7 @@ begin
     module ActionView::Helpers::AssetTagHelper
       def javascript_include_tag(*sources)
         options = sources.extract_options!.stringify_keys
-        path_options = options.extract!('protocol', 'extname').symbolize_keys
+        path_options = options.extract!('protocol', 'extname', 'host').symbolize_keys
         path_options[:debug] = options['allow_non_precompiled']
         sources.uniq.map { |source|
           tag_options = {

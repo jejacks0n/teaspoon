@@ -2,6 +2,18 @@
 
 #### Bug Fixes
 
+### 1.1.5
+
+#### Enhancements
+
+* Adds support for Rails 5
+
+#### Bug Fixes
+
+* Fixes an ActionView version related issue.
+* Changes before_filter to before_action where possible (Rails 3 vs. Rails 5)
+
+
 ### 1.1.4
 
 #### Bug Fixes
@@ -12,6 +24,10 @@
 ### 1.1.3
 
 This was an erroneous release, of the rails_5 branch. oops. 
+
+#### Bug Fixes
+
+* Fix for version check of ActionView, to expand the version checking for security/bug fix releases.
 
 
 ### 1.1.2
