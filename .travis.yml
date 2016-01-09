@@ -6,6 +6,11 @@ rvm:
 gemfile:
   - gemfiles/rails_3.gemfile
   - gemfiles/rails_4.gemfile
+  - gemfiles/rails_5.gemfile
+matrix:
+  exclude:
+    - rvm: ruby-1
+      gemfile: gemfiles/rails_5.gemfile
 before_script:
   - sh -e /etc/init.d/xvfb start && npm install -g istanbul
 env:

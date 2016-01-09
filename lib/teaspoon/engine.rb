@@ -98,7 +98,7 @@ end
 
 begin
   require 'action_view'
-  if ActionView::VERSION::STRING == '4.2.5'
+  if ActionView::VERSION::STRING == "4.2.5" || ActionView::VERSION::MAJOR >= 5
     require 'action_view/helpers/asset_tag_helper'
     module ActionView::Helpers::AssetTagHelper
       def javascript_include_tag(*sources)
