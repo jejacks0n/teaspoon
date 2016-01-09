@@ -6,7 +6,7 @@ feature "Running in the console", shell: true do
       Starting the Teaspoon server...
       Teaspoon running default suite at http://127\\.0\\.0\\.1:31337/teaspoon/default
       TypeError: undefined is not a constructor \\(evaluating 'foo\\(\\)'\\)
-        # integration/spec_helper(\\.self[^\.]*)\\.js:12
+        # integration/spec_helper(\\.self[^\.]*)?\\.js:12
     OUTPUT
   end
 
@@ -49,8 +49,7 @@ feature "Running in the console", shell: true do
       gem 'teaspoon', path: '#{Teaspoon::DEV_PATH}'
       gem 'teaspoon-mocha', path: '#{Teaspoon::DEV_PATH}'
     GEMFILE
-    # install_teaspoon("--coffee --version=#{version}")
-    install_teaspoon("--coffee")
+    install_teaspoon("--coffee --version=#{version}")
     copy_integration_files("spec", File.expand_path("../", __FILE__))
   end
 

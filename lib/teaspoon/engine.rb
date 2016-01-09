@@ -96,19 +96,22 @@ module Teaspoon
   end
 end
 
-require 'action_view/helpers/asset_tag_helper'
-if ActionView::VERSION::STRING == '4.2.5'
-  module ActionView::Helpers::AssetTagHelper
-    def javascript_include_tag(*sources)
-      options = sources.extract_options!.stringify_keys
-      path_options = options.extract!('protocol', 'extname').symbolize_keys
-      path_options[:debug] = options['allow_non_precompiled']
-      sources.uniq.map { |source|
-        tag_options = {
-          "src" => path_to_javascript(source, path_options)
-        }.merge!(options)
-        content_tag(:script, "", tag_options)
-      }.join("\n").html_safe
+begin
+  require 'action_view/helpers/asset_tag_helper'
+  if ActionView::VERSION::STRING == '4.2.5'
+    module ActionView::Helpers::AssetTagHelper
+      def javascript_include_tag(*sources)
+        options = sources.extract_options!.stringify_keys
+        path_options = options.extract!('protocol', 'extname').symbolize_keys
+        path_options[:debug] = options['allow_non_precompiled']
+        sources.uniq.map { |source|
+          tag_options = {
+            "src" => path_to_javascript(source, path_options)
+          }.merge!(options)
+          content_tag(:script, "", tag_options)
+        }.join("\n").html_safe
+      end
     end
   end
+rescue
 end
