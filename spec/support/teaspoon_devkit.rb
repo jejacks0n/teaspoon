@@ -39,12 +39,12 @@ module Teaspoon
 
     def run_teaspoon(opts = "")
       set_rails_env
-      run_simple("bundle exec teaspoon #{opts}", fail_on_error: false)
+      run_simple("bundle exec teaspoon #{opts}", false)
     end
 
     def rake_teaspoon(envs = "")
       set_rails_env
-      run_simple("bundle exec rake teaspoon #{envs}", fail_on_error: false)
+      run_simple("bundle exec rake teaspoon #{envs}", false)
     end
 
     def copy_integration_files(suffix, from, to = "spec")
