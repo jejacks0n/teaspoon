@@ -1,8 +1,8 @@
 sudo: false
 cache: bundler
 rvm:
-  - ruby-1
-  - ruby-2
+  - 1.9.3
+  - 2.2.2
 gemfile:
   - gemfiles/rails_3.gemfile
   - gemfiles/rails_4.gemfile
