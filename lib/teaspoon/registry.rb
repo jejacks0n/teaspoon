@@ -26,7 +26,7 @@ module Teaspoon
       driver.call
     end
 
-    def equal?(one, two)
+    def matches?(one, two)
       normalize_name(one) == normalize_name(two)
     end
 

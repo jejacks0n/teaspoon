@@ -76,12 +76,12 @@ describe Teaspoon::Registry do
     end
   end
 
-  describe ".equal?" do
-    it "determines if the two conditions are equal after processing" do
-      expect(subject.equal?(:capybara_webkit, :capybara_webkit)).to equal(true)
-      expect(subject.equal?(:capybara_webkit, "capybara-webkit")).to equal(true)
-      expect(subject.equal?("capybara-webkit", :capybara_webkit)).to equal(true)
-      expect(subject.equal?(:capybara_webkit, :phantomjs)).to equal(false)
+  describe ".matches?" do
+    it "determines if the two conditions are matches after processing" do
+      expect(subject.matches?(:capybara_webkit, :capybara_webkit)).to equal(true)
+      expect(subject.matches?(:capybara_webkit, "capybara-webkit")).to equal(true)
+      expect(subject.matches?("capybara-webkit", :capybara_webkit)).to equal(true)
+      expect(subject.matches?(:capybara_webkit, :phantomjs)).to equal(false)
     end
   end
 

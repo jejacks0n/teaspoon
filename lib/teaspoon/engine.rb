@@ -80,7 +80,7 @@ module Teaspoon
       private
 
       def self.using_phantomjs?
-        Teaspoon::Driver.equal?(Teaspoon.configuration.driver, :phantomjs)
+        Teaspoon::Driver.matches?(Teaspoon.configuration.driver, :phantomjs)
       end
 
       def self.render_exceptions_with_javascript
