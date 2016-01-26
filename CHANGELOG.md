@@ -2,6 +2,12 @@
 
 #### Bug Fixes
 
+### 1.1.3
+
+#### Bug Fixes
+
+* Fix for version check of ActionView, to expand the version checking for security/bug fix releases.
+
 
 ### 1.1.2
 
