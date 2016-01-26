@@ -17,11 +17,21 @@ Feedback, ideas and pull requests are always welcome, or you can hit us up on Tw
 
 [![Join the chat at https://gitter.im/modeset/teaspoon](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/modeset/teaspoon?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-The goal of Teaspoon is to stay simple while also providing the most complete Javascript testing solution for Rails.
+The goal of Teaspoon is to be simple to use while also providing the most complete Javascript testing solution for Rails.
 
 Teaspoon takes advantage of the Rails asset pipeline, and ships with support for Jasmine, Mocha, and QUnit.
 
 If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), check out the [guard-teaspoon](https://github.com/modeset/guard-teaspoon) project. Or, if you want to use the [Spring](https://github.com/rails/spring) preloader, try the unofficial [spring-commands-teaspoon](https://github.com/alejandrobabio/spring-commands-teaspoon).
+
+
+## Developer Note
+
+We've added experimental Rails 5 support. If you're looking to use Teaspoon with Rails 5, please try out the rails_5 branch.
+
+```
+gem "teaspoon-mocha", github: "modeset/teaspoon", branch: "rails_5" 
+```
+
 
 ## Screenshots
 
@@ -437,11 +447,11 @@ We encourage you to experiment and let us know. Feel free to create a wiki artic
 
 ## Alternative Projects
 
-[Konacha](https://github.com/jfirebaugh/konacha)
-[Jasminerice](https://github.com/bradphelan/jasminerice)
-[Evergreen](https://github.com/abepetrillo/evergreen)
-[jasmine-rails](https://github.com/searls/jasmine-rails)
-[guard-jasmine](https://github.com/netzpirat/guard-jasmine)
+- [Konacha](https://github.com/jfirebaugh/konacha)
+- [Jasminerice](https://github.com/bradphelan/jasminerice)
+- [Evergreen](https://github.com/abepetrillo/evergreen)
+- [jasmine-rails](https://github.com/searls/jasmine-rails)
+- [guard-jasmine](https://github.com/netzpirat/guard-jasmine)
 
 
 ## License
