@@ -2,6 +2,17 @@
 
 #### Bug Fixes
 
+### 1.1.4
+
+#### Bug Fixes
+
+* Fixes an ActionView version related issue.
+
+
+### 1.1.3
+
+This was an erroneous release, of the rails_5 branch. oops. 
+
 
 ### 1.1.2
 
