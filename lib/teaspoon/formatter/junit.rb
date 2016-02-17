@@ -9,7 +9,7 @@ module Teaspoon
       def log_runner(result)
         log_line(%{<?xml version="1.0" encoding="UTF-8"?>})
         log_line(%{<testsuites name="Teaspoon">})
-        log_line(%{<testsuite name="#{escape(@suite_name)}" tests="#{@total_count}" time="#{result.start}">})
+        log_line(%{<testsuite name="#{escape(@suite_name)}" tests="#{@total_count}" timestamp="#{result.start.iso8601}">})
       end
 
       def log_suite(result)
