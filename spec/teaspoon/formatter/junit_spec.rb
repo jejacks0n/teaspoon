@@ -11,7 +11,7 @@ describe Teaspoon::Formatter.fetch(:junit) do
   end
 
   describe "#runner" do
-    let(:result) { double(start: Time.current, total: 42) }
+    let(:result) { double(start: "2016-02-17T06:14:56.064Z", total: 42) }
 
     before do
       subject.instance_variable_set(:@suite_name, "not_default&")
@@ -19,7 +19,8 @@ describe Teaspoon::Formatter.fetch(:junit) do
 
     it "starts the suite" do
       subject.runner(result)
-      expect(@log).to eq(%{<?xml version="1.0" encoding="UTF-8"?>\n<testsuites name="Teaspoon">\n<testsuite name="not_default&amp;" tests="42" timestamp="#{result.start.iso8601}">\n})
+      start_time = Time.parse(result.start).iso8601
+      expect(@log).to eq(%{<?xml version="1.0" encoding="UTF-8"?>\n<testsuites name="Teaspoon">\n<testsuite name="not_default&amp;" tests="42" timestamp="#{start_time}">\n})
     end
   end
 
