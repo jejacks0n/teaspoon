@@ -91,11 +91,12 @@ Teaspoon.configure do |config|
   # Rake:
   # teaspoon DRIVER=phantomjs SERVER_PORT=31337 FAIL_FAST=true FORMATTERS=junit suite=my_suite
 
-  # Specify which headless driver to use. Supports PhantomJS and Selenium Webdriver.
+  # Specify which headless driver to use. Supports PhantomJS, Selenium Webdriver and BrowserStack Webdriver.
   #
   # Available: <%= Teaspoon::Driver.available.keys.map{|f| ":#{f}"}.join(", ") %>
   # PhantomJS: https://github.com/modeset/teaspoon/wiki/Using-PhantomJS
   # Selenium Webdriver: https://github.com/modeset/teaspoon/wiki/Using-Selenium-WebDriver
+  # BrowserStack Webdriver: https://github.com/modeset/teaspoon/wiki/Using-BrowserStack-WebDriver
   # Capybara Webkit: https://github.com/modeset/teaspoon/wiki/Using-Capybara-Webkit
   #config.driver = :<%= Teaspoon::Driver.default %>
 
@@ -103,6 +104,7 @@ Teaspoon.configure do |config|
   #
   # PhantomJS: https://github.com/modeset/teaspoon/wiki/Using-PhantomJS
   # Selenium Webdriver: https://github.com/modeset/teaspoon/wiki/Using-Selenium-WebDriver
+  # BrowserStack Webdriver: https://github.com/modeset/teaspoon/wiki/Using-BrowserStack-WebDriver
   # Capybara Webkit: https://github.com/modeset/teaspoon/wiki/Using-Capybara-Webkit
   #config.driver_options = nil
 

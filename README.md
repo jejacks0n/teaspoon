@@ -11,7 +11,7 @@ Teaspoon
 <img src="https://raw.github.com/modeset/teaspoon/master/screenshots/logo_big.png" alt="Logo by Morgan Keys" align="right" />
 <sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
 
-Teaspoon is a Javascript test runner built for Rails. It can run tests in the browser and headless using PhantomJS, Selenium WebDriver, or Capybara Webkit.
+Teaspoon is a Javascript test runner built for Rails. It can run tests in the browser and headless using PhantomJS, Selenium WebDriver, or Capybara Webkit. It can also run your tests on selenium-webgrid providers such as [BrowserStack](https://www.browserstack.com).
 
 Feedback, ideas and pull requests are always welcome, or you can hit us up on Twitter @modeset_.
 
@@ -443,6 +443,16 @@ Some build services also support selenium based setups using Xvfb and Firefox. T
 If you want to generate reports that CI can use you can install Istanbul for coverage reports -- and output the report using the cobertura format, which Hudson and some others can read. You can track spec failure rates by using the tap formatter, or on TeamCity setups you can use the teamcity formatter. A junit formatter is available as well.
 
 We encourage you to experiment and let us know. Feel free to create a wiki article about what you did to get it working on your CI setup.
+
+## Testing on [BrowserStack](https://www.browserstack.com)
+
+Running your javascript tests on BrowserStack infrastructure is easy. The support is available as a `broserstack` driver.
+
+In your `teaspoon_env.rb` file, add `config.driver = :browserstack`. You must add the browsers you need to test on as an array of hash with key `capabilities` in `config.driver_options`. More details with config examples are available [here](https://github.com/modeset/teaspoon/wiki/Using-BrowserStack-WebDriver)
+
+You can run 10 tests in parallel by default. The number of tests runnning in parallel can be configured by changing `max_parallel` in `config.driver_options`
+
+With these changes, you can run `bundle exec teaspoon` on your command-line and can see your tests running on the [BrowserStack Automate Dashboard](https://browserstack.com/automate).
 
 
 ## Alternative Projects
