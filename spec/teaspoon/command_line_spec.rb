@@ -59,6 +59,7 @@ describe Teaspoon::CommandLine do
           -d, --driver DRIVER              Specify driver:
                                              phantomjs (default)
                                              selenium
+                                             browserstack
                                              capybara_webkit
               --driver-options OPTIONS     Specify driver-specific options to pass into the driver.
                                              e.g. "--ssl-protocol=any --ssl-certificates-path=/path/to/certs".
