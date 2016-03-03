@@ -444,15 +444,16 @@ If you want to generate reports that CI can use you can install Istanbul for cov
 
 We encourage you to experiment and let us know. Feel free to create a wiki article about what you did to get it working on your CI setup.
 
+
 ## Testing on [BrowserStack](https://www.browserstack.com)
 
-Running your javascript tests on BrowserStack infrastructure is easy. The support is available as a `broserstack` driver.
+Running your javascript tests on the BrowserStack infrastructure is easy. The support is available as a `browserstack` driver.
 
-In your `teaspoon_env.rb` file, add `config.driver = :browserstack`. You must add the browsers you need to test on as an array of hash with key `capabilities` in `config.driver_options`. More details with config examples are available [here](https://github.com/modeset/teaspoon/wiki/Using-BrowserStack-WebDriver)
+In your `teaspoon_env.rb` file, add `config.driver = :browserstack`. You must add the browsers you need to test on as an array of hash with key `capabilities` in `config.driver_options`. More details with config examples are available on the  [Using BrowserStack](https://github.com/modeset/teaspoon/wiki/Using-BrowserStack-WebDriver)wiki article.
 
 You can run 10 tests in parallel by default. The number of tests runnning in parallel can be configured by changing `max_parallel` in `config.driver_options`
 
-With these changes, you can run `bundle exec teaspoon` on your command-line and can see your tests running on the [BrowserStack Automate Dashboard](https://browserstack.com/automate).
+With these changes, you can run Teaspoon locally and can see your tests running on the [BrowserStack Automate Dashboard](https://browserstack.com/automate).
 
 
 ## Alternative Projects
