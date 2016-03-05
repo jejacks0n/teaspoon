@@ -57,7 +57,7 @@ gem "teaspoon-mocha", github: "modeset/teaspoon", branch: "rails_5"
 8. [Test Frameworks](#test-frameworks)
 9. [Support Libraries](#support-libraries)
 10. [CI Support](#ci-support)
-
+11. [With BrowserStack](#with-browserstack)
 
 ## Installation
 
@@ -445,15 +445,15 @@ If you want to generate reports that CI can use you can install Istanbul for cov
 We encourage you to experiment and let us know. Feel free to create a wiki article about what you did to get it working on your CI setup.
 
 
-## Testing on [BrowserStack](https://www.browserstack.com)
+## With [BrowserStack](https://www.browserstack.com)
 
-Running your javascript tests on the BrowserStack infrastructure is easy. The support is available as a `browserstack` driver.
+Running your javascript tests on the BrowserStack infrastructure is easy with the included `browserstack` driver.
 
-In your `teaspoon_env.rb` file, add `config.driver = :browserstack`. You must add the browsers you need to test on as an array of hash with key `capabilities` in `config.driver_options`. More details with config examples are available on the  [Using BrowserStack](https://github.com/modeset/teaspoon/wiki/Using-BrowserStack-WebDriver)wiki article.
+In `teaspoon_env.rb` configure your driver to `config.driver = :browserstack`. You must add the browsers you'd like to test on as an array of hashes with key `capabilities` in `config.driver_options`. More details about the driver configurations are available on the [Using BrowserStack WebDriver](https://github.com/modeset/teaspoon/wiki/Using-BrowserStack-WebDriver) wiki article.
 
-You can run 10 tests in parallel by default. The number of tests runnning in parallel can be configured by changing `max_parallel` in `config.driver_options`
+By default you can run 10 tests in parallel by default, and the number of tests running in parallel can be specified using the `max_parallel` driver option.
 
-With these changes, you can run Teaspoon locally and can see your tests running on the [BrowserStack Automate Dashboard](https://browserstack.com/automate).
+Now you can run Teaspoon locally and can see your tests running on the [BrowserStack Automate Dashboard](https://browserstack.com/automate).
 
 
 ## Alternative Projects
