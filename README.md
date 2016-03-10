@@ -29,7 +29,7 @@ If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), chec
 We've added experimental Rails 5 support. If you're looking to use Teaspoon with Rails 5, please try out the rails_5 branch.
 
 ```
-gem "teaspoon-mocha", github: "modeset/teaspoon", branch: "rails_5" 
+gem "teaspoon-jasmine", github: "modeset/teaspoon", branch: "rails_5" 
 ```
 
 
