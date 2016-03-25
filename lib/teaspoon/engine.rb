@@ -51,6 +51,9 @@ module Teaspoon
 
     def self.inject_instrumentation
       Sprockets::Environment.send(:include, Teaspoon::SprocketsInstrumentation)
+      Sprockets::CachedEnvironment.send(:include, Teaspoon::SprocketsInstrumentation)
+    rescue NameError
+      # Handle cached environment in Sprockets 2.x
       Sprockets::Index.send(:include, Teaspoon::SprocketsInstrumentation)
     end
 
