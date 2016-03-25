@@ -24,15 +24,6 @@ Teaspoon takes advantage of the Rails asset pipeline, and ships with support for
 If you'd like to use Teaspoon with [Guard](https://github.com/guard/guard), check out the [guard-teaspoon](https://github.com/modeset/guard-teaspoon) project. Or, if you want to use the [Spring](https://github.com/rails/spring) preloader, try the unofficial [spring-commands-teaspoon](https://github.com/alejandrobabio/spring-commands-teaspoon).
 
 
-## Developer Note
-
-We've added experimental Rails 5 support. If you're looking to use Teaspoon with Rails 5, please try out the rails_5 branch.
-
-```
-gem "teaspoon-jasmine", github: "modeset/teaspoon", branch: "rails_5" 
-```
-
-
 ## Screenshots
 
 ### Running in the console
