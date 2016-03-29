@@ -271,6 +271,20 @@ config.suite :my_suite do |suite|
 end
 ```
 
+When defining multiple suites and running the tests on a CI (like Jenkins), you might need the output of `bundle exec teaspoon` in your XML-reports.
+To get one XML-file per suite you are running, you might want to add e.g a `junit` formatter which creates one result file per suite. 
+ 
+```ruby
+config.formatters = ["junit>#{Rails.root.join(["spec", "reports", "teaspoon_%{suite_name}.xml"])}"]
+``` 
+
+Will create a single file for each defined test-suite under `spec/reports/teasoon_%{suite_name}.xml`. 
+Allowed placeholders are:
+
+- `suite_name`: the name defined by your config (`config.suite :my_suite ...`)
+- `date`: the execution timestamp of your test (`Date.now.to_i`)
+
+
 ### Hooks
 
 Hooks are designed to facilitate loading fixtures or other things that might be required on the back end before, after, or during running a suite or test.

@@ -7,7 +7,7 @@ module Teaspoon
 
       def initialize(suite_name = :default, output_file = nil)
         @suite_name  = suite_name.to_s
-        @output_file = output_file
+        @output_file = parse_output_file(output_file)
         @stdout      = ""
         @suite       = nil
         @last_suite  = nil
@@ -153,6 +153,24 @@ module Teaspoon
         filename = uri.path.sub(%r(^/assets/), "")
         filename += "?#{params.join("&")}" if params.any?
         filename
+      end
+
+      def parse_output_file(output)
+        return output unless output
+        output.gsub(/%{([^}]*)}/) { parse_output_capture($1) }
+      end
+
+      def parse_output_capture(cap)
+        case cap
+        when "suite_name"
+          @suite_name
+        when "date"
+          Time.now.to_i
+        else
+          warn ["Teaspoon::Formatter - Output File can only contain the placeholders %{suite_name} or %{date}.",
+                "%{#{cap}} is not supported and will be ignored."].join("\n")
+          ""
+        end
       end
     end
   end
