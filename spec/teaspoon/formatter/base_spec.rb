@@ -277,4 +277,81 @@ describe Teaspoon::Formatter::Base do
       )
     end
   end
+
+  context "with placeholders in output_file" do
+    let(:filename_parsed) { "_output_file_/foo_#{@time_now.to_i}.xml" }
+    let(:filename_un_parsed) { "_output_file_/%{suite_name}_%{date}.xml" }
+
+    before do
+      allow(File).to receive(:open)
+      @time_now = Time.now
+    end
+    before(:each) do
+      allow(Time).to receive(:now).and_return(@time_now)
+    end
+
+    describe "#parse_output_file" do
+      subject { Teaspoon::Formatter::Base.new(:foo) }
+
+      it "should return the same if no placeholder present" do
+        foo = "random_output_file_{with}_no_{suite_name}_placeholder"
+        expect(subject.send(:parse_output_file, foo)).to eq foo
+      end
+      it "should replace placeholders not valid" do
+        foo = "random_%{with}"
+        expect(subject.send(:parse_output_file, foo)).to eq "random_"
+      end
+
+      it "should replace suite_name placeholder" do
+        foo = "random_%{suite_name}"
+        expect(subject.send(:parse_output_file, foo)).to eq "random_foo"
+      end
+      it "should replace date placeholder" do
+        foo = "random_%{date}"
+        expect(subject.send(:parse_output_file, foo)).to eq "random_#{@time_now.to_i}"
+      end
+    end
+
+    describe "#parse_output_capture" do
+      subject { Teaspoon::Formatter::Base.new(:foo) }
+
+      it "should return suite_name" do
+        expect(subject.send(:parse_output_capture, "suite_name")).to eq "foo"
+      end
+
+      it "should replace placeholders not valid" do
+        expect(subject.send(:parse_output_capture, "with")).to be_empty
+      end
+
+      it "should warn if placeholders not valid" do
+        expect { subject.send(:parse_output_capture, "with") }.to output.to_stderr
+      end
+
+      it "should return timestamp" do
+        expect(subject.send(:parse_output_capture, "date")).to eq @time_now.to_i
+      end
+    end
+
+    describe "parse_output_file correctly" do
+
+      subject { Teaspoon::Formatter::Base.new(:foo, filename_un_parsed) }
+
+      it "should set output file name to parsed value" do
+        expect(subject.instance_variable_get(:@output_file)).to eq(filename_parsed)
+      end
+    end
+
+    describe "parse output file correctly and print warning if placeholder not known" do
+      let(:filename_wrong_unparsed) { "_output_file_/%{suite_name}_%{date}%{foo}.xml" }
+
+      it "should set output file name to parsed value" do
+        subject = Teaspoon::Formatter::Base.new(:foo, filename_wrong_unparsed)
+        expect(subject.instance_variable_get(:@output_file)).to eq(filename_parsed)
+      end
+
+      it "should print warnings to std_error" do
+        expect { Teaspoon::Formatter::Base.new(:foo, filename_wrong_unparsed) }.to output.to_stderr
+      end
+    end
+  end
 end
