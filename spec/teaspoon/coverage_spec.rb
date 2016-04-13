@@ -60,10 +60,11 @@ describe Teaspoon::Coverage do
 
     it "generates reports using istanbul and passes them to the block provided" do
       stub_exit_code(ExitCodes::SUCCESS)
-      html_report  = %w[/path/to/executable report --include=/temp_path/coverage.json --dir\ output/path/_suite_ html]
-      text1_report = %w[/path/to/executable report --include=/temp_path/coverage.json --dir\ output/path/_suite_ text]
-      text2_report = %w[/path/to/executable report --include=/temp_path/coverage.json --dir\ output/path/_suite_ text-summary]
-      expect(Open3).to receive(:capture2e).with(*html_report ).and_return(["_html_report_",  exit_status_0])
+      base_report  = %w[/path/to/executable report --include=/temp_path/coverage.json --dir\ output/path/_suite_]
+      html_report  = base_report + %w[html]
+      text1_report = base_report + %w[text]
+      text2_report = base_report + %w[text-summary]
+      expect(Open3).to receive(:capture2e).with(*html_report). and_return(["_html_report_",  exit_status_0])
       expect(Open3).to receive(:capture2e).with(*text1_report).and_return(["_text1_report_", exit_status_0])
       expect(Open3).to receive(:capture2e).with(*text2_report).and_return(["_text2_report_", exit_status_0])
       subject.generate_reports { |r| @result = r }
@@ -93,7 +94,8 @@ describe Teaspoon::Coverage do
     it "checks the coverage using istanbul and passes them to the block provided" do
       stub_exit_code(ExitCodes::EXCEPTION)
       opts = %w[--statements=42 --functions=66.6 --branches=0 --lines=100]
-      expect(Open3).to receive(:capture2e).with(*["/path/to/executable", "check-coverage", *opts, "/temp_path/coverage.json"]).
+      args = ["/path/to/executable", "check-coverage", *opts, "/temp_path/coverage.json"]
+      expect(Open3).to receive(:capture2e).with(*args).
         and_return(["some mumbo jumbo\nERROR: _failure1_\nmore garbage\nERROR: _failure2_", exit_status_1])
       subject.check_thresholds { |r| @result = r }
       expect(@result).to eq("_failure1_\n_failure2_")
