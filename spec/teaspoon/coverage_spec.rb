@@ -6,6 +6,9 @@ describe Teaspoon::Coverage do
   let(:data) { { foo: "bar" } }
   let(:config) { double }
 
+  let(:exit_status_0) { OpenStruct.new exitstatus: 0 }
+  let(:exit_status_1) { OpenStruct.new exitstatus: 1 }
+
   before do
     allow(Teaspoon::Instrumentation).to receive(:executable).and_return("/path/to/executable")
     allow(Teaspoon.configuration).to receive(:use_coverage).and_return(true)
@@ -57,19 +60,19 @@ describe Teaspoon::Coverage do
 
     it "generates reports using istanbul and passes them to the block provided" do
       stub_exit_code(ExitCodes::SUCCESS)
-      html_report = "/path/to/executable report --include=/temp_path/coverage.json --dir output/path/_suite_ html 2>&1"
-      text1_report = "/path/to/executable report --include=/temp_path/coverage.json --dir output/path/_suite_ text 2>&1"
-      text2_report = "/path/to/executable report --include=/temp_path/coverage.json --dir output/path/_suite_ text-summary 2>&1"
-      expect(subject).to receive(:`).with(html_report).and_return("_html_report_")
-      expect(subject).to receive(:`).with(text1_report).and_return("_text1_report_")
-      expect(subject).to receive(:`).with(text2_report).and_return("_text2_report_")
+      html_report  = %w[/path/to/executable report --include=/temp_path/coverage.json --dir\ output/path/_suite_ html]
+      text1_report = %w[/path/to/executable report --include=/temp_path/coverage.json --dir\ output/path/_suite_ text]
+      text2_report = %w[/path/to/executable report --include=/temp_path/coverage.json --dir\ output/path/_suite_ text-summary]
+      expect(Open3).to receive(:capture2e).with(*html_report ).and_return(["_html_report_",  exit_status_0])
+      expect(Open3).to receive(:capture2e).with(*text1_report).and_return(["_text1_report_", exit_status_0])
+      expect(Open3).to receive(:capture2e).with(*text2_report).and_return(["_text2_report_", exit_status_0])
       subject.generate_reports { |r| @result = r }
       expect(@result).to eq("_text1_report_\n\n_text2_report_")
     end
 
     it "raises an exception if the command doesn't exit cleanly" do
       stub_exit_code(ExitCodes::EXCEPTION)
-      allow(subject).to receive(:`).and_return("Results could not be generated.")
+      allow(Open3).to receive(:capture2e).and_return(["Results could not be generated.", exit_status_1])
 
       expect { subject.generate_reports }.to raise_error(
         Teaspoon::DependencyError,
@@ -89,16 +92,16 @@ describe Teaspoon::Coverage do
 
     it "checks the coverage using istanbul and passes them to the block provided" do
       stub_exit_code(ExitCodes::EXCEPTION)
-      opts = "--statements=42 --functions=66.6 --branches=0 --lines=100"
-      expect(subject).to receive(:`).with("/path/to/executable check-coverage #{opts} /temp_path/coverage.json 2>&1").
-        and_return("some mumbo jumbo\nERROR: _failure1_\nmore garbage\nERROR: _failure2_")
+      opts = %w[--statements=42 --functions=66.6 --branches=0 --lines=100]
+      expect(Open3).to receive(:capture2e).with(*["/path/to/executable", "check-coverage", *opts, "/temp_path/coverage.json"]).
+        and_return(["some mumbo jumbo\nERROR: _failure1_\nmore garbage\nERROR: _failure2_", exit_status_1])
       subject.check_thresholds { |r| @result = r }
       expect(@result).to eq("_failure1_\n_failure2_")
     end
 
     it "doesn't call the callback if the exit status is 0" do
       stub_exit_code(ExitCodes::SUCCESS)
-      expect(subject).to receive(:`).and_return("ERROR: _failure1_")
+      expect(Open3).to receive(:capture2e).and_return(["ERROR: _failure1_", exit_status_0])
       subject.check_thresholds { @called = true }
       expect(@called).to be_falsey
     end
@@ -114,7 +117,7 @@ describe Teaspoon::Coverage do
       Teaspoon::Instrumentation.instance_variable_set(:@executable_checked, nil)
       expect(Teaspoon::Instrumentation).to receive(:executable).and_call_original
       expect(subject).to receive(:input_path).and_call_original
-      expect(subject).to receive(:`).and_call_original
+      expect(Open3).to receive(:capture2e).twice.and_call_original
 
       pending("needs istanbul to be installed") unless executable
       subject.instance_variable_set(:@executable, executable)
@@ -123,7 +126,7 @@ describe Teaspoon::Coverage do
 
     it "generates coverage reports" do
       subject.generate_reports { |r| @report = r }
-      expect(@report).to eq <<-RESULT.strip_heredoc + "\n"
+      expect(@report).to eq <<-RESULT.strip_heredoc.chomp
         ---------------------|----------|----------|----------|----------|----------------|
         File                 |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
         ---------------------|----------|----------|----------|----------|----------------|
@@ -133,6 +136,13 @@ describe Teaspoon::Coverage do
         ---------------------|----------|----------|----------|----------|----------------|
         All files            |    90.91 |      100 |       75 |    90.91 |                |
         ---------------------|----------|----------|----------|----------|----------------|
+
+        =============================== Coverage summary ===============================
+        Statements   : 90.91% ( 10/11 )
+        Branches     : 100% ( 0/0 )
+        Functions    : 75% ( 3/4 )
+        Lines        : 90.91% ( 10/11 )
+        ================================================================================
       RESULT
     end
   end

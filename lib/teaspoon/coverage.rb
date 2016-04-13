@@ -1,3 +1,5 @@
+require "open3"
+
 module Teaspoon
   class Coverage
     def self.configuration(name = Teaspoon.configuration.use_coverage)
@@ -33,8 +35,8 @@ module Teaspoon
       args = threshold_args
       return if args.blank?
       input_path do |input|
-        result = %x{#{@executable} check-coverage #{args.join(" ")} #{input.shellescape} 2>&1}
-        return if $?.exitstatus == 0
+        result, st = Open3.capture2e(@executable, "check-coverage", *args, input.shellescape)
+        return if st.exitstatus == 0
         result = result.scan(/ERROR: .*$/).join("\n").gsub("ERROR: ", "")
         block.call(result) unless result.blank?
       end
@@ -57,8 +59,11 @@ module Teaspoon
 
     def generate_report(input, format)
       output_path = File.join(@config.output_path, @suite_name)
-      result = %x{#{@executable} report --include=#{input.shellescape} --dir #{output_path} #{format} 2>&1}
-      return result.gsub("Done", "").gsub("Using reporter [#{format}]", "").strip if $?.exitstatus == 0
+      result, st =
+        Open3.capture2e(
+          @executable, "report", "--include=#{input.shellescape}", "--dir #{output_path}", format
+        )
+      return result.gsub("Done", "").gsub("Using reporter [#{format}]", "").strip if st.exitstatus == 0
       raise Teaspoon::DependencyError.new("Unable to generate #{format} coverage report:\n#{result}")
     end
 
