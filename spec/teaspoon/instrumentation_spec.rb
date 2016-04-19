@@ -6,7 +6,7 @@ require "rack/test"
 describe Teaspoon::Instrumentation do
   subject { described_class }
 
-  let(:asset) { double(source: source, pathname: "path/to/instrument.js") }
+  let(:asset) { double(source: source, filename: "path/to/instrument.js") }
   let(:source) { "function add(a, b) { return a + b } // ☃ " }
   let(:response) { [200, { "Content-Type" => "application/javascript" }, asset] }
   let(:env) { { "QUERY_STRING" => "instrument=true" } }
@@ -120,7 +120,7 @@ describe Teaspoon::Instrumentation do
   end
 
   describe "integration" do
-    let(:asset) { Rails.application.assets.find_asset("support/instrumented.coffee") }
+    let(:asset) { Rails.application.assets.find_asset("support/instrumented", accept: "application/javascript") }
 
     it "instruments a file" do
       pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable
