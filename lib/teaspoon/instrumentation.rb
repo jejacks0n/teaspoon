@@ -45,14 +45,14 @@ module Teaspoon
 
     def self.ignored?(asset)
       Array(Teaspoon::Coverage.configuration.ignore).any? do |ignore|
-        asset.filename.match(ignore)
+        asset.pathname.to_s.match(ignore)
       end
     rescue Teaspoon::UnknownCoverage
       false
     end
 
     def add_instrumentation(asset)
-      source_path = asset.filename
+      source_path = asset.pathname.to_s
       Dir.mktmpdir do |temp_path|
         input_path = File.join(temp_path, File.basename(source_path)).sub(/\.js.+/, ".js")
         File.open(input_path, "w") { |f| f.write(asset.source) }

@@ -119,14 +119,3 @@ begin
   end
 rescue
 end
-
-# Some Sprockets patches to work with Sprockets 2.x
-unless Sprockets::Asset.public_method_defined?(:filename)
-  module Sprockets
-    class Asset
-      def filename
-        pathname.to_s
-      end
-    end
-  end
-end
