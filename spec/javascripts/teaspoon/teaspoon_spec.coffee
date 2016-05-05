@@ -81,3 +81,15 @@ describe "Teaspoon", ->
       expect(-> Teaspoon.log('__spec_results__')).not.toThrow();
 
       window.console = originalConsole
+
+  describe "onerror", ->
+    beforeEach ->
+      @spy = spyOn(console, "log")
+      Teaspoon.started = false
+
+    afterEach ->
+      Teaspoon.started = true
+
+    it "logs errors that happen during start", ->
+      window.onerror("FAIL")
+      expect(@spy).toHaveBeenCalledWith('{"_teaspoon":true,"type":"exception","message":"FAIL"}')
