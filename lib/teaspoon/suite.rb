@@ -50,7 +50,7 @@ module Teaspoon
 
     def asset_tree(sources)
       sources.flat_map do |source|
-        asset = @env.find_asset(source)
+        asset = @env.find_asset(source, accept: "application/javascript", pipeline: :debug)
 
         if asset && asset.respond_to?(:logical_path)
           asset_and_dependencies(asset).map { |a| asset_url(a) }
