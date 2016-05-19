@@ -31,14 +31,12 @@ feature "Running in the browser", browser: true do
 
       within("#teaspoon-stats") do
         expect(find("li:nth-child(1)")).to have_text("passes: 2")
-        expect(find("li:nth-child(2)")).to have_text("failures: 3")
+        expect(find("li:nth-child(2)")).to have_text("failures: 2")
         expect(find("li:nth-child(3)")).to have_text("skipped: 0")
       end
 
       within("#teaspoon-report-failures") do
         expect(find("li.spec:nth-child(1)")).
-          to have_text("global failure TypeError: foo is not a function")
-        expect(find("li.spec:nth-child(2)")).
           to have_text("Integration tests allows failing specs fails correctly")
       end
     end
@@ -60,7 +58,6 @@ feature "Running in the browser", browser: true do
 
       find("#teaspoon-build-full-report").click
       text = find("#teaspoon-report-all").text
-      expect(text).to include("global failure")
       expect(text).to include("Integration tests allows failing specs")
       expect(text).to include("allows erroring specs")
       expect(text).to include("allows passing specs")

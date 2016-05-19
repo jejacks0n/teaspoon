@@ -5,8 +5,6 @@ feature "Running in the console", shell: true do
     Regexp.new(<<-OUTPUT.strip_heredoc)
       Starting the Teaspoon server...
       Teaspoon running default suite at http://127\\.0\\.0\\.1:31337/teaspoon/default
-      TypeError: undefined is not a constructor \\(evaluating 'foo\\(\\)'\\)
-        # integration/spec_helper(\\.self[^\.]*)?\\.js:12
     OUTPUT
   end
 
