@@ -120,6 +120,7 @@ describe "PhantomJS Runner", ->
   describe "callback method", ->
 
     beforeEach ->
+      @runner.initPage()
       @callbacks = @runner.pageCallbacks()
 
     describe "#onError", ->

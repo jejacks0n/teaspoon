@@ -37,7 +37,7 @@ class @Teaspoon
     window.onerror = (message) ->
       originalOnError(arguments...) if originalOnError && originalOnError.call
       return if Teaspoon.started
-      Teaspoon.log JSON.stringify
+      Teaspoon.messages.push JSON.stringify
         _teaspoon: true
         type: "exception"
         message:  message
