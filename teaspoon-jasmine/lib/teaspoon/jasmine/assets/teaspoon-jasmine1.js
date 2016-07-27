@@ -472,8 +472,8 @@
       if (xhr.readyState !== 4) {
         return;
       }
-      if (xhr.status !== 200) {
-        throw "Unable to call hook \"" + url + "\".";
+      if (xhr.status !== 200 && xhr.status !== 500) {
+        throw JSON.parse(xhr.response).err;
       }
     });
   };

@@ -18,8 +18,13 @@ class Teaspoon::SuiteController < ActionController::Base
 
   def hook
     hooks = Teaspoon::Suite.new(params).hooks[params[:hook].to_s]
-    hooks.each { |hook| hook.call(hook_params(params[:args])) }
-    head(:success)
+
+    if hooks.present?
+      hooks.each { |hook| hook.call(hook_params(params[:args])) }
+      head(:ok)
+    else
+      render status: :not_found, json: { err: "The `#{params[:hook]}` hook is not defined in the `#{params[:suite]}` suite " }
+    end
   end
 
   def fixtures

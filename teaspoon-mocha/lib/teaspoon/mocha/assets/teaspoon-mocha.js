@@ -473,7 +473,7 @@
         return;
       }
       if (xhr.status !== 200) {
-        throw "Unable to call hook \"" + url + "\".";
+        throw JSON.parse(xhr.response).err;
       }
     });
   };
