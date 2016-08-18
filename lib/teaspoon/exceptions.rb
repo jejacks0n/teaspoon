@@ -29,7 +29,7 @@ module Teaspoon
       super(build_message(msg_or_options) do |options|
         msg = "Unknown framework: expected \"#{options[:name]}\" to be a registered framework. Available frameworks are #{options[:available]}."
         if options[:available].blank?
-          msg += " Do you need to update your Gemfile to use the teaspoon-#{options[:name]} gem? If you are upgrading, please see https://github.com/modeset/teaspoon/blob/master/CHANGELOG.md"
+          msg += " Do you need to update your Gemfile to use the teaspoon-#{options[:name]} gem? If you are upgrading, please see https://github.com/jejacks0n/teaspoon/blob/master/CHANGELOG.md"
         end
       end)
     end

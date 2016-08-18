@@ -29,4 +29,4 @@
 // If you'd rather require your spec files manually (to control order for instance) you can disable the suite matcher in
 // the configuration and use this file as a manifest.
 //
-// For more information: http://github.com/modeset/teaspoon
+// For more information: http://github.com/jejacks0n/teaspoon

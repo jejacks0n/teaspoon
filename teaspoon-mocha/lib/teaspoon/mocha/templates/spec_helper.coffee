@@ -29,7 +29,7 @@
 # If you'd rather require your spec files manually (to control order for instance) you can disable the suite matcher in
 # the configuration and use this file as a manifest.
 #
-# For more information: http://github.com/modeset/teaspoon
+# For more information: http://github.com/jejacks0n/teaspoon
 #
 # Chai
 # If you're using Chai, you'll probably want to initialize your preferred assertion style. You can read more about Chai

@@ -22,7 +22,7 @@ feature "Installation", shell: true do
         gem "teaspoon-mocha"
         gem "teaspoon-qunit"
 
-      More information can be found at: https://github.com/modeset/teaspoon
+      More information can be found at: https://github.com/jejacks0n/teaspoon
     OUTPUT
   end
 end

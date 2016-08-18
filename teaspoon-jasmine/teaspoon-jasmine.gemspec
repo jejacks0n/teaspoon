@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.name        = "teaspoon-jasmine"
   s.version     = Teaspoon::Jasmine::VERSION
   s.authors     = ["jejacks0n", "mikepack"]
-  s.email       = ["info@modeset.com"]
-  s.homepage    = "https://github.com/modeset/teaspoon"
+  s.email       = ["jejacks0n@gmail.com"]
+  s.homepage    = "https://github.com/jejacks0n/teaspoon"
   s.summary     = "Teaspoon Jasmine: A Javascript test runner built on top of Rails for Jasmine"
   s.description = "Run Jasmine specs in the browser or headless with PhantomJS, Selenium Webdriver, or Capybara Webkit"
   s.license     = "MIT"
