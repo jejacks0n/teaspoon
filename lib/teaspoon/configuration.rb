@@ -66,7 +66,7 @@ module Teaspoon
                     :hooks, :expand_assets, :js_extensions
 
       def initialize(name = nil)
-        @matcher       = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee}"
+        @matcher       = "{spec/javascripts,app/assets}/**/*_spec.{js,js.coffee,coffee,es6,js.es6}"
         @helper        = "spec_helper"
         @javascripts   = []
         @stylesheets   = ["teaspoon"]
