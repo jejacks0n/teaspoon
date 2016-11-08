@@ -45,9 +45,9 @@
         if (Teaspoon.started) {
           return;
         }
-        return Teaspoon.log(JSON.stringify({
+        return Teaspoon.messages.push(JSON.stringify({
           _teaspoon: true,
-          type: 'exception',
+          type: "exception",
           message: message
         }));
       };
@@ -129,7 +129,7 @@
 
     Teaspoon.checkNamespace = function(root, klass) {
       var i, j, len, namespace, namespaces, scope;
-      namespaces = klass.split('.');
+      namespaces = klass.split(".");
       scope = root;
       for (i = j = 0, len = namespaces.length; j < len; i = ++j) {
         namespace = namespaces[i];

@@ -84,7 +84,7 @@ describe "Teaspoon", ->
 
   describe "onerror", ->
     beforeEach ->
-      @spy = spyOn(console, "log")
+      @spy = spyOn(Teaspoon.messages, "push")
       Teaspoon.started = false
 
     afterEach ->

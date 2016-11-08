@@ -15,6 +15,8 @@ module Teaspoon
         log_line
       end
 
+      alias_method :log_exception, :log_error
+
       def log_result(result)
         log_information
         log_stats(result)
