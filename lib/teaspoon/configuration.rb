@@ -15,8 +15,9 @@ module Teaspoon
     # - add it to ENV_OVERRIDES if it can be overridden from ENV
     # - add it to the initializers in /lib/generators/install/templates so it's documented there as well
 
-    cattr_accessor :mount_at, :root, :asset_paths, :fixture_paths, :asset_manifest
+    cattr_accessor :mount_at, :root, :asset_paths, :fixture_paths, :asset_manifest, :catchall
     @@mount_at       = "/teaspoon"
+    @@catchall       = nil # will default to "routing_error"
     @@root           = nil # will default to Rails.root
     @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets",
                         "test/javascripts", "test/javascripts/stylesheets"]

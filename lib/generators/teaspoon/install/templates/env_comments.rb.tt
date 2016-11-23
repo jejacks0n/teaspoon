@@ -3,6 +3,11 @@ Teaspoon.configure do |config|
   # `http://localhost:3000/jasmine` to run your tests.
   config.mount_at = "/teaspoon"
 
+  # Sets an alternative catch-all action to check when mounting Teaspoon routes. For example, if your application
+  # imposes a catch-all like `get "*path", to: "errors#not_found"`, you should set this to "not_found".
+  # Note: Defaults to "routing_error" if nil.
+  config.catchall = nil
+
   # Specifies the root where Teaspoon will look for files. If you're testing an engine using a dummy application it can
   # be useful to set this to your engines root (e.g. `Teaspoon::Engine.root`).
   # Note: Defaults to `Rails.root` if nil.
@@ -65,7 +70,7 @@ Teaspoon.configure do |config|
     #suite.hook :fixtures, &proc{}
 
     # Determine whether specs loaded into the test harness should be embedded as individual script tags or concatenated
-    # into a single file. Similar to Rails' asset `debug: true` and `config.assets.debug = true` options. By default, 
+    # into a single file. Similar to Rails' asset `debug: true` and `config.assets.debug = true` options. By default,
     # Teaspoon expands all assets to provide more valuable stack traces that reference individual source files.
     #suite.expand_assets = true
 
