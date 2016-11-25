@@ -188,7 +188,8 @@ describe Teaspoon::Configuration::Coverage do
     expect(subject.reports).to eq(["text-summary"])
     expect(subject.output_path).to eq("coverage")
     expect(subject.ignore).to eq([
-      %r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/}, %r{/support/}, %r{/(.+)_helper.}
+      %r{/.rvm/gems/}, %r{/lib/ruby/gems/}, %r{/vendor/assets/},
+      %r{/support/}, %r{(?m)^(?=.*_helper)((?!spec_helper).)*$}
     ])
     expect(subject.statements).to be_nil
     expect(subject.functions).to be_nil

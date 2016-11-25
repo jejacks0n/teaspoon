@@ -92,9 +92,9 @@ describe Teaspoon::Instrumentation do
     end
 
     describe "with ignored files" do
-      def ignore(paths)
+      def ignore(paths = nil)
         config = Teaspoon::Configuration::Coverage.new do |coverage|
-          coverage.ignore = paths
+          coverage.ignore = paths if !paths.nil?
         end
         allow(Teaspoon::Coverage).to receive(:configuration).and_return(config)
       end
@@ -115,6 +115,27 @@ describe Teaspoon::Instrumentation do
         ignore("path/to")
 
         expect(subject.add?(response, "QUERY_STRING" => "instrument=true")).to be(false)
+      end
+
+      context "with default ignored files" do
+        before do
+          ignore
+        end
+        context "for spec_helper file" do
+          let(:asset) { double(source: source, pathname: "path/to/spec_helper.js") }
+
+          it "does include the file" do
+            expect(subject.add?(response, "QUERY_STRING" => "instrument=true")).to be(true)
+          end
+        end
+
+        context "for other helper file" do
+          let(:asset) { double(source: source, pathname: "path/to/other_helper.js") }
+
+          it "doesn't include the file" do
+            expect(subject.add?(response, "QUERY_STRING" => "instrument=true")).to be(false)
+          end
+        end
       end
     end
   end
