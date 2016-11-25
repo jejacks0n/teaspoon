@@ -23,7 +23,7 @@ module Teaspoon
       !execute
     end
 
-    def execute(options = {})
+    def execute(options = {}, *args)
       execute_without_handling(options)
     rescue Teaspoon::Failure
       false
