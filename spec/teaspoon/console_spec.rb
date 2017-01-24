@@ -121,6 +121,14 @@ describe Teaspoon::Console do
       expect(subject.send(:filter, "foo")).to eq("file[]=file2")
     end
 
+    it 'resolves suites if multiple are given' do
+      subject.execute_without_handling(suite: 'bar,foo')
+      expect(subject.send(:suites)).to eq(%w(foo bar))
+
+      subject.execute_without_handling(suite: 'foo')
+      expect(subject.send(:suites)).to eq(%w(foo))
+    end
+
     it "resolves the files if a directory was given" do
       resolve_spec_for_output = ["test/javascripts/foo.coffee", "test/javascripts/bar.coffee"]
       expect(Teaspoon::Suite).to receive(:resolve_spec_for).with("full/path").

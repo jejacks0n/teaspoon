@@ -84,7 +84,7 @@ module Teaspoon
     end
 
     def suites
-      return [options[:suite]] if options[:suite].present?
+      return options[:suite].split(',') if options[:suite].present?
       return @suites.keys if @suites.present?
       Teaspoon.configuration.suite_configs.keys
     end
