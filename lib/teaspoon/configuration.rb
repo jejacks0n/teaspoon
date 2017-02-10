@@ -61,7 +61,7 @@ module Teaspoon
     end
 
     class Suite
-      attr_accessor :matcher, :helper, :javascripts, :stylesheets,
+      attr_accessor :matcher, :helper, :javascripts, :javascript_packs, :stylesheets,
                     :boot_partial, :body_partial,
                     :hooks, :expand_assets, :js_extensions
 
@@ -70,6 +70,7 @@ module Teaspoon
         @helper        = "spec_helper"
         @javascripts   = []
         @stylesheets   = ["teaspoon"]
+        @javascript_packs = []
 
         @boot_partial  = "boot"
         @body_partial  = "body"

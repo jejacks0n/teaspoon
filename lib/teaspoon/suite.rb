@@ -13,7 +13,7 @@ module Teaspoon
     end
 
     attr_accessor :config, :name
-    delegate :helper, :stylesheets, :javascripts, :boot_partial, :body_partial, :hooks,
+    delegate :helper, :stylesheets, :javascripts, :javascript_packs, :boot_partial, :body_partial, :hooks,
              to: :config
 
     def initialize(options = {})

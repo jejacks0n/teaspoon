@@ -1,5 +1,10 @@
 ### Unreleased
 
+* Support for (webpacker)[https://github.com/rails/webpacker/].
+   ```ruby
+   suite.javascript_packs += ["your-custom-pack.js"]
+   ```
+
 ### 1.2.2
 
 * make sure all tests pass with rails 4.2 - 6.1 (few pending excluded PR welcome)
@@ -49,7 +54,7 @@
 
 ### 1.1.3
 
-This was an erroneous release, of the rails_5 branch. oops. 
+This was an erroneous release, of the rails_5 branch. oops.
 
 #### Bug Fixes
 
