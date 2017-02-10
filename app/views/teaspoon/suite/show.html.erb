@@ -7,6 +7,9 @@
 
     <%= stylesheet_link_tag *@suite.stylesheets %>
     <%= javascript_include_tag *@suite.javascripts %>
+    <% @suite.javascript_packs.each do |javascript_pack| %>
+      <%= javascript_pack_tag javascript_pack %>
+    <% end %>
     <script type="text/javascript">
       Teaspoon.version = <%= Teaspoon::VERSION.to_json.html_safe %>;
       Teaspoon.suites  = <%= {all: Teaspoon.configuration.suite_configs.keys, active: @suite.name}.to_json.html_safe %>;

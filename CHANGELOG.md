@@ -1,5 +1,9 @@
 ### Unreleased
 
+* Support for (webpacker)[https://github.com/rails/webpacker/].
+   ```ruby
+   suite.javascript_packs += ["your-custom-pack.js"]
+   ```
 * Adds support for Rails 6.
 * Removes build support for Rails 3 & 4.
 * Removes build support for Ruby < 2.5.
