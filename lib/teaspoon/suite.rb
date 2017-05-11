@@ -21,6 +21,7 @@ module Teaspoon
       @name = (@options[:suite] || :default).to_s
       @config = suite_configuration
       @env = Rails.application.assets
+      @manifest = Rails.application.assets_manifest
     end
 
     def spec_files
@@ -42,6 +43,14 @@ module Teaspoon
 
     protected
 
+    class ManifestAsset
+      def initialize(logical_path, filename, metadata)
+        @logical_path = logical_path
+        @filename = filename
+        @metadata = metadata
+      end
+    end
+
     def specs
       files = specs_from_file
       return files unless files.empty?
@@ -50,7 +59,14 @@ module Teaspoon
 
     def asset_tree(sources)
       sources.flat_map do |source|
-        asset = @env.find_asset(source, accept: "application/javascript", pipeline: :debug)
+        asset = if @env
+                  @env.find_asset(source, accept: 'application/javascript', pipeline: :debug)
+                elsif @manifest
+                  matching_manifest_files = @manifest.files.select { |_, attribs| attribs['logical_path'].include?(source) }
+                  matching_manifest_files.map do |filename, attribs|
+                    ManifestAsset.new(attribs['logical_path'], filename, included: [])
+                  end
+                end
 
         if asset && asset.respond_to?(:logical_path)
           asset_and_dependencies(asset).map { |a| asset_url(a) }
