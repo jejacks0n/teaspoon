@@ -1,27 +1,3 @@
-begin
-  require "codeclimate-test-reporter"
-  require "simplecov"
-  SimpleCov.profiles.define "teaspoon" do
-    filters.clear
-    add_filter { |src| !(src.filename =~ /^#{SimpleCov.root}/) unless src.filename =~ /teaspoon/ }
-    # filter the framework implementations
-    add_filter("lib/teaspoon-(jasmine|mocha|qunit).rb")
-    # filter deprecation warnings, devkit tools, and our teaspoon envs
-    add_filter("teaspoon/deprecated.rb")
-    add_filter("devkit.rb")
-    add_filter("teaspoon_env.rb")
-    # filter the controller, since it's tested elsewhere
-    add_filter("suite_controller.rb")
-  end
-  # CodeClimate::TestReporter.configuration.profile = "teaspoon"
-  CodeClimate::TestReporter.configure do |config|
-    config.path_prefix = File.expand_path('../../', __FILE__)
-  end
-  CodeClimate::TestReporter.start
-rescue LoadError
-  puts "Not using codeclimate-test-reporter."
-end
-
 ENV["RAILS_ENV"] ||= "test"
 ENV["RAILS_ROOT"] = File.expand_path("../dummy", __FILE__)
 ENV["TEASPOON_RAILS_ENV"] = File.expand_path("../dummy/config/environment.rb", __FILE__)
