@@ -107,6 +107,9 @@ begin
       def javascript_include_tag(*sources)
         options = sources.extract_options!.stringify_keys
         path_options = options.extract!('protocol', 'extname', 'host').symbolize_keys
+        if ActionView.gem_version >= Gem::Version.new('5.1.0')
+          path_options.merge(options.extract!('skip_pipeline').symbolize_keys)
+        end
         path_options[:debug] = options['allow_non_precompiled']
         sources.uniq.map { |source|
           tag_options = {
