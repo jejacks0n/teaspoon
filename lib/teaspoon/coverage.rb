@@ -1,4 +1,4 @@
-require "open3"
+require 'open3'
 
 module Teaspoon
   class Coverage
@@ -25,7 +25,7 @@ module Teaspoon
         results = []
         @config.reports.each do |format|
           result = generate_report(input, format)
-          results << result if ["text", "text-summary"].include?(format.to_s)
+          results << result if ['text', 'text-summary'].include?(format.to_s)
         end
         block.call(results.join("\n\n")) unless results.blank?
       end
@@ -35,9 +35,9 @@ module Teaspoon
       args = threshold_args
       return if args.blank?
       input_path do |input|
-        result, st = Open3.capture2e(@executable, "check-coverage", *args, input.shellescape)
-        return if st.exitstatus == 0
-        result = result.scan(/ERROR: .*$/).join("\n").gsub("ERROR: ", "")
+        result, st = Open3.capture2e(@executable, 'check-coverage', *args, input.shellescape)
+        return if st.exitstatus.zero?
+        result = result.scan(/ERROR: .*$/).join("\n").gsub('ERROR: ', '')
         block.call(result) unless result.blank?
       end
     end
@@ -45,14 +45,14 @@ module Teaspoon
     private
 
     def self.normalize_config_name(name)
-      return "default" if name == true
+      return 'default' if name == true
       name.to_s
     end
 
     def input_path(&block)
       Dir.mktmpdir do |temp_path|
-        input_path = File.join(temp_path, "coverage.json")
-        File.open(input_path, "w") { |f| f.write(@data.to_json) }
+        input_path = File.join(temp_path, 'coverage.json')
+        File.open(input_path, 'w') { |f| f.write(@data.to_json) }
         block.call(input_path)
       end
     end
@@ -61,9 +61,9 @@ module Teaspoon
       output_path = File.join(@config.output_path, @suite_name)
       result, st =
         Open3.capture2e(
-          @executable, "report", "--include=#{input.shellescape}", "--dir #{output_path}", format
+          @executable, 'report', "--include=#{input.shellescape}", "--dir #{output_path}", format
         )
-      return result.gsub("Done", "").gsub("Using reporter [#{format}]", "").strip if st.exitstatus == 0
+      return result.gsub('Done', '').gsub("Using reporter [#{format}]", '').strip if st.exitstatus.zero?
       raise Teaspoon::DependencyError.new("Unable to generate #{format} coverage report:\n#{result}")
     end
 
