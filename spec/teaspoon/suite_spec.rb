@@ -111,8 +111,9 @@ describe Teaspoon::Suite do
       it "includes instrumentation, but only at the root" do
         result = subject.spec_assets(true)
 
-        # Rails 4 expands spec_helper to include .js extension, Rails 3 doesn't
-        expect(result).to include(match(/spec_helper(\.self)?(\.js)?\?instrument=1/))
+        # Rails 4 expands spec_helper to include .js extension, Rails 3 doesn't.
+        # Also, with Sprockets 4 we want the 'debug' asset when not expanding assets.
+        expect(result).to include(match(/spec_helper(\.(self|debug))?(\.js)?\?instrument=1/))
       end
     end
   end

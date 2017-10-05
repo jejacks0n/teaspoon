@@ -10,26 +10,22 @@ feature "Running in the console", shell: true do
 
   let(:expected_testing_output) do
     Regexp.new(<<-OUTPUT.strip_heredoc)
-      FFFit can log to the console
+      FFit can log to the console
       \\.\\.
 
       Failures:
 
-        1\\)  global failure \\(1, 0, 1\\)
-           Failure/Error: TypeError: undefined is not a constructor \\(evaluating 'foo\\(\\)'\\)
-
-        2\\) Integration tests allows failing specs \\(1, 0, 1\\)
+        1\\) Integration tests allows failing specs \\(1, 0, 1\\)
            Failure/Error: fails correctly
 
-        3\\) Integration tests allows erroring specs \\(1, 0, 1\\)
+        2\\) Integration tests allows erroring specs \\(1, 0, 1\\)
            Failure/Error: errors correctly
 
       Finished in 0\\.31337 seconds
-      5 examples, 3 failures
+      4 examples, 2 failures
 
       Failed examples:
 
-      teaspoon -s default --filter=" global failure"
       teaspoon -s default --filter="Integration tests allows failing specs"
       teaspoon -s default --filter="Integration tests allows erroring specs"
     OUTPUT

@@ -7,9 +7,9 @@ require "teaspoon/version"
 Gem::Specification.new do |s|
   s.name        = "teaspoon"
   s.version     = Teaspoon::VERSION
-  s.authors     = ["jejacks0n", "jayzes", "jedschneider", "mikepack"]
-  s.email       = ["info@modeset.com"]
-  s.homepage    = "https://github.com/modeset/teaspoon"
+  s.authors     = ["jejacks0n", "mikepack", "jayzes", "jedschneider"]
+  s.email       = ["jejacks0n@gmail.com"]
+  s.homepage    = "https://github.com/jejacks0n/teaspoon"
   s.summary     = "Teaspoon: A Javascript test runner built on top of Rails"
   s.description = ["Run Javascript tests using Jasmine, Mocha or QUnit in the browser",
                    "or headless using PhantomJS, Selenium Webdriver, or Capybara Webkit"].join(" ")

@@ -35,6 +35,24 @@
       return new (Teaspoon.resolveClass("Runner"))();
     };
 
+    Teaspoon.setupErrorHandler = function() {
+      var originalOnError;
+      originalOnError = window.onerror;
+      return window.onerror = function(message) {
+        if (originalOnError && originalOnError.call) {
+          originalOnError.apply(null, arguments);
+        }
+        if (Teaspoon.started) {
+          return;
+        }
+        return Teaspoon.messages.push(JSON.stringify({
+          _teaspoon: true,
+          type: "exception",
+          message: message
+        }));
+      };
+    };
+
     Teaspoon.reload = function() {
       return window.location.reload();
     };
@@ -77,12 +95,12 @@
     };
 
     Teaspoon.log = function() {
-      var e;
+      var e, error;
       Teaspoon.messages.push(arguments[0]);
       try {
         return typeof console !== "undefined" && console !== null ? typeof console.log === "function" ? console.log.apply(console, arguments) : void 0 : void 0;
-      } catch (_error) {
-        e = _error;
+      } catch (error) {
+        e = error;
         throw new Error("Unable to use console.log for logging");
       }
     };
@@ -111,7 +129,7 @@
 
     Teaspoon.checkNamespace = function(root, klass) {
       var i, j, len, namespace, namespaces, scope;
-      namespaces = klass.split('.');
+      namespaces = klass.split(".");
       scope = root;
       for (i = j = 0, len = namespaces.length; j < len; i = ++j) {
         namespace = namespaces[i];
@@ -125,6 +143,8 @@
     return Teaspoon;
 
   })();
+
+  Teaspoon.setupErrorHandler();
 
 }).call(this);
 (function() {
@@ -383,18 +403,18 @@
     };
 
     xhrRequest = function(url, callback) {
-      var e;
+      var e, error, error1;
       if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest();
       } else if (window.ActiveXObject) {
         try {
           xhr = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (_error) {
-          e = _error;
+        } catch (error) {
+          e = error;
           try {
             xhr = new ActiveXObject("Microsoft.XMLHTTP");
-          } catch (_error) {
-            e = _error;
+          } catch (error1) {
+            e = error1;
           }
         }
       }
@@ -423,18 +443,18 @@
     }
     xhr = null;
     xhrRequest = function(url, payload, callback) {
-      var e;
+      var e, error, error1;
       if (window.XMLHttpRequest) {
         xhr = new XMLHttpRequest();
       } else if (window.ActiveXObject) {
         try {
           xhr = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (_error) {
-          e = _error;
+        } catch (error) {
+          e = error;
           try {
             xhr = new ActiveXObject("Microsoft.XMLHTTP");
-          } catch (_error) {
-            e = _error;
+          } catch (error1) {
+            e = error1;
           }
         }
       }
@@ -453,7 +473,7 @@
         return;
       }
       if (xhr.status !== 200) {
-        throw "Unable to call hook \"" + url + "\".";
+        throw JSON.parse(xhr.response).err;
       }
     });
   };
@@ -898,7 +918,7 @@
     };
 
     RadialProgressView.prototype.appendTo = function() {
-      var canvas, e;
+      var canvas, e, error;
       RadialProgressView.__super__.appendTo.apply(this, arguments);
       this.size = 80;
       try {
@@ -907,8 +927,8 @@
         this.ctx = canvas.getContext("2d");
         this.ctx.strokeStyle = "#fff";
         return this.ctx.lineWidth = 1.5;
-      } catch (_error) {
-        e = _error;
+      } catch (error) {
+        e = error;
       }
     };
 

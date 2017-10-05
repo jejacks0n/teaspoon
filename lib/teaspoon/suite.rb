@@ -50,11 +50,10 @@ module Teaspoon
 
     def asset_tree(sources)
       sources.flat_map do |source|
-        asset = @env.find_asset(source)
+        asset = @env.find_asset(source, accept: "application/javascript", pipeline: :debug)
 
         if asset && asset.respond_to?(:logical_path)
-          assets = config.expand_assets ? asset.to_a : [asset]
-          assets.map { |a| asset_url(a) }
+          asset_and_dependencies(asset).map { |a| asset_url(a) }
         else
           source.blank? ? [] : [source]
         end
@@ -64,10 +63,22 @@ module Teaspoon
     def asset_url(asset)
       params = []
       params << "body=1" if config.expand_assets
-      params << "instrument=1" if instrument_file?(asset.pathname.to_s)
+      params << "instrument=1" if instrument_file?(asset.filename)
       url = asset.logical_path
       url += "?#{params.join("&")}" if params.any?
       url
+    end
+
+    def asset_and_dependencies(asset)
+      if config.expand_assets
+        if asset.respond_to?(:to_a)
+          asset.to_a
+        else
+          asset.metadata[:included].map { |uri| @env.load(uri) }
+        end
+      else
+        [asset]
+      end
     end
 
     def instrument_file?(file)

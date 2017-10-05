@@ -26,7 +26,7 @@ module Teaspoon
       # coffee-rails is needed because we are using Teaspoon dev deps which are CS files
       append_to_file("Gemfile", %{\ngem "coffee-rails"\n})
       append_to_file("Gemfile", %{\n#{gem}\n})
-      run_simple("bundle install#{local ? ' --local' : ''}")
+      run_simple("bundle install#{local ? " --local" : ""}")
 
       # create an application.js because there is no way to tell rails not to include it
       # in the layout, and we don't want the default generated application.js
@@ -49,12 +49,20 @@ module Teaspoon
 
     def copy_integration_files(suffix, from, to = "spec")
       sources = Dir[File.join(from, "javascripts", "integration", "**/*")]
-      dest = expand_path(File.join(to, 'javascripts/integration'))
+      dest = expand_path(File.join(to, "javascripts/integration"))
       FileUtils::mkdir_p(dest)
       sources.each do |source|
         spec = File.join(dest, File.basename(source).gsub("_integration", "_#{suffix}"))
         FileUtils.cp(source, spec)
       end
+    end
+
+    def copy_broken_helper(suffix)
+      test_directory = expand_path("#{suffix}/javascripts")
+      FileUtils::mkdir_p(test_directory)
+      broken_helper = File.expand_path("../../../spec/support/broken_spec_helper.coffee", __FILE__)
+      helper = File.join(test_directory, "#{suffix}_helper.coffee")
+      FileUtils.cp(broken_helper, helper)
     end
 
     def teaspoon_output

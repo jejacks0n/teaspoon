@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.name        = "teaspoon-devkit"
   s.version     = Teaspoon::VERSION
   s.authors     = ["jejacks0n", "mikepack"]
-  s.email       = ["info@modeset.com"]
-  s.homepage    = "https://github.com/modeset/teaspoon"
+  s.email       = ["jejacks0n@gmail.com"]
+  s.homepage    = "https://github.com/jejacks0n/teaspoon"
   s.summary     = "Teaspoon: A Javascript test runner built on top of Rails"
   s.description = ["Devkit for Teaspoon -- test dependencies, rails app, and more for developing teaspoon ties"]
   s.license     = "MIT"

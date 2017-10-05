@@ -18,7 +18,7 @@
 // setTimeout(Teaspoon.execute, 1000)
 //
 // Matching files
-// By default Teaspoon will look for files that match _test.{js,js.coffee,.coffee}. Add a filename_test.js file in your
+// By default Teaspoon will look for files that match _test.{js,js.coffee,coffee}. Add a filename_test.js file in your
 // test path and it'll be included in the default suite automatically. If you want to customize suites, check out the
 // configuration in teaspoon_env.rb
 //
@@ -26,5 +26,5 @@
 // If you'd rather require your test files manually (to control order for instance) you can disable the suite matcher in
 // the configuration and use this file as a manifest.
 //
-// For more information: http://github.com/modeset/teaspoon
+// For more information: http://github.com/jejacks0n/teaspoon
 

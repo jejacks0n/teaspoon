@@ -94,18 +94,18 @@ Teaspoon.configure do |config|
   # Specify which headless driver to use. Supports PhantomJS, Selenium Webdriver and BrowserStack Webdriver.
   #
   # Available: <%= Teaspoon::Driver.available.keys.map{|f| ":#{f}"}.join(", ") %>
-  # PhantomJS: https://github.com/modeset/teaspoon/wiki/Using-PhantomJS
-  # Selenium Webdriver: https://github.com/modeset/teaspoon/wiki/Using-Selenium-WebDriver
-  # BrowserStack Webdriver: https://github.com/modeset/teaspoon/wiki/Using-BrowserStack-WebDriver
-  # Capybara Webkit: https://github.com/modeset/teaspoon/wiki/Using-Capybara-Webkit
+  # PhantomJS: https://github.com/jejacks0n/teaspoon/wiki/Using-PhantomJS
+  # Selenium Webdriver: https://github.com/jejacks0n/teaspoon/wiki/Using-Selenium-WebDriver
+  # BrowserStack Webdriver: https://github.com/jejacks0n/teaspoon/wiki/Using-BrowserStack-WebDriver
+  # Capybara Webkit: https://github.com/jejacks0n/teaspoon/wiki/Using-Capybara-Webkit
   #config.driver = :<%= Teaspoon::Driver.default %>
 
   # Specify additional options for the driver.
   #
-  # PhantomJS: https://github.com/modeset/teaspoon/wiki/Using-PhantomJS
-  # Selenium Webdriver: https://github.com/modeset/teaspoon/wiki/Using-Selenium-WebDriver
-  # BrowserStack Webdriver: https://github.com/modeset/teaspoon/wiki/Using-BrowserStack-WebDriver
-  # Capybara Webkit: https://github.com/modeset/teaspoon/wiki/Using-Capybara-Webkit
+  # PhantomJS: https://github.com/jejacks0n/teaspoon/wiki/Using-PhantomJS
+  # Selenium Webdriver: https://github.com/jejacks0n/teaspoon/wiki/Using-Selenium-WebDriver
+  # BrowserStack Webdriver: https://github.com/jejacks0n/teaspoon/wiki/Using-BrowserStack-WebDriver
+  # Capybara Webkit: https://github.com/jejacks0n/teaspoon/wiki/Using-Capybara-Webkit
   #config.driver_options = nil
 
   # Specify the timeout for the driver. Specs are expected to complete within this time frame or the run will be

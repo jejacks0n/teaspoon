@@ -161,7 +161,7 @@ describe Teaspoon::Configuration::Suite do
   describe "deprecations" do
     describe "no_coverage=" do
       it "deprecates with no backwards compatibility" do
-        expect(Teaspoon).to receive(:dep).with("suite.no_coverage has been removed in Teaspoon 1.0. Please use coverage.ignore instead. https://github.com/modeset/teaspoon/blob/master/CHANGELOG.md")
+        expect(Teaspoon).to receive(:dep).with("suite.no_coverage has been removed in Teaspoon 1.0. Please use coverage.ignore instead. https://github.com/jejacks0n/teaspoon/blob/master/CHANGELOG.md")
 
         subject.no_coverage = [/excluded.js/]
       end
