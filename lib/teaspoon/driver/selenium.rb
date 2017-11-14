@@ -23,7 +23,7 @@ module Teaspoon
       end
 
       def run_specs(runner, url)
-        driver = ::Selenium::WebDriver.for(driver_options[:client_driver], driver_options[:client_driver_opts] || {})
+        driver = ::Selenium::WebDriver.for(driver_options[:client_driver], @options[:client_driver_opts]&.dup || {})
         driver.navigate.to(url)
 
         ::Selenium::WebDriver::Wait.new(driver_options).until do
