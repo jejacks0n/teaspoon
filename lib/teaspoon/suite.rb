@@ -64,7 +64,8 @@ module Teaspoon
       params = []
       params << "body=1" if config.expand_assets
       params << "instrument=1" if instrument_file?(asset.filename)
-      url = asset.filename
+      puts asset.filename
+      url = asset.filename.gsub('app/assets/javascripts/', '')
       url += "?#{params.join("&")}" if params.any?
       url
     end
