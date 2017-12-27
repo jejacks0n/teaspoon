@@ -18,6 +18,6 @@ group :development, :test do
   gem "capybara-webkit"
 
   # io services
-  gem "codeclimate-test-reporter", group: :test, require: false
+  gem "simplecov", require: false
   gem "rubocop", require: false
 end
