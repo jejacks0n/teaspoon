@@ -1,11 +1,18 @@
 ### Unreleased
 
-* Adds support for Rails 6.
-* Removes build support for Rails 3 & 4.
-* Removes build support for Ruby < 2.5.
-* Removes support for capybara webkit.
+### 1.2.0
+
+#### Enhancements
+
+* Add Rails 6 (beta1) support (#556)
+* Allow passing selenium options (#537)
 
 #### Bug Fixes
+
+* Removes Rails 3 & 4 support (#560)
+* Removes support for capybara webkit (#560)
+* Fixes gem coffeescript assets being discovered by sprockets (#405)
+* Many other small changes/fixes
 
 ### 1.1.5
 
