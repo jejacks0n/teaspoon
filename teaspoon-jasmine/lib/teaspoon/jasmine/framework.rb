@@ -11,7 +11,7 @@ module Teaspoon
                                 dependencies: ["teaspoon-jasmine1.js"],
                                 dev_deps: ["teaspoon/jasmine1.js"]
 
-      versions = ["2.0.3", "2.1.3", "2.2.0", "2.2.1", "2.3.4", "2.4.1"]
+      versions = ["2.0.3", "2.1.3", "2.2.0", "2.2.1", "2.3.4", "2.4.1", "2.9.1"]
 
       versions.each do |version|
         register_version version, "jasmine/#{version}.js",

@@ -12,7 +12,7 @@ Teaspoon.configure do |config|
   end
 
   config.suite :jasmine2 do |suite|
-    suite.use_framework :jasmine, "2.3.4"
+    suite.use_framework :jasmine, "2.9.1"
     suite.matcher = "#{path}/jasmine2/**/*_spec.{js,js.coffee,coffee}"
     suite.helper = "jasmine2_helper"
   end
