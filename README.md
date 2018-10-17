@@ -7,6 +7,7 @@ Teaspoon
 [![Code Climate](https://codeclimate.com/github/jejacks0n/teaspoon/badges/gpa.svg)](https://codeclimate.com/github/jejacks0n/teaspoon)
 [![Test Coverage](https://codeclimate.com/github/jejacks0n/teaspoon/badges/coverage.svg)](https://codeclimate.com/github/jejacks0n/teaspoon)
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+[![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 <img src="https://raw.github.com/jejacks0n/teaspoon/master/screenshots/logo_big.png" alt="Logo by Morgan Keys" align="right" />
 <sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
