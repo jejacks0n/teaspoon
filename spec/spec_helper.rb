@@ -27,6 +27,8 @@ require "ostruct"
 
 Dir[File.expand_path("../support/**/*.rb", __FILE__)].each { |f| require f }
 
+Capybara.server = :webrick
+
 RSpec.configure do |config|
   config.order = "random"
   config.color = true
