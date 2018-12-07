@@ -60,7 +60,7 @@ feature "Running in the browser", browser: true do
 
         find("#teaspoon-build-full-report").click
         text = find("#teaspoon-report-all").text
-        expect(text).to include("Integration tests allows failing specs")
+        expect(text).to include("Integration tests allows\nfailing specs")
         expect(text).to include("allows erroring specs")
         expect(text).to include("with nested describes")
         expect(text).to include("allows passing specs")
@@ -133,7 +133,7 @@ feature "Running in the browser", browser: true do
 
         find("#teaspoon-build-full-report").click
         text = find("#teaspoon-report-all").text
-        expect(text).to include("Integration tests allows failing specs")
+        expect(text).to include("Integration tests allows\nfailing specs")
         expect(text).to include("allows erroring specs")
         expect(text).to include("with nested describes")
         expect(text).to include("allows passing specs")
