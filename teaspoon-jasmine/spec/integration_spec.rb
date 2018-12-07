@@ -66,7 +66,7 @@ feature "Running in the browser", browser: true do
         expect(text).to include("allows passing specs")
         expect(text).not_to include("allows pending specs using xit")
         expect(text).to include("allows pending specs by passing no function")
-        expect(text).to include("Another top level integration test allows passing specs")
+        expect(text).to include("Another top level integration test\nallows passing specs")
 
         find("#teaspoon-build-full-report").click
         expect(page).not_to have_selector("#teaspoon-report-all")
@@ -139,7 +139,7 @@ feature "Running in the browser", browser: true do
         expect(text).to include("allows passing specs")
         expect(text).to include("allows pending specs using xit")
         expect(text).to include("allows pending specs by passing no function")
-        expect(text).to include("Another top level integration test allows passing")
+        expect(text).to include("Another top level integration test\nallows passing")
 
         find("#teaspoon-build-full-report").click
         expect(page).not_to have_selector("#teaspoon-report-all")
