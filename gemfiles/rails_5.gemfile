@@ -5,6 +5,7 @@ source "https://rubygems.org"
 gem "rails", "< 5.1"
 
 group :development, :test do
+  gem "puma"
   gem "teaspoon-jasmine", :path => "../teaspoon-jasmine"
   gem "teaspoon-mocha", :path => "../teaspoon-mocha"
   gem "teaspoon-qunit", :path => "../teaspoon-qunit"
