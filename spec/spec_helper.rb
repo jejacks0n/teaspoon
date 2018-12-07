@@ -48,6 +48,5 @@ RSpec.configure do |config|
 
   config.before(:each, browser: true) do
     Capybara.current_driver = Capybara.javascript_driver
-    Capybara.server = :webkit
   end
 end

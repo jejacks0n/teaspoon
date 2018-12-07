@@ -8,6 +8,8 @@ gemspec name: "teaspoon"
 group :development, :test do
   gemspec name: "teaspoon-devkit"
 
+  gem "puma"
+
   # frameworks
   gem "teaspoon-jasmine", path: "teaspoon-jasmine"
   gem "teaspoon-mocha", path: "teaspoon-mocha"
