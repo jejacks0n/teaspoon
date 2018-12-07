@@ -6,9 +6,6 @@ describe "Using fixtures in Jasmine 2", ->
 
   describe 'within the context of a describe', ->
 
-    beforeEach ->
-      @fixtures = fixture.load("fixture.html", "fixture.json", true) # append these fixtures
-
     it "loads fixtures", ->
       expect($("h1", fixture.el).text()).toBe("Title") # using fixture.el as a jquery scope
       expect($("h2", fixture.el).text()).toBe("Another Title")
