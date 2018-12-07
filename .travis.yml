@@ -1,5 +1,4 @@
 sudo: false
-cache: bundler
 rvm:
   - 2.3.6
 addons:
