@@ -10,8 +10,12 @@ describe "Using fixtures in Jasmine 2", ->
     it "loads fixtures", ->
       expect($("h1", fixture.el).text()).toBe("Title") # using fixture.el as a jquery scope
       expect($("h2", fixture.el).text()).toBe("Another Title")
-      expect(fixtures[0].innerHTML).toEqual(fixture.el.innerHTML) # the element is available as a return value and through fixture.el
-      expect(fixtures[1]).toEqual(fixture.json[0]) # the json for json fixtures is returned, and available in fixture.json
+
+      # available as a return value and appended to fixture.el
+      expect(fixtures[0].innerHTML).toEqual(fixture.el.innerHTML)
+
+      # the json for json fixtures is returned, and available in fixture.json
+      expect(fixtures[1]).toEqual(fixture.json[0])
 
   describe 'within the context of an it', ->
 
