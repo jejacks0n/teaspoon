@@ -5,7 +5,7 @@ describe "Using fixtures in Jasmine 2", ->
   fixture.set("<h2>Another Title</h2>") # create some markup manually (will be in a beforeEach)
 
   describe 'within the context of a describe', ->
-  
+
     beforeEach ->
       @fixtures = fixture.load("fixture.html", "fixture.json", true) # append these fixtures
 
