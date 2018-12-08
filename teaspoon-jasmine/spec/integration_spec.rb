@@ -60,13 +60,13 @@ feature "Running in the browser", browser: true do
 
         find("#teaspoon-build-full-report").click
         text = find("#teaspoon-report-all").text
-        expect(text).to include("Integration tests allows failing specs")
+        expect(text).to include("Integration tests\nallows failing specs")
         expect(text).to include("allows erroring specs")
         expect(text).to include("with nested describes")
         expect(text).to include("allows passing specs")
         expect(text).not_to include("allows pending specs using xit")
         expect(text).to include("allows pending specs by passing no function")
-        expect(text).to include("Another top level integration test allows passing specs")
+        expect(text).to include("Another top level integration test\nallows passing specs")
 
         find("#teaspoon-build-full-report").click
         expect(page).not_to have_selector("#teaspoon-report-all")
@@ -133,13 +133,13 @@ feature "Running in the browser", browser: true do
 
         find("#teaspoon-build-full-report").click
         text = find("#teaspoon-report-all").text
-        expect(text).to include("Integration tests allows failing specs")
+        expect(text).to include("Integration tests\nallows failing specs")
         expect(text).to include("allows erroring specs")
         expect(text).to include("with nested describes")
         expect(text).to include("allows passing specs")
         expect(text).to include("allows pending specs using xit")
         expect(text).to include("allows pending specs by passing no function")
-        expect(text).to include("Another top level integration test allows passing")
+        expect(text).to include("Another top level integration test\nallows passing")
 
         find("#teaspoon-build-full-report").click
         expect(page).not_to have_selector("#teaspoon-report-all")

@@ -37,7 +37,7 @@ feature "Running in the browser", browser: true do
 
       within("#teaspoon-report-failures") do
         expect(find("li.spec:nth-child(1)")).
-          to have_text("Integration tests allows failing specs fails correctly")
+          to have_text("Integration tests allows failing specs\nfails correctly")
       end
     end
 
@@ -58,10 +58,10 @@ feature "Running in the browser", browser: true do
 
       find("#teaspoon-build-full-report").click
       text = find("#teaspoon-report-all").text
-      expect(text).to include("Integration tests allows failing specs")
+      expect(text).to include("Integration tests\nallows failing specs")
       expect(text).to include("allows erroring specs")
       expect(text).to include("allows passing specs")
-      expect(text).to include("Another top level integration test allows passing specs")
+      expect(text).to include("Another top level integration test\nallows passing specs")
 
       find("#teaspoon-build-full-report").click
       expect(page).not_to have_selector("#teaspoon-report-all")
