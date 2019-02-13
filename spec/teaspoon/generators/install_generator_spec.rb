@@ -26,7 +26,11 @@ describe Teaspoon::Generators::InstallGenerator do
     expect(help.join("\n").gsub(/\n+/, "\n")).to include(<<-HELP.strip_heredoc)
       Usage:
         rails generate teaspoon:install [options]
-      Options:
+      Options:#{if Rails::VERSION::MAJOR >= 6
+          "
+          [--skip-namespace], [--no-skip-namespace]
+      # Skip namespace (affects only isolated applications)"
+      end}
       -t, [--framework=FRAMEWORK]
       # Specify which test framework to use (Available: jasmine, mocha, qunit)
       # Default: jasmine
