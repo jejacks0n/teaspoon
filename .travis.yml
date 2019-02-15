@@ -1,7 +1,6 @@
 sudo: false
 cache: bundler
 rvm:
-  - 2.3.6
   - 2.5.0
 addons:
   firefox: "49"
