@@ -17,7 +17,7 @@ module Teaspoon
       # Create the Rails application, which uses the version of Rails defined
       # in the Appraisal Gemfile. Then, no longer use the Appraisal Gemfile
       # and use the application one instead.
-      run_simple("bundle exec rails new testapp --skip-bundle --skip-activerecord -O --skip-javascript --skip-gemfile")
+      run_simple("bundle exec rails new testapp --skip-bundle --skip-activerecord -O --skip-javascript --skip-gemfile --skip-bootsnap")
       cd("testapp")
       set_environment_variable("BUNDLE_GEMFILE", expand_path("Gemfile"))
 

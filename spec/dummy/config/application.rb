@@ -3,7 +3,7 @@ require File.expand_path('../boot', __FILE__)
 require "action_controller/railtie"
 require "sprockets/railtie"
 begin
-  # require "haml-rails"
+  require "haml-rails" unless Rails::VERSION::MAJOR >= 6
   require "coffee-rails"
   require "sass-rails"
   require "jquery-rails"
