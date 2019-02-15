@@ -16,6 +16,13 @@ describe Teaspoon::Generators::InstallGenerator do
     expect(described_class.desc).to eq("Installs the Teaspoon initializer into your application.")
   end
 
+  def rails_6_option
+    return unless Rails::VERSION::MAJOR >= 6
+      "
+          [--skip-namespace], [--no-skip-namespace]
+      # Skip namespace (affects only isolated applications)"
+  end
+
   it "has useful help" do
     help = []
     shell = double(say: nil, print_table: nil)
@@ -26,7 +33,7 @@ describe Teaspoon::Generators::InstallGenerator do
     expect(help.join("\n").gsub(/\n+/, "\n")).to include(<<-HELP.strip_heredoc)
       Usage:
         rails generate teaspoon:install [options]
-      Options:
+      Options:#{rails_6_option}
       -t, [--framework=FRAMEWORK]
       # Specify which test framework to use (Available: jasmine, mocha, qunit)
       # Default: jasmine

@@ -1,12 +1,13 @@
 sudo: false
 cache: bundler
 rvm:
-  - 2.3.6
+  - 2.5.0
 addons:
   firefox: "49"
 gemfile:
   - gemfiles/rails_4.gemfile
   - gemfiles/rails_5.gemfile
+  - gemfiles/rails_6.gemfile
 before_script:
   - sh -e /etc/init.d/xvfb start && npm install -g istanbul
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
