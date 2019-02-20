@@ -2,7 +2,6 @@ Teaspoon
 ========
 
 [![Gem Version](https://img.shields.io/gem/v/teaspoon.svg)](https://rubygems.org/gems/teaspoon)
-[![Dependency Status](https://gemnasium.com/jejacks0n/teaspoon.svg)](https://gemnasium.com/jejacks0n/teaspoon)
 [![Build Status](https://img.shields.io/travis/jejacks0n/teaspoon.svg)](https://travis-ci.org/jejacks0n/teaspoon)
 [![Code Climate](https://codeclimate.com/github/jejacks0n/teaspoon/badges/gpa.svg)](https://codeclimate.com/github/jejacks0n/teaspoon)
 [![Test Coverage](https://codeclimate.com/github/jejacks0n/teaspoon/badges/coverage.svg)](https://codeclimate.com/github/jejacks0n/teaspoon)
