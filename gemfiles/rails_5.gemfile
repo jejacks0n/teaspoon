@@ -6,15 +6,15 @@ gem "rails", "< 5.1"
 
 group :development, :test do
   gem "puma"
-  gem "teaspoon-jasmine", :path => "../teaspoon-jasmine"
-  gem "teaspoon-mocha", :path => "../teaspoon-mocha"
-  gem "teaspoon-qunit", :path => "../teaspoon-qunit"
+  gem "teaspoon-jasmine", path: "../teaspoon-jasmine"
+  gem "teaspoon-mocha", path: "../teaspoon-mocha"
+  gem "teaspoon-qunit", path: "../teaspoon-qunit"
   gem "selenium-webdriver"
   gem "capybara-webkit"
-  gem "simplecov", :require => false
-  gem "rubocop", :require => false
+  gem "simplecov", require: false
+  gem "rubocop", require: false
 
-  gemspec :name => "teaspoon-devkit", :path => "../"
+  gemspec name: "teaspoon-devkit", path: "../"
 end
 
-gemspec :name => "teaspoon", :path => "../"
+gemspec name: "teaspoon", path: "../"

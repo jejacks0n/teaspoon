@@ -85,7 +85,7 @@ describe Teaspoon::Suite do
     it "returns just a file if one was requested" do
       subject.instance_variable_set(:@options, file: "spec/javascripts/foo.js")
       result = subject.spec_assets(false)
-      expect(result).to eql(["foo.js"])
+      expect(result).to eql(["foo.self.js?body=1"])
     end
 
     it "returns the asset tree (all dependencies resolved) if we want coverage" do

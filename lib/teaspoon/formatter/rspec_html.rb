@@ -38,38 +38,38 @@ module Teaspoon
 
       private
 
-      def log_suite_start(result)
-        @current_suite << result.label
-        log_template @suite_start_template, result
-      end
-
-      def log_suite_end
-        log_template @suite_end_template, @current_suite.pop
-      end
-
-      def template(contents)
-        Template.new contents
-      end
-
-      def log_template(template, object)
-        log_str template.render(object)
-      end
-
-      class Template
-        include ERB::Util
-
-        def initialize(contents)
-          @template = contents
+        def log_suite_start(result)
+          @current_suite << result.label
+          log_template @suite_start_template, result
         end
 
-        def render(obj)
-          @o = obj
-          ERB.new(@template).result binding
+        def log_suite_end
+          log_template @suite_end_template, @current_suite.pop
         end
-      end
 
-      module Templates
-        CSS = <<-CSS.strip_heredoc
+        def template(contents)
+          Template.new contents
+        end
+
+        def log_template(template, object)
+          log_str template.render(object)
+        end
+
+        class Template
+          include ERB::Util
+
+          def initialize(contents)
+            @template = contents
+          end
+
+          def render(obj)
+            @o = obj
+            ERB.new(@template).result binding
+          end
+        end
+
+        module Templates
+          CSS = <<-CSS.strip_heredoc
         body {
           margin: 0;
           padding: 0;
@@ -191,7 +191,7 @@ module Teaspoon
         }
         CSS
 
-        JAVASCRIPT = <<-JAVASCRIPT.strip_heredoc
+          JAVASCRIPT = <<-JAVASCRIPT.strip_heredoc
         (function() {
           "use strict";
 
@@ -386,7 +386,7 @@ module Teaspoon
         })();
         JAVASCRIPT
 
-        HEADER = <<-HTML.strip_heredoc
+          HEADER = <<-HTML.strip_heredoc
         <!DOCTYPE html>
         <html>
           <head>
@@ -422,13 +422,13 @@ module Teaspoon
               <div class="results">
         HTML
 
-        SUITE_START = <<-HTML.strip_heredoc
+          SUITE_START = <<-HTML.strip_heredoc
         <div class="example_group">
           <dl>
             <dt><%= h @o.label %></dt>
         HTML
 
-        SPEC = <<-HTML.strip_heredoc
+          SPEC = <<-HTML.strip_heredoc
         <dd class="example <%= h @o.status %>">
           <span class="spec-name"><%= h @o.label %></span>
           <span class="duration"><%= h "\#{@o.elapsed}s" if @o.elapsed %></span>
@@ -441,12 +441,12 @@ module Teaspoon
         </dd>
         HTML
 
-        SUITE_END = <<-HTML.strip_heredoc
+          SUITE_END = <<-HTML.strip_heredoc
           </dl>
         </div>
         HTML
 
-        FOOTER = <<-HTML.strip_heredoc
+          FOOTER = <<-HTML.strip_heredoc
               </div>
             </div>
 
@@ -458,7 +458,7 @@ module Teaspoon
           </body>
         </html>
         HTML
-      end
+        end
     end
   end
 end

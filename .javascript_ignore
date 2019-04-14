@@ -1,5 +1,0 @@
-node_modules/*
-vendor/*
-teaspoon-qunit/*
-teaspoon-mocha/*
-teaspoon-jasmine/*

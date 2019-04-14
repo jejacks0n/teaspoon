@@ -50,13 +50,13 @@ describe Teaspoon::Configuration do
   end
 
   it "allows defining suite configurations" do
-    subject.suite(:test_suite) {}
+    subject.suite(:test_suite) { }
     expect(subject.suite_configs["test_suite"][:block]).to be_a(Proc)
     expect(subject.suite_configs["test_suite"][:instance]).to be_a(Teaspoon::Configuration::Suite)
   end
 
   it "allows defining coverage configurations" do
-    subject.coverage(:test_coverage) {}
+    subject.coverage(:test_coverage) { }
     expect(subject.coverage_configs["test_coverage"][:block]).to be_a(Proc)
     expect(subject.coverage_configs["test_coverage"][:instance]).to be_a(Teaspoon::Configuration::Coverage)
   end
@@ -101,7 +101,7 @@ describe Teaspoon::Configuration do
 end
 
 describe Teaspoon::Configuration::Suite do
-  subject { described_class.new(:test, &(@suite || proc {})) }
+  subject { described_class.new(:test, &(@suite || proc { })) }
 
   it "has the default configuration" do
     roots = "spec/javascripts,spec/dummy/app/assets/javascripts/specs"
@@ -120,7 +120,7 @@ describe Teaspoon::Configuration::Suite do
 
   it "allows registering hooks" do
     expect(subject.hooks).to eq({})
-    subject.hook {}
+    subject.hook { }
     expect(subject.hooks["default"].length).to eq(1)
   end
 
@@ -182,7 +182,7 @@ describe Teaspoon::Configuration::Suite do
 end
 
 describe Teaspoon::Configuration::Coverage do
-  subject { described_class.new &(@coverage || proc{}) }
+  subject { described_class.new(&(@coverage || proc { })) }
 
   it "has the default configuration" do
     expect(subject.reports).to eq(["text-summary"])

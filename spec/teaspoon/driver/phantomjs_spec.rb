@@ -53,7 +53,7 @@ describe Teaspoon::Driver.fetch(:phantomjs) do
       end
 
       it "checks for the Phantomjs gem" do
-        stub_const("Phantomjs", double(path: '/path/to/phantomjs'))
+        stub_const("Phantomjs", double(path: "/path/to/phantomjs"))
 
         expect(::Phantomjs).to receive(:path)
         expect(::IO).to receive(:popen)

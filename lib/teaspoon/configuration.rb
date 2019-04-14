@@ -54,7 +54,7 @@ module Teaspoon
     # suite configurations
 
     cattr_accessor :suite_configs
-    @@suite_configs = { "default" => { block: proc {} } }
+    @@suite_configs = { "default" => { block: proc { } } }
 
     def self.suite(name = :default, &block)
       @@suite_configs[name.to_s] = { block: block, instance: Suite.new(name, &block) }
@@ -104,7 +104,7 @@ module Teaspoon
     # coverage configurations
 
     cattr_accessor :coverage_configs
-    @@coverage_configs = { "default" => { block: proc {} } }
+    @@coverage_configs = { "default" => { block: proc { } } }
 
     def self.coverage(name = :default, &block)
       @@coverage_configs[name.to_s] = { block: block, instance: Coverage.new(&block) }

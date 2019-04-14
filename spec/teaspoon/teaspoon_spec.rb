@@ -14,19 +14,19 @@ describe Teaspoon do
 
     it "sets configured to true" do
       subject.configured = false
-      subject.configure {}
+      subject.configure { }
       expect(subject.configured).to be_truthy
     end
 
     it "overrides configuration from ENV" do
       expect(subject.configuration).to receive(:override_from_env).with(ENV)
-      subject.configure {}
+      subject.configure { }
     end
   end
 
   describe ".setup" do
     it "calls configure" do
-      block = proc {}
+      block = proc { }
       expect(subject).to receive(:configure).with(no_args) { |&arg| expect(arg).to eq(block) }
       subject.setup(&block)
     end

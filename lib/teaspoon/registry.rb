@@ -22,7 +22,7 @@ module Teaspoon
       if !(driver = @registry[normalize_name(name)])
         raise not_found_exception.new(name: name, available: available.keys)
       end
-      
+
       driver.call
     end
 
@@ -36,12 +36,12 @@ module Teaspoon
 
     private
 
-    def normalize_name(name)
-      name.to_s.gsub(/[-|\s]/, '_').to_sym
-    end
+      def normalize_name(name)
+        name.to_s.gsub(/[-|\s]/, "_").to_sym
+      end
 
-    def not_found_exception
-      @not_found_exception || Teaspoon::NotFoundInRegistry
-    end
+      def not_found_exception
+        @not_found_exception || Teaspoon::NotFoundInRegistry
+      end
   end
 end

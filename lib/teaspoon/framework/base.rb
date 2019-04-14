@@ -13,7 +13,7 @@ module Teaspoon
           base._asset_paths = []
           base._template_paths = []
           base._install_path = "spec"
-          base._install_proc = proc {}
+          base._install_proc = proc { }
         end
 
         def framework_name(name = nil)

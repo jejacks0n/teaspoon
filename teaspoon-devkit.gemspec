@@ -30,5 +30,4 @@ Gem::Specification.new do |s|
 
   # for local bundle installs
   s.add_dependency "jbuilder"
-  s.add_dependency "sdoc"
 end

@@ -42,15 +42,15 @@ module Teaspoon
 
       protected
 
-      def driver_options
-        @driver_options ||= HashWithIndifferentAccess.new(
-          client_driver: :firefox,
-          timeout: Teaspoon.configuration.driver_timeout.to_i,
-          interval: 0.01,
-          message: 'Timed out',
-          selenium_options: {}
-        ).merge(@options)
-      end
+        def driver_options
+          @driver_options ||= HashWithIndifferentAccess.new(
+            client_driver: :firefox,
+            timeout: Teaspoon.configuration.driver_timeout.to_i,
+            interval: 0.01,
+            message: "Timed out",
+            selenium_options: {}
+          ).merge(@options)
+        end
     end
   end
 end

@@ -1,9 +1,0 @@
-languages:
-  Ruby: true
-  CoffeeScript: true
-exclude_paths:
-- "teaspoon-qunit/**/*"
-- "teaspoon-mocha/**/*"
-- "teaspoon-jasmine/**/*"
-- "app/assets/javascripts/support/**/*"
-- "**/*_spec.rb"
