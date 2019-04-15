@@ -3,8 +3,8 @@ Teaspoon
 
 [![Gem Version](https://img.shields.io/gem/v/teaspoon.svg)](https://rubygems.org/gems/teaspoon)
 [![Build Status](https://img.shields.io/travis/jejacks0n/teaspoon.svg)](https://travis-ci.org/jejacks0n/teaspoon)
-[![Code Climate](https://codeclimate.com/github/jejacks0n/teaspoon/badges/gpa.svg)](https://codeclimate.com/github/jejacks0n/teaspoon)
-[![Test Coverage](https://codeclimate.com/github/jejacks0n/teaspoon/badges/coverage.svg)](https://codeclimate.com/github/jejacks0n/teaspoon)
+[![Maintainability](https://api.codeclimate.com/v1/badges/70c116d18acd407d9201/maintainability)](https://codeclimate.com/github/jejacks0n/teaspoon/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/70c116d18acd407d9201/test_coverage)](https://codeclimate.com/github/jejacks0n/teaspoon/test_coverage)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
