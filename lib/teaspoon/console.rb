@@ -66,54 +66,54 @@ module Teaspoon
 
     protected
 
-    def resolve(files = [])
-      return if files.blank?
-      files.uniq.each do |path|
-        if result = Teaspoon::Suite.resolve_spec_for(path)
-          suite = @suites[result[:suite]] ||= []
-          suite << result[:path]
+      def resolve(files = [])
+        return if files.blank?
+        files.uniq.each do |path|
+          if result = Teaspoon::Suite.resolve_spec_for(path)
+            suite = @suites[result[:suite]] ||= []
+            suite << result[:path]
+          end
         end
       end
-    end
 
-    def start_server
-      server = Teaspoon::Server.new
-      log("Starting the Teaspoon server...") unless server.responsive?
-      server.start
-      server
-    end
+      def start_server
+        server = Teaspoon::Server.new
+        log("Starting the Teaspoon server...") unless server.responsive?
+        server.start
+        server
+      end
 
-    def suites
-      return [options[:suite]] if options[:suite].present?
-      return @suites.keys if @suites.present?
-      Teaspoon.configuration.suite_configs.keys
-    end
+      def suites
+        return [options[:suite]] if options[:suite].present?
+        return @suites.keys if @suites.present?
+        Teaspoon.configuration.suite_configs.keys
+      end
 
-    def driver
-      return @driver if @driver
-      driver = Teaspoon::Driver.fetch(Teaspoon.configuration.driver)
-      @driver = driver.new(Teaspoon.configuration.driver_options)
-    end
+      def driver
+        return @driver if @driver
+        driver = Teaspoon::Driver.fetch(Teaspoon.configuration.driver)
+        @driver = driver.new(Teaspoon.configuration.driver_options)
+      end
 
-    def base_url_for(suite)
-      ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite].join("/")
-    end
+      def base_url_for(suite)
+        ["#{@server.url}#{Teaspoon.configuration.mount_at}", suite].join("/")
+      end
 
-    def url_for(suite, console = true)
-      url = [base_url_for(suite), filter(suite)].compact.join("?")
-      url += "#{(url.include?('?') ? '&' : '?')}reporter=Console" if console
-      url
-    end
+      def url_for(suite, console = true)
+        url = [base_url_for(suite), filter(suite)].compact.join("?")
+        url += "#{(url.include?('?') ? '&' : '?')}reporter=Console" if console
+        url
+      end
 
-    def filter(suite)
-      parts = []
-      parts << "grep=#{URI::encode(options[:filter])}" if options[:filter].present?
-      (@suites[suite] || options[:files] || []).flatten.each { |file| parts << "file[]=#{URI::encode(file)}" }
-      "#{parts.join('&')}" if parts.present?
-    end
+      def filter(suite)
+        parts = []
+        parts << "grep=#{CGI.escape(options[:filter])}" if options[:filter].present?
+        (@suites[suite] || options[:files] || []).flatten.each { |file| parts << "file[]=#{CGI.escape(file)}" }
+        "#{parts.join('&')}" if parts.present?
+      end
 
-    def log(str)
-      STDOUT.print("#{str}\n") unless Teaspoon.configuration.suppress_log
-    end
+      def log(str)
+        STDOUT.print("#{str}\n") unless Teaspoon.configuration.suppress_log
+      end
   end
 end

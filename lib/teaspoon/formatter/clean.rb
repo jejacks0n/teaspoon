@@ -5,8 +5,8 @@ module Teaspoon
     class Clean < Dot
       private
 
-      def log_failed_examples
-      end
+        def log_failed_examples
+        end
     end
   end
 end

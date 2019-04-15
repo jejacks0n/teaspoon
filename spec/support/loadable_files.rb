@@ -2,7 +2,7 @@ module LoadableFiles
   FileDetails = Struct.new(:driver_file, :load_path)
 
   def create_loadable_file(filename, contents)
-    driver_file_path = File.expand_path(filename, Dir::mktmpdir())
+    driver_file_path = File.expand_path(filename, Dir.mktmpdir())
     driver_file = File.open(driver_file_path, "w") do |file|
       file.write(contents)
       file

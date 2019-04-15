@@ -3,13 +3,13 @@ Teaspoon
 
 [![Gem Version](https://img.shields.io/gem/v/teaspoon.svg)](https://rubygems.org/gems/teaspoon)
 [![Build Status](https://img.shields.io/travis/jejacks0n/teaspoon.svg)](https://travis-ci.org/jejacks0n/teaspoon)
-[![Code Climate](https://codeclimate.com/github/jejacks0n/teaspoon/badges/gpa.svg)](https://codeclimate.com/github/jejacks0n/teaspoon)
-[![Test Coverage](https://codeclimate.com/github/jejacks0n/teaspoon/badges/coverage.svg)](https://codeclimate.com/github/jejacks0n/teaspoon)
-[![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+[![Maintainability](https://api.codeclimate.com/v1/badges/70c116d18acd407d9201/maintainability)](https://codeclimate.com/github/jejacks0n/teaspoon/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/70c116d18acd407d9201/test_coverage)](https://codeclimate.com/github/jejacks0n/teaspoon/test_coverage)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 <img src="https://raw.github.com/jejacks0n/teaspoon/master/screenshots/logo_big.png" alt="Logo by Morgan Keys" align="right" />
-<sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
+<sup>Logo by [Morgan Keys](https://twitter.com/morganrkeys)</sup>
 
 Teaspoon is a Javascript test runner built for Rails. It can run tests in the browser and headless using PhantomJS, Selenium WebDriver, or Capybara Webkit. It can also run your tests on selenium-webgrid providers such as [BrowserStack](https://www.browserstack.com).
 

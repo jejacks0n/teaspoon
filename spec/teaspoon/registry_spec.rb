@@ -87,14 +87,14 @@ describe Teaspoon::Registry do
 
   describe ".available" do
     it "lists the registered options with any arbitrary data passed to #register" do
-      subject.register(:his_driver,"","my_driver", extra: "data", default: true)
-      subject.register(:her_driver,"","my_driver")
+      subject.register(:his_driver, "", "my_driver", extra: "data", default: true)
+      subject.register(:her_driver, "", "my_driver")
 
-      expect(subject.available).to eq({
+      expect(subject.available).to eq(
         my_driver: {},
-        his_driver: {extra: "data", default: true},
+        his_driver: { extra: "data", default: true },
         her_driver: {}
-      })
+      )
     end
   end
 end

@@ -57,7 +57,7 @@ describe Teaspoon::Driver.fetch(:selenium) do
         client_driver: :firefox,
         timeout: 180,
         interval: 0.01,
-        message: 'Timed out',
+        message: "Timed out",
         selenium_options: {}
       )
       expect(Selenium::WebDriver::Wait).to receive(:new).with(hash)

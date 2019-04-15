@@ -88,7 +88,7 @@ describe Teaspoon::Coverage do
     it "does nothing if there are no threshold checks to make" do
       expect(subject).to receive(:threshold_args).and_return(nil)
       expect(subject).to_not receive(:input_path)
-      subject.check_thresholds {}
+      subject.check_thresholds { }
     end
 
     it "checks the coverage using istanbul and passes them to the block provided" do

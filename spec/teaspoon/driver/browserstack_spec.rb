@@ -97,7 +97,7 @@ describe Teaspoon::Driver.fetch(:browserstack) do
 
     it "ensures quit is called on the driver for every browser" do
       expect(driver).to receive(:quit).twice
-      subject = described_class.new(capabilities: [{"foo" => "bar"}, {"foo2" => "bar2"}])
+      subject = described_class.new(capabilities: [{ "foo" => "bar" }, { "foo2" => "bar2" }])
       subject.run_specs(runner, "_url_")
     end
 

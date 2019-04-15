@@ -333,7 +333,6 @@ describe Teaspoon::Formatter::Base do
     end
 
     describe "parse_output_file correctly" do
-
       subject { Teaspoon::Formatter::Base.new(:foo, filename_un_parsed) }
 
       it "should set output file name to parsed value" do

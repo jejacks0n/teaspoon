@@ -43,28 +43,28 @@ module Teaspoon
 
     protected
 
-    def self.ignored?(asset)
-      Array(Teaspoon::Coverage.configuration.ignore).any? do |ignore|
-        asset.filename.match(ignore)
+      def self.ignored?(asset)
+        Array(Teaspoon::Coverage.configuration.ignore).any? do |ignore|
+          asset.filename.match(ignore)
+        end
+      rescue Teaspoon::UnknownCoverage
+        false
       end
-    rescue Teaspoon::UnknownCoverage
-      false
-    end
 
-    def add_instrumentation(asset)
-      source_path = asset.filename
-      Dir.mktmpdir do |temp_path|
-        input_path = File.join(temp_path, File.basename(source_path)).sub(/\.js.+/, ".js")
-        File.open(input_path, "w") { |f| f.write(asset.source) }
-        instrument(input_path).gsub(input_path, source_path)
+      def add_instrumentation(asset)
+        source_path = asset.filename
+        Dir.mktmpdir do |temp_path|
+          input_path = File.join(temp_path, File.basename(source_path)).sub(/\.js.+/, ".js")
+          File.open(input_path, "w") { |f| f.write(asset.source) }
+          instrument(input_path).gsub(input_path, source_path)
+        end
       end
-    end
 
-    def instrument(input)
-      result = %x{#{self.class.executable} instrument --embed-source #{input.shellescape}}
-      return result if $?.exitstatus == 0
-      raise Teaspoon::DependencyError.new("Unable to add instrumentation to #{File.basename(input)}.")
-    end
+      def instrument(input)
+        result = %x{#{self.class.executable} instrument --embed-source #{input.shellescape}}
+        return result if $?.exitstatus == 0
+        raise Teaspoon::DependencyError.new("Unable to add instrumentation to #{File.basename(input)}.")
+      end
   end
 
   module SprocketsInstrumentation

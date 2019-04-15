@@ -1,2 +1,2 @@
-Rails.application.routes.draw do
+Dummy::Application.routes.draw do
 end

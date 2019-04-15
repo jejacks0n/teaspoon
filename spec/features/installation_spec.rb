@@ -6,7 +6,7 @@ feature "Installation", shell: true do
   end
 
   it "errors with the expected message" do
-    run_simple("bundle exec rails generate teaspoon:install --trace", false)
+    run_command_and_stop("bundle exec rails generate teaspoon:install --trace", fail_on_error: false)
 
     expect(last_command_started).to have_exit_status(1)
     expect(all_output).to include(<<-OUTPUT.strip_heredoc)

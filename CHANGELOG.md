@@ -1,5 +1,9 @@
 ### Unreleased
 
+* Removes build support for Rails 3 & 4.
+* Removes build support for Ruby < 2.4.
+* Removes support for capybara webkit.
+
 #### Bug Fixes
 
 ### 1.1.5
