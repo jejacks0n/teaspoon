@@ -23,12 +23,11 @@ module Dummy
     config.eager_load = false
     config.assets.enabled = true
     config.secret_key_base = "d3375037082cacbd4bb3072b780cbb27"
-    config.secret_token = "d3375037082cacbd4bb3072b780cbb27"
 
     # Change our relative root url to show that if relative paths are setup properly, teaspoon will
     # continue to work and load the proper urls.
     config.relative_url_root = "/relative"
     config.assets.prefix = "/relative/assets" # this must be set for any asset paths to be correct!
-    config.assets.precompile += %w[teaspoon/*.js]
+    config.assets.precompile += %w[teaspoon/*.js foo.js]
   end
 end
