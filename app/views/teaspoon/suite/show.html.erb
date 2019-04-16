@@ -7,10 +7,7 @@
 
     <%= stylesheet_link_tag *@suite.stylesheets %>
     <%= javascript_include_tag *@suite.javascripts %>
-    <script type="text/javascript">
-      Teaspoon.version = <%= Teaspoon::VERSION.to_json.html_safe %>;
-      Teaspoon.suites  = <%= {all: Teaspoon.configuration.suite_configs.keys, active: @suite.name}.to_json.html_safe %>;
-    </script>
+    <script src="<%= "#{Teaspoon.configuration.mount_at}/js/#{@suite.name}.config.js" %>"></script>
     <%= render @suite.boot_partial %>
   </head>
   <body data-no-turbolink>

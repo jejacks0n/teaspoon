@@ -1,4 +1,2 @@
 <%= javascript_include_tag *@suite.spec_assets, debug: @suite.config.expand_assets, allow_non_precompiled: true %>
-<script type="text/javascript">
-  Teaspoon.onWindowLoad(Teaspoon.execute);
-</script>
+<script src="<%= "#{Teaspoon.configuration.mount_at}/js/#{@suite.name}.vanilla.js" %>"></script>

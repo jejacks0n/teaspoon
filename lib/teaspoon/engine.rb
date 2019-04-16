@@ -9,6 +9,7 @@ module Teaspoon
     routes do
       root to: "suite#index"
       match "/fixtures/*filename", to: "suite#fixtures", via: :get, as: "fixture"
+      match "/js/:suite.:jstype.js", to: "suite#js", via: :get, defaults: { suite: "default", jstype: "vanilla" }
       match "/:suite", to: "suite#show", via: :get, as: "suite", defaults: { suite: "default" }
       match "/:suite/:hook", to: "suite#hook", via: :post, defaults: { suite: "default", hook: "default" }
     end
