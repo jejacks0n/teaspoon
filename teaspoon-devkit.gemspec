@@ -23,10 +23,13 @@ Gem::Specification.new do |s|
   s.add_dependency "jquery-rails"
 
   # test dependencies
+  s.add_dependency "puma"
   s.add_dependency "rspec-rails"
+  s.add_dependency "webdrivers"
   s.add_dependency "capybara"
   s.add_dependency "aruba"
   s.add_dependency "appraisal"
+  s.add_dependency "simplecov"
 
   # for local bundle installs
   s.add_dependency "jbuilder"

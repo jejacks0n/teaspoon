@@ -4,7 +4,7 @@ rvm:
   - 2.5.0
   - 2.6.0
 addons:
-  firefox: latest
+  chrome: stable
 gemfile:
   - gemfiles/rails_5.gemfile
   - gemfiles/rails_6.gemfile
@@ -16,9 +16,6 @@ env:
 before_script:
   - sh -e /etc/init.d/xvfb start
   - npm install -g istanbul
-  - wget https://github.com/mozilla/geckodriver/releases/download/v0.19.1/geckodriver-v0.19.1-linux64.tar.gz
-  - mkdir geckodriver && tar -xzf geckodriver-v0.19.1-linux64.tar.gz -C geckodriver
-  - export PATH=$PATH:$PWD/geckodriver
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
