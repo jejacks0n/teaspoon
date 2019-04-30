@@ -1,4 +1,5 @@
 require "teaspoon-devkit"
+ENV["SIMPLECOV_COMMAND_NAME"] = "teaspoon-mocha"
 
 # Set the path for our teaspoon_env.
 # This is used within the dummy app, and allows us to tailor the teasooon

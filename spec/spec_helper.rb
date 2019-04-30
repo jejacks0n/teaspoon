@@ -1,14 +1,17 @@
 require "simplecov"
 SimpleCov.start do
+  command_name ENV["SIMPLECOV_COMMAND_NAME"] || "teaspoon"
+
   filters.clear
   add_filter { |src| !(src.filename =~ /^#{SimpleCov.root}/) unless src.filename =~ /teaspoon/ }
+
   # filter the framework implementations
-  add_filter "teaspoon-(jasmine|mocha|qunit)/**/framework.rb"
-  # filter deprecation warnings, devkit tools, and our teaspoon envs
-  add_filter "teaspoon/deprecated.rb"
-  add_filter "devkit.rb"
-  add_filter "teaspoon_env.rb"
-  # filter the controller, since it's tested elsewhere
+  add_filter { |src| src.filename =~ /teaspoon-(jasmine|mocha|qunit)\/.*\/framework.rb/ }
+
+  # filter our teaspoon envs, devkit tools, deprecation code and spec support
+  add_filter [ "teaspoon_env.rb", "devkit.rb", "teaspoon/deprecated.rb" ]
+
+  # filter the controller, since it's tested in framework implementations
   add_filter "suite_controller.rb"
 end
 

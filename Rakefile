@@ -39,10 +39,9 @@ namespace :teaspoon do
 
   namespace :build do
     desc "Builds all frameworks into the distribution ready bundles"
-    x = frameworks.inject([]) do |tasks, framework|
+    task javascripts: (frameworks.inject([]) do |tasks, framework|
       tasks + ["teaspoon:#{framework}:build"]
-    end
-    task javascripts: x
+    end)
   end
 end
 
