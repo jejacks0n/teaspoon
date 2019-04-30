@@ -1,7 +1,7 @@
 exclude_patterns:
-- "teaspoon-qunit/**/*"
-- "teaspoon-mocha/**/*"
-- "teaspoon-jasmine/**/*"
-- "app/assets/javascripts/support/**/*"
-- "spec/javascripts/support/**/*"
-- "**/*_spec.rb"
+  - "teaspoon-qunit/**/*"
+  - "teaspoon-mocha/**/*"
+  - "teaspoon-jasmine/**/*"
+  - "app/assets/javascripts/support/**/*"
+  - "spec/javascripts/support/**/*"
+  - "**/*_spec.rb"
