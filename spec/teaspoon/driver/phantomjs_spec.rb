@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe Teaspoon::Driver.fetch(:phantomjs) do
-
   describe "#initialize" do
     it "assigns @options" do
       subject = described_class.new(foo: "bar")

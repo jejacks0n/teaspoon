@@ -11,7 +11,7 @@ Teaspoon
 <img src="https://raw.github.com/jejacks0n/teaspoon/master/screenshots/logo_big.png" alt="Logo by Morgan Keys" align="right" />
 <sup>Logo by [Morgan Keys](https://twitter.com/morganrkeys)</sup>
 
-Teaspoon is a Javascript test runner built for Rails. It can run tests in the browser and headless using PhantomJS, Selenium WebDriver, or Capybara Webkit. It can also run your tests on selenium-webgrid providers such as [BrowserStack](https://www.browserstack.com).
+Teaspoon is a Javascript test runner built for Rails. It can run tests in the browser and headless using PhantomJS, or Selenium WebDriver. It can also run your tests on selenium-webgrid providers such as [BrowserStack](https://www.browserstack.com).
 
 The goal of Teaspoon is to be simple to use while also providing the most complete Javascript testing solution for Rails.
 
@@ -62,7 +62,7 @@ Run the install generator to get the environment file and a basic spec helper. I
 rails generate teaspoon:install --coffee
 ```
 
-To run Teaspoon headless you'll need PhantomJS, Selenium Webdriver or Capybara Webkit. We recommend PhantomJS, which you can install with homebrew, npm or [as a download](http://phantomjs.org/download.html).
+To run Teaspoon headless you'll need PhantomJS or Selenium Webdriver.
 
 
 ## Usage

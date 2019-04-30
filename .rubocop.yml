@@ -14,3 +14,5 @@ Layout/DefEndAlignment:
 
 AllCops:
   TargetRubyVersion: 2.6.2
+  Exclude:
+    - 'tmp/**/*'
