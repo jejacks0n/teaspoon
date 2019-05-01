@@ -13,7 +13,7 @@ SimpleCov.start do
 
   # filter the controller, since it's tested in framework implementations
   add_filter "suite_controller.rb"
-end
+end unless ENV["SIMPLECOV_COMMAND_NAME"]
 
 ENV["RAILS_ENV"] ||= "test"
 ENV["RAILS_ROOT"] = File.expand_path("../dummy", __FILE__)
