@@ -3,16 +3,16 @@ SimpleCov.start do
   command_name ENV["SIMPLECOV_COMMAND_NAME"] || "teaspoon"
 
   filters.clear
-  add_filter { |src| !(src.filename =~ /^#{SimpleCov.root}/) unless src.filename =~ /teaspoon/ }
 
-  # filter the framework implementations
-  add_filter { |src| src.filename =~ /teaspoon-(jasmine|mocha|qunit)\/.*\/framework.rb/ }
-
-  # filter our teaspoon envs, devkit tools, deprecation code and spec support
-  add_filter [ "teaspoon_env.rb", "devkit.rb", "teaspoon/deprecated.rb" ]
-
-  # filter the controller, since it's tested in framework implementations
-  add_filter "suite_controller.rb"
+  add_filter { |src| !(src.filename =~ /teaspoon\//) }
+  add_filter [
+    "teaspoon_env.rb", # teaspoon envs
+    "devkit.rb", # devkit tools
+    "framework.rb", # framework definitions
+    "deprecated.rb", # deprecation warnings
+    "support/capybara", # spec support
+    "suite_controller.rb" # controller, tested in framework implementations
+  ]
 end unless ENV["SIMPLECOV_COMMAND_NAME"]
 
 ENV["RAILS_ENV"] ||= "test"

@@ -60,7 +60,8 @@ module Teaspoon
           environment: "test",
           AccessLog: [],
           Logger: Rails.logger,
-          server: Teaspoon.configuration.server
+          server: Teaspoon.configuration.server,
+          Silent: true
         }
       end
 

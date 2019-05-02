@@ -49,7 +49,8 @@ describe Teaspoon::Server do
         environment: "test",
         AccessLog: [],
         Logger: Rails.logger,
-        server: Teaspoon.configuration.server
+        server: Teaspoon.configuration.server,
+        Silent: true,
       }
       expect(Rack::Server).to receive(:new).with(expected_opts).and_return(server)
 
