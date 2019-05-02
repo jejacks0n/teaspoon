@@ -4,12 +4,9 @@ SimpleCov.start do
 
   filters.clear
 
-  add_filter { |src|
-    filtered = !(src.filename =~ /teaspoon\//)
-    puts src.filename unless filtered
-    filtered
-  }
+  add_filter { |src| !(src.filename =~ /teaspoon\//) }
   add_filter [
+    "gemfiles", # appraisal installs gems here
     "teaspoon_env.rb", # teaspoon envs
     "devkit.rb", # devkit tools
     "framework.rb", # framework definitions
