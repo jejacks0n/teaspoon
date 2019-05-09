@@ -1,3 +1,5 @@
+require "pathname"
+
 module Teaspoon
   def self.root
     defined?(Rails) ? Rails.root : Pathname.new(Dir.pwd)
