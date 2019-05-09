@@ -8,16 +8,13 @@ end
 
 require "teaspoon/driver/base"
 
-# The driver creates individual thread for each test.
-# This limit is here to disallow too many threads
-# Override via max_parallel key in options.
-MAX_PARALLEL = 10
-
 # Need to have BrowserStackLocal binary (https://www.browserstack.com/local-testing#command-line)
 # running in the background to use this driver.
 module Teaspoon
   module Driver
     class BrowserStack < Base
+      MAX_PARALLEL = 10
+
       def initialize(options = nil)
         options ||= {}
         case options
