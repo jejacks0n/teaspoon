@@ -17,6 +17,7 @@ env:
 before_script:
   - sh -e /etc/init.d/xvfb start
   - npm install -g istanbul
+  - npm install -g phantomjs
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build

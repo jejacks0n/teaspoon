@@ -58,7 +58,7 @@ feature "Running in the console", shell: true do
     expect(teaspoon_output).to match(expected_testing_output)
   end
 
-  xit "can display coverage information" do
+  it "can display coverage information" do
     pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable
     run_teaspoon("--coverage=default")
 
