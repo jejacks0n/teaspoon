@@ -2,13 +2,13 @@
 
 source "https://rubygems.org"
 
-gem "rails", "~> 6.0"
+gem "rails", "< 6"
 gem "teaspoon-jasmine", path: "../teaspoon-jasmine"
 gem "teaspoon-mocha", path: "../teaspoon-mocha"
 gem "teaspoon-qunit", path: "../teaspoon-qunit"
 gem "rubocop", require: false
 gem "rubocop-rails_config"
-gem "sprockets", "< 4"
+gem "sprockets", "~> 4.0"
 
 gemspec name: "teaspoon", path: "../"
 gemspec name: "teaspoon-devkit", path: "../"

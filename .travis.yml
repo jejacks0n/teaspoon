@@ -9,13 +9,15 @@ addons:
 gemfile:
   - gemfiles/rails_5.gemfile
   - gemfiles/rails_6.gemfile
+  - gemfiles/rails_5_sprockets_4.gemfile
+  - gemfiles/rails_6_sprockets_4.gemfile
 env:
   global:
     - TRAVIS=true
-    - DISPLAY=:99.0
     - TEASPOON_DEVELOPMENT=true
+services:
+  - xvfb
 before_script:
-  - sh -e /etc/init.d/xvfb start
   - npm install -g istanbul
   - npm install -g phantomjs
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
