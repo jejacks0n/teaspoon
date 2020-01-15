@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-gem "rails", "6.0.0.beta3"
+gem "rails", "6.0.0"
 gem "teaspoon-jasmine", path: "../teaspoon-jasmine"
 gem "teaspoon-mocha", path: "../teaspoon-mocha"
 gem "teaspoon-qunit", path: "../teaspoon-qunit"
