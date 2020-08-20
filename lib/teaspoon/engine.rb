@@ -61,7 +61,9 @@ module Teaspoon
       mount_at = Teaspoon.configuration.mount_at
 
       return if app.routes.recognize_path(mount_at)[:action] != "routing_error" rescue nil
-      require Teaspoon::Engine.root.join("app/controllers/teaspoon/suite_controller")
+      ActiveSupport.on_load(:action_controller) do
+        require Teaspoon::Engine.root.join("app/controllers/teaspoon/suite_controller")
+      end
 
       app.routes.prepend { mount Teaspoon::Engine => mount_at, as: "teaspoon" }
     end
