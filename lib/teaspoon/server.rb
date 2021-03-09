@@ -1,6 +1,7 @@
 require "socket"
 require "timeout"
-require "webrick"
+# no longer ship with ruby 3, but is it required?
+# require "webrick"
 
 module Teaspoon
   class Server
