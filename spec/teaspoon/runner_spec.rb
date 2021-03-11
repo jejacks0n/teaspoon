@@ -91,6 +91,7 @@ describe Teaspoon::Runner do
         expect(subject).to receive(:notify_formatters).once.with("coverage", "_generated_reports_")
         expect(subject).to receive(:notify_formatters).once.with("threshold_failure", "_threshold_failures_")
         expect(subject).to receive(:notify_formatters).exactly(2).times.and_call_original
+        pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable
         subject.process('{"_teaspoon":true,"type":"result","coverage":"_coverage_"}')
         expect(subject.failure_count).to eq(1)
       end
