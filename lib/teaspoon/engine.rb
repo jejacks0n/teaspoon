@@ -101,27 +101,6 @@ module Teaspoon
   end
 end
 
-begin
-  require "action_view"
-  if ActionView.gem_version >= Gem::Version.new("4.2.5")
-    require "action_view/helpers/asset_tag_helper"
-    module ActionView::Helpers::AssetTagHelper
-      def javascript_include_tag(*sources)
-        options = sources.extract_options!.stringify_keys
-        path_options = options.extract!("protocol", "extname", "host").symbolize_keys
-        path_options[:debug] = options["allow_non_precompiled"]
-        sources.uniq.map { |source|
-          tag_options = {
-            "src" => path_to_javascript(source, path_options)
-          }.merge!(options)
-          content_tag(:script, "", tag_options)
-        }.join("\n").html_safe
-      end
-    end
-  end
-rescue
-end
-
 # Some Sprockets patches to work with Sprockets 2.x
 unless Sprockets::Asset.public_method_defined?(:filename)
   module Sprockets
