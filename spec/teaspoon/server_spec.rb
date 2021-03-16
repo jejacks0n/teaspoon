@@ -109,10 +109,8 @@ describe Teaspoon::Server do
     end
 
     it "really starts a server" do
-      pending "TODO: currently broken, please fix this test"
       subject.start
       response = Net::HTTP.get_response(URI.parse("#{subject.url}/teaspoon/foo"))
-      $stderr.print response.body.inspect unless response.code == "200"
       expect(response.code).to eq("200")
     end
   end
