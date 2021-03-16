@@ -57,7 +57,7 @@ jobs:
     - name: Run tests
       run: bundle exec rake
     - name: Report cc-test-reporter result
-      run: ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+      run: ./cc-test-reporter after-build
 
 # How to do these?
 #addons:
