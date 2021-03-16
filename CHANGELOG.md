@@ -1,5 +1,11 @@
 ### Unreleased
 
+### 1.2.2
+
+* make sure all tests pass with rails 4.2 - 6.1 (few pending excluded PR welcome)
+* ruby supported 2.5 to 2.7 works, unknown about 3.0
+* remove monkey-patch on `javascript_include_tag`
+
 ### 1.2.1
 
 * require utility in console to get Teaspoon.root (#562)
