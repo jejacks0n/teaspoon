@@ -101,6 +101,16 @@ module Teaspoon
   end
 end
 
+class Sprockets::Rails::HelperAssetResolvers::Environment
+  def raise_unless_precompiled_asset(path)
+    if Rails.env.test? or Rails.env.development?
+      # nothing, thank you
+    else
+      super
+    end
+  end
+end
+
 # Some Sprockets patches to work with Sprockets 2.x
 unless Sprockets::Asset.public_method_defined?(:filename)
   module Sprockets
