@@ -9,6 +9,7 @@ gem "teaspoon-qunit", path: "../teaspoon-qunit"
 gem "rubocop", require: false
 gem "rubocop-rails_config"
 gem "sprockets", "~> 4.0"
+gem "thin"
 
 gemspec name: "teaspoon", path: "../"
 gemspec name: "teaspoon-devkit", path: "../"

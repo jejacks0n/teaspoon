@@ -1,6 +1,10 @@
 require "socket"
 require "timeout"
-require "webrick"
+if RUBY_VERSION >= "3.0"
+  require "thin"
+else
+  require "webrick"
+end
 
 module Teaspoon
   class Server
