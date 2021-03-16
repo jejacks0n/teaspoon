@@ -1,7 +1,9 @@
 require "socket"
 require "timeout"
 if RUBY_VERSION >= "3.0"
-  require "thin"
+  require "thin" rescue LoadError
+  require "webrick" rescue LoadError
+  require "puma" rescue LoadError
 else
   require "webrick"
 end
