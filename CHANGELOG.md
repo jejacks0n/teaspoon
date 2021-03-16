@@ -1,5 +1,13 @@
 ### Unreleased
 
+### 1.2.1
+
+* require utility in console to get Teaspoon.root (#562)
+* Update ruby version requirement to allow ruby 3.0 (#583)
+* Fix coverage output path (#579)
+* Delay using Rails until loaded (#582)
+* Run tests via Github Actions (#588)
+
 ### 1.2.0
 
 #### Enhancements
