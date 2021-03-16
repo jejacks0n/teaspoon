@@ -1,4 +1,4 @@
-#= require support/json2
+#= require support/stimulus@2
 #= require jquery
 
 window.passing = true

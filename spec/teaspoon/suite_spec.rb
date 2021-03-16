@@ -93,7 +93,7 @@ describe Teaspoon::Suite do
 
       expect(result).to include(match(/teaspoon\/reporters\/console_spec(\.self)?\.js\?body=1/)) # Specs do not get instrumentation
       expect(result).to include(match(/jquery(\.self)?\.js\?body=1&instrument=1/))
-      expect(result).to include(match(/support\/json2(\.self)?\.js\?body=1&instrument=1/))
+      expect(result).to include(match(/support\/stimulus@2(\.self)?\.js\?body=1&instrument=1/))
       expect(result).to include(match(/spec_helper(\.self)?\.js\?body=1&instrument=1/))
       expect(result).to include(match(/driver\/phantomjs\/runner(\.self)?\.js\?body=1&instrument=1/))
     end
