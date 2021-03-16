@@ -1,13 +1,31 @@
 require "webdrivers"
 
-def register_driver(name, args = [], opts = {})
+def register_driver(browser, name, args, headless: false)
+  case browser
+  when :firefox
+    options = Selenium::WebDriver::Firefox::Options.new
+  when :chrome
+    options = Selenium::WebDriver::Chrome::Options.new
+  else
+    raise "what browser?"
+  end
+
   Capybara.register_driver(name) do |app|
-    options = { args: args + ["window-size=1440,1080"] }
-    options[:binary] = ENV.fetch("GOOGLE_CHROME_SHIM", nil)
-    capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(chromeOptions: options.compact)
-    Capybara::Selenium::Driver.new(app, { browser: :chrome, desired_capabilities: capabilities }.merge(opts))
+    args.each { |arg| options.add_argument arg }
+    options.headless! if headless
+    Capybara::Selenium::Driver.new(app, browser: browser, options: options)
   end
 end
 
-register_driver(:chrome)
-register_driver(:chrome_headless, %w[headless disable-gpu no-sandbox disable-dev-shm-usage])
+driver_arguments = %w[
+  disable-impl-side-painting
+  window-size=1440,1080
+  no-sandbox
+  disable-gpu
+  disable-dev-shm-usage
+  verbose
+]
+register_driver(:chrome, :chrome, driver_arguments)
+register_driver(:chrome, :chrome_headless, driver_arguments, headless: true)
+register_driver(:firefox, :firefox, driver_arguments)
+register_driver(:firefox, :firefox_headless, driver_arguments, headless: true)

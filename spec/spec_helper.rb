@@ -46,6 +46,6 @@ RSpec.configure do |config|
   end
 
   config.before(:each, browser: true) do
-    Capybara.current_driver = Capybara.javascript_driver = ENV.fetch("CAPYBARA_DRIVER", "chrome_headless").to_sym
+    Capybara.current_driver = Capybara.javascript_driver = ENV.fetch("CAPYBARA_DRIVER", "firefox_headless").to_sym
   end
 end
