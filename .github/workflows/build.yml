@@ -20,8 +20,10 @@ jobs:
           - 2.7
           - 2.6
           - 2.5
+          - 2.4
           #- jruby-9.2.15.0
         gemfile:
+          - rails_4.1
           - rails_4.2
           - rails_5.0
           - rails_5.1
