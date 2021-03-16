@@ -20,4 +20,5 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = ">= 2.4"
   s.add_dependency "railties", ">= 3.2.5"
+  s.add_development_dependency "simplecov", "< 0.18"
 end
