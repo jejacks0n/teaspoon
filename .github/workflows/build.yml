@@ -56,11 +56,6 @@ jobs:
       run: ./cc-test-reporter before-build
     - name: Run tests
       run: bundle exec rake
-    - name: Report cc-test-reporter result
-      run: ./cc-test-reporter after-build
+    #- name: Report cc-test-reporter result
+    #  run: ./cc-test-reporter after-build
 
-# How to do these?
-#addons:
-  #chrome: stable
-#services:
-  #- xvfb
