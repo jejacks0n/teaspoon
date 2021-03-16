@@ -20,7 +20,7 @@ jobs:
           - 2.7
           - 2.6
           - 2.5
-          - jruby-9.2.15.0
+          #- jruby-9.2.15.0
         gemfile:
           - rails_5
           - rails_6
