@@ -1,9 +1,17 @@
 require "socket"
 require "timeout"
+def safe_require(libname)
+  begin
+    require libname
+  rescue LoadError => err
+    warn "Couldn't load: #{err}"
+  end
+end
+
 if RUBY_VERSION >= "3.0"
-  require "thin" rescue LoadError
-  require "webrick" rescue LoadError
-  require "puma" rescue LoadError
+  safe_require "thin"
+  safe_require "webrick"
+  safe_require "puma"
 else
   require "webrick"
 end
