@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.files       = Dir["{app,lib,bin}/**/*"] + ["MIT.LICENSE", "README.md", "CHANGELOG.md"]
   s.executables = ["teaspoon"]
 
-  s.required_ruby_version = ">= 2.4"
-  s.add_dependency "railties", ">= 3.2.5"
+  s.required_ruby_version = ">= 2.5"
+  s.add_dependency "railties", ">= 4.2.11"
   s.add_development_dependency "simplecov", "< 0.18"
 end
