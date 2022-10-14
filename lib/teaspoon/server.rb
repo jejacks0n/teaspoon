@@ -1,6 +1,5 @@
 require "socket"
 require "timeout"
-require "webrick"
 
 module Teaspoon
   class Server
