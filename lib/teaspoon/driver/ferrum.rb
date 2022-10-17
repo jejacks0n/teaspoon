@@ -23,7 +23,7 @@ module Teaspoon
       end
 
       def run_specs(runner, url)
-        driver = ::Ferrum::Browser.new
+        driver = ::Ferrum::Browser.new(driver_options)
         driver.go_to(url)
 
         if driver.evaluate("window.Teaspoon")
