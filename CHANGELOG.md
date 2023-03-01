@@ -1,5 +1,9 @@
 ### Unreleased
 
+### 1.3.0
+
+* Officially drops support for Ruby 2.4 and Rails earlier than 4.2.11
+
 ### 1.2.2
 
 * make sure all tests pass with rails 4.2 - 6.1 (few pending excluded PR welcome)
@@ -37,7 +41,7 @@
 #### Bug Fixes
 
 * Fixes an ActionView version related issue.
-* Changes before_filter to before_action where possible (Rails 3 vs. Rails 5)
+* Changes `before_filter` to `before_action` where possible (Rails 3 vs. Rails 5)
 
 
 ### 1.1.4

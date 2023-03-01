@@ -1,9 +1,9 @@
 PATH
   remote: ..
   specs:
-    teaspoon (1.2.1)
+    teaspoon (1.2.2)
       railties (>= 3.2.5)
-    teaspoon-devkit (1.2.1)
+    teaspoon-devkit (1.2.2)
       appraisal
       aruba
       capybara
