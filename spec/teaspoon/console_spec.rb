@@ -122,7 +122,7 @@ describe Teaspoon::Console do
 
     it 'resolves suites if multiple are given' do
       subject.execute_without_handling(suite: 'bar,foo')
-      expect(subject.send(:suites)).to eq(%w(foo bar))
+      expect(subject.send(:suites)).to eq(%w(bar foo))
 
       subject.execute_without_handling(suite: 'foo')
       expect(subject.send(:suites)).to eq(%w(foo))
