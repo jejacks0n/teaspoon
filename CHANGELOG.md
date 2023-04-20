@@ -9,7 +9,37 @@
 * Removes build support for Ruby < 2.5.
 * Removes support for capybara webkit.
 
+### 1.3.0
+
+* Officially drops support for Ruby 2.4 and Rails earlier than 4.2.11
+
+### 1.2.2
+
+* make sure all tests pass with rails 4.2 - 6.1 (few pending excluded PR welcome)
+* ruby supported 2.5 to 2.7 works, unknown about 3.0
+* remove monkey-patch on `javascript_include_tag`
+
+### 1.2.1
+
+* require utility in console to get Teaspoon.root (#562)
+* Update ruby version requirement to allow ruby 3.0 (#583)
+* Fix coverage output path (#579)
+* Delay using Rails until loaded (#582)
+* Run tests via Github Actions (#588)
+
+### 1.2.0
+
+#### Enhancements
+
+* Add Rails 6 (beta1) support (#556)
+* Allow passing selenium options (#537)
+
 #### Bug Fixes
+
+* Removes Rails 3 & 4 support (#560)
+* Removes support for capybara webkit (#560)
+* Fixes gem coffeescript assets being discovered by sprockets (#405)
+* Many other small changes/fixes
 
 ### 1.1.5
 
@@ -20,7 +50,7 @@
 #### Bug Fixes
 
 * Fixes an ActionView version related issue.
-* Changes before_filter to before_action where possible (Rails 3 vs. Rails 5)
+* Changes `before_filter` to `before_action` where possible (Rails 3 vs. Rails 5)
 
 
 ### 1.1.4

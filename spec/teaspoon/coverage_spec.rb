@@ -60,7 +60,7 @@ describe Teaspoon::Coverage do
 
     it "generates reports using istanbul and passes them to the block provided" do
       stub_exit_code(ExitCodes::SUCCESS)
-      base_report  = %w[/path/to/executable report --include=/temp_path/coverage.json --dir\ output/path/_suite_]
+      base_report  = %w[/path/to/executable report --include /temp_path/coverage.json --dir output/path/_suite_]
       html_report  = base_report + %w[html]
       text1_report = base_report + %w[text]
       text2_report = base_report + %w[text-summary]

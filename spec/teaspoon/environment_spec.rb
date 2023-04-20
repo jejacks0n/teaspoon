@@ -39,7 +39,7 @@ describe Teaspoon::Environment do
 
     it "configures teaspoon from options if the environment is ready" do
       expect(subject).to receive(:rails_loaded?).and_return(true)
-      expect(Teaspoon.configuration).to receive(:override_from_options).with(foo: "bar")
+      expect(Teaspoon.configuration).to receive(:override_from_options).with({foo: "bar"})
       described_class.load(foo: "bar")
     end
   end

@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
   s.add_dependency "aruba"
   s.add_dependency "appraisal"
   s.add_dependency "simplecov"
+  s.add_dependency "selenium-webdriver"
 
   # for local bundle installs
   s.add_dependency "jbuilder"
