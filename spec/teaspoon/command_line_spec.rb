@@ -30,7 +30,7 @@ describe Teaspoon::CommandLine do
     end
 
     it "executes using Teaspoon::Console" do
-      expect(Teaspoon::Console).to receive(:new).with(files: ["file1", "file2"])
+      expect(Teaspoon::Console).to receive(:new).with({files: ["file1", "file2"]})
       expect(console).to receive(:failures?)
       subject.new
     end
