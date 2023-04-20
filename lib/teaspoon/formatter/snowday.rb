@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require "teaspoon/formatter/dot"
 
 module Teaspoon
@@ -6,11 +7,11 @@ module Teaspoon
     class Snowday < Dot
       protected
 
-      def log_spec(result)
-        return log_str("☃", CYAN) if result.passing?
-        return log_str("☹", YELLOW) if result.pending?
-        log_str("☠", RED)
-      end
+        def log_spec(result)
+          return log_str("☃", CYAN) if result.passing?
+          return log_str("☹", YELLOW) if result.pending?
+          log_str("☠", RED)
+        end
     end
   end
 end

@@ -19,17 +19,18 @@ Gem::Specification.new do |s|
   # dummy app dependencies
   s.add_dependency "rails", [">= 3.2.5"]
   s.add_dependency "coffee-rails"
-  s.add_dependency "sass-rails"
-  s.add_dependency "haml-rails"
   s.add_dependency "jquery-rails"
 
   # test dependencies
+  s.add_dependency "puma"
   s.add_dependency "rspec-rails"
+  s.add_dependency "webdrivers"
   s.add_dependency "capybara"
   s.add_dependency "aruba"
   s.add_dependency "appraisal"
+  s.add_dependency "simplecov"
+  s.add_dependency "selenium-webdriver"
 
   # for local bundle installs
   s.add_dependency "jbuilder"
-  s.add_dependency "sdoc"
 end

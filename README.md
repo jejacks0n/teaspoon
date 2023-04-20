@@ -2,16 +2,16 @@ Teaspoon
 ========
 
 [![Gem Version](https://img.shields.io/gem/v/teaspoon.svg)](https://rubygems.org/gems/teaspoon)
-[![Dependency Status](https://gemnasium.com/jejacks0n/teaspoon.svg)](https://gemnasium.com/jejacks0n/teaspoon)
-[![Build Status](https://img.shields.io/travis/jejacks0n/teaspoon.svg)](https://travis-ci.org/jejacks0n/teaspoon)
-[![Code Climate](https://codeclimate.com/github/jejacks0n/teaspoon/badges/gpa.svg)](https://codeclimate.com/github/jejacks0n/teaspoon)
-[![Test Coverage](https://codeclimate.com/github/jejacks0n/teaspoon/badges/coverage.svg)](https://codeclimate.com/github/jejacks0n/teaspoon)
-[![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/jejacks0n/teaspoon.svg?branch=master)](https://travis-ci.org/jejacks0n/teaspoon)
+[![Maintainability](https://api.codeclimate.com/v1/badges/70c116d18acd407d9201/maintainability)](https://codeclimate.com/github/jejacks0n/teaspoon/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/70c116d18acd407d9201/test_coverage)](https://codeclimate.com/github/jejacks0n/teaspoon/test_coverage)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 <img src="https://raw.github.com/jejacks0n/teaspoon/master/screenshots/logo_big.png" alt="Logo by Morgan Keys" align="right" />
-<sup>Logo by [Morgan Keys](http://www.morganrkeys.com/)</sup>
+<sup>Logo by [Morgan Keys](https://twitter.com/morganrkeys)</sup>
 
-Teaspoon is a Javascript test runner built for Rails. It can run tests in the browser and headless using PhantomJS, Selenium WebDriver, or Capybara Webkit. It can also run your tests on selenium-webgrid providers such as [BrowserStack](https://www.browserstack.com).
+Teaspoon is a Javascript test runner built for Rails. It can run tests in the browser and headless using PhantomJS, or Selenium WebDriver. It can also run your tests on selenium-webgrid providers such as [BrowserStack](https://www.browserstack.com).
 
 The goal of Teaspoon is to be simple to use while also providing the most complete Javascript testing solution for Rails.
 
@@ -62,7 +62,7 @@ Run the install generator to get the environment file and a basic spec helper. I
 rails generate teaspoon:install --coffee
 ```
 
-To run Teaspoon headless you'll need PhantomJS, Selenium Webdriver or Capybara Webkit. We recommend PhantomJS, which you can install with homebrew, npm or [as a download](http://phantomjs.org/download.html).
+To run Teaspoon headless you'll need PhantomJS or Selenium Webdriver.
 
 
 ## Usage
@@ -390,9 +390,9 @@ When you install Teaspoon a `teaspoon_env.rb` file is generated that contains go
 
 ## Test Frameworks
 
-[Jasmine](http://pivotal.github.com/jasmine) is one of the first BDD-style frameworks. We've been using Jasmine for a long time, and have been pretty happy with it. It lacks a few important things that could be in a test framework, so we've done a little bit of work to make that nicer. Like adding pending spec support.
+[Jasmine](https://jasmine.github.io/) is one of the first BDD-style frameworks. We've been using Jasmine for a long time, and have been pretty happy with it. It lacks a few important things that could be in a test framework, so we've done a little bit of work to make that nicer. Like adding pending spec support.
 
-[Mocha](http://visionmedia.github.com/mocha) came up while we were working on Teaspoon -- we read up about it and thought it was a pretty awesome library with some really great approaches to some of the things that some of us browser types should consider more often, so we included it and added support for it. We encourage you to give it a try. Read more about [Using Mocha](https://github.com/jejacks0n/teaspoon/wiki/Using-Mocha) with Teaspoon.
+[Mocha](http://mochajs.org/) came up while we were working on Teaspoon -- we read up about it and thought it was a pretty awesome library with some really great approaches to some of the things that some of us browser types should consider more often, so we included it and added support for it. We encourage you to give it a try. Read more about [Using Mocha](https://github.com/jejacks0n/teaspoon/wiki/Using-Mocha) with Teaspoon.
 
 [QUnit](http://qunitjs.com) We're not sure about how many people use QUnit, but we like jQuery, so we added it. Read more about [Using QUnit](https://github.com/jejacks0n/teaspoon/wiki/Using-QUnit) with Teaspoon.
 

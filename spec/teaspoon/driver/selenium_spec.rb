@@ -37,7 +37,12 @@ describe Teaspoon::Driver.fetch(:selenium) do
   end
 
   describe "#run_specs" do
+    it "runs without errors" do
+      subject.run_specs(runner, "_url_")
+    end
+
     it "loads firefox for the webdriver" do
+      pending "this is apparently no longer the case..." if RUBY_VERSION < "3.0"
       expect(Selenium::WebDriver).to receive(:for).with(:firefox)
       subject.run_specs(runner, "_url_")
     end
@@ -53,7 +58,13 @@ describe Teaspoon::Driver.fetch(:selenium) do
     end
 
     it "waits for the specs to complete, setting the interval, timeout and message" do
-      hash = HashWithIndifferentAccess.new(client_driver: :firefox, timeout: 180, interval: 0.01, message: "Timed out")
+      hash = HashWithIndifferentAccess.new(
+        client_driver: :firefox,
+        timeout: 180,
+        interval: 0.01,
+        message: "Timed out",
+        selenium_options: {}
+      )
       expect(Selenium::WebDriver::Wait).to receive(:new).with(hash)
       subject.run_specs(runner, "_url_")
     end

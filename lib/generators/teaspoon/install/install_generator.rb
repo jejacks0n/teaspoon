@@ -71,49 +71,49 @@ module Teaspoon
 
       private
 
-      def described_frameworks
-        Teaspoon::Framework.available.map do |framework, options|
-          klass = Teaspoon::Framework.fetch(framework)
-          "#{framework}: versions[#{klass.versions.join(', ')}]"
+        def described_frameworks
+          Teaspoon::Framework.available.map do |framework, options|
+            klass = Teaspoon::Framework.fetch(framework)
+            "#{framework}: versions[#{klass.versions.join(', ')}]"
+          end
         end
-      end
 
-      def framework
-        @framework ||= begin
-          framework = Teaspoon::Framework.fetch(options[:framework])
-          source_paths
-          @source_paths = framework.template_paths + @source_paths
-          framework
+        def framework
+          @framework ||= begin
+            framework = Teaspoon::Framework.fetch(options[:framework])
+            source_paths
+            @source_paths = framework.template_paths + @source_paths
+            framework
+          end
         end
-      end
 
-      def suite
-        @suite ||= begin
-          config = Teaspoon::Configuration::Suite.new
-          framework.modify_config(config)
-          config
+        def suite
+          @suite ||= begin
+            config = Teaspoon::Configuration::Suite.new
+            framework.modify_config(config)
+            config
+          end
         end
-      end
 
-      def version
-        @version ||= options[:version] ? determine_requested_version : framework.versions.last
-      end
-
-      def determine_requested_version
-        return options[:version] if framework.versions.include?(options[:version])
-        raise Teaspoon::UnknownFrameworkVersion.new(name: framework.name, version: options[:version])
-      end
-
-      def abort_with_message
-        if Teaspoon::Framework.available.empty?
-          readme "MISSING_FRAMEWORK"
-        else
-          message = "Unknown framework: #{options[:framework]}#{options[:version] ? "[#{options[:version]}]" : ''}"
-          message << "\n  Available: #{described_frameworks.join("\n             ")}"
-          say_status message, nil, :red
+        def version
+          @version ||= options[:version] ? determine_requested_version : framework.versions.last
         end
-        exit(1)
-      end
+
+        def determine_requested_version
+          return options[:version] if framework.versions.include?(options[:version])
+          raise Teaspoon::UnknownFrameworkVersion.new(name: framework.name, version: options[:version])
+        end
+
+        def abort_with_message
+          if Teaspoon::Framework.available.empty?
+            readme "MISSING_FRAMEWORK"
+          else
+            message = "Unknown framework: #{options[:framework]}#{options[:version] ? "[#{options[:version]}]" : ''}"
+            message << "\n  Available: #{described_frameworks.join("\n             ")}"
+            say_status message, nil, :red
+          end
+          exit(1)
+        end
     end
   end
 end

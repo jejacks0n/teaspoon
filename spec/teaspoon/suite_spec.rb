@@ -85,13 +85,14 @@ describe Teaspoon::Suite do
     it "returns just a file if one was requested" do
       subject.instance_variable_set(:@options, file: "spec/javascripts/foo.js")
       result = subject.spec_assets(false)
-      expect(result).to eql(["foo.js"])
+      expect(result).to eql(["foo.self.js?body=1"])
     end
 
     it "returns the asset tree (all dependencies resolved) if we want coverage" do
       result = subject.spec_assets(true)
 
       expect(result).to include(match(/teaspoon\/reporters\/console_spec(\.self)?\.js\?body=1/)) # Specs do not get instrumentation
+      expect(result).to include(match(/jquery(\.self)?\.js\?body=1&instrument=1/))
       expect(result).to include(match(/support\/json2(\.self)?\.js\?body=1&instrument=1/))
       expect(result).to include(match(/spec_helper(\.self)?\.js\?body=1&instrument=1/))
       expect(result).to include(match(/driver\/phantomjs\/runner(\.self)?\.js\?body=1&instrument=1/))

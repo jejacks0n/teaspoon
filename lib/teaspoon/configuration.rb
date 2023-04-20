@@ -21,7 +21,7 @@ module Teaspoon
     @@asset_paths    = ["spec/javascripts", "spec/javascripts/stylesheets",
                         "test/javascripts", "test/javascripts/stylesheets"]
     @@fixture_paths  = ["spec/javascripts/fixtures", "test/javascripts/fixtures"]
-    @@asset_manifest = ["teaspoon.css", "teaspoon-filterer.js", "teaspoon/*.js", "support/*.js"]
+    @@asset_manifest = ["teaspoon.css", "teaspoon-filterer.js", "support/*.js"]
 
     # console runner specific
 
@@ -54,14 +54,14 @@ module Teaspoon
     # suite configurations
 
     cattr_accessor :suite_configs
-    @@suite_configs = { "default" => { block: proc {} } }
+    @@suite_configs = { "default" => { block: proc { } } }
 
     def self.suite(name = :default, &block)
       @@suite_configs[name.to_s] = { block: block, instance: Suite.new(name, &block) }
     end
 
     class Suite
-      attr_accessor :matcher, :helper, :javascripts, :stylesheets,
+      attr_accessor :matcher, :helper, :javascripts, :javascript_packs, :stylesheets,
                     :boot_partial, :body_partial,
                     :hooks, :expand_assets, :js_extensions
 
@@ -70,6 +70,7 @@ module Teaspoon
         @helper        = "spec_helper"
         @javascripts   = []
         @stylesheets   = ["teaspoon"]
+        @javascript_packs = []
 
         @boot_partial  = "boot"
         @body_partial  = "body"
@@ -104,7 +105,7 @@ module Teaspoon
     # coverage configurations
 
     cattr_accessor :coverage_configs
-    @@coverage_configs = { "default" => { block: proc {} } }
+    @@coverage_configs = { "default" => { block: proc { } } }
 
     def self.coverage(name = :default, &block)
       @@coverage_configs[name.to_s] = { block: block, instance: Coverage.new(&block) }

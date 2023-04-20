@@ -37,38 +37,39 @@ module Teaspoon
 
     protected
 
-    def wait_until_started(thread)
-      Timeout.timeout(Teaspoon.configuration.server_timeout.to_i) { thread.join(0.1) until responsive? }
-    rescue Timeout::Error
-      raise Timeout::Error.new("consider increasing the timeout with `config.server_timeout`")
-    end
-
-    def disable_logging
-      return unless defined?(Thin)
-      if Teaspoon.configuration.suppress_log
-        Thin::Logging.silent = true
-      else
-        Thin::Logging.trace = false
+      def wait_until_started(thread)
+        Timeout.timeout(Teaspoon.configuration.server_timeout.to_i) { thread.join(0.1) until responsive? }
+      rescue Timeout::Error
+        raise Timeout::Error.new("consider increasing the timeout with `config.server_timeout`")
       end
-    end
 
-    def rack_options
-      {
-        app: Rails.application,
-        Host: host,
-        Port: port,
-        environment: "test",
-        AccessLog: [],
-        Logger: Rails.logger,
-        server: Teaspoon.configuration.server
-      }
-    end
+      def disable_logging
+        return unless defined?(Thin)
+        if Teaspoon.configuration.suppress_log
+          Thin::Logging.silent = true
+        else
+          Thin::Logging.trace = false
+        end
+      end
 
-    def find_available_port
-      server = TCPServer.new(host, 0)
-      server.addr[1]
-    ensure
-      server.close if server
-    end
+      def rack_options
+        {
+          app: Rails.application,
+          Host: host,
+          Port: port,
+          environment: "test",
+          AccessLog: [],
+          Logger: Rails.logger,
+          server: Teaspoon.configuration.server,
+          Silent: true
+        }
+      end
+
+      def find_available_port
+        server = TCPServer.new(host, 0)
+        server.addr[1]
+      ensure
+        server.close if server
+      end
   end
 end

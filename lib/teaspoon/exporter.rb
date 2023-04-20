@@ -20,33 +20,33 @@ module Teaspoon
 
     private
 
-    def executable
-      return @executable if @executable
-      @executable = which("wget")
-      return @executable unless @executable.blank?
-      raise Teaspoon::MissingDependencyError.new("Unable to locate `wget` for exporter.")
-    end
-
-    def create_export(path)
-      Dir.chdir(path) do
-        update_relative_paths
-        cleanup_output
-        move_output
+      def executable
+        return @executable if @executable
+        @executable = which("wget")
+        return @executable unless @executable.blank?
+        raise Teaspoon::MissingDependencyError.new("Unable to locate `wget` for exporter.")
       end
-    end
 
-    def update_relative_paths
-      html = File.read(".#{Teaspoon.configuration.mount_at}/#{@suite}.html")
-      File.write("index.html", html.gsub!('"../', '"'))
-    end
+      def create_export(path)
+        Dir.chdir(path) do
+          update_relative_paths
+          cleanup_output
+          move_output
+        end
+      end
 
-    def cleanup_output
-      FileUtils.rm_r(Dir["{.#{Teaspoon.configuration.mount_at},robots.txt.html}"])
-    end
+      def update_relative_paths
+        html = File.read(".#{Teaspoon.configuration.mount_at}/#{@suite}.html")
+        File.write("index.html", html.gsub!('"../', '"'))
+      end
 
-    def move_output
-      FileUtils.mkdir_p(@output_path)
-      FileUtils.mv(Dir["*"], @output_path, force: true)
-    end
+      def cleanup_output
+        FileUtils.rm_r(Dir["{.#{Teaspoon.configuration.mount_at},robots.txt.html}"])
+      end
+
+      def move_output
+        FileUtils.mkdir_p(@output_path)
+        FileUtils.mv(Dir["*"], @output_path, force: true)
+      end
   end
 end

@@ -61,7 +61,9 @@ module Teaspoon
       mount_at = Teaspoon.configuration.mount_at
 
       return if app.routes.recognize_path(mount_at)[:action] != "routing_error" rescue nil
-      require Teaspoon::Engine.root.join("app/controllers/teaspoon/suite_controller")
+      ActiveSupport.on_load(:action_controller) do
+        require Teaspoon::Engine.root.join("app/controllers/teaspoon/suite_controller")
+      end
 
       app.routes.prepend { mount Teaspoon::Engine => mount_at, as: "teaspoon" }
     end
@@ -82,42 +84,31 @@ module Teaspoon
 
       private
 
-      def self.using_phantomjs?
-        Teaspoon::Driver.matches?(Teaspoon.configuration.driver, :phantomjs)
-      end
+        def self.using_phantomjs?
+          Teaspoon::Driver.matches?(Teaspoon.configuration.driver, :phantomjs)
+        end
 
-      def self.render_exceptions_with_javascript
-        ActionDispatch::DebugExceptions.class_eval do
-          def render_exception(_env, exception)
-            message = "#{exception.class.name}: #{exception.message}"
-            body = "<script>throw Error(#{[message, exception.backtrace].join("\n").inspect})</script>"
-            [200, { "Content-Type" => "text/html;", "Content-Length" => body.bytesize.to_s }, [body]]
+        def self.render_exceptions_with_javascript
+          ActionDispatch::DebugExceptions.class_eval do
+            def render_exception(_env, exception)
+              message = "#{exception.class.name}: #{exception.message}"
+              body = "<script>throw Error(#{[message, exception.backtrace].join("\n").inspect})</script>"
+              [200, { "Content-Type" => "text/html;", "Content-Length" => body.bytesize.to_s }, [body]]
+            end
           end
         end
-      end
     end
   end
 end
 
-begin
-  require 'action_view'
-  if ActionView::VERSION::STRING >= '4.2.5'
-    require 'action_view/helpers/asset_tag_helper'
-    module ActionView::Helpers::AssetTagHelper
-      def javascript_include_tag(*sources)
-        options = sources.extract_options!.stringify_keys
-        path_options = options.extract!('protocol', 'extname', 'host').symbolize_keys
-        path_options[:debug] = options['allow_non_precompiled']
-        sources.uniq.map { |source|
-          tag_options = {
-            "src" => path_to_javascript(source, path_options)
-          }.merge!(options)
-          content_tag(:script, "", tag_options)
-        }.join("\n").html_safe
-      end
+class Sprockets::Rails::HelperAssetResolvers::Environment
+  def raise_unless_precompiled_asset(path)
+    if Rails.env.test? or Rails.env.development?
+      # nothing, thank you
+    else
+      super
     end
   end
-rescue
 end
 
 # Some Sprockets patches to work with Sprockets 2.x

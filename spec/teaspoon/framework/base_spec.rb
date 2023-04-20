@@ -110,7 +110,7 @@ describe Teaspoon::Framework::Base do
     end
 
     it "allows providing a block that will be called within the install generator" do
-      callback = proc {}
+      callback = proc { }
       subject.install_to("path/to/install", &callback)
 
       expect(subject.install_callback).to eq(callback)

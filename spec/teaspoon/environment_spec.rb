@@ -26,7 +26,7 @@ describe Teaspoon::Environment do
 
     it "falls back to loading the teaspoon environment" do
       allow(subject).to receive(:load_rails).and_call_original
-      allow(File).to receive(:exists?).and_return(false)
+      allow(File).to receive(:exist?).and_return(false)
       expect(subject).to receive(:require_environment)
       described_class.load
     end
@@ -39,14 +39,14 @@ describe Teaspoon::Environment do
 
     it "configures teaspoon from options if the environment is ready" do
       expect(subject).to receive(:rails_loaded?).and_return(true)
-      expect(Teaspoon.configuration).to receive(:override_from_options).with(foo: "bar")
+      expect(Teaspoon.configuration).to receive(:override_from_options).with({foo: "bar"})
       described_class.load(foo: "bar")
     end
   end
 
   describe ".require_environment" do
     before do
-      allow(File).to receive(:exists?)
+      allow(File).to receive(:exist?)
       allow(subject).to receive(:require_env)
       Teaspoon.configured = false
     end
@@ -56,7 +56,7 @@ describe Teaspoon::Environment do
     end
 
     describe "when loading with an override" do
-      let(:expanded) { File.expand_path("_override_", Dir.pwd) }
+      let(:expanded) { File.expand_path("_override_", Teaspoon.root) }
 
       before do
         allow(subject).to receive(:require_env).and_call_original
@@ -71,7 +71,7 @@ describe Teaspoon::Environment do
       end
 
       it "sets the TEASPOON_ENV so that the web app can access it when run on the CLI" do
-        allow(File).to receive(:exists?).and_return(true)
+        allow(File).to receive(:exist?).and_return(true)
         subject.require_environment("_override_")
 
         expect(ENV["TEASPOON_ENV"]).to eq(expanded)
@@ -79,18 +79,20 @@ describe Teaspoon::Environment do
     end
 
     describe "when loading from defaults" do
+      let(:root) { Teaspoon.root }
+
       it "looks for the standard files" do
-        expect(File).to receive(:exists?).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd)).and_return(false)
-        expect(File).to receive(:exists?).with(File.expand_path("test/teaspoon_env.rb", Dir.pwd)).and_return(false)
-        expect(File).to receive(:exists?).with(File.expand_path("teaspoon_env.rb", Dir.pwd)).and_return(true)
-        expect(subject).to receive(:require_env).with(File.expand_path("teaspoon_env.rb", Dir.pwd))
+        expect(File).to receive(:exist?).with(File.expand_path("spec/teaspoon_env.rb", Teaspoon.root)).and_return(false)
+        expect(File).to receive(:exist?).with(File.expand_path("test/teaspoon_env.rb", Teaspoon.root)).and_return(false)
+        expect(File).to receive(:exist?).with(File.expand_path("teaspoon_env.rb", Teaspoon.root)).and_return(true)
+        expect(subject).to receive(:require_env).with(File.expand_path("teaspoon_env.rb", Teaspoon.root))
         subject.require_environment
       end
 
       it "short circuits when it finds a file" do
-        expect(File).to receive(:exists?).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd)).and_return(true)
-        expect(File).not_to receive(:exists?).with(File.expand_path("test/teaspoon_env.rb", Dir.pwd))
-        expect(subject).to receive(:require_env).with(File.expand_path("spec/teaspoon_env.rb", Dir.pwd))
+        expect(File).to receive(:exist?).with(File.expand_path("spec/teaspoon_env.rb", Teaspoon.root)).and_return(true)
+        expect(File).not_to receive(:exist?).with(File.expand_path("test/teaspoon_env.rb", Teaspoon.root))
+        expect(subject).to receive(:require_env).with(File.expand_path("spec/teaspoon_env.rb", Teaspoon.root))
         subject.require_environment
       end
 
@@ -106,19 +108,19 @@ describe Teaspoon::Environment do
 
   describe ".check_env!" do
     it "does nothing if an env file exists" do
-      allow(File).to receive(:exists?).and_return(true)
+      allow(File).to receive(:exist?).and_return(true)
 
       expect { subject.check_env! }.not_to raise_error
     end
 
     it "does nothing if an override env file exists" do
-      expect(File).to receive(:exists?).with(/_override_/).and_return(true)
+      expect(File).to receive(:exist?).with(/_override_/).and_return(true)
 
       expect { subject.check_env!("_override_") }.not_to raise_error
     end
 
     it "raises if no env file was found" do
-      allow(File).to receive(:exists?).and_return(false)
+      allow(File).to receive(:exist?).and_return(false)
 
       expect { subject.check_env! }.to raise_error(
         Teaspoon::EnvironmentNotFound,
@@ -128,7 +130,7 @@ describe Teaspoon::Environment do
     end
 
     it "raises if no override env file was found" do
-      expect(File).to receive(:exists?).with(/_override_/).and_return(false)
+      expect(File).to receive(:exist?).with(/_override_/).and_return(false)
 
       expect { subject.check_env!("_override_") }.to raise_error(
         Teaspoon::EnvironmentNotFound,

@@ -30,7 +30,7 @@ describe Teaspoon::CommandLine do
     end
 
     it "executes using Teaspoon::Console" do
-      expect(Teaspoon::Console).to receive(:new).with(files: ["file1", "file2"])
+      expect(Teaspoon::Console).to receive(:new).with({files: ["file1", "file2"]})
       expect(console).to receive(:failures?)
       subject.new
     end
@@ -60,7 +60,6 @@ describe Teaspoon::CommandLine do
                                              phantomjs (default)
                                              selenium
                                              browserstack
-                                             capybara_webkit
               --driver-options OPTIONS     Specify driver-specific options to pass into the driver.
                                              e.g. "--ssl-protocol=any --ssl-certificates-path=/path/to/certs".
                                              Driver options are only supported with phantomjs.

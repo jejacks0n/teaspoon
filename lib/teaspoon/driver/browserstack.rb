@@ -8,16 +8,13 @@ end
 
 require "teaspoon/driver/base"
 
-# The driver creates individual thread for each test.
-# This limit is here to disallow too many threads
-# Override via max_parallel key in options.
-MAX_PARALLEL = 10
-
 # Need to have BrowserStackLocal binary (https://www.browserstack.com/local-testing#command-line)
 # running in the background to use this driver.
 module Teaspoon
   module Driver
     class BrowserStack < Base
+      MAX_PARALLEL = 10
+
       def initialize(options = nil)
         options ||= {}
         case options
@@ -51,64 +48,64 @@ module Teaspoon
 
       protected
 
-      def parallelize
-        threads = []
-        left_capabilities = capabilities
-        until left_capabilities.empty?
-          left_capabilities.pop(max_parallel).each do |desired_capability|
-            desired_capability[:"browserstack.local"] = true
-            desired_capability[:project] = driver_options[:project] if driver_options[:project]
-            desired_capability[:build] = driver_options[:build] if driver_options[:build]
-            threads << Thread.new do
-              driver = ::Selenium::WebDriver.for(:remote, url: hub_url, desired_capabilities: desired_capability)
-              Thread.current[:driver] = driver
-              capability = driver.capabilities
-
-              Thread.current[:name] = "Session on #{capability[:platform].to_s.strip}," \
-                "#{capability[:browser_name].to_s.strip} #{capability[:version].to_s.strip}"
-
-              yield
-              Thread.current[:driver].quit
-              STDOUT.print("#{Thread.current[:name]} Completed\n") unless Teaspoon.configuration.suppress_log
-            end
-          end
-          threads.each(&:join)
+        def parallelize
           threads = []
+          left_capabilities = capabilities
+          until left_capabilities.empty?
+            left_capabilities.pop(max_parallel).each do |desired_capability|
+              desired_capability[:"browserstack.local"] = true
+              desired_capability[:project] = driver_options[:project] if driver_options[:project]
+              desired_capability[:build] = driver_options[:build] if driver_options[:build]
+              threads << Thread.new do
+                driver = ::Selenium::WebDriver.for(:remote, url: hub_url, desired_capabilities: desired_capability)
+                Thread.current[:driver] = driver
+                capability = driver.capabilities
+
+                Thread.current[:name] = "Session on #{capability[:platform].to_s.strip}," \
+                  "#{capability[:browser_name].to_s.strip} #{capability[:version].to_s.strip}"
+
+                yield
+                Thread.current[:driver].quit
+                STDOUT.print("#{Thread.current[:name]} Completed\n") unless Teaspoon.configuration.suppress_log
+              end
+            end
+            threads.each(&:join)
+            threads = []
+          end
         end
-      end
 
-      def capabilities
-        driver_options[:capabilities]
-      end
-
-      def hub_url
-        "https://#{username}:#{access_key}@hub.browserstack.com/wd/hub"
-      end
-
-      def username
-        driver_options[:username] || ENV["BROWSERSTACK_USERNAME"]
-      end
-
-      def access_key
-        driver_options[:access_key] || ENV["BROWSERSTACK_ACCESS_KEY"]
-      end
-
-      def max_parallel
-        parallel = MAX_PARALLEL
-        begin
-          parallel = driver_options[:max_parallel].to_i if driver_options[:max_parallel].to_i > 0
-        rescue
+        def capabilities
+          driver_options[:capabilities]
         end
-        parallel
-      end
 
-      def driver_options
-        @driver_options ||= HashWithIndifferentAccess.new(
-          timeout: Teaspoon.configuration.driver_timeout.to_i,
-          interval: 0.01,
-          message: "Timed out"
-        ).merge(@options)
-      end
+        def hub_url
+          "https://#{username}:#{access_key}@hub.browserstack.com/wd/hub"
+        end
+
+        def username
+          driver_options[:username] || ENV["BROWSERSTACK_USERNAME"]
+        end
+
+        def access_key
+          driver_options[:access_key] || ENV["BROWSERSTACK_ACCESS_KEY"]
+        end
+
+        def max_parallel
+          parallel = MAX_PARALLEL
+          begin
+            parallel = driver_options[:max_parallel].to_i if driver_options[:max_parallel].to_i > 0
+          rescue
+          end
+          parallel
+        end
+
+        def driver_options
+          @driver_options ||= HashWithIndifferentAccess.new(
+            timeout: Teaspoon.configuration.driver_timeout.to_i,
+            interval: 0.01,
+            message: "Timed out"
+          ).merge(@options)
+        end
     end
   end
 end

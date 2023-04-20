@@ -17,7 +17,8 @@ module Teaspoon
       # Create the Rails application, which uses the version of Rails defined
       # in the Appraisal Gemfile. Then, no longer use the Appraisal Gemfile
       # and use the application one instead.
-      run_simple("bundle exec rails new testapp --skip-bundle --skip-activerecord -O --skip-javascript --skip-gemfile")
+      options = "--skip-bundle --skip-activerecord -O --skip-javascript --skip-gemfile --skip-bootsnap"
+      run_command_and_stop("bundle exec rails new testapp #{options}")
       cd("testapp")
       set_environment_variable("BUNDLE_GEMFILE", expand_path("Gemfile"))
 
@@ -26,7 +27,7 @@ module Teaspoon
       # coffee-rails is needed because we are using Teaspoon dev deps which are CS files
       append_to_file("Gemfile", %{\ngem "coffee-rails"\n})
       append_to_file("Gemfile", %{\n#{gem}\n})
-      run_simple("bundle install#{local ? " --local" : ""}")
+      run_command_and_stop("bundle install#{local ? " --local" : ""}")
 
       # create an application.js because there is no way to tell rails not to include it
       # in the layout, and we don't want the default generated application.js
@@ -34,23 +35,23 @@ module Teaspoon
     end
 
     def install_teaspoon(opts = "")
-      run_simple("bundle exec rails generate teaspoon:install #{opts} --trace")
+      run_command_and_stop("bundle exec rails generate teaspoon:install #{opts} --trace")
     end
 
     def run_teaspoon(opts = "")
       set_rails_env
-      run_simple("bundle exec teaspoon #{opts}", false)
+      run_command_and_stop("bundle exec teaspoon #{opts}", fail_on_error: false)
     end
 
     def rake_teaspoon(envs = "")
       set_rails_env
-      run_simple("bundle exec rake teaspoon #{envs}", false)
+      run_command_and_stop("bundle exec rake teaspoon #{envs}", fail_on_error: false)
     end
 
     def copy_integration_files(suffix, from, to = "spec")
       sources = Dir[File.join(from, "javascripts", "integration", "**/*")]
       dest = expand_path(File.join(to, "javascripts/integration"))
-      FileUtils::mkdir_p(dest)
+      FileUtils.mkdir_p(dest)
       sources.each do |source|
         spec = File.join(dest, File.basename(source).gsub("_integration", "_#{suffix}"))
         FileUtils.cp(source, spec)
@@ -59,7 +60,7 @@ module Teaspoon
 
     def copy_broken_helper(suffix)
       test_directory = expand_path("#{suffix}/javascripts")
-      FileUtils::mkdir_p(test_directory)
+      FileUtils.mkdir_p(test_directory)
       broken_helper = File.expand_path("../../../spec/support/broken_spec_helper.coffee", __FILE__)
       helper = File.join(test_directory, "#{suffix}_helper.coffee")
       FileUtils.cp(broken_helper, helper)

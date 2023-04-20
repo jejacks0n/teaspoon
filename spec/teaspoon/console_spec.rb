@@ -69,7 +69,7 @@ describe Teaspoon::Console do
 
   describe "#execute" do
     it "calls #execute_without_handling and returns its value" do
-      expect(subject).to receive(:execute_without_handling).with(foo: "bar").and_return(true)
+      expect(subject).to receive(:execute_without_handling).with({foo: "bar"}).and_return(true)
       expect(subject.execute(foo: "bar")).to be_truthy
     end
 
@@ -113,8 +113,7 @@ describe Teaspoon::Console do
     end
 
     it "resolves the files" do
-      expect(Teaspoon::Suite).to receive(:resolve_spec_for).with("file").
-        and_return(suite: "foo", path: "file2")
+      expect(Teaspoon::Suite).to receive(:resolve_spec_for).with("file").and_return(suite: "foo", path: "file2")
       subject.execute_without_handling(files: ["file"])
 
       expect(subject.send(:suites)).to eq(["foo"])
@@ -131,11 +130,15 @@ describe Teaspoon::Console do
 
     it "resolves the files if a directory was given" do
       resolve_spec_for_output = ["test/javascripts/foo.coffee", "test/javascripts/bar.coffee"]
-      expect(Teaspoon::Suite).to receive(:resolve_spec_for).with("full/path").
-        and_return(suite: "foo", path: resolve_spec_for_output)
+      expect(Teaspoon::Suite).to receive(:resolve_spec_for).with("full/path").and_return(
+        suite: "foo",
+        path: resolve_spec_for_output
+      )
       subject.execute_without_handling(files: ["full/path"])
       expect(subject.send(:suites)).to eq(["foo"])
-      expect(subject.send(:filter, "foo")).to eq("file[]=#{resolve_spec_for_output.join('&file[]=')}")
+      expect(subject.send(:filter, "foo")).to eq(
+        "file[]=test%2Fjavascripts%2Ffoo.coffee&file[]=test%2Fjavascripts%2Fbar.coffee"
+      )
     end
 
     it "runs the tests" do
@@ -169,7 +172,7 @@ describe Teaspoon::Console do
     before do
       allow(Teaspoon.configuration).to receive(:fail_fast).and_return(false)
       expect(Teaspoon.configuration).to receive(:suite_configs).
-        and_return("_suite_" => proc {}, "suite_name" => proc {})
+        and_return("_suite_" => proc { }, "suite_name" => proc { })
     end
 
     it "raises an exception when the suite isn't known" do
@@ -201,7 +204,7 @@ describe Teaspoon::Console do
   describe "#export" do
     before do
       expect(Teaspoon.configuration).to receive(:suite_configs).
-        and_return("_suite_" => proc {}, "suite_name" => proc {})
+        and_return("_suite_" => proc { }, "suite_name" => proc { })
       allow(Teaspoon::Exporter).to receive(:new).and_return(double(export: nil))
     end
 

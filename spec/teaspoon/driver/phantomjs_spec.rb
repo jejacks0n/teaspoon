@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe Teaspoon::Driver.fetch(:phantomjs) do
-
   describe "#initialize" do
     it "assigns @options" do
       subject = described_class.new(foo: "bar")
@@ -53,7 +52,7 @@ describe Teaspoon::Driver.fetch(:phantomjs) do
       end
 
       it "checks for the Phantomjs gem" do
-        stub_const("Phantomjs", double(path: '/path/to/phantomjs'))
+        stub_const("Phantomjs", double(path: "/path/to/phantomjs"))
 
         expect(::Phantomjs).to receive(:path)
         expect(::IO).to receive(:popen)

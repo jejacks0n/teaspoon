@@ -26,41 +26,41 @@ module Teaspoon
 
     private
 
-    def self.find_env(override = nil)
-      override ||= ENV["TEASPOON_ENV"]
-      env_files = override && !override.empty? ? [override] : standard_environments
+      def self.find_env(override = nil)
+        override ||= ENV["TEASPOON_ENV"]
+        env_files = override && !override.empty? ? [override] : standard_environments
 
-      env_files.each do |filename|
-        file = File.expand_path(filename, Dir.pwd)
-        ENV["TEASPOON_ENV"] = file if override
-        return file if File.exists?(file)
+        env_files.each do |filename|
+          file = File.expand_path(filename, Teaspoon.root)
+          ENV["TEASPOON_ENV"] = file if override
+          return file if File.exist?(file)
+        end
+
+        raise Teaspoon::EnvironmentNotFound.new(searched: env_files.join(", "))
       end
 
-      raise Teaspoon::EnvironmentNotFound.new(searched: env_files.join(", "))
-    end
-
-    def self.standard_environments
-      ["spec/teaspoon_env.rb", "test/teaspoon_env.rb", "teaspoon_env.rb"]
-    end
-
-    def self.require_env(file)
-      ::Kernel.load(file)
-    end
-
-    def self.rails_loaded?
-      !!defined?(Rails)
-    end
-
-    def self.load_rails
-      rails_env = ENV["TEASPOON_RAILS_ENV"] || File.expand_path("config/environment.rb", Dir.pwd)
-
-      # Try to load rails, assume teaspoon_env will do it if the expected
-      # environment isn't found.
-      if File.exists?(rails_env)
-        require rails_env
-      else
-        require_environment
+      def self.standard_environments
+        ["spec/teaspoon_env.rb", "test/teaspoon_env.rb", "teaspoon_env.rb"]
       end
-    end
+
+      def self.require_env(file)
+        ::Kernel.load(file)
+      end
+
+      def self.rails_loaded?
+        !!defined?(Rails)
+      end
+
+      def self.load_rails
+        rails_env = ENV["TEASPOON_RAILS_ENV"] || File.expand_path("config/environment.rb", Teaspoon.root)
+
+        # Try to load rails, assume teaspoon_env will do it if the expected
+        # environment isn't found.
+        if File.exist?(rails_env)
+          require rails_env
+        else
+          require_environment
+        end
+      end
   end
 end

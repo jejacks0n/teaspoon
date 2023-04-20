@@ -1,4 +1,10 @@
+require "pathname"
+
 module Teaspoon
+  def self.root
+    defined?(Rails) ? Rails.root : Pathname.new(Dir.pwd)
+  end
+
   def self.abort(message = nil, code = 1)
     STDOUT.print("#{message}\n") if message
     exit(code)

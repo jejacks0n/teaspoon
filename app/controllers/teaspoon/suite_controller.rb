@@ -33,18 +33,18 @@ class Teaspoon::SuiteController < ActionController::Base
 
   private
 
-  def check_env
-    Teaspoon::Environment.check_env!
-  end
-
-  def prepend_fixture_paths
-    Teaspoon.configuration.fixture_paths.each do |path|
-      prepend_view_path Teaspoon.configuration.root.join(path)
+    def check_env
+      Teaspoon::Environment.check_env!
     end
-  end
 
-  def hook_params(params)
-    return params.permit!.to_h if params.respond_to?(:permit!)
-    params
-  end
+    def prepend_fixture_paths
+      Teaspoon.configuration.fixture_paths.each do |path|
+        prepend_view_path Teaspoon.configuration.root.join(path)
+      end
+    end
+
+    def hook_params(params)
+      return params.permit!.to_h if params.respond_to?(:permit!)
+      params
+    end
 end

@@ -86,92 +86,92 @@ module Teaspoon
 
       protected
 
-      def log_runner(_result); end
+        def log_runner(_result); end
 
-      def log_suite(_result); end
+        def log_suite(_result); end
 
-      def log_spec(result)
-        return log_passing_spec(result) if result.passing?
-        return log_pending_spec(result) if result.pending?
-        log_failing_spec(result)
-      end
+        def log_spec(result)
+          return log_passing_spec(result) if result.passing?
+          return log_pending_spec(result) if result.pending?
+          log_failing_spec(result)
+        end
 
-      def log_passing_spec(_result); end
+        def log_passing_spec(_result); end
 
-      def log_pending_spec(_result); end
+        def log_pending_spec(_result); end
 
-      def log_failing_spec(_result); end
+        def log_failing_spec(_result); end
 
-      def log_error(_result); end
+        def log_error(_result); end
 
-      def log_exception(_result); end
+        def log_exception(_result); end
 
-      def log_console(_message); end
+        def log_console(_message); end
 
-      def log_result(_result); end
+        def log_result(_result); end
 
-      def log_coverage(_message); end
+        def log_coverage(_message); end
 
-      def log_threshold_failure(_message); end
+        def log_threshold_failure(_message); end
 
-      def log_complete(_failure_count); end
+        def log_complete(_failure_count); end
 
       private
 
-      def log_str(str, color_code = nil)
-        return log_to_file(str, @output_file) if @output_file
-        STDOUT.print(color_code ? colorize(str, color_code) : str)
-      end
-
-      def log_line(str = "", color_code = nil)
-        return log_to_file("#{str}\n", @output_file) if @output_file
-        STDOUT.print("#{color_code ? colorize(str, color_code) : str}\n")
-      end
-
-      def log_to_file(str, output_file)
-        @_output_file = File.open(output_file, "a") { |f| f.write(str) }
-      rescue IOError => e
-        raise Teaspoon::FileWriteError.new(e.message)
-      end
-
-      def colorize(str, color_code)
-        return str unless Teaspoon.configuration.color || @output_file
-        "\e[#{color_code}m#{str}\e[0m"
-      end
-
-      def pluralize(str, value)
-        value == 1 ? "#{value} #{str}" : "#{value} #{str}s"
-      end
-
-      def filename(file)
-        uri = URI(file)
-
-        params = String(uri.query).split("&").reject do |param|
-          RESERVED_PARAMS.include?(param.split("=").first)
+        def log_str(str, color_code = nil)
+          return log_to_file(str, @output_file) if @output_file
+          STDOUT.print(color_code ? colorize(str, color_code) : str)
         end
 
-        filename = uri.path.sub(%r(^/assets/), "")
-        filename += "?#{params.join("&")}" if params.any?
-        filename
-      end
-
-      def parse_output_file(output)
-        return output unless output
-        output.gsub(/%{([^}]*)}/) { parse_output_capture($1) }
-      end
-
-      def parse_output_capture(cap)
-        case cap
-        when "suite_name"
-          @suite_name
-        when "date"
-          Time.now.to_i
-        else
-          warn ["Teaspoon::Formatter - Output File can only contain the placeholders %{suite_name} or %{date}.",
-                "%{#{cap}} is not supported and will be ignored."].join("\n")
-          ""
+        def log_line(str = "", color_code = nil)
+          return log_to_file("#{str}\n", @output_file) if @output_file
+          STDOUT.print("#{color_code ? colorize(str, color_code) : str}\n")
         end
-      end
+
+        def log_to_file(str, output_file)
+          @_output_file = File.open(output_file, "a") { |f| f.write(str) }
+        rescue IOError => e
+          raise Teaspoon::FileWriteError.new(e.message)
+        end
+
+        def colorize(str, color_code)
+          return str unless Teaspoon.configuration.color || @output_file
+          "\e[#{color_code}m#{str}\e[0m"
+        end
+
+        def pluralize(str, value)
+          value == 1 ? "#{value} #{str}" : "#{value} #{str}s"
+        end
+
+        def filename(file)
+          uri = URI(file)
+
+          params = String(uri.query).split("&").reject do |param|
+            RESERVED_PARAMS.include?(param.split("=").first)
+          end
+
+          filename = uri.path.sub(%r(^/assets/), "")
+          filename += "?#{params.join("&")}" if params.any?
+          filename
+        end
+
+        def parse_output_file(output)
+          return output unless output
+          output.gsub(/%{([^}]*)}/) { parse_output_capture($1) }
+        end
+
+        def parse_output_capture(cap)
+          case cap
+          when "suite_name"
+            @suite_name
+          when "date"
+            Time.now.to_i
+          else
+            warn ["Teaspoon::Formatter - Output File can only contain the placeholders %{suite_name} or %{date}.",
+                  "%{#{cap}} is not supported and will be ignored."].join("\n")
+            ""
+          end
+        end
     end
   end
 end

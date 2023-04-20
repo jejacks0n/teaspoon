@@ -4,6 +4,7 @@ require_relative("../../../lib/generators/teaspoon/install/install_generator")
 describe Teaspoon::Generators::InstallGenerator do
   subject { described_class.new([], options) }
   let(:options) { {} }
+
   before do
     allow(subject).to receive(:readme)
     allow(subject).to receive(:say_status)
@@ -23,10 +24,14 @@ describe Teaspoon::Generators::InstallGenerator do
     allow(shell).to receive(:print_table) { |msg| help << msg }
 
     described_class.help(shell)
-    expect(help.join("\n").gsub(/\n+/, "\n")).to include(<<-HELP.strip_heredoc)
+    result = help.join("\n").gsub(/\n+/, "\n")
+
+    expect(result).to include(<<-HELP.strip_heredoc)
       Usage:
         rails generate teaspoon:install [options]
-      Options:
+    HELP
+
+    expect(result).to include(<<-HELP.strip_heredoc)
       -t, [--framework=FRAMEWORK]
       # Specify which test framework to use (Available: jasmine, mocha, qunit)
       # Default: jasmine
