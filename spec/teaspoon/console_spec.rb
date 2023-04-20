@@ -69,7 +69,7 @@ describe Teaspoon::Console do
 
   describe "#execute" do
     it "calls #execute_without_handling and returns its value" do
-      expect(subject).to receive(:execute_without_handling).with(foo: "bar").and_return(true)
+      expect(subject).to receive(:execute_without_handling).with({foo: "bar"}).and_return(true)
       expect(subject.execute(foo: "bar")).to be_truthy
     end
 
