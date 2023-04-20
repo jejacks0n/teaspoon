@@ -4,10 +4,6 @@
    ```ruby
    suite.javascript_packs += ["your-custom-pack.js"]
    ```
-* Adds support for Rails 6.
-* Removes build support for Rails 3 & 4.
-* Removes build support for Ruby < 2.5.
-* Removes support for capybara webkit.
 
 ### 1.3.0
 
