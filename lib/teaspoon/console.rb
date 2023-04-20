@@ -1,4 +1,5 @@
 require "teaspoon/environment"
+require "teaspoon/utility"
 
 module Teaspoon
   class Console

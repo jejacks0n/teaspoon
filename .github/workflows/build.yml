@@ -1,0 +1,66 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
+# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - 3.0.6
+          - 2.7.8
+          #- jruby-9.2.15.0
+        gemfile:
+          - rails_5.0
+          - rails_5.1
+          - rails_5.2
+          - rails_6.0
+          - rails_6.1
+          - rails_5_sprockets_4
+          - rails_6_sprockets_4
+        exclude:
+        - gemfile: rails_5.0
+          ruby: 3.0.6
+        - gemfile: rails_5.1
+          ruby: 3.0.6
+        - gemfile: rails_5.2
+          ruby: 3.0.6
+        - gemfile: rails_5_sprockets_4
+          ruby: 3.0.6
+
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
+      TRAVIS: true
+      TEASPOON_DEVELOPMENT: true
+    steps:
+    - name: Fetch source
+      uses: actions/checkout@v2
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+    - name: Download istanbul
+      run: npm install istanbul
+    - name: Download phantomjs
+      run: npm install phantomjs
+    - name: Download cc-test-reporter
+      run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - name: Make cc-test-reporter executable
+      run: chmod +x ./cc-test-reporter
+    - name: Init cc-test-reporter
+      run: ./cc-test-reporter before-build
+    - name: Run tests
+      run: bundle exec rake
+    #- name: Report cc-test-reporter result
+    #  run: ./cc-test-reporter after-build
+

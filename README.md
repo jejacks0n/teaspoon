@@ -2,7 +2,7 @@ Teaspoon
 ========
 
 [![Gem Version](https://img.shields.io/gem/v/teaspoon.svg)](https://rubygems.org/gems/teaspoon)
-[![Build Status](https://img.shields.io/travis/jejacks0n/teaspoon.svg)](https://travis-ci.org/jejacks0n/teaspoon)
+[![Build Status](https://travis-ci.org/jejacks0n/teaspoon.svg?branch=master)](https://travis-ci.org/jejacks0n/teaspoon)
 [![Maintainability](https://api.codeclimate.com/v1/badges/70c116d18acd407d9201/maintainability)](https://codeclimate.com/github/jejacks0n/teaspoon/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/70c116d18acd407d9201/test_coverage)](https://codeclimate.com/github/jejacks0n/teaspoon/test_coverage)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
@@ -392,7 +392,7 @@ When you install Teaspoon a `teaspoon_env.rb` file is generated that contains go
 
 [Jasmine](https://jasmine.github.io/) is one of the first BDD-style frameworks. We've been using Jasmine for a long time, and have been pretty happy with it. It lacks a few important things that could be in a test framework, so we've done a little bit of work to make that nicer. Like adding pending spec support.
 
-[Mocha](http://visionmedia.github.com/mocha) came up while we were working on Teaspoon -- we read up about it and thought it was a pretty awesome library with some really great approaches to some of the things that some of us browser types should consider more often, so we included it and added support for it. We encourage you to give it a try. Read more about [Using Mocha](https://github.com/jejacks0n/teaspoon/wiki/Using-Mocha) with Teaspoon.
+[Mocha](http://mochajs.org/) came up while we were working on Teaspoon -- we read up about it and thought it was a pretty awesome library with some really great approaches to some of the things that some of us browser types should consider more often, so we included it and added support for it. We encourage you to give it a try. Read more about [Using Mocha](https://github.com/jejacks0n/teaspoon/wiki/Using-Mocha) with Teaspoon.
 
 [QUnit](http://qunitjs.com) We're not sure about how many people use QUnit, but we like jQuery, so we added it. Read more about [Using QUnit](https://github.com/jejacks0n/teaspoon/wiki/Using-QUnit) with Teaspoon.
 

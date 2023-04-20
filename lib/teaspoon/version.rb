@@ -1,3 +1,3 @@
 module Teaspoon
-  VERSION = "1.1.5"
+  VERSION = "1.3.0"
 end

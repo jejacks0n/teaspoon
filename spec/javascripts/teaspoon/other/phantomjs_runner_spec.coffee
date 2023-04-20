@@ -151,7 +151,7 @@ describe "PhantomJS Runner", ->
         spy = spyOn(@runner, "fail")
         evalSpy = spyOn(@runner.page, "evaluate").andReturn(true)
         @callbacks.onLoadFinished("failure")
-        expect(spy).toHaveBeenCalledWith("Failed to load: #{@runner.url}")
+        expect(spy).toHaveBeenCalledWith("Failed to load: #{@runner.url}. Status: failure")
         expect(evalSpy).toHaveBeenCalled()
         expect(@waitSpy).wasNotCalled()
 

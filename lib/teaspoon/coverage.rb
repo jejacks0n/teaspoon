@@ -60,7 +60,7 @@ module Teaspoon
         output_path = File.join(@config.output_path, @suite_name)
         result, st =
           Open3.capture2e(
-            @executable, "report", "--include=#{input.shellescape}", "--dir #{output_path}", format
+            @executable, "report", "--include", input.shellescape, "--dir", output_path, format
           )
         return result.gsub("Done", "").gsub("Using reporter [#{format}]", "").strip if st.exitstatus.zero?
         raise Teaspoon::DependencyError.new("Unable to generate #{format} coverage report:\n#{result}")
