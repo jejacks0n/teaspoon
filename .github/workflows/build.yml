@@ -16,8 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-          - 3.0
-          - 2.7
+          - 3.0.6
+          - 2.7.8
           - 2.6
           - 2.5
           #- jruby-9.2.15.0
@@ -32,17 +32,17 @@ jobs:
           - rails_6_sprockets_4
         exclude:
         - gemfile: rails_4.2
-          ruby: 2.7
+          ruby: 2.7.8
         - gemfile: rails_4.2
-          ruby: 3.0
+          ruby: 3.0.6
         - gemfile: rails_5.0
-          ruby: 3.0
+          ruby: 3.0.6
         - gemfile: rails_5.1
-          ruby: 3.0
+          ruby: 3.0.6
         - gemfile: rails_5.2
-          ruby: 3.0
+          ruby: 3.0.6
         - gemfile: rails_5_sprockets_4
-          ruby: 3.0
+          ruby: 3.0.6
 
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
