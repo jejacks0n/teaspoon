@@ -1,5 +1,10 @@
 ### Unreleased
 
+* Support for (webpacker)[https://github.com/rails/webpacker/].
+   ```ruby
+   suite.javascript_packs += ["your-custom-pack.js"]
+   ```
+
 ### 1.3.0
 
 * Officially drops support for Ruby 2.4 and Rails earlier than 4.2.11
