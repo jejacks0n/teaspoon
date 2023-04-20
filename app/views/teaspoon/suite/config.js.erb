@@ -1,0 +1,2 @@
+Teaspoon.version = <%= Teaspoon::VERSION.to_json.html_safe %>;
+Teaspoon.suites  = <%= {all: Teaspoon.configuration.suite_configs.keys, active: @suite.name}.to_json.html_safe %>;

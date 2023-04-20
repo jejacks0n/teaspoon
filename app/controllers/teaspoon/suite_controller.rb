@@ -16,6 +16,12 @@ class Teaspoon::SuiteController < ActionController::Base
     @suite = Teaspoon::Suite.new(params)
   end
 
+  def js
+    jstype = params.extract!(:jstype).fetch(:jstype, 'vanilla')
+    @suite = Teaspoon::Suite.new(params)
+    render "teaspoon/suite/#{jstype}", :content_type => 'application/javascript'
+  end
+
   def hook
     hooks = Teaspoon::Suite.new(params).hooks[params[:hook].to_s]
 

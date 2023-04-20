@@ -1,20 +1,2 @@
-<%
-rails_config = Rails.application.config
-require_options = {baseUrl: rails_config.assets.prefix}
-require_options.merge!(urlArgs: "instrument=1", waitSeconds: 0) if Teaspoon.configuration.use_coverage
-require_options.merge!(rails_config.requirejs.user_config) if rails_config.respond_to?(:requirejs)
-specs = @suite.spec_assets(false).map{ |s| "#{s.gsub(/\.js.*$/, "")}" }
-%>
-
 <%= javascript_include_tag @suite.helper %>
-<script type="text/javascript">
-  Teaspoon.onWindowLoad(function () {
-    // setup the Teaspoon path prefix to load /assets
-    require.config(<%= require_options.to_json.html_safe %>);
-
-    // require specs by striping off the .js file extension
-    require(<%= specs.to_json.html_safe %>, function() {
-      Teaspoon.execute();
-    });
-  });
-</script>
+<script src="<%= "#{Teaspoon.configuration.mount_at}/js/#{@suite.name}.require.js" %>"></script>
