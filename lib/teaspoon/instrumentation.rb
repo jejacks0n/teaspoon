@@ -35,10 +35,8 @@ module Teaspoon
 
       result = add_instrumentation(asset)
 
-      asset.instance_variable_set(:@source, result)
-      asset.instance_variable_set(:@length, headers["Content-Length"] = result.bytesize.to_s)
-
-      [status, headers, asset]
+      headers["Content-Length"] = result.bytesize.to_s
+      [status, headers, [result]]
     end
 
     protected
