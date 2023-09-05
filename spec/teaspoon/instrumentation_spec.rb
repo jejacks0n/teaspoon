@@ -8,6 +8,7 @@ describe Teaspoon::Instrumentation do
 
   let(:asset) { double(source: source, filename: "path/to/instrument.js") }
   let(:source) { "function add(a, b) { return a + b } // ☃ " }
+  let(:instrumented_source) { source + " // instrumented" }
   let(:response) { [200, { "Content-Type" => "application/javascript" }, asset] }
   let(:env) { { "QUERY_STRING" => "instrument=true" } }
 
@@ -21,7 +22,7 @@ describe Teaspoon::Instrumentation do
       expect(asset).to receive(:clone).and_return(asset)
 
       allow(File).to receive(:open)
-      allow_any_instance_of(subject).to receive(:instrument).and_return(source + " // instrumented")
+      allow_any_instance_of(subject).to receive(:instrument).and_return(instrumented_source)
 
       path = nil
       Dir.mktmpdir { |p| path = p }
@@ -43,7 +44,7 @@ describe Teaspoon::Instrumentation do
 
     it "replaces the response array with the appropriate information" do
       response = [666, { "Content-Type" => "application/javascript" }, asset]
-      expected = [666, { "Content-Type" => "application/javascript", "Content-Length" => "59" }, asset]
+      expected = [666, { "Content-Type" => "application/javascript", "Content-Length" => "59" }, [instrumented_source]]
 
       expect(subject.add_to(response, env)).to eq(expected)
     end
@@ -124,10 +125,10 @@ describe Teaspoon::Instrumentation do
 
     it "instruments a file" do
       pending("needs istanbul to be installed") unless Teaspoon::Instrumentation.executable
-      status, headers, asset = subject.add_to(response, "QUERY_STRING" => "instrument=true")
+      status, headers, body = subject.add_to(response, "QUERY_STRING" => "instrument=true")
       expect(status).to eq(200)
       expect(headers).to include("Content-Type" => "application/javascript")
-      expect(asset.source).to match(/var __cov_.+ = \(Function\('return this'\)\)\(\);/)
+      expect(body.first).to match(/var __cov_.+ = \(Function\('return this'\)\)\(\);/)
     end
 
     it "hooks into sprockets" do
