@@ -5,7 +5,14 @@
    suite.javascript_packs += ["your-custom-pack.js"]
    ```
 
-### 1.3.0
+### 1.4.0 Sep 8, 2023
+
+* Fix CI
+* Unfortunately disable a few tests with Ruby 3.x, they still pass with 2.x
+* Adding support for multiple test suites through options #511
+* fix instrumentation to support puma >= 6.2 (#600) (#601) 
+
+### 1.3.0 Mar 19, 2021
 
 * Officially drops support for Ruby 2.4 and Rails earlier than 4.2.11
 
