@@ -1,5 +1,6 @@
 require "teaspoon/environment"
 require "teaspoon/utility"
+require "erb"
 
 module Teaspoon
   class Console
@@ -108,7 +109,10 @@ module Teaspoon
 
       def filter(suite)
         parts = []
-        parts << "grep=#{CGI.escape(options[:filter])}" if options[:filter].present?
+        # Using ERB::Util.url_encode instead of CGI.escape as CGI.escape will convert
+        # the space ' ' into a '+' and not into "%20". The JS on the front end expects
+        # %20
+        parts << "grep=#{ERB::Util.url_encode(options[:filter])}" if options[:filter].present?
         (@suites[suite] || options[:files] || []).flatten.each { |file| parts << "file[]=#{CGI.escape(file)}" }
         "#{parts.join('&')}" if parts.present?
       end
