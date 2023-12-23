@@ -69,7 +69,7 @@ describe Teaspoon::Console do
 
   describe "#execute" do
     it "calls #execute_without_handling and returns its value" do
-      expect(subject).to receive(:execute_without_handling).with(foo: "bar").and_return(true)
+      expect(subject).to receive(:execute_without_handling).with({foo: "bar"}).and_return(true)
       expect(subject.execute(foo: "bar")).to be_truthy
     end
 
@@ -118,6 +118,14 @@ describe Teaspoon::Console do
 
       expect(subject.send(:suites)).to eq(["foo"])
       expect(subject.send(:filter, "foo")).to eq("file[]=file2")
+    end
+
+    it 'resolves suites if multiple are given' do
+      subject.execute_without_handling(suite: 'bar,foo')
+      expect(subject.send(:suites)).to eq(%w(bar foo))
+
+      subject.execute_without_handling(suite: 'foo')
+      expect(subject.send(:suites)).to eq(%w(foo))
     end
 
     it "resolves the files if a directory was given" do
