@@ -7,7 +7,7 @@ module Teaspoon
 
   def self.abort(message = nil, code = 1)
     STDOUT.print("#{message}\n") if message
-    exit(code)
+    exit!(code)
   end
 
   module Utility
