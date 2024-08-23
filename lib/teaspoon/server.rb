@@ -1,6 +1,7 @@
 require "socket"
 require "timeout"
 require "webrick"
+require_relative "rackup_server_shim"
 
 module Teaspoon
   class Server
@@ -16,7 +17,7 @@ module Teaspoon
 
       thread = Thread.new do
         disable_logging
-        server = Rack::Server.new(rack_options)
+        server = RackupServerShim.new(rack_options)
         server.start
       end
       wait_until_started(thread)

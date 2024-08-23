@@ -20,7 +20,7 @@ describe Teaspoon::Server do
     end
 
     it "starts a rack server" do
-      expect(Rack::Server).to receive(:new).and_return(server)
+      expect(Teaspoon::RackupServerShim).to receive(:new).and_return(server)
       expect(server).to receive(:start)
 
       subject.start
@@ -41,7 +41,7 @@ describe Teaspoon::Server do
       )
     end
 
-    it "creates a Rack::Server with the correct setting" do
+    it "creates a Teaspoon::RackupServerShim with the correct setting" do
       expected_opts = {
         app: Rails.application,
         Host: subject.host,
@@ -52,7 +52,7 @@ describe Teaspoon::Server do
         server: Teaspoon.configuration.server,
         Silent: true,
       }
-      expect(Rack::Server).to receive(:new).with(expected_opts).and_return(server)
+      expect(Teaspoon::RackupServerShim).to receive(:new).with(expected_opts).and_return(server)
 
       subject.start
       @block.call
